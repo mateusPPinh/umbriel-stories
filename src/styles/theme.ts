@@ -1,0 +1,92 @@
+import { DefaultTheme } from 'styled-components';
+
+export const theme: DefaultTheme = {
+  colors: {
+   base: {
+    white: '#FFFFFF',
+    black: '#000000',
+   },
+   neutralGray: {
+    neutral50: '#F7F8F8',
+    neutral100: '#E6E6E9',
+    neutral200: '#D4D5D9',
+    neutral300: '#BFC1C7',
+    neutral400: '#ADB0B7',
+    neutral500: '#8C8F9A',
+    neutral600: '#666A79',
+    neutral700: '#404557',
+    neutral800: '#33394C',
+    neutral900: '#1A2035',
+   },
+   primary: {
+    primary50: '#EBEFFF',
+    primary100: '#D6E0FF',
+    primary200: '#A8BDFF',
+    primary300: '#809DFF',
+    primary400: '#527AFF',
+    primary500: '#295BFF',
+    primary600: '#0037EB',
+    primary700: '#002AB3',
+    primary800: '#001B75',
+    primary900: '#000E3D',
+    primary950: '#00071F'
+   },
+   secodary: {
+    secondary50: '#FFF0EB',
+    secondary100: '#FFE1D6',
+    secondary200: '#FFBFA8',
+    secondary300: '#FFA180',
+    secondary400: '#FF8052',
+    secondary500: '#FF6229',
+    secondary600: '#EB3E00',
+    secondary700: '#B33000',
+   },
+   positive: {
+    positive50:  '#E6FAEE',
+    positive100: '#D0F5E1',
+    positive200: '#A2ECC2',
+    positive300: '#73E2A4',
+    positive400: '#45D985',
+    positive500: '#27BE69',
+    positive600: '#1F9854',
+    positive700: '#17723F',
+   },
+   negative: {
+    negative50: '#FEECEE',
+    negative100: '#FCD9DE',
+    negative200: '#FAB3BD',
+    negative300: '#F78C9C',
+    negative400: '#F5667A',
+    negative500: '#F2415A',
+    negative600: '#E5102E',
+    negative700: '#AC0C22',
+    negative800: '#730817',
+   },
+   warning: {
+    warning50: '#FFF8E5',
+    warning100: '#FFF3D1',
+    warning200: '#FFE59E',
+    warning300: '#FFD970',
+    warning400: '#FFCB3D',
+    warning500: '#FFBF0F',
+    warning600: '#D69D00',
+   },
+   info: {
+    info50: '#EBEFFF',
+    info100: '#D6E0FF',
+    info200: '#A8BDFF',
+    info300: '#809DFF',
+    info400: '#527AFF',
+    info500: '#295BFF',
+    info600: '#0037EB',
+    info700: '#002AB3',
+    info800: '#001B75',
+    info900: '#000E3D',
+    info950: '#00071F',
+   },
+  },
+  fonts: {
+    primary: 'Roboto',
+    secondary: 'Roboto Mono'
+  }
+}

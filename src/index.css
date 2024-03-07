@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  /* background-color: #1A1A1E; */
+}
+
+body {
+  font-family: 'Roboto', 'sans-serif';
+}
+
+.gradient-border {
+  position: relative;
+}
+
+.myAwesomeTextDecoration {
+  text-decoration: none;
+  color: pink;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  top: -2px; 
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  z-index: -1;
+  background: linear-gradient(to right, #fbc2eb 0%, #a6c1ee 100%);
+  border-radius: inherit;
+  border: 1px dashed transparent;
+  background-clip: padding-box, border-box;
+  background-origin: border-box;
+}

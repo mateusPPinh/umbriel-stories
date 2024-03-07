@@ -1,0 +1,62 @@
+[
+  {
+    "blockPosition": 0,
+    "blockType": "slot",
+    "blocksData": {
+      "layout": "layoutPadrao",
+      "template": "Template100",
+      "menu": [
+       
+      ],
+      "footer": [
+       
+      ],
+      "layoutCarrousel": [
+      
+      ],
+      "centerMiddle": {
+        "blockPosition": 0,
+        "layout": "layoutPageCenter",
+        "template": "Template5050",
+        "items": [
+          {
+            "slot_right_items": {
+              "content": [
+               
+              ]
+            },
+            "slot_left_items": {
+              "content": [
+               
+              ],
+              "items": [
+                {
+                  "slot_right_items": {
+                    "content": [
+                      
+                    ]
+                  },
+                  "slot_left_items": {
+                    "content": [
+                     
+                    ],
+                    "images": [
+                      {
+                        "slot_left_images": [
+                         
+                        ],
+                        "slot_right_images": [
+                         
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "leftSide": {
+        "title": "Case Panvel Baby",
+        "text": "IDENTIDADE VISUAL + DESIGN DE EMBALAGENS",
+        "backgroundColor": "transparent",
+        "textColor": "",
+        "imageLeftTemplate": "https://updesign.com.br/panvel_baby/body/desk-bodypanvel_baby02.jpg"
+      },
+      "rightSide": {
+        "title": "Case Uniagro",
+        "text": "IDENTIDADE VISUAL + DESIGN DE EMBALAGEM",
+        "backgroundColor": "transparent",
+        "textColor": "",
+        "imageRightTemplate": "https://updesign.com.br/uniagro/body/desk-body-uniagro-01.jpg"
+      }
+    }
+  ]
+}
