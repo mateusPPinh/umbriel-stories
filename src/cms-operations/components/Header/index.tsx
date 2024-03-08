@@ -22,7 +22,7 @@ export function Header({ menu }: HeaderProps) {
         padding: '0 1rem',
       }}
     >
-      <Text css={{color: '#fff'}}>umbriel pageblock header</Text>
+      <Text css={{color: 'white'}}>umbriel pageblock header</Text>
       <nav>
         {menu.map((item, index) => (
           <a key={index} href={item.href} style={{ margin: '0 1rem', color: '#fff' }}>{item.title}</a>

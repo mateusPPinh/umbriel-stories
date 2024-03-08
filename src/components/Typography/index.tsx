@@ -1,6 +1,7 @@
 import React from 'react';
 import { TextProps } from './types';
 import { processInlineStyles } from '../styles/cssUtils';
+import { useTheme } from 'styled-components';
 
 function Text<C extends React.ElementType = 'span'>({
   as,
@@ -8,9 +9,10 @@ function Text<C extends React.ElementType = 'span'>({
   css= {},
   ...props
 }: TextProps<C>) {
+  const theme = useTheme();
   const Component = as || 'span';
 
-  const inlineStyles = processInlineStyles(css)
+  const inlineStyles = processInlineStyles(css, theme)
 
   return <Component style={inlineStyles}  {...props}>{children}</Component>;
 }

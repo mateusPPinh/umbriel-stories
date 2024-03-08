@@ -27,7 +27,6 @@ type GenericProps = {
 
 export default function Template100(props: GenericProps) {
   const {menu, footer, carrousel} = props;
-  console.log(menu, footer, carrousel)
   return (
     <>
       {menu && (

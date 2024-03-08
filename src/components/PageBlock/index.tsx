@@ -12,7 +12,6 @@ const PageBlockRenderer: React.FC<PageBlockTypes> = (props) => {
   };
 
   const renderTemplates = () => {
-    console.log(template)
     const templates = [];
 
     if (template === 'Template100') {
@@ -28,7 +27,6 @@ const PageBlockRenderer: React.FC<PageBlockTypes> = (props) => {
     }
 
     if (centerMiddle && centerMiddle.template === 'Template5050') {
-      console.log(centerMiddle, 'center')
       const Template = templateComponentMap[centerMiddle.template];
       const { slot_left_items, slot_right_items } = centerMiddle.items[0];
       templates.push(

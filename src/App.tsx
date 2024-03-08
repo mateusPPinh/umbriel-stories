@@ -1,7 +1,5 @@
 import PageHome from './cms-operations/PageHome';
-import {Anchor} from './components/Anchor';
 import { Box } from './components/Boxes';
-import { Image } from './components/Image';
 
 const App = () => {
   return (

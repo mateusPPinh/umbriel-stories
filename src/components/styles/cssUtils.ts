@@ -1,4 +1,5 @@
 import React from 'react';
+import { DefaultTheme } from 'styled-components';
 
 export type CSSInline = {
   alignX?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around';
@@ -15,7 +16,7 @@ export type CSSInline = {
   width_container?: [string, string];
 } & React.CSSProperties;
 
-export const processInlineStyles = (css: CSSInline = {}): React.CSSProperties => {
+export const processInlineStyles = (css: CSSInline = {}, theme?: DefaultTheme): React.CSSProperties => {
   const inlineStyles: React.CSSProperties = {
     ...css,
     backgroundColor: css.bgColor,
@@ -27,6 +28,7 @@ export const processInlineStyles = (css: CSSInline = {}): React.CSSProperties =>
     paddingBottom: css.py,
     boxShadow: css.boxShadow,
     maxWidth: css.maxWidth,
+    color: css.color ? theme?.colors.base[css.color] : undefined
   };
 
   if (css.alignX || css.alignY) {
