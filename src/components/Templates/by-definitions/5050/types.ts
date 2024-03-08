@@ -7,20 +7,18 @@ export type Template50Types = {
   maxImagesRight?: number;
   slot_right_items?: {
     content: Array<any>;
+    image?: {
+      desktop_image_path: string;
+      mobile_image_path: string;
+    };
   };
   slot_left_items?: {
     content: Array<any>;
+    image?: {
+      desktop_image_path: string;
+      mobile_image_path: string;
+    };
   };
   slot_left_bgColor?: string;
   slot_right_bgColor?: string;
-  images?: {
-    slot_left_images: Array<{
-      image_middle_desktop_path: string;
-      image_mobile_path: string;
-    }>;
-    slot_right_images: Array<{
-      image_middle_desktop_path: string;
-      image_mobile_path: string;
-    }>;
-  };
 }
