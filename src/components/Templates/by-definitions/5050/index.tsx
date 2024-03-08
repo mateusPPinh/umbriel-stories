@@ -25,8 +25,39 @@ export const Template5050: React.FC<Template50Types> = ({
       }}
     >
       {/* Lado esquerdo */}
-      <Box css={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', bgColor: slot_left_bgColor }}>
+      <Box css={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        bgColor: slot_left_bgColor
+      }}>
         {slot_left.map((item, index) => (
+          <Box 
+            key={index} 
+            css={{
+            alignItems: 'column',
+            justifyContent: 'center',
+            display: 'flex',
+            margin: 'auto',
+            flexDirection: 'column',
+            width:'calc(100% - 32px)'
+            }}
+          >
+            {item.image && (
+              <Image
+                key={`left-image-${index}`}
+                desktop_image_path={item.image.desktop_image_path}
+                mobile_image_path={item.image.mobile_image_path}
+                alt={`Imagem correspondente a ${item.title}`}
+              />
+            )}
+            <Text as='strong'>{item.title}</Text>
+            <Text as='p'>{item.subtitle}</Text>
+          </Box>
+        ))}
+      </Box>
       {/* Lado direito */}
       <Box
         css={{
@@ -48,16 +79,14 @@ export const Template5050: React.FC<Template50Types> = ({
           flexDirection: 'column',
           width:'calc(100% - 32px)'
         }}>
-          <Box key={index}>
-            {item.image && (
-              <Image
-              key={`right-image-${index}`} 
-              desktop_image_path={item.image.desktop_image_path}
-              mobile_image_path={item.image.image_mobile_path}
-              alt={`Imagem correspondente a ${item.title}`}
-            />
-            )}
-          </Box>
+          {item.image && (
+            <Image
+            key={`right-image-${index}`} 
+            desktop_image_path={item.image.desktop_image_path}
+            mobile_image_path={item.image.image_mobile_path}
+            alt={`Imagem correspondente a ${item.title}`}
+          />
+          )}
           <Text as='strong'>{item.title}</Text>
           <Text as='p'>{item.subtitle}</Text>
         </Box>
@@ -69,21 +98,5 @@ export const Template5050: React.FC<Template50Types> = ({
 
 Template5050.defaultProps = {
   slot_left_bgColor: '#7159c1',
-  slot_right_bgColor: '#a69dc6',
-  maxImagesLeft: 2,
-  maxImagesRight: 2,
-  images: {
-    slot_left_images: [
-     {
-      image_middle_desktop_path: 'https://images.unsplash.com/photo-1579762714453-51d9913984e2?q=80&w=2662&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      image_mobile_path: 'https://images.unsplash.com/photo-1579762714453-51d9913984e2?q=80&w=2662&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-     }
-    ],
-    slot_right_images: [
-      {
-        image_middle_desktop_path: 'https://images.unsplash.com/photo-1579762714453-51d9913984e2?q=80&w=2662&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        image_mobile_path: 'https://images.unsplash.com/photo-1579762714453-51d9913984e2?q=80&w=2662&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-      }
-    ]
-  }
+  slot_right_bgColor: '#a69dc6'
 }
