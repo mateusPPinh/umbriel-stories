@@ -6,4 +6,5 @@ export type ImageProps = {
   customCss?: CSSInline
   className?: string;
   alt: string;
-} & Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src" | "alt" | "style">
+  fetchPriority?: "high" | "low" | "auto" | undefined;
+} & Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src" | "alt" | "style" | "fetchPriority">

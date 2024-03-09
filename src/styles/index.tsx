@@ -1,8 +1,26 @@
-import { DefaultTheme } from 'styled-components';
+/* eslint-disable prefer-rest-params */
+import { ThemeProvider, StyleSheetManager } from 'styled-components'
+import { type PropsWithChildren } from 'react'
+import isPropValid from '@emotion/is-prop-valid'
 
-export const theme: DefaultTheme = {
+const spacingSize = 8
+const theme = {
+  breakpoints: {
+    down: (size: 'xs' | 'sm' | 'md' | 'lg' | 'xl') => {
+      return `@media (max-width: ${theme.breakpoints.values[size]}px)`
+    },
+    up: (size: 'xs' | 'sm' | 'md' | 'lg' | 'xl') => {
+      return `@media (min-width: ${theme.breakpoints.values[size]}px)`
+    },
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536
+    }
+  },
   colors: {
-   base: {
     white: '#FFFFFF',
     black: '#000000',
     neutral50: '#F7F8F8',
@@ -34,7 +52,7 @@ export const theme: DefaultTheme = {
     secondary500: '#FF6229',
     secondary600: '#EB3E00',
     secondary700: '#B33000',
-    positive50:  '#E6FAEE',
+    positive50: '#E6FAEE',
     positive100: '#D0F5E1',
     positive200: '#A2ECC2',
     positive300: '#73E2A4',
@@ -69,10 +87,38 @@ export const theme: DefaultTheme = {
     info800: '#001B75',
     info900: '#000E3D',
     info950: '#00071F',
-   },
+    transparent: 'transparent'
   },
-  fonts: {
-    primary: 'Roboto',
-    secondary: 'Roboto Mono'
+  fonts: { // compatibilidade com components
+    fontPrimary: 'Montserrat',
+    fontSecondary: 'Roboto'
+    // thin: 100,
+    // light: 300,
+    // regular: 400,
+    // medium: 500,
+    // bold: 600
+  },
+  spacing: function () {
+    const results = []
+    for (let i = 0; i < arguments.length; i++) {
+      results.push(arguments[i] * spacingSize + 'px')
+    }
+    return results.join(' ')
   }
+}
+export default function CustomStyles ({ children }: PropsWithChildren): any {
+  return (
+    <StyleSheetManager
+      enableVendorPrefixes
+      shouldForwardProp={(propName, elementToBeRendered) => {
+        return typeof elementToBeRendered === 'string'
+          ? isPropValid(propName)
+          : true
+      }}
+        >
+      <ThemeProvider theme={theme}>
+        {children}
+      </ThemeProvider>
+    </StyleSheetManager>
+  )
 }

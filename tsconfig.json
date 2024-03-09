@@ -11,6 +11,7 @@
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "Node",
+    "outDir": "dist",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -20,6 +21,12 @@
     "vite.config.ts",
     ".eslint.cjs",
     "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/dist",
+    "**/tests",
+    "**/utils"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

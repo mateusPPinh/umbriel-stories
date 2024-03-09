@@ -1,15 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react'
 
-import { Text as Typography } from '.';
-import { Box } from '../Boxes';
+import { Text as Typography } from '.'
+import { Box } from '../Boxes'
 
 const meta: Meta<typeof Typography> = {
-  component: Typography,
-};
+  component: Typography
+}
 
-export default meta;
-type Story = StoryObj<typeof Typography>;
-
+export default meta
+type Story = StoryObj<typeof Typography>
 
 /*
  *👇 Render functions are a framework specific feature to allow you control on how the component renders.
@@ -25,11 +24,11 @@ export const Primary: Story = {
   decorators: [
     (Story) => {
       return (
-        <Box css={{bgColor: 'neutral900'}}>
+        <Box css={{ bgColor: 'primary950' }}>
           <Story />
         </Box>
       )
     }
   ],
   render: () => <Typography>Olá!!!</Typography>
-};
+}

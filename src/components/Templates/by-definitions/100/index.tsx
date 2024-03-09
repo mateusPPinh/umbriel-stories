@@ -1,37 +1,41 @@
-import {Header} from "../../../../cms-operations/components/Header";
+import React from 'react'
+import { Box } from '../../../Boxes'
+import { Column, ColumnColor } from './helpers'
+import { type SlotDefinitions } from './types'
 
-type Menu = {
-  title: string;
-  href: string;
-};
+export default function Template100 (props: SlotDefinitions): React.ReactElement {
+  const {
+    bgColor,
+    children,
+    minHeight,
+    template,
+    transparent,
+    genericCarrousel,
+    genericFooter,
+    genericMenu
+  } = props
 
-type Footer = {
-  footer?: {
-    title_top: string;
-    title_bottom: string;
-  };
-}
+  // Renderize o menu, footer, e carrousel aqui
+  // ...
 
-type Carrousel = {
-  layoutCarrousel?: {
-    image_middle_desktop_path?: string;
-    image_mobile_path?: string;
-  };
-}
-
-type GenericProps = {
-  menu?: Menu[];
-  footer?: Footer[];
-  carrousel?: Carrousel[];
-}
-
-export default function Template100(props: GenericProps) {
-  const {menu, footer, carrousel} = props;
   return (
     <>
-      {menu && (
-      <Header menu={menu} />
-    )}
+      <Box css={{ width: '100%', flexDirection: 'row', verticalAlign: 'top', alignItems: 'center' }}>
+        <Column>
+          <ColumnColor bgColor={bgColor} transparent={transparent}>
+            {/* Aqui você renderiza o menu, carrossel, footer e o que mais precisar */}
+            {genericMenu?.map(menuItem => <div key={menuItem.href}>{menuItem.title}</div>)}
+            {genericFooter?.map(footerItem => (
+              <div key={footerItem.footer?.title_top}>
+                {footerItem.footer?.title_top}
+                {/* ... outros elementos do footer */}
+              </div>
+            ))}
+            {/* ... carrossel e outros elementos */}
+            {children}
+          </ColumnColor>
+        </Column>
+      </Box>
     </>
   )
 }

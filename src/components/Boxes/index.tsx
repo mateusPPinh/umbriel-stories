@@ -1,16 +1,16 @@
-import { BoxProps } from "./types"
-import { processInlineStyles } from "../styles/cssUtils";
+import { type BoxProps } from './types'
+import { processInlineStyles } from '../styles/cssUtils'
 
-export function Box<C extends React.ElementType = 'div'> 
+export function Box<C extends React.ElementType = 'div'>
 ({
-  as, 
+  as,
   children,
   css = {},
   ...props
-}: BoxProps<C>) {
+}: BoxProps<C>): React.ReactElement {
   const Component = as || 'div'
 
-  const inlineStyles = processInlineStyles(css);
+  const inlineStyles = processInlineStyles(css)
 
   return (
     <Component style={inlineStyles} {...props}>

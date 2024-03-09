@@ -1,20 +1,20 @@
-import React from 'react';
-import { TextProps } from './types';
-import { processInlineStyles } from '../styles/cssUtils';
-import { useTheme } from 'styled-components';
+import React from 'react'
+import { type TextProps } from './types'
+import { processInlineStyles } from '../styles/cssUtils'
+import { useTheme } from 'styled-components'
 
-function Text<C extends React.ElementType = 'span'>({
+function Text<C extends React.ElementType = 'span'> ({
   as,
   children,
-  css= {},
+  css = {},
   ...props
-}: TextProps<C>) {
-  const theme = useTheme();
-  const Component = as || 'span';
+}: TextProps<C>): React.ReactElement {
+  const theme = useTheme()
+  const Component = as ?? 'span'
 
   const inlineStyles = processInlineStyles(css, theme)
 
-  return <Component style={inlineStyles}  {...props}>{children}</Component>;
+  return <Component style={inlineStyles} {...props}>{children}</Component>
 }
 
-export {Text}
+export { Text }

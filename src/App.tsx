@@ -1,5 +1,5 @@
-import PageHome from './cms-operations/PageHome';
-import { Box } from './components/Boxes';
+import PageHome from './cms-operations/PageHome'
+import { Box } from './components/Boxes'
 
 const App = () => {
   return (
@@ -16,7 +16,7 @@ const App = () => {
         >
         Clique aqui
       </Anchor>
-      <Image 
+      <Image
         desktop_image_path='http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
         mobile_image_path='http://localhost:3001/uploads/18c59e118a3d5d057ade-mob-nextproject-panvel_vita_c.jpg'
         alt="Imagem Name"
@@ -25,7 +25,7 @@ const App = () => {
         }}
       /> */}
     </Box>
-  );
-};
+  )
+}
 
-export default App;
+export default App

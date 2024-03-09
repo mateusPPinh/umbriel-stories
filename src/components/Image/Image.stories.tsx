@@ -1,15 +1,15 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react'
 
-import { Image } from '.';
-import { Box } from '../Boxes';
+import { Image } from '.'
+import { Box } from '../Boxes'
 
 const meta: Meta<typeof Image> = {
   title: 'Componentes/Image',
-  component: Image,
-};
+  component: Image
+}
 
-export default meta;
-type Story = StoryObj<typeof Image>;
+export default meta
+type Story = StoryObj<typeof Image>
 
 export const Primary: Story = {
   args: {
@@ -24,10 +24,10 @@ export const Primary: Story = {
   decorators: [
     (Story) => {
       return (
-        <Box css={{bgColor: 'neutral900'}}>
+        <Box css={{ bgColor: 'neutral900' }}>
           <Story />
         </Box>
       )
     }
-  ],
-};
+  ]
+}
