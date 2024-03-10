@@ -3,7 +3,7 @@ import { type ImageProps } from './types'
 import { processInlineStyles } from '../styles/cssUtils'
 import { forwardRef, useEffect, useState } from 'react'
 
-export const Image = forwardRef<HTMLImageElement, ImageProps>((props, ref) => {
+const Image = forwardRef<HTMLImageElement, ImageProps>((props, ref) => {
   const { alt, desktop_image_path, mobile_image_path, customCss, fetchPriority, ...rest } = props
   const [src, setSrc] = useState<string>()
 
@@ -33,3 +33,5 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>((props, ref) => {
    </>
   )
 })
+
+export default Image

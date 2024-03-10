@@ -1,6 +1,5 @@
 import { type DefaultTheme } from 'styled-components/dist/types'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface Template50Types {
   blockPosition?: number
   layout?: string

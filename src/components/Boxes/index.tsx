@@ -1,7 +1,7 @@
 import { type BoxProps } from './types'
 import { processInlineStyles } from '../styles/cssUtils'
 
-export function Box<C extends React.ElementType = 'div'>
+export default function Box<C extends React.ElementType = 'div'>
 ({
   as,
   children,

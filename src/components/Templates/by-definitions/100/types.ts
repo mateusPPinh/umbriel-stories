@@ -1,31 +1,31 @@
-import { ReactNode } from "react";
+import { type ReactNode } from 'react'
 
-type Menu = {
-  title: string;
-  href: string;
-};
+interface Menu {
+  title: string
+  href: string
+}
 
-type Footer = {
+interface Footer {
   footer?: {
-    title_top: string;
-    title_bottom: string;
-  };
+    title_top: string
+    title_bottom: string
+  }
 }
 
-type Carrousel = {
+interface Carrousel {
   layoutCarrousel?: {
-    image_middle_desktop_path?: string;
-    image_mobile_path?: string;
-  };
+    image_middle_desktop_path?: string
+    image_mobile_path?: string
+  }
 }
 
-export type SlotDefinitions = {
-  bgColor: string;
-  children: ReactNode;
-  minHeight: [string, string];
-  transparent: boolean;
-  genericMenu?: Menu[];
-  genericFooter?: Footer[];
-  genericCarrousel?: Carrousel[];
-  template: 'Template100';
+export interface SlotDefinitions {
+  bgColor: string
+  children: ReactNode
+  minHeight: [string, string]
+  transparent: boolean
+  genericMenu?: Menu[]
+  genericFooter?: Footer[]
+  genericCarrousel?: Carrousel[]
+  template: 'Template100'
 }

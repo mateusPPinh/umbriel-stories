@@ -1,4 +1,3 @@
-/* eslint-disable prefer-rest-params */
 import { ThemeProvider, StyleSheetManager } from 'styled-components'
 import { type PropsWithChildren } from 'react'
 import isPropValid from '@emotion/is-prop-valid'

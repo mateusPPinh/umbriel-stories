@@ -11,7 +11,9 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "prepack": "json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\""
+    "prepack": "cp package.json package.backup.json && json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\"",
+    "postpack": "mv package.backup.json package.json"
+
   },
   "peerDependencies": {
     "react": "^16.8.0 || 17.x",
@@ -40,5 +42,8 @@
   "bugs": {
     "url": "https://github.com/Umbriel-CMS/umbriel-stories/issues"
   },
-  "homepage": "https://github.com/Umbriel-CMS/umbriel-stories#readme"
+  "homepage": "https://github.com/Umbriel-CMS/umbriel-stories#readme",
+  "dependencies": {
+    "@umbriel/components": "^0.1.1"
+  }
 }

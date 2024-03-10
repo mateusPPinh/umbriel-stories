@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/prefer-ts-expect-error */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { type ReactElement } from 'react'
-import { Box } from '../../components/Boxes'
-import { PageBlockRenderer } from '../../components/PageBlock'
+import Box from '../../components/Boxes'
+import PageBlockRenderer from '../../components/PageBlock'
 import array from '../../components/template50mode2.json'
 import { Text } from '../../components/Typography'
 

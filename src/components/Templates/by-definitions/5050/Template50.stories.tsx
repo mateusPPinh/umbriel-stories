@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
 import Template5050 from '.'
-import { Box } from '../../../Boxes'
+import Box from '../../../Boxes'
 
 const meta: Meta<typeof Template5050> = {
   title: 'Componentes/Template5050',

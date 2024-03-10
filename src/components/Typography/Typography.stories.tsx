@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
 import { Text as Typography } from '.'
-import { Box } from '../Boxes'
+import Box from '../Boxes'
 
 const meta: Meta<typeof Typography> = {
   component: Typography

@@ -5,7 +5,6 @@ import { type PageBlockTypes } from './types'
 const PageBlockRenderer: React.FC<PageBlockTypes> = (props: PageBlockTypes) => {
   const { template, slot100, centerMiddle } = props
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const templateComponentMap: any = {
     Template5050,
     Template100
@@ -53,4 +52,4 @@ const PageBlockRenderer: React.FC<PageBlockTypes> = (props: PageBlockTypes) => {
   return <>{renderTemplates()}</>
 }
 
-export { PageBlockRenderer }
+export default PageBlockRenderer

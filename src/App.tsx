@@ -1,5 +1,5 @@
 import PageHome from './cms-operations/PageHome'
-import { Box } from './components/Boxes'
+import Box from './components/Boxes'
 
 const App = () => {
   return (

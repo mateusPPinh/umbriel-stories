@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import React from 'react'
 import { processInlineStyles } from '../styles/cssUtils'
 import { type AnchorType } from './types'
@@ -13,4 +14,4 @@ const Anchor = React.forwardRef<HTMLAnchorElement, AnchorType>((props, ref) => {
   )
 })
 
-export { Anchor }
+export default Anchor

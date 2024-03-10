@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box } from '../../../Boxes'
+import Box from '../../../Boxes'
 import { Column, ColumnColor } from './helpers'
 import { type SlotDefinitions } from './types'
 
