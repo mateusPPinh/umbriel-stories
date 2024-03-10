@@ -4,7 +4,7 @@ import { type ReactElement } from 'react'
 import Box from '../../components/Boxes/Boxes'
 import PageBlockRenderer from '../../components/PageBlock/PageBlock'
 import array from '../../components/template50mode2.json'
-import { Text } from '../../components/Typography'
+import Text from '../../components/Typography'
 
 const PageHome = (): ReactElement => {
   return (
@@ -16,7 +16,7 @@ const PageHome = (): ReactElement => {
           menu,
           footer,
           layoutCarrousel,
-          centerMiddle,
+          centerMiddle
         } = block.blocksData
 
         return (
@@ -34,7 +34,7 @@ const PageHome = (): ReactElement => {
       })}
       <Text
         css={{
-          color: 'warning600',
+          color: 'white'
         }}
       >
         Hello

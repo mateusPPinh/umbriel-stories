@@ -21,4 +21,4 @@ function Text<C extends React.ElementType = 'span'> ({
   )
 }
 
-export { Text }
+export default Text
