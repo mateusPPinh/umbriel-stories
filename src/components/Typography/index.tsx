@@ -3,7 +3,7 @@ import { type TextProps } from './types'
 import { processInlineStyles } from '../styles/cssUtils'
 import { useTheme } from 'styled-components'
 
-function Text<C extends React.ElementType = 'span'>({
+function Text<C extends React.ElementType = 'span'> ({
   as,
   children,
   css = {},
