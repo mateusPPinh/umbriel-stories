@@ -3,7 +3,12 @@ import type React from 'react'
 import { type DefaultTheme } from 'styled-components'
 
 export type CSSInline = {
-  alignX?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around'
+  alignX?:
+    | 'flex-start'
+    | 'flex-end'
+    | 'center'
+    | 'space-between'
+    | 'space-around'
   alignY?: 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline'
   align?: ''
   bgColor?: keyof DefaultTheme['colors'] | 'transparent'
@@ -19,7 +24,10 @@ export type CSSInline = {
   width_container?: [string, string]
 } & React.CSSProperties
 
-export const processInlineStyles = (css: CSSInline = {}, theme?: DefaultTheme): React.CSSProperties => {
+export const processInlineStyles = (
+  css: CSSInline = {},
+  theme?: DefaultTheme
+): React.CSSProperties => {
   const inlineStyles: React.CSSProperties = {
     ...css,
     marginBottom: css.mb,
@@ -31,7 +39,9 @@ export const processInlineStyles = (css: CSSInline = {}, theme?: DefaultTheme): 
     boxShadow: css.boxShadow,
     maxWidth: css.maxWidth,
     color: css.color ? theme?.colors[css.color] ?? css.color : undefined,
-    backgroundColor: css.bgColor ? theme?.colors[css.bgColor] ?? css.bgColor : undefined
+    backgroundColor: css.bgColor
+      ? theme?.colors[css.bgColor] ?? css.bgColor
+      : undefined,
   }
 
   if (css.alignX ?? css.alignY) {

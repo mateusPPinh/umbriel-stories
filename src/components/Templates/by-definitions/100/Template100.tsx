@@ -3,26 +3,29 @@ import Box from '../../../Boxes/Boxes'
 import { Column, ColumnColor } from './helpers'
 import { type SlotDefinitions } from './types'
 
-function Template100 (props: SlotDefinitions): React.ReactElement {
-  const {
-    bgColor,
-    children,
-    transparent,
-    genericFooter,
-    genericMenu
-  } = props
+function Template100(props: SlotDefinitions): React.ReactElement {
+  const { bgColor, children, transparent, genericFooter, genericMenu } = props
 
   // Renderize o menu, footer, e carrousel aqui
   // ...
 
   return (
     <>
-      <Box css={{ width: '100%', flexDirection: 'row', verticalAlign: 'top', alignItems: 'center' }}>
+      <Box
+        css={{
+          width: '100%',
+          flexDirection: 'row',
+          verticalAlign: 'top',
+          alignItems: 'center',
+        }}
+      >
         <Column>
           <ColumnColor bgColor={bgColor} transparent={transparent}>
             {/* Aqui você renderiza o menu, carrossel, footer e o que mais precisar */}
-            {genericMenu?.map(menuItem => <div key={menuItem.href}>{menuItem.title}</div>)}
-            {genericFooter?.map(footerItem => (
+            {genericMenu?.map((menuItem) => (
+              <div key={menuItem.href}>{menuItem.title}</div>
+            ))}
+            {genericFooter?.map((footerItem) => (
               <div key={footerItem.footer?.title_top}>
                 {footerItem.footer?.title_top}
                 {/* ... outros elementos do footer */}

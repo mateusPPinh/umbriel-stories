@@ -32,7 +32,7 @@ jobs:
         run: npm version ${{ github.event.inputs.version }}
 
       - name: Push new version tag to repository
-        env: 
+        env:
           UMBRIEL_COMPONENTS_TOKEN: ${{ secrets.UMBRIEL_COMPONENTS_TOKEN }}
         run: |
           git remote set-url origin https://Umbriel-CMS:$(echo $UMBRIEL_COMPONENTS_TOKEN)@github.com/Umbriel-CMS/umbriel-stories.git

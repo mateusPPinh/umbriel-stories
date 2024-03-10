@@ -10,7 +10,7 @@ const Template5050: React.FC<Template50Types> = ({
   slot_left_bgColor,
   slot_right_bgColor,
   slot_left_items,
-  slot_right_items
+  slot_right_items,
 }) => {
   const slot_left = slot_left_items?.content ?? []
   const slot_right = slot_right_items?.content ?? []
@@ -23,18 +23,20 @@ const Template5050: React.FC<Template50Types> = ({
         justifyContent: 'center',
         alignItems: 'flex-start',
         padding: '0',
-        width: '100%'
+        width: '100%',
       }}
     >
       {/* Lado esquerdo */}
-      <Box css={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        bgColor: slot_left_bgColor
-      }}>
+      <Box
+        css={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          bgColor: slot_left_bgColor,
+        }}
+      >
         {slot_left.map((item, index) => (
           <Box
             key={index}
@@ -44,7 +46,7 @@ const Template5050: React.FC<Template50Types> = ({
               display: 'flex',
               margin: 'auto',
               flexDirection: 'column',
-              width: 'calc(100% - 32px)'
+              width: 'calc(100% - 32px)',
             }}
           >
             {item.image && (
@@ -53,15 +55,15 @@ const Template5050: React.FC<Template50Types> = ({
                 desktop_image_path={item.image.desktop_image_path}
                 mobile_image_path={item.image.mobile_image_path}
                 alt={`Imagem correspondente a ${item.title}`}
-                fetchPriority='high'
+                fetchPriority="high"
                 customCss={{
                   paddingBottom: '56.25%',
-                  display: 'block'
+                  display: 'block',
                 }}
               />
             )}
-            <Text as='strong'>{item.title}</Text>
-            <Text as='p'>{item.subtitle}</Text>
+            <Text as="strong">{item.title}</Text>
+            <Text as="p">{item.subtitle}</Text>
           </Box>
         ))}
       </Box>
@@ -73,35 +75,37 @@ const Template5050: React.FC<Template50Types> = ({
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          bgColor: slot_right_bgColor
+          bgColor: slot_right_bgColor,
         }}
       >
         {slot_right.map((item, index) => (
-        <Box key={index}
-        css={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          display: 'flex',
-          margin: 'auto',
-          flexDirection: 'column',
-          width: 'calc(100% - 32px)'
-        }}>
-          {item.image && (
-            <Image
-            key={`right-image-${index}`}
-            desktop_image_path={item.image.desktop_image_path}
-            mobile_image_path={item.image.image_mobile_path}
-            alt={`Imagem correspondente a ${item.title}`}
-            fetchPriority='high'
-            customCss={{
-              paddingBottom: '56.25%',
-              display: 'block'
+          <Box
+            key={index}
+            css={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              display: 'flex',
+              margin: 'auto',
+              flexDirection: 'column',
+              width: 'calc(100% - 32px)',
             }}
-          />
-          )}
-          <Text as='strong'>{item.title}</Text>
-          <Text as='p'>{item.subtitle}</Text>
-        </Box>
+          >
+            {item.image && (
+              <Image
+                key={`right-image-${index}`}
+                desktop_image_path={item.image.desktop_image_path}
+                mobile_image_path={item.image.image_mobile_path}
+                alt={`Imagem correspondente a ${item.title}`}
+                fetchPriority="high"
+                customCss={{
+                  paddingBottom: '56.25%',
+                  display: 'block',
+                }}
+              />
+            )}
+            <Text as="strong">{item.title}</Text>
+            <Text as="p">{item.subtitle}</Text>
+          </Box>
         ))}
       </Box>
     </Box>
@@ -110,7 +114,7 @@ const Template5050: React.FC<Template50Types> = ({
 
 Template5050.defaultProps = {
   slot_left_bgColor: '#7159c1',
-  slot_right_bgColor: '#a69dc6'
+  slot_right_bgColor: '#a69dc6',
 }
 
 export default Template5050

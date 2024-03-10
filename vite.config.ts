@@ -5,19 +5,22 @@ import { resolve } from 'node:path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), dts({
-    insertTypesEntry: true,
-    include: ['src/components/']
-  })],
+  plugins: [
+    react(),
+    dts({
+      insertTypesEntry: true,
+      include: ['src/components/'],
+    }),
+  ],
   server: {
-    open: true
+    open: true,
   },
   build: {
     lib: {
       entry: resolve('src', 'components/index.ts'),
       name: 'UmbrielComponents',
       fileName: (format) => `index.${format}.js`,
-      formats: ['cjs', 'es', 'umd']
+      formats: ['cjs', 'es', 'umd'],
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'styled-components'],
@@ -25,9 +28,9 @@ export default defineConfig({
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
-          'styled-components': 'styled'
-        }
-      }
-    }
-  }
+          'styled-components': 'styled',
+        },
+      },
+    },
+  },
 })

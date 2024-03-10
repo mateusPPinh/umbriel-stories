@@ -10,12 +10,19 @@ const PageHome = (): ReactElement => {
   return (
     <Box>
       {array.map((block, index) => {
-        const { template, layout, menu, footer, layoutCarrousel, centerMiddle } = block.blocksData
+        const {
+          template,
+          layout,
+          menu,
+          footer,
+          layoutCarrousel,
+          centerMiddle,
+        } = block.blocksData
 
         return (
           <PageBlockRenderer
             key={index}
-            template={(template !== '') ? 'Template5050' : 'Template100'}
+            template={template !== '' ? 'Template5050' : 'Template100'}
             layout={layout}
             genericCarrousel={layoutCarrousel}
             genericFooter={footer}
@@ -27,7 +34,7 @@ const PageHome = (): ReactElement => {
       })}
       <Text
         css={{
-          color: 'warning600'
+          color: 'warning600',
         }}
       >
         Hello

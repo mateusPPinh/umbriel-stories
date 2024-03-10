@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
   /* background-color: #1A1A1E; */
 }
@@ -16,9 +15,9 @@ body {
 }
 
 .gradient-border::before {
-  content: "";
+  content: '';
   position: absolute;
-  top: -2px; 
+  top: -2px;
   left: -2px;
   right: -2px;
   bottom: -2px;

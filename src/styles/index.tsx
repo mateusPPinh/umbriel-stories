@@ -16,8 +16,8 @@ const theme = {
       sm: 600,
       md: 900,
       lg: 1200,
-      xl: 1536
-    }
+      xl: 1536,
+    },
   },
   colors: {
     white: '#FFFFFF',
@@ -86,11 +86,12 @@ const theme = {
     info800: '#001B75',
     info900: '#000E3D',
     info950: '#00071F',
-    transparent: 'transparent'
+    transparent: 'transparent',
   },
-  fonts: { // compatibilidade com components
+  fonts: {
+    // compatibilidade com components
     fontPrimary: 'Montserrat',
-    fontSecondary: 'Roboto'
+    fontSecondary: 'Roboto',
     // thin: 100,
     // light: 300,
     // regular: 400,
@@ -103,9 +104,9 @@ const theme = {
       results.push(arguments[i] * spacingSize + 'px')
     }
     return results.join(' ')
-  }
+  },
 }
-export default function CustomStyles ({ children }: PropsWithChildren): any {
+export default function CustomStyles({ children }: PropsWithChildren): any {
   return (
     <StyleSheetManager
       enableVendorPrefixes
@@ -114,10 +115,8 @@ export default function CustomStyles ({ children }: PropsWithChildren): any {
           ? isPropValid(propName)
           : true
       }}
-        >
-      <ThemeProvider theme={theme}>
-        {children}
-      </ThemeProvider>
+    >
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </StyleSheetManager>
   )
 }

@@ -6,4 +6,7 @@ export type AnchorType = {
   customCss?: CSSInline
   children?: React.ReactNode
   className?: string
-} & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'target' | 'style'>
+} & Omit<
+  React.AnchorHTMLAttributes<HTMLAnchorElement>,
+  'href' | 'target' | 'style'
+>

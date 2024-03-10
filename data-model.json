@@ -5,15 +5,9 @@
     "blocksData": {
       "layout": "layoutPadrao",
       "template": "Template100",
-      "menu": [
-       
-      ],
-      "footer": [
-       
-      ],
-      "layoutCarrousel": [
-      
-      ],
+      "menu": [],
+      "footer": [],
+      "layoutCarrousel": [],
       "centerMiddle": {
         "blockPosition": 0,
         "layout": "layoutPageCenter",
@@ -21,33 +15,21 @@
         "items": [
           {
             "slot_right_items": {
-              "content": [
-               
-              ]
+              "content": []
             },
             "slot_left_items": {
-              "content": [
-               
-              ],
+              "content": [],
               "items": [
                 {
                   "slot_right_items": {
-                    "content": [
-                      
-                    ]
+                    "content": []
                   },
                   "slot_left_items": {
-                    "content": [
-                     
-                    ],
+                    "content": [],
                     "images": [
                       {
-                        "slot_left_images": [
-                         
-                        ],
-                        "slot_right_images": [
-                         
-                        ]
+                        "slot_left_images": [],
+                        "slot_right_images": []
                       }
                     ]
                   }
