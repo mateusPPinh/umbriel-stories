@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react'
 import Box from '../../../Boxes/Boxes'
-import { Text } from '../../../Typography'
+import Text from '../../../Typography'
 import { type Template50Types } from './types'
 import Image from '../../../Image/Image'
 
@@ -10,7 +10,7 @@ const Template5050: React.FC<Template50Types> = ({
   slot_left_bgColor,
   slot_right_bgColor,
   slot_left_items,
-  slot_right_items,
+  slot_right_items
 }) => {
   const slot_left = slot_left_items?.content ?? []
   const slot_right = slot_right_items?.content ?? []
@@ -23,7 +23,7 @@ const Template5050: React.FC<Template50Types> = ({
         justifyContent: 'center',
         alignItems: 'flex-start',
         padding: '0',
-        width: '100%',
+        width: '100%'
       }}
     >
       {/* Lado esquerdo */}
@@ -34,7 +34,7 @@ const Template5050: React.FC<Template50Types> = ({
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          bgColor: slot_left_bgColor,
+          bgColor: slot_left_bgColor
         }}
       >
         {slot_left.map((item, index) => (
@@ -46,7 +46,7 @@ const Template5050: React.FC<Template50Types> = ({
               display: 'flex',
               margin: 'auto',
               flexDirection: 'column',
-              width: 'calc(100% - 32px)',
+              width: 'calc(100% - 32px)'
             }}
           >
             {item.image && (
@@ -58,7 +58,7 @@ const Template5050: React.FC<Template50Types> = ({
                 fetchPriority="high"
                 customCss={{
                   paddingBottom: '56.25%',
-                  display: 'block',
+                  display: 'block'
                 }}
               />
             )}
@@ -75,7 +75,7 @@ const Template5050: React.FC<Template50Types> = ({
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          bgColor: slot_right_bgColor,
+          bgColor: slot_right_bgColor
         }}
       >
         {slot_right.map((item, index) => (
@@ -87,7 +87,7 @@ const Template5050: React.FC<Template50Types> = ({
               display: 'flex',
               margin: 'auto',
               flexDirection: 'column',
-              width: 'calc(100% - 32px)',
+              width: 'calc(100% - 32px)'
             }}
           >
             {item.image && (
@@ -99,7 +99,7 @@ const Template5050: React.FC<Template50Types> = ({
                 fetchPriority="high"
                 customCss={{
                   paddingBottom: '56.25%',
-                  display: 'block',
+                  display: 'block'
                 }}
               />
             )}
@@ -114,7 +114,7 @@ const Template5050: React.FC<Template50Types> = ({
 
 Template5050.defaultProps = {
   slot_left_bgColor: '#7159c1',
-  slot_right_bgColor: '#a69dc6',
+  slot_right_bgColor: '#a69dc6'
 }
 
 export default Template5050
