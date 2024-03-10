@@ -15,11 +15,6 @@ body {
   position: relative;
 }
 
-.myAwesomeTextDecoration {
-  text-decoration: none;
-  color: pink;
-}
-
 .gradient-border::before {
   content: "";
   position: absolute;

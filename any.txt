@@ -1,0 +1,1 @@
+@umbriel/components:registry=https://mycustomregistry.example.org/:authToken="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"

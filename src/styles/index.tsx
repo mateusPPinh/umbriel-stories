@@ -1,12 +1,27 @@
-import { DefaultTheme } from 'styled-components';
+import { ThemeProvider, StyleSheetManager } from 'styled-components'
+import { type PropsWithChildren } from 'react'
+import isPropValid from '@emotion/is-prop-valid'
 
-export const theme: DefaultTheme = {
+const spacingSize = 8
+const theme = {
+  breakpoints: {
+    down: (size: 'xs' | 'sm' | 'md' | 'lg' | 'xl') => {
+      return `@media (max-width: ${theme.breakpoints.values[size]}px)`
+    },
+    up: (size: 'xs' | 'sm' | 'md' | 'lg' | 'xl') => {
+      return `@media (min-width: ${theme.breakpoints.values[size]}px)`
+    },
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536
+    }
+  },
   colors: {
-   base: {
     white: '#FFFFFF',
     black: '#000000',
-   },
-   neutralGray: {
     neutral50: '#F7F8F8',
     neutral100: '#E6E6E9',
     neutral200: '#D4D5D9',
@@ -17,8 +32,6 @@ export const theme: DefaultTheme = {
     neutral700: '#404557',
     neutral800: '#33394C',
     neutral900: '#1A2035',
-   },
-   primary: {
     primary50: '#EBEFFF',
     primary100: '#D6E0FF',
     primary200: '#A8BDFF',
@@ -29,9 +42,7 @@ export const theme: DefaultTheme = {
     primary700: '#002AB3',
     primary800: '#001B75',
     primary900: '#000E3D',
-    primary950: '#00071F'
-   },
-   secodary: {
+    primary950: '#00071F',
     secondary50: '#FFF0EB',
     secondary100: '#FFE1D6',
     secondary200: '#FFBFA8',
@@ -40,9 +51,7 @@ export const theme: DefaultTheme = {
     secondary500: '#FF6229',
     secondary600: '#EB3E00',
     secondary700: '#B33000',
-   },
-   positive: {
-    positive50:  '#E6FAEE',
+    positive50: '#E6FAEE',
     positive100: '#D0F5E1',
     positive200: '#A2ECC2',
     positive300: '#73E2A4',
@@ -50,8 +59,6 @@ export const theme: DefaultTheme = {
     positive500: '#27BE69',
     positive600: '#1F9854',
     positive700: '#17723F',
-   },
-   negative: {
     negative50: '#FEECEE',
     negative100: '#FCD9DE',
     negative200: '#FAB3BD',
@@ -61,8 +68,6 @@ export const theme: DefaultTheme = {
     negative600: '#E5102E',
     negative700: '#AC0C22',
     negative800: '#730817',
-   },
-   warning: {
     warning50: '#FFF8E5',
     warning100: '#FFF3D1',
     warning200: '#FFE59E',
@@ -70,8 +75,6 @@ export const theme: DefaultTheme = {
     warning400: '#FFCB3D',
     warning500: '#FFBF0F',
     warning600: '#D69D00',
-   },
-   info: {
     info50: '#EBEFFF',
     info100: '#D6E0FF',
     info200: '#A8BDFF',
@@ -83,10 +86,38 @@ export const theme: DefaultTheme = {
     info800: '#001B75',
     info900: '#000E3D',
     info950: '#00071F',
-   },
+    transparent: 'transparent'
   },
-  fonts: {
-    primary: 'Roboto',
-    secondary: 'Roboto Mono'
+  fonts: { // compatibilidade com components
+    fontPrimary: 'Montserrat',
+    fontSecondary: 'Roboto'
+    // thin: 100,
+    // light: 300,
+    // regular: 400,
+    // medium: 500,
+    // bold: 600
+  },
+  spacing: function () {
+    const results = []
+    for (let i = 0; i < arguments.length; i++) {
+      results.push(arguments[i] * spacingSize + 'px')
+    }
+    return results.join(' ')
   }
+}
+export default function CustomStyles ({ children }: PropsWithChildren): any {
+  return (
+    <StyleSheetManager
+      enableVendorPrefixes
+      shouldForwardProp={(propName, elementToBeRendered) => {
+        return typeof elementToBeRendered === 'string'
+          ? isPropValid(propName)
+          : true
+      }}
+        >
+      <ThemeProvider theme={theme}>
+        {children}
+      </ThemeProvider>
+    </StyleSheetManager>
+  )
 }
