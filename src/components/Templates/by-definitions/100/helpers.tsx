@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react'
+import { type ReactElement, type ReactNode } from 'react'
 import Box from '../../../Boxes/Boxes'
 import { type DefaultTheme } from 'styled-components'
 
@@ -6,14 +6,14 @@ interface ColumnProps {
   children: ReactNode
 }
 
-export const Column = ({ children }: ColumnProps) => {
+export const Column = ({ children }: ColumnProps): ReactElement => {
   return (
     <Box
       css={{
         flexDirection: 'column',
         width: '100%',
         textAlign: 'left',
-        verticalAlign: 'top'
+        verticalAlign: 'top',
       }}
     >
       {children}
@@ -32,18 +32,18 @@ interface ColumnColorProps {
 export const ColumnColor = ({
   children,
   bgColor,
-  transparent
-}: ColumnColorProps) => {
+  transparent,
+}: ColumnColorProps): ReactElement => {
   return (
     <Box
       css={{
         flexDirection: 'column',
         bgColor,
-        py: (transparent ?? false) ? '0px' : 16,
+        py: transparent ?? false ? '0px' : 16,
         width: 'calc(100% - 32px)',
-        mb: (transparent === true) ? '' : '',
+        mb: transparent === true ? '' : '',
         textAlign: 'left',
-        verticalAlign: 'top'
+        verticalAlign: 'top',
       }}
     >
       {children}

@@ -7,4 +7,7 @@ export type ImageProps = {
   className?: string
   alt: string
   fetchPriority?: 'high' | 'low' | 'auto' | undefined
-} & Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt' | 'style' | 'fetchPriority'>
+} & Omit<
+  React.ImgHTMLAttributes<HTMLImageElement>,
+  'src' | 'alt' | 'style' | 'fetchPriority'
+>

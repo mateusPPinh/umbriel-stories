@@ -6,7 +6,7 @@ import Box from '../Boxes/Boxes'
 
 const meta: Meta<typeof PageBlockRenderer> = {
   title: 'Componentes/PageBlockRenderer',
-  component: PageBlockRenderer
+  component: PageBlockRenderer,
 }
 
 export default meta
@@ -15,7 +15,7 @@ type Story = StoryObj<typeof PageBlockRenderer>
 export const Primary: Story = {
   args: {
     layout: '',
-    template: 'Template5050'
+    template: 'Template5050',
   },
   decorators: [
     (Story, context) => {
@@ -26,13 +26,19 @@ export const Primary: Story = {
         content = {
           slot100: {
             bgColor: '#f7e4f7',
-            genericCarrousel: [{ /* Dados do carrossel aqui */ }],
-            genericFooter: [{ footer: { title_bottom: 'Teste', title_top: 'Teste 2' } }],
+            genericCarrousel: [
+              {
+                /* Dados do carrossel aqui */
+              },
+            ],
+            genericFooter: [
+              { footer: { title_bottom: 'Teste', title_top: 'Teste 2' } },
+            ],
             genericMenu: [{ title: 'Home', href: '/' }],
             template: 'Template100',
             transparent: false,
-            children: <p>Conteúdo adicional que será renderizado</p>
-          }
+            children: <p>Conteúdo adicional que será renderizado</p>,
+          },
         }
       } else if (template === 'Template5050') {
         content = {
@@ -50,19 +56,23 @@ export const Primary: Story = {
                       title: 'Produto do Mateus',
                       subtitle: 'Subtítulo 1',
                       image: {
-                        desktop_image_path: 'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
-                        image_mobile_path: 'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
-                      }
+                        desktop_image_path:
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
+                        image_mobile_path:
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
+                      },
                     },
                     {
                       title: 'Produto do Mateus',
                       subtitle: 'Subtítulo 1',
                       image: {
-                        desktop_image_path: 'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
-                        image_mobile_path: 'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
-                      }
-                    }
-                  ]
+                        desktop_image_path:
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
+                        image_mobile_path:
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
+                      },
+                    },
+                  ],
                 },
                 slot_right_items: {
                   content: [
@@ -70,23 +80,27 @@ export const Primary: Story = {
                       title: 'Título Esquerdo 1',
                       subtitle: 'Subtítulo 1',
                       image: {
-                        desktop_image_path: 'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
-                        image_mobile_path: 'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
-                      }
+                        desktop_image_path:
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
+                        image_mobile_path:
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
+                      },
                     },
                     {
                       title: 'Título Esquerdo 1',
                       subtitle: 'Subtítulo 1',
                       image: {
-                        desktop_image_path: 'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
-                        image_mobile_path: 'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
+                        desktop_image_path:
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
+                        image_mobile_path:
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
         }
       }
 
@@ -96,7 +110,7 @@ export const Primary: Story = {
           <PageBlockRenderer {...context.args} {...content} />
         </Box>
       )
-    }
+    },
   ],
   argTypes: {
     template: {
@@ -104,7 +118,7 @@ export const Primary: Story = {
       options: ['Template100', 'Template5050'],
       bgColor: { control: 'color' },
       slot_left_bgColor: { control: 'color' },
-      slot_right_bgColor: { control: 'color' }
-    }
-  }
+      slot_right_bgColor: { control: 'color' },
+    },
+  },
 }

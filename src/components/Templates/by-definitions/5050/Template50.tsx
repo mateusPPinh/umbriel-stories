@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react'
 import Box from '../../../Boxes/Boxes'
-import { Text } from '../../../Typography'
+import Text from '../../../Typography'
 import { type Template50Types } from './types'
 import Image from '../../../Image/Image'
 
@@ -27,14 +27,16 @@ const Template5050: React.FC<Template50Types> = ({
       }}
     >
       {/* Lado esquerdo */}
-      <Box css={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        bgColor: slot_left_bgColor
-      }}>
+      <Box
+        css={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          bgColor: slot_left_bgColor
+        }}
+      >
         {slot_left.map((item, index) => (
           <Box
             key={index}
@@ -53,15 +55,15 @@ const Template5050: React.FC<Template50Types> = ({
                 desktop_image_path={item.image.desktop_image_path}
                 mobile_image_path={item.image.mobile_image_path}
                 alt={`Imagem correspondente a ${item.title}`}
-                fetchPriority='high'
+                fetchPriority="high"
                 customCss={{
                   paddingBottom: '56.25%',
                   display: 'block'
                 }}
               />
             )}
-            <Text as='strong'>{item.title}</Text>
-            <Text as='p'>{item.subtitle}</Text>
+            <Text as="strong">{item.title}</Text>
+            <Text as="p">{item.subtitle}</Text>
           </Box>
         ))}
       </Box>
@@ -77,31 +79,33 @@ const Template5050: React.FC<Template50Types> = ({
         }}
       >
         {slot_right.map((item, index) => (
-        <Box key={index}
-        css={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          display: 'flex',
-          margin: 'auto',
-          flexDirection: 'column',
-          width: 'calc(100% - 32px)'
-        }}>
-          {item.image && (
-            <Image
-            key={`right-image-${index}`}
-            desktop_image_path={item.image.desktop_image_path}
-            mobile_image_path={item.image.image_mobile_path}
-            alt={`Imagem correspondente a ${item.title}`}
-            fetchPriority='high'
-            customCss={{
-              paddingBottom: '56.25%',
-              display: 'block'
+          <Box
+            key={index}
+            css={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              display: 'flex',
+              margin: 'auto',
+              flexDirection: 'column',
+              width: 'calc(100% - 32px)'
             }}
-          />
-          )}
-          <Text as='strong'>{item.title}</Text>
-          <Text as='p'>{item.subtitle}</Text>
-        </Box>
+          >
+            {item.image && (
+              <Image
+                key={`right-image-${index}`}
+                desktop_image_path={item.image.desktop_image_path}
+                mobile_image_path={item.image.image_mobile_path}
+                alt={`Imagem correspondente a ${item.title}`}
+                fetchPriority="high"
+                customCss={{
+                  paddingBottom: '56.25%',
+                  display: 'block'
+                }}
+              />
+            )}
+            <Text as="strong">{item.title}</Text>
+            <Text as="p">{item.subtitle}</Text>
+          </Box>
         ))}
       </Box>
     </Box>

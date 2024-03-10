@@ -17,13 +17,25 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "prepare": "npm run build",
+    "prepare": "husky",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prepack": "cp package.json package.backup.json && json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\"",
-    "postpack": "mv package.backup.json package.json"
+    "postpack": "mv package.backup.json package.json",
+    "format": "prettier --write .",
+    "lint-staged": "lint-staged"
+  },
+  "husky": {
+    "hooks": {
+      "lint-staged": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
+    ]
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0",
@@ -72,6 +84,8 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "eslint-plugin-storybook": "^0.8.0",
+    "husky": "^9.0.11",
+    "pinst": "^3.0.0",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
