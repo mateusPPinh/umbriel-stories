@@ -1,8 +1,19 @@
 {
   "name": "@umbriel/components",
   "private": false,
-  "version": "0.1.1",
+  "version": "0.1.4",
   "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.umd.cjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.cjs"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -13,37 +24,68 @@
     "build-storybook": "storybook build",
     "prepack": "cp package.json package.backup.json && json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\"",
     "postpack": "mv package.backup.json package.json"
-
   },
   "peerDependencies": {
-    "react": "^16.8.0 || 17.x",
-    "react-dom": "^16.8.0 || 17.x",
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || 18.x",
     "styled-components": "^5.0.0"
   },
-  "files": [
-    "dist"
-  ],
+  "dependencies": {
+    "@fontsource/roboto": "^5.0.12",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@storybook/addon-themes": "^7.6.17",
+    "@storybook/addons": "^7.6.17",
+    "@umbriel/components": "^0.1.4",
+    "init": "^0.1.2",
+    "json": "^11.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-vite-library": "^0.0.3",
+    "rollup-plugin-typescript-paths": "^1.5.0",
+    "storybook": "^7.6.17",
+    "storybook-addon-theme-provider": "^0.1.15",
+    "styled-components": "^6.1.8",
+    "vite-plugin-dts": "^3.7.3"
+  },
+  "devDependencies": {
+    "@storybook/addon-essentials": "^7.6.17",
+    "@storybook/addon-interactions": "^7.6.17",
+    "@storybook/addon-links": "^7.6.17",
+    "@storybook/addon-onboarding": "^1.0.11",
+    "@storybook/blocks": "^7.6.17",
+    "@storybook/builder-vite": "^7.6.17",
+    "@storybook/react": "^7.6.17",
+    "@storybook/react-vite": "^7.6.17",
+    "@storybook/test": "^7.6.17",
+    "@types/react": "^18.2.56",
+    "@types/react-dom": "^18.2.19",
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.18",
+    "eslint": "^8.56.0",
+    "eslint-config-standard-with-typescript": "^43.0.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-react": "^7.34.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "eslint-plugin-storybook": "^0.8.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.1.4"
+  },
   "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Umbriel-CMS/umbriel-stories.git"
-  },
-  "main": "./dist/@umbriel-components.umd.js",
-  "module": "./dist/@umbriel-components.es.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/@umbriel-components.es.js",
-      "require": "./dist/@umbriel-components.umd.js"
-    }
   },
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Umbriel-CMS/umbriel-stories/issues"
   },
-  "homepage": "https://github.com/Umbriel-CMS/umbriel-stories#readme",
-  "dependencies": {
-    "@umbriel/components": "^0.1.1"
-  }
+  "homepage": "https://github.com/Umbriel-CMS/umbriel-stories#readme"
 }

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { Meta, StoryObj } from '@storybook/react'
 
-import PageBlockRenderer from '.'
-import Box from '../Boxes'
+import PageBlockRenderer from './PageBlock'
+import Box from '../Boxes/Boxes'
 
 const meta: Meta<typeof PageBlockRenderer> = {
   title: 'Componentes/PageBlockRenderer',

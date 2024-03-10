@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react'
-import Box from '../../../Boxes'
+import Box from '../../../Boxes/Boxes'
 import { type DefaultTheme } from 'styled-components'
 
 interface ColumnProps {

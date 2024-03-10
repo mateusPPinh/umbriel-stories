@@ -1,5 +1,5 @@
-import Template5050 from '../Templates/by-definitions/5050'
-import Template100 from '../Templates/by-definitions/100'
+import Template5050 from '../Templates/by-definitions/5050/Template50'
+import Template100 from '../Templates/by-definitions/100/Template100'
 import { type PageBlockTypes } from './types'
 
 const PageBlockRenderer: React.FC<PageBlockTypes> = (props: PageBlockTypes) => {

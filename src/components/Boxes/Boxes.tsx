@@ -1,14 +1,14 @@
 import { type BoxProps } from './types'
 import { processInlineStyles } from '../styles/cssUtils'
 
-export default function Box<C extends React.ElementType = 'div'>
+function Box<C extends React.ElementType = 'div'>
 ({
   as,
   children,
   css = {},
   ...props
 }: BoxProps<C>): React.ReactElement {
-  const Component = as || 'div'
+  const Component = as ?? 'div'
 
   const inlineStyles = processInlineStyles(css)
 
@@ -18,3 +18,5 @@ export default function Box<C extends React.ElementType = 'div'>
     </Component>
   )
 }
+
+export default Box

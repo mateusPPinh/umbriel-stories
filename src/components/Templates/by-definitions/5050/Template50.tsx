@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react'
-import Box from '../../../Boxes'
+import Box from '../../../Boxes/Boxes'
 import { Text } from '../../../Typography'
 import { type Template50Types } from './types'
-import Image from '../../../Image'
+import Image from '../../../Image/Image'
 
 const Template5050: React.FC<Template50Types> = ({
   slot_left_bgColor,

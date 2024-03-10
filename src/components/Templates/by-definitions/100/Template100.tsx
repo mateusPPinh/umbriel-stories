@@ -1,16 +1,13 @@
 import React from 'react'
-import Box from '../../../Boxes'
+import Box from '../../../Boxes/Boxes'
 import { Column, ColumnColor } from './helpers'
 import { type SlotDefinitions } from './types'
 
-export default function Template100 (props: SlotDefinitions): React.ReactElement {
+function Template100 (props: SlotDefinitions): React.ReactElement {
   const {
     bgColor,
     children,
-    minHeight,
-    template,
     transparent,
-    genericCarrousel,
     genericFooter,
     genericMenu
   } = props
@@ -39,3 +36,5 @@ export default function Template100 (props: SlotDefinitions): React.ReactElement
     </>
   )
 }
+
+export default Template100
