@@ -35,5 +35,5 @@ jobs:
         env: 
           UMBRIEL_COMPONENTS_TOKEN: ${{ secrets.UMBRIEL_COMPONENTS_TOKEN }}
         run: |
-          git remote set-url origin https://mateusPPinh:$(echo $UMBRIEL_COMPONENTS_TOKEN)@github.com/Umbriel-CMS/umbriel-stories.git
+          git remote set-url origin https://Umbriel-CMS:$(echo $UMBRIEL_COMPONENTS_TOKEN)@github.com/Umbriel-CMS/umbriel-stories.git
           git push origin develop --tags
