@@ -13,6 +13,7 @@ const Image = forwardRef<HTMLImageElement, ImageProps>((props, ref) => {
     fetchPriority,
     ...rest
   } = props
+  Image.displayName = 'Image'
   const [src, setSrc] = useState<string>()
 
   useEffect(() => {
