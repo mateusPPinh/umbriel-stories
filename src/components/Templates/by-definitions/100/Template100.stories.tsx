@@ -4,7 +4,7 @@ import Template100 from './Template100'
 
 const meta: Meta<typeof Template100> = {
   title: 'Components/Template100',
-  component: Template100,
+  component: Template100
 }
 
 export default meta
@@ -16,15 +16,15 @@ export const Primary: Story = {
     genericCarrousel: [
       {
         /* Dados do carrossel aqui */
-      },
+      }
     ],
     genericFooter: [
-      { footer: { title_bottom: 'Teste', title_top: 'Teste 2' } },
+      { footer: { title_bottom: 'Teste', title_top: 'Teste 2' } }
     ],
     genericMenu: [{ title: 'Home', href: '/' }],
     template: 'Template100',
     transparent: false,
-    children: <p>Conteúdo adicional que será renderizado</p>,
+    children: <p>Conteúdo adicional que será renderizado</p>
   },
-  render: (args) => <Template100 {...args} />,
+  render: (args) => <Template100 {...args} />
 }
