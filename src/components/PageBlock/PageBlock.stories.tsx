@@ -6,7 +6,7 @@ import Box from '../Boxes/Boxes'
 
 const meta: Meta<typeof PageBlockRenderer> = {
   title: 'Componentes/PageBlockRenderer',
-  component: PageBlockRenderer,
+  component: PageBlockRenderer
 }
 
 export default meta
@@ -15,7 +15,7 @@ type Story = StoryObj<typeof PageBlockRenderer>
 export const Primary: Story = {
   args: {
     layout: '',
-    template: 'Template5050',
+    template: 'Template5050'
   },
   decorators: [
     (Story, context) => {
@@ -29,16 +29,16 @@ export const Primary: Story = {
             genericCarrousel: [
               {
                 /* Dados do carrossel aqui */
-              },
+              }
             ],
             genericFooter: [
-              { footer: { title_bottom: 'Teste', title_top: 'Teste 2' } },
+              { footer: { title_bottom: 'Teste', title_top: 'Teste 2' } }
             ],
             genericMenu: [{ title: 'Home', href: '/' }],
             template: 'Template100',
             transparent: false,
-            children: <p>Conteúdo adicional que será renderizado</p>,
-          },
+            children: <p>Conteúdo adicional que será renderizado</p>
+          }
         }
       } else if (template === 'Template5050') {
         content = {
@@ -46,6 +46,16 @@ export const Primary: Story = {
             blockPosition: 0,
             layout: '',
             template: 'Template5050',
+            align_text_slot_left: 'left',
+            align_text_slot_right: 'left',
+            anchorHandlerProps: {
+              href: '/',
+              isSlotImageLeftAnchor: true,
+              isSlotLeftTitleAnchor: true,
+              isSlotImageRightAnchor: true,
+              isSlotRightTitleAnchor: true
+            },
+            target: '_blank',
             slot_left_bgColor: '#7159c1',
             slot_right_bgColor: '#333',
             items: [
@@ -59,8 +69,8 @@ export const Primary: Story = {
                         desktop_image_path:
                           'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
                         image_mobile_path:
-                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
-                      },
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
+                      }
                     },
                     {
                       title: 'Produto do Mateus',
@@ -69,10 +79,10 @@ export const Primary: Story = {
                         desktop_image_path:
                           'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
                         image_mobile_path:
-                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
-                      },
-                    },
-                  ],
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
+                      }
+                    }
+                  ]
                 },
                 slot_right_items: {
                   content: [
@@ -83,8 +93,8 @@ export const Primary: Story = {
                         desktop_image_path:
                           'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
                         image_mobile_path:
-                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
-                      },
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
+                      }
                     },
                     {
                       title: 'Título Esquerdo 1',
@@ -93,14 +103,14 @@ export const Primary: Story = {
                         desktop_image_path:
                           'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
                         image_mobile_path:
-                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
         }
       }
 
@@ -110,7 +120,7 @@ export const Primary: Story = {
           <PageBlockRenderer {...context.args} {...content} />
         </Box>
       )
-    },
+    }
   ],
   argTypes: {
     template: {
@@ -118,7 +128,7 @@ export const Primary: Story = {
       options: ['Template100', 'Template5050'],
       bgColor: { control: 'color' },
       slot_left_bgColor: { control: 'color' },
-      slot_right_bgColor: { control: 'color' },
-    },
-  },
+      slot_right_bgColor: { control: 'color' }
+    }
+  }
 }
