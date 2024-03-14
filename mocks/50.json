@@ -1,20 +1,164 @@
-{
-  "items": [
-    {
-      "leftSide": {
-        "title": "Case Panvel Baby",
-        "text": "IDENTIDADE VISUAL + DESIGN DE EMBALAGENS",
-        "backgroundColor": "transparent",
-        "textColor": "",
-        "imageLeftTemplate": "https://updesign.com.br/panvel_baby/body/desk-bodypanvel_baby02.jpg"
-      },
-      "rightSide": {
-        "title": "Case Uniagro",
-        "text": "IDENTIDADE VISUAL + DESIGN DE EMBALAGEM",
-        "backgroundColor": "transparent",
-        "textColor": "",
-        "imageRightTemplate": "https://updesign.com.br/uniagro/body/desk-body-uniagro-01.jpg"
+[
+  {
+    "blockPosition": "",
+    "blockType": "slot",
+    "blocksData": {
+      "layout": "layoutPadrao",
+      "template": "Template100",
+      "menu": [
+        {
+          "title": "Projetos",
+          "href": "/projetos"
+        },
+        {
+          "title": "Sobre",
+          "href": "/sobre"
+        },
+        {
+          "title": "Contato",
+          "href": "/contato"
+        }
+      ],
+      "footer": [
+        {
+          "title_top": "Entre em Contato",
+          "title_bottom": "Compartilhe suas ideias com a gente"
+        },
+        {
+          "title_top": "E-mail",
+          "title_bottom": "contato@updesign.com.br"
+        },
+        {
+          "title_top": "WhatsApp",
+          "title_bottom": "(51) 3061.2146"
+        }
+      ],
+      "layoutCarrousel": [
+        {
+          "image_middle_desktop_path": "",
+          "image_mobile_path": "http://localhost:3001/uploads/18c59e118a3d5d057ade-mob-nextproject-panvel_vita_c.jpg"
+        },
+        {
+          "image_middle_desktop_path": "",
+          "image_mobile_path": "http://localhost:3001/uploads/6080517fa8f28fa470b9-mob-nextproject-uniagro_equilibrio.jpg"
+        },
+        {
+          "image_middle_desktop_path": "",
+          "image_mobile_path": "http://localhost:3001/uploads/76038f0ae190b217fb6e-mob-nextproject-panvel_sensacoes.jpg"
+        }
+      ],
+      "centerMiddle": {
+        "blockPosition": "1",
+        "layout": "layoutPageCenter",
+        "template": "Template5050",
+        "target": "_blank",
+        "textProps": [
+          {
+            "color": "#333",
+            "fontFamily": "Roboto",
+            "fontSize": "1rem",
+            "transform": "uppercase",
+            "lineHeight": "2",
+            "as": "strong" 
+          }
+        ],
+        "template50Options": [
+          {
+            "slot_left_bgColor": "#fff",
+            "slot_right_bgColor": "#fff",
+            "align_text_slot_left": "start",
+            "align_text_slot_right": "start"
+          },
+          {
+            "anchorHandlerProps": [
+              {
+                "isSlotImageLeftAnchor": true,
+                "isSlotImageRightAnchor": true,
+                "isSlotLeftTitleAnchor": true,
+                "isSlotRightTitleAnchor": true,
+                "href": "",
+                "index": ""
+              }
+            ]
+          }
+        ],
+        "items": [
+          {
+            "slot_right_items": {
+              "content": [
+                {
+                  "title": "Case Uniagro",
+                  "subtitle": "Identidade Visual + Design de Embalagem",
+                  "image": {
+                    "desktop_image_path": "http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg",
+                    "image_mobile_path": "http://localhost:3001/uploads/18c59e118a3d5d057ade-mob-nextproject-panvel_vita_c.jpg"
+                  }
+                },
+                {
+                  "title": "Misturinha",
+                  "subtitle": "Identidade Visual + Design de Embalagem",
+                  "image": {
+                    "desktop_image_path": "http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg",
+                    "image_mobile_path": "http://localhost:3001/uploads/18c59e118a3d5d057ade-mob-nextproject-panvel_vita_c.jpg"
+                  }
+                },
+                {
+                  "title": "Misturinha",
+                  "subtitle": "Identidade Visual + Design de Embalagem",
+                  "image": {
+                    "desktop_image_path": "http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg",
+                    "image_mobile_path": "http://localhost:3001/uploads/18c59e118a3d5d057ade-mob-nextproject-panvel_vita_c.jpg"
+                  }
+                },
+                {
+                  "title": "Feliz",
+                  "subtitle": "Identidade Visual + Design de Embalagem",
+                  "image": {
+                    "desktop_image_path": "http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg",
+                    "image_mobile_path": "http://localhost:3001/uploads/18c59e118a3d5d057ade-mob-nextproject-panvel_vita_c.jpg"
+                  }
+                }
+              ]
+            },
+            "slot_left_items": {
+              "content": [
+                {
+                  "title": "Case Uniagro",
+                  "subtitle": "Identidade Visual + Design de Embalagem",
+                  "image": {
+                    "desktop_image_path": "http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg",
+                    "image_mobile_path": "http://localhost:3001/uploads/18c59e118a3d5d057ade-mob-nextproject-panvel_vita_c.jpg"
+                  }
+                },
+                {
+                  "title": "Panvel Vita C",
+                  "subtitle": "Identidade Visual + Design de Embalagem",
+                  "image": {
+                    "desktop_image_path": "http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg",
+                    "image_mobile_path": "http://localhost:3001/uploads/18c59e118a3d5d057ade-mob-nextproject-panvel_vita_c.jpg"
+                  }
+                },
+                {
+                  "title": "Misturinha",
+                  "subtitle": "Identidade Visual + Design de Embalagem",
+                  "image": {
+                    "desktop_image_path": "http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg",
+                    "image_mobile_path": "http://localhost:3001/uploads/18c59e118a3d5d057ade-mob-nextproject-panvel_vita_c.jpg"
+                  }
+                },
+                {
+                  "title": "Panvel Sensações",
+                  "subtitle": "Identidade Visual + Design de Embalagem",
+                  "image": {
+                    "desktop_image_path": "http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg",
+                    "image_mobile_path": "http://localhost:3001/uploads/18c59e118a3d5d057ade-mob-nextproject-panvel_vita_c.jpg"
+                  }
+                }
+              ]
+            }
+          }
+        ]
       }
     }
-  ]
-}
+  }
+]
