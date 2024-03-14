@@ -4,11 +4,11 @@ import { type DefaultTheme } from 'styled-components'
 
 export type CSSInline = {
   alignX?:
-    | 'flex-start'
-    | 'flex-end'
-    | 'center'
-    | 'space-between'
-    | 'space-around'
+  | 'flex-start'
+  | 'flex-end'
+  | 'center'
+  | 'space-between'
+  | 'space-around'
   alignY?: 'flex-start' | 'flex-end' | 'center' | 'stretch' | 'baseline'
   align?: ''
   bgColor?: keyof DefaultTheme['colors'] | 'transparent'
@@ -28,6 +28,8 @@ export const processInlineStyles = (
   css: CSSInline = {},
   theme?: DefaultTheme
 ): React.CSSProperties => {
+  console.log(css, 'css')
+  console.log(theme, 'theme')
   const inlineStyles: React.CSSProperties = {
     ...css,
     marginBottom: css.mb,
@@ -41,7 +43,7 @@ export const processInlineStyles = (
     color: css.color ? theme?.colors[css.color] ?? css.color : undefined,
     backgroundColor: css.bgColor
       ? theme?.colors[css.bgColor] ?? css.bgColor
-      : undefined,
+      : undefined
   }
 
   if (css.alignX ?? css.alignY) {
