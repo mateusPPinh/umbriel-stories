@@ -3,7 +3,7 @@ import Box from '../../../Boxes/Boxes'
 import { Column, ColumnColor } from './helpers'
 import { type SlotDefinitions } from './types'
 
-function Template100(props: SlotDefinitions): React.ReactElement {
+function Template100 (props: SlotDefinitions): React.ReactElement {
   const { bgColor, children, transparent, genericFooter, genericMenu } = props
 
   // Renderize o menu, footer, e carrousel aqui
@@ -16,7 +16,7 @@ function Template100(props: SlotDefinitions): React.ReactElement {
           width: '100%',
           flexDirection: 'row',
           verticalAlign: 'top',
-          alignItems: 'center',
+          alignItems: 'center'
         }}
       >
         <Column>

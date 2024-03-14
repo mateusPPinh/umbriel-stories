@@ -80,10 +80,12 @@ declare module 'styled-components' {
       info900: string
       info950: string
       transparent: string
+      storybook: string
     }
     fonts: {
       fontPrimary: string
       fontSecondary: string
+      tertiary: string
     }
     spacing: (...args: number[]) => string
   }
