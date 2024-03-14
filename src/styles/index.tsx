@@ -16,8 +16,8 @@ const theme = {
       sm: 600,
       md: 900,
       lg: 1200,
-      xl: 1536,
-    },
+      xl: 1536
+    }
   },
   colors: {
     white: '#FFFFFF',
@@ -86,12 +86,14 @@ const theme = {
     info800: '#001B75',
     info900: '#000E3D',
     info950: '#00071F',
-    transparent: 'transparent',
+    storybook: '#1A1A1E',
+    transparent: 'transparent'
   },
   fonts: {
     // compatibilidade com components
     fontPrimary: 'Montserrat',
     fontSecondary: 'Roboto',
+    tertiary: 'GeistMono-Medium'
     // thin: 100,
     // light: 300,
     // regular: 400,
@@ -104,9 +106,9 @@ const theme = {
       results.push(arguments[i] * spacingSize + 'px')
     }
     return results.join(' ')
-  },
+  }
 }
-export default function CustomStyles({ children }: PropsWithChildren): any {
+export default function CustomStyles ({ children }: PropsWithChildren): any {
   return (
     <StyleSheetManager
       enableVendorPrefixes
