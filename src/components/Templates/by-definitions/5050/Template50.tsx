@@ -9,7 +9,7 @@ const Template5050: React.FC<Template50Types> = ({
   slot_left_items,
   slot_right_items,
   blockPosition,
-  template_50_options,
+  template50Options,
   textProps,
   target
 }) => {
@@ -40,22 +40,22 @@ const Template5050: React.FC<Template50Types> = ({
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          bgColor: template_50_options?.slot_left_bgColor
+          bgColor: template50Options?.slot_left_bgColor
         }}
       >
         {slot_left.map((item, index) => (
          <SlotAnchorHandlers
            key={index}
            index={index}
-           isSlotLeftTitleAnchor={template_50_options?.anchorHandlerProps?.isSlotLeftTitleAnchor}
-           isSlotImageLeftAnchor={template_50_options?.anchorHandlerProps?.isSlotImageLeftAnchor}
+           isSlotLeftTitleAnchor={template50Options?.anchorHandlerProps?.isSlotLeftTitleAnchor}
+           isSlotImageLeftAnchor={template50Options?.anchorHandlerProps?.isSlotImageLeftAnchor}
            position="slot_left"
-           href={template_50_options?.anchorHandlerProps?.href}
+           href={template50Options?.anchorHandlerProps?.href}
            target={target}
          >
            <Box
             css={{
-              alignItems: template_50_options?.align_text_slot_left,
+              alignItems: template50Options?.align_text_slot_left,
               justifyContent: 'center',
               display: 'flex',
               margin: 'auto',
@@ -108,22 +108,22 @@ const Template5050: React.FC<Template50Types> = ({
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          bgColor: template_50_options?.slot_right_bgColor
+          bgColor: template50Options?.slot_right_bgColor
         }}
       >
         {slot_right.map((item, index) => (
          <SlotAnchorHandlers
           key={index}
           index={index}
-          isSlotRightTitleAnchor={template_50_options?.anchorHandlerProps?.isSlotRightTitleAnchor}
-          isSlotImageRightAnchor={template_50_options?.anchorHandlerProps?.isSlotImageRightAnchor}
+          isSlotRightTitleAnchor={template50Options?.anchorHandlerProps?.isSlotRightTitleAnchor}
+          isSlotImageRightAnchor={template50Options?.anchorHandlerProps?.isSlotImageRightAnchor}
           position="slot_right"
-          href={template_50_options?.anchorHandlerProps?.href}
+          href={template50Options?.anchorHandlerProps?.href}
           target={target}
          >
            <Box
             css={{
-              alignItems: template_50_options?.align_text_slot_right,
+              alignItems: template50Options?.align_text_slot_right,
               justifyContent: 'center',
               display: 'flex',
               margin: 'auto',
@@ -173,7 +173,7 @@ const Template5050: React.FC<Template50Types> = ({
 }
 
 Template5050.defaultProps = {
-  template_50_options: {
+  template50Options: {
     slot_left_bgColor: 'white',
     slot_right_bgColor: 'white',
     align_text_slot_left: 'center',

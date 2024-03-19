@@ -69,7 +69,7 @@ export const Primary: Story = {
       as: 'h2',
       font_size: 23
     },
-    template_50_options: {
+    template50Options: {
       align_text_slot_left: 'center',
       align_text_slot_right: 'center',
       slot_left_bgColor: 'white',
