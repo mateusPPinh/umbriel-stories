@@ -18,13 +18,13 @@ type Story = StoryObj<typeof Typography>
 export const Primary: Story = {
   args: {
     css: {
-      color: 'neutral900'
+      color: 'background1'
     }
   },
   decorators: [
     (Story) => {
       return (
-        <Box css={{ bgColor: 'primary950' }}>
+        <Box css={{ bgColor: 'white' }}>
           <Story />
         </Box>
       )
