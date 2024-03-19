@@ -10,21 +10,29 @@ const meta: Meta<typeof Template100> = {
 export default meta
 type Story = StoryObj<typeof Template100>
 
-export const Primary: Story = {
+export const PrimaryFooter: Story = {
   args: {
     bgColor: 'neutral500',
-    genericCarrousel: [
-      {
-        /* Dados do carrossel aqui */
-      }
-    ],
     genericFooter: [
-      { footer: { title_bottom: 'Teste', title_top: 'Teste 2' } }
+      { footer: { title_bottom: 'Teste Renderização', title_top: 'Teste 2' } }
     ],
-    genericMenu: [{ title: 'Home', href: '/' }],
+    template: 'Template100',
+    transparent: false
+  },
+  render: (args) => <Template100 {...args} />
+}
+
+export const PrimaryMenu: Story = {
+  args: {
+    bgColor: 'neutral500',
+    genericMenu: [
+      { title: 'Home', href: '/' },
+      { title: 'Home', href: '/' },
+      { title: 'Home', href: '/' }
+    ],
     template: 'Template100',
     transparent: false,
-    children: <p>Conteúdo adicional que será renderizado</p>
+    children: ''
   },
   render: (args) => <Template100 {...args} />
 }
