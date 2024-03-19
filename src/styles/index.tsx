@@ -86,11 +86,14 @@ const theme = {
     info800: '#001B75',
     info900: '#000E3D',
     info950: '#00071F',
+    storybook: '#1A1A1E',
     transparent: 'transparent'
   },
-  fonts: { // compatibilidade com components
+  fonts: {
+    // compatibilidade com components
     fontPrimary: 'Montserrat',
-    fontSecondary: 'Roboto'
+    fontSecondary: 'Roboto',
+    tertiary: 'GeistMono-Medium'
     // thin: 100,
     // light: 300,
     // regular: 400,
@@ -114,10 +117,8 @@ export default function CustomStyles ({ children }: PropsWithChildren): any {
           ? isPropValid(propName)
           : true
       }}
-        >
-      <ThemeProvider theme={theme}>
-        {children}
-      </ThemeProvider>
+    >
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </StyleSheetManager>
   )
 }

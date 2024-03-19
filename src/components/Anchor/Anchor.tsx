@@ -8,7 +8,12 @@ const Anchor = React.forwardRef<HTMLAnchorElement, AnchorType>((props, ref) => {
   const inlineStyles = processInlineStyles(customCss)
 
   return (
-    <a ref={ref} style={inlineStyles} {...restProps} className={props.className}>
+    <a
+      ref={ref}
+      style={inlineStyles}
+      {...restProps}
+      className={props.className}
+    >
       {children}
     </a>
   )

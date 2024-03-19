@@ -1,7 +1,7 @@
 {
   "name": "@umbriel/components",
   "private": false,
-  "version": "0.1.6",
+  "version": "0.1.9",
   "type": "module",
   "files": [
     "dist"
@@ -23,12 +23,13 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prepack": "cp package.json package.backup.json && json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\"",
-    "postpack": "mv package.backup.json package.json"
+    "postpack": "mv package.backup.json package.json",
+    "format": "prettier --write ."
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || 18.x",
-    "styled-components": "^5.0.0"
+    "styled-components": "^6.0.0"
   },
   "dependencies": {
     "@fontsource/roboto": "^5.0.12",
@@ -38,6 +39,7 @@
     "@umbriel/components": "^0.1.4",
     "init": "^0.1.2",
     "json": "^11.0.0",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-vite-library": "^0.0.3",
@@ -72,6 +74,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "eslint-plugin-storybook": "^0.8.0",
+    "pinst": "^3.0.0",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",

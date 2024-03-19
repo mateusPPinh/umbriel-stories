@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/prefer-ts-expect-error */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { type ReactNode } from 'react'
+import { type ElementType, type ReactNode } from 'react'
+import { type SlotAnchorHandlersProps } from '../utils/SlotAnchorHandlers/types'
+import { type DefaultTheme } from 'styled-components/dist/types'
 
 export interface GenericItemsType {
   generics?: {
@@ -35,19 +37,59 @@ interface Slot100 {
 }
 
 interface CenterMiddleType {
-  blockPosition: number
+  blockPosition: string
   layout: string
   template: 'Template5050'
-  slot_left_bgColor?: string
-  slot_right_bgColor?: string
-  items: Array<{
-    slot_right_items: {
-      content: any[]
+  textProps?: {
+    title?: string
+    subtitle?: string
+    color?: any // corrigir para usar o theme
+    as?: ElementType
+    font_family?: string
+    font_size?: string | number
+    line_height?: string | number
+    transform?: string
+  }
+  target?: '_blank' | '_self' | '_parent' | '_top'
+  slot_right_items?: {
+    content: any[]
+    image?: {
+      desktop_image_path: string
+      mobile_image_path: string
     }
-    slot_left_items: {
-      content: any[]
+  }
+  slot_left_items?: {
+    content: any[]
+    image?: {
+      desktop_image_path: string
+      mobile_image_path: string
     }
-  }>
+  }
+  template_50_options?: {
+    slot_left_bgColor?: keyof DefaultTheme['colors']
+    slot_right_bgColor?: keyof DefaultTheme['colors']
+    align_text_slot_left?: string
+    align_text_slot_right?: string
+    anchorHandlerProps?: Pick<SlotAnchorHandlersProps,
+    'isSlotImageLeftAnchor'
+    |
+    'isSlotImageRightAnchor'
+    |
+    'isSlotLeftTitleAnchor'
+    |
+    'isSlotNodeLeftAnchor'
+    |
+    'href'
+    |
+    'index'
+    |
+    'isSlotNodeRightAnchor'
+    |
+    'isSlotRightTitleAnchor'
+    |
+    'position'
+    >
+  }
 }
 
 export interface PageBlockTypes {
@@ -63,4 +105,5 @@ export interface PageBlockTypes {
     }
   }
   centerMiddle?: CenterMiddleType
+  className?: string
 }

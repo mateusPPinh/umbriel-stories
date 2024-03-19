@@ -14,7 +14,11 @@ function Text<C extends React.ElementType = 'span'> ({
 
   const inlineStyles = processInlineStyles(css, theme)
 
-  return <Component style={inlineStyles} {...props}>{children}</Component>
+  return (
+    <Component style={inlineStyles} {...props}>
+      {children}
+    </Component>
+  )
 }
 
-export { Text }
+export default Text

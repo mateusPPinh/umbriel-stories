@@ -13,8 +13,14 @@ type Story = StoryObj<typeof Template100>
 export const Primary: Story = {
   args: {
     bgColor: 'neutral500',
-    genericCarrousel: [{ /* Dados do carrossel aqui */ }],
-    genericFooter: [{ footer: { title_bottom: 'Teste', title_top: 'Teste 2' } }],
+    genericCarrousel: [
+      {
+        /* Dados do carrossel aqui */
+      }
+    ],
+    genericFooter: [
+      { footer: { title_bottom: 'Teste', title_top: 'Teste 2' } }
+    ],
     genericMenu: [{ title: 'Home', href: '/' }],
     template: 'Template100',
     transparent: false,

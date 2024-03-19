@@ -26,8 +26,14 @@ export const Primary: Story = {
         content = {
           slot100: {
             bgColor: '#f7e4f7',
-            genericCarrousel: [{ /* Dados do carrossel aqui */ }],
-            genericFooter: [{ footer: { title_bottom: 'Teste', title_top: 'Teste 2' } }],
+            genericCarrousel: [
+              {
+                /* Dados do carrossel aqui */
+              }
+            ],
+            genericFooter: [
+              { footer: { title_bottom: 'Teste', title_top: 'Teste 2' } }
+            ],
             genericMenu: [{ title: 'Home', href: '/' }],
             template: 'Template100',
             transparent: false,
@@ -40,6 +46,16 @@ export const Primary: Story = {
             blockPosition: 0,
             layout: '',
             template: 'Template5050',
+            align_text_slot_left: 'left',
+            align_text_slot_right: 'left',
+            anchorHandlerProps: {
+              href: '/',
+              isSlotImageLeftAnchor: true,
+              isSlotLeftTitleAnchor: true,
+              isSlotImageRightAnchor: true,
+              isSlotRightTitleAnchor: true
+            },
+            target: '_blank',
             slot_left_bgColor: '#7159c1',
             slot_right_bgColor: '#333',
             items: [
@@ -50,16 +66,20 @@ export const Primary: Story = {
                       title: 'Produto do Mateus',
                       subtitle: 'Subtítulo 1',
                       image: {
-                        desktop_image_path: 'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
-                        image_mobile_path: 'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
+                        desktop_image_path:
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
+                        image_mobile_path:
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
                       }
                     },
                     {
                       title: 'Produto do Mateus',
                       subtitle: 'Subtítulo 1',
                       image: {
-                        desktop_image_path: 'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
-                        image_mobile_path: 'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
+                        desktop_image_path:
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
+                        image_mobile_path:
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
                       }
                     }
                   ]
@@ -70,16 +90,20 @@ export const Primary: Story = {
                       title: 'Título Esquerdo 1',
                       subtitle: 'Subtítulo 1',
                       image: {
-                        desktop_image_path: 'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
-                        image_mobile_path: 'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
+                        desktop_image_path:
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
+                        image_mobile_path:
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
                       }
                     },
                     {
                       title: 'Título Esquerdo 1',
                       subtitle: 'Subtítulo 1',
                       image: {
-                        desktop_image_path: 'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
-                        image_mobile_path: 'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
+                        desktop_image_path:
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg',
+                        image_mobile_path:
+                          'http://localhost:3001/uploads/a96788fcc1e5ea73af18-desk-nextproject-panvel_vita_c.jpg'
                       }
                     }
                   ]
