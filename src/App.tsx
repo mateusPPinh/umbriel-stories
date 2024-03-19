@@ -1,4 +1,4 @@
-import { Boxes } from '@umbriel/components'
+import Boxes from './components/Boxes/Boxes'
 import { type ReactElement } from 'react'
 import Text from './components/Typography'
 
@@ -7,12 +7,12 @@ const App = (): ReactElement => {
     <Boxes
       as="div"
       css={{
-        bgColor: 'black',
+        bgColor: 'background4',
         width: '100%',
         height: '100vh'
       }}
     >
-      <Text as='h2' css={{ color: 'white' }}>Awesome</Text>
+      <Text as='h2' css={{ color: 'blueDark' }}>Awesome</Text>
     </Boxes>
   )
 }
