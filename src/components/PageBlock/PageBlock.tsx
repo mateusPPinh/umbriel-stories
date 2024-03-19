@@ -45,7 +45,7 @@ const PageBlockRenderer: React.FC<PageBlockTypes> = (props: PageBlockTypes) => {
         blockPosition,
         layout,
         template,
-        template_50_options,
+        template50Options,
         target,
         textProps
       } = centerMiddle
@@ -57,7 +57,7 @@ const PageBlockRenderer: React.FC<PageBlockTypes> = (props: PageBlockTypes) => {
           blockPosition={blockPosition}
           layout={layout}
           template={template}
-          template_50_options={template_50_options}
+          template50Options={template50Options}
           target={target}
           textProps={textProps}
         />

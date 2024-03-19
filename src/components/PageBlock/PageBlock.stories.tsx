@@ -13,10 +13,6 @@ export default meta
 type Story = StoryObj<typeof PageBlockRenderer>
 
 export const Primary: Story = {
-  args: {
-    layout: '',
-    template: 'Template5050'
-  },
   decorators: [
     (Story, context) => {
       const template = context.args.template
@@ -44,7 +40,7 @@ export const Primary: Story = {
         content = {
           centerMiddle: {
             blockPosition: 0,
-            layout: '',
+            layout: 'any',
             template: 'Template5050',
             align_text_slot_left: 'left',
             align_text_slot_right: 'left',
@@ -115,7 +111,7 @@ export const Primary: Story = {
       }
 
       return (
-        <Box css={{ bgColor: 'negative500' }}>
+        <Box css={{ bgColor: 'background1' }}>
           {/* @ts-expect-error */}
           <PageBlockRenderer {...context.args} {...content} />
         </Box>
