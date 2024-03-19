@@ -31,7 +31,7 @@ export interface Template50Types {
     line_height?: string | number
     transform?: string
   }
-  template_50_options?: {
+  template50Options?: {
     slot_left_bgColor?: keyof DefaultTheme['colors']
     slot_right_bgColor?: keyof DefaultTheme['colors']
     align_text_slot_left?: string

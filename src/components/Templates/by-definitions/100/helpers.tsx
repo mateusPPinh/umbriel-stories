@@ -13,7 +13,7 @@ export const Column = ({ children }: ColumnProps): ReactElement => {
         flexDirection: 'column',
         width: '100%',
         textAlign: 'left',
-        verticalAlign: 'top',
+        verticalAlign: 'top'
       }}
     >
       {children}
@@ -32,7 +32,7 @@ interface ColumnColorProps {
 export const ColumnColor = ({
   children,
   bgColor,
-  transparent,
+  transparent
 }: ColumnColorProps): ReactElement => {
   return (
     <Box
@@ -43,7 +43,7 @@ export const ColumnColor = ({
         width: 'calc(100% - 32px)',
         mb: transparent === true ? '' : '',
         textAlign: 'left',
-        verticalAlign: 'top',
+        verticalAlign: 'top'
       }}
     >
       {children}

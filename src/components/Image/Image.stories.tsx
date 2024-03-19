@@ -5,7 +5,7 @@ import Box from '../Boxes/Boxes'
 
 const meta: Meta<typeof Image> = {
   title: 'Componentes/Image',
-  component: Image,
+  component: Image
 }
 
 export default meta
@@ -20,16 +20,16 @@ export const Primary: Story = {
     alt: 'Minha Imagem',
     customCss: {
       width: 600,
-      borderRadius: 10,
-    },
+      borderRadius: 10
+    }
   },
   decorators: [
     (Story) => {
       return (
-        <Box css={{ bgColor: 'neutral900' }}>
+        <Box css={{ bgColor: 'background1' }}>
           <Story />
         </Box>
       )
-    },
-  ],
+    }
+  ]
 }
