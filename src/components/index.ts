@@ -6,3 +6,5 @@ export { default as Template100 } from './Templates/by-definitions/100/Template1
 export { default as Template50 } from './Templates/by-definitions/5050/Template50'
 export { default as Theme } from '../styles/index'
 export { default as Typography } from './Typography'
+export { default as Gallery } from './Gallery'
+export { default as GalleryPreview } from './Gallery/components/Preview'
