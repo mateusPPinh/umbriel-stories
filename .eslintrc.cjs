@@ -23,6 +23,9 @@ module.exports = {
   rules: {
     'react/react-in-jsx-scope': 0,
     '@typescript-eslint/naming-convention': 'warn',
-    'react/no-children-prop': 'warn'
+    'react/no-children-prop': 'warn',
+    '@typescript-eslint/ban-ts-comment': 'warn',
+    '@typescript-eslint/strict-boolean-expressions': 'warn',
+    '@typescript-eslint/prefer-ts-expect-error': 'warn'
   },
 }
