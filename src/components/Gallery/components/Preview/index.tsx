@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { type ReactElement } from 'react'
 import { PreviewImage } from '../../styles'
-import { Link } from 'react-router-dom'
 import type PreviewProps from './types'
 
 export default function Preview ({
@@ -17,9 +16,9 @@ export default function Preview ({
       {images.length > 0 && <img src={images[0].url} alt={images[0].caption} className="object-cover"/>}
 
       <div className="text-content absolute">
-        <Link to={path}>
+        <a href={path}>
           <h1>{title}</h1>
-        </Link>
+        </a>
         <h2>{description}</h2>
       </div>
     </PreviewImage>
