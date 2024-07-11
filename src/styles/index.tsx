@@ -1,6 +1,7 @@
 import '@fontsource-variable/roboto-condensed'
 import '@fontsource/roboto'
 import '@fontsource-variable/noto-sans'
+import '@fontsource-variable/rubik'
 
 import { ThemeProvider, StyleSheetManager } from 'styled-components'
 import { type PropsWithChildren } from 'react'
@@ -30,13 +31,17 @@ const theme = {
     background3: '#F1F2F2',
     background4: '#FFF7FF',
     background5: '#E1EDF2',
-    transparent: 'transparent'
+    transparent: 'transparent',
+    gray50: '#FAFAFA',
+    gray200: '#E4E4E7',
+    gray500: '#71717A',
+    gray800: '#27272A'
   },
   fonts: {
     fontPrimary: 'Noto Sans Variable',
     fontSecondary: 'Roboto',
     fontThird: 'Poppins',
-    heading: 'Rubik'
+    heading: 'Rubik Variable'
   },
   spacing: function () {
     const results = []
