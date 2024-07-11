@@ -26,6 +26,7 @@ module.exports = {
     'react/no-children-prop': 'warn',
     '@typescript-eslint/ban-ts-comment': 'warn',
     '@typescript-eslint/strict-boolean-expressions': 'warn',
-    '@typescript-eslint/prefer-ts-expect-error': 'warn'
+    '@typescript-eslint/prefer-ts-expect-error': 'warn',
+    "etc/prefer-interface": 0
   },
 }

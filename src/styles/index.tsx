@@ -1,3 +1,7 @@
+import '@fontsource-variable/roboto-condensed'
+import '@fontsource/roboto'
+import '@fontsource-variable/noto-sans'
+
 import { ThemeProvider, StyleSheetManager } from 'styled-components'
 import { type PropsWithChildren } from 'react'
 import isPropValid from '@emotion/is-prop-valid'
@@ -29,9 +33,10 @@ const theme = {
     transparent: 'transparent'
   },
   fonts: {
-    primary: 'Montserrat',
-    secondary: 'Roboto',
-    tertiary: 'GeistMono-Medium'
+    fontPrimary: 'Noto Sans Variable',
+    fontSecondary: 'Roboto',
+    fontThird: 'Poppins',
+    heading: 'Rubik'
   },
   spacing: function () {
     const results = []
