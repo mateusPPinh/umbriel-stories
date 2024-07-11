@@ -22,9 +22,10 @@ declare module 'styled-components' {
       transparent: string
     }
     fonts: {
-      primary: string
-      secondary: string
-      tertiary: string
+      fontPrimary: string
+      fontSecondary: string
+      fontThird: string
+      heading: string
     }
     spacing: (...args: number[]) => string
   }
