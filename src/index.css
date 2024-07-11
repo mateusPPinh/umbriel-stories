@@ -7,6 +7,11 @@
   src: url(./assets/fonts/GeistMono-Regular.otf);
 }
 
+.sb-main-padded {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 .embla {
   overflow: hidden;
 }
@@ -23,7 +28,7 @@
 }
 
 body {
-  font-family: 'Geist Mono Regular', 'Roboto', 'sans-serif';
+  font-family: Rubik Variable, 'Geist Mono Regular', 'Roboto', 'sans-serif',;
 }
 
 .gradient-text {
