@@ -33,6 +33,7 @@ const theme = {
     background5: '#E1EDF2',
     transparent: 'transparent',
     gray50: '#FAFAFA',
+    gray100: '#F4F4F5',
     gray200: '#E4E4E7',
     gray500: '#71717A',
     gray800: '#27272A'

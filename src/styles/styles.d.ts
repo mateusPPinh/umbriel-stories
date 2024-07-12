@@ -21,6 +21,7 @@ declare module 'styled-components' {
       background5: string
       transparent: string
       gray50: string
+      gray100: string
       gray200: string
       gray500: string
       gray800: string
