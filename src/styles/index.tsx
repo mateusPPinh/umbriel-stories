@@ -36,7 +36,20 @@ const theme = {
     gray100: '#F4F4F5',
     gray200: '#E4E4E7',
     gray500: '#71717A',
-    gray800: '#27272A'
+    gray800: '#27272A',
+    gray900: '#18181B',
+    violet: {
+      violet50: '#F5F3FF',
+      violet100: '#EDE9FE',
+      violet200: '#C4B5FD',
+      violet300: '#C4B5FD',
+      violet400: '#A78BFA',
+      violet500: '#8B5CF6',
+      violet600: '#7C3AED',
+      violet700: '#6D28D9',
+      violet800: '#5B21B6',
+      violet900: '#4C1D95'
+    }
   },
   fonts: {
     fontPrimary: 'Noto Sans Variable',
