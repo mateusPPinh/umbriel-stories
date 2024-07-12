@@ -25,6 +25,19 @@ declare module 'styled-components' {
       gray200: string
       gray500: string
       gray800: string
+      gray900: string
+      violet: {
+        violet50: string
+        violet100: string
+        violet200: string
+        violet300: string
+        violet400: string
+        violet500: string
+        violet600: string
+        violet700: string
+        violet800: string
+        violet900: string
+      }
     }
     fonts: {
       fontPrimary: string
