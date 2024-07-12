@@ -40,7 +40,11 @@ export const processInlineStyles = (
     paddingBottom: css.py,
     boxShadow: css.boxShadow,
     maxWidth: css.maxWidth,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
+    // @ts-ignore
     color: css.color ? theme?.colors[css.color] ?? css.color : undefined,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
+    // @ts-ignore
     backgroundColor: css.bgColor
       ? theme?.colors[css.bgColor] ?? css.bgColor
       : undefined
