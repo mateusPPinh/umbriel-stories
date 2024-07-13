@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import type { Meta, StoryObj } from '@storybook/react'
+import Button from '../Button'
 
 import Modal from './index'
 import BlockItemCards from '../BlockItemCards'
@@ -11,7 +12,7 @@ import imageBlockOnly from '../../../public/image-block-image-block-1:2-width.sv
 import nextProjectFullWidth from '../../../public/next-project-fullwidth.svg'
 
 const dialogTriggerChild = () => {
-  return <button>Open dialog</button>
+  return <Button variant="primary" className='hover:opacity-80 transition-opacity'>Open add block modal</Button>
 }
 
 const defaultBlocks = [
@@ -78,18 +79,18 @@ type Story = StoryObj<typeof Modal>
 
 export const AddBlockModal: Story = {
   args: {
-    modalContent: <BlockItemCards blocks={defaultBlocks}/>,
+    modalContent: <BlockItemCards blocks={defaultBlocks} />,
     modalTitle: 'Adicionar Bloco',
     modalSubtitle: '',
-    useCustomCloseButton: true,
+    useCustomCloseButton: false,
     dialogTriggerChild: dialogTriggerChild()
   },
   decorators: [
     (Story, context) => {
       return (
-        <>
+        <div className="flex items-center justify-center h-screen w-screen">
           <Story {...context.args} />
-        </>
+        </div>
       )
     }
   ]

@@ -7,15 +7,41 @@ import imageBlockText from '../../../public/image-block-text-block-1:2-width.svg
 import textBlockImage from '../../../public/text-block-image-block-1:2-width.svg'
 import imageBlockOnly from '../../../public/image-block-image-block-1:2-width.svg'
 import nextProjectFullWidth from '../../../public/next-project-fullwidth.svg'
+import { type BlockItemCardsProps } from './types'
 
 const meta: Meta<typeof BlockItemCards> = {
   title: 'Componentes/BlockItemCards',
   component: BlockItemCards,
   argTypes: {
     blocks: {
-      control: 'object',
+      control: { type: 'object' },
       description: 'Array of block items to be displayed',
-      defaultValue: []
+      table: {
+        type: { summary: 'Array of blocks' }
+      }
+    },
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
+    // @ts-ignore
+    'blocks.title': {
+      control: { type: 'text' },
+      description: 'Title of the block',
+      table: {
+        type: { summary: 'string' }
+      }
+    },
+    'blocks.description': {
+      control: { type: 'text' },
+      description: 'Description of the block',
+      table: {
+        type: { summary: 'string' }
+      }
+    },
+    'blocks.img': {
+      control: { type: 'text' },
+      description: 'Image URL of the block',
+      table: {
+        type: { summary: 'string' }
+      }
     }
   }
 }
@@ -23,7 +49,7 @@ const meta: Meta<typeof BlockItemCards> = {
 export default meta
 type Story = StoryObj<typeof BlockItemCards>
 
-const defaultBlocks = [
+const defaultBlocks: BlockItemCardsProps['blocks'] = [
   {
     title: 'Bloco de imagem',
     description: 'Largura: 100% da tela',
@@ -63,9 +89,9 @@ export const Primary: Story = {
   decorators: [
     (Story, context) => {
       return (
-        <>
+        <div className="flex items-center justify-center h-screen w-screen">
           <Story {...context.args} />
-        </>
+        </div>
       )
     }
   ]
