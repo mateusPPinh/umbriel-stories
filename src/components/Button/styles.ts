@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components'
 
 interface CSSProps {
   variant: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info' | 'light' | 'dark' | 'underline'
+  isFullWidth?: boolean
 }
 
 const paddingStyles = css`
@@ -85,6 +86,14 @@ const Container = styled.button<CSSProps>`
   line-height: 110%;
   font-weight: 500;
   font-size: 12px;
+
+  ${({ isFullWidth }) => {
+    if (isFullWidth === true) {
+      return `
+        width: 100vw;
+      `
+    }
+  }}
 `
 
 export { Container }
