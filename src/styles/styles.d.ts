@@ -44,6 +44,8 @@ declare module 'styled-components' {
       fontSecondary: string
       fontThird: string
       heading: string
+      heading2: string
+      mvpFont: string
     }
     spacing: (...args: number[]) => string
   }
