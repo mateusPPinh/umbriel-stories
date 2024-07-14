@@ -2,6 +2,8 @@ import '@fontsource-variable/roboto-condensed'
 import '@fontsource/roboto'
 import '@fontsource-variable/noto-sans'
 import '@fontsource-variable/rubik'
+import '@fontsource-variable/lora'
+import '@fontsource-variable/inter'
 
 import { ThemeProvider, StyleSheetManager } from 'styled-components'
 import { type PropsWithChildren } from 'react'
@@ -55,7 +57,9 @@ const theme = {
     fontPrimary: 'Noto Sans Variable',
     fontSecondary: 'Roboto',
     fontThird: 'Poppins',
-    heading: 'Rubik Variable'
+    heading: 'Rubik Variable',
+    heading2: 'Inter Variable',
+    mvpFont: 'Lora Variable'
   },
   spacing: function () {
     const results = []

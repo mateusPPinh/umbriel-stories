@@ -7,6 +7,11 @@
   src: url(./assets/fonts/GeistMono-Regular.otf);
 }
 
+@font-face {
+  font-family: Chomsky;
+  src: url(./fonts/Chomsky.otf);
+}
+
 .sb-main-padded {
   margin: 0 !important;
   padding: 0 !important;
