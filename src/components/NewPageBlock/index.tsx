@@ -8,6 +8,9 @@ import TemplateLayoutThreeColumns from './templates/LayoutThreeColumns'
 import TemplateSeventyThirty from './templates/TemplateSeventyThirty'
 import TemplateSeventyThirtyWithTwoImages from './templates/TemplateSeventyThirtyWithTwoImages'
 import TemplateMainWithSidebar from './templates/TemplateMainWithSidebar'
+import TemplateBlockWithVerticalLine from './templates/TemplateBlockWithVerticalLine'
+import TemplateWithVerticalAndHorizontalLines from './templates/TemplateWithVerticalAndHorizontalLines'
+import TemplateLayoutNewsBlock from './templates/TemplateLayoutNewsBlock'
 
 const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
   return (
@@ -33,13 +36,19 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
           case 'TemplateHalfAndHalf':
             return <TemplateHalfAndHalf key={index} articles={articles} />
           case 'TemplateLayoutThreeColumns':
-            return <TemplateLayoutThreeColumns key={index} articles={articles} />
+            return <TemplateLayoutThreeColumns key={index} articles={articles} blockTitle={blockData.blockTitle ?? ''}/>
           case 'TemplateSeventyThirty':
             return <TemplateSeventyThirty key={index} articles={articles} />
           case 'TemplateSeventyThirtyWithTwoImages':
             return <TemplateSeventyThirtyWithTwoImages key={index} articles={articles} />
           case 'TemplateMainWithSidebar':
             return <TemplateMainWithSidebar key={index} articles={articles} />
+          case 'TemplateBlockWithVerticalLine':
+            return <TemplateBlockWithVerticalLine key={index} articles={articles} blockTitle={blockData.blockTitle ?? ''} />
+          case 'TemplateWithVerticalAndHorizontalLines':
+            return <TemplateWithVerticalAndHorizontalLines key={index} articles={articles} blockTitle={blockData.blockTitle ?? ''} />
+          case 'TemplateLayoutNewsBlock':
+            return <TemplateLayoutNewsBlock key={index} articles={articles} />
           default:
             return <div key={index}>Template not found</div>
         }

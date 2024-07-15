@@ -35,13 +35,27 @@ const Template5050: React.FC<Template5050Props> = ({
       <Column gridArea="col1">
         <ArticlePreview>
           <TextContainer>
-          <Title style={{ fontSize: headingsProps.fontSize, fontWeight: headingsProps.fontWeight, transform: headingsProps.transform }}>
-            <h2>{blockTitle}</h2>
-          </Title>
+            <Title
+              style={{
+                fontSize: headingsProps.fontSize,
+                fontWeight: headingsProps.fontWeight,
+                transform: headingsProps.transform
+              }}
+            >
+              <h2>{blockTitle}</h2>
+            </Title>
             <Description>
-              <p className='paragraph'>{descriptions[0]}</p>
+              <p className="paragraph">{descriptions[0]}</p>
             </Description>
-            <h2 style={{ fontSize: headingsProps.fontSize, fontWeight: headingsProps.fontWeight, transform: headingsProps.transform }}>{articles[0].title}</h2>
+            <h2
+              style={{
+                fontSize: headingsProps.fontSize,
+                fontWeight: headingsProps.fontWeight,
+                transform: headingsProps.transform
+              }}
+            >
+              {articles[0].title}
+            </h2>
             <p>{articles[0].subtitle}</p>
           </TextContainer>
           {articles[0].content.image.desktop_image_path.length > 0 && (
@@ -57,9 +71,17 @@ const Template5050: React.FC<Template5050Props> = ({
         <ArticlePreview>
           <TextContainer>
             <Description>
-            <p className='paragraph'>{descriptions[1]}</p>
+              <p className="paragraph">{descriptions[1]}</p>
             </Description>
-            <h2 style={{ fontSize: headingsProps.fontSize, fontWeight: headingsProps.fontWeight, transform: headingsProps.transform }}>{articles[1].title}</h2>
+            <h2
+              style={{
+                fontSize: headingsProps.fontSize,
+                fontWeight: headingsProps.fontWeight,
+                transform: headingsProps.transform
+              }}
+            >
+              {articles[1].title}
+            </h2>
             <p>{articles[1].subtitle}</p>
           </TextContainer>
           {articles[1].content.image.desktop_image_path.length > 0 && (
@@ -75,9 +97,17 @@ const Template5050: React.FC<Template5050Props> = ({
         <ArticlePreview>
           <TextContainer>
             <Description>
-            <p className='paragraph'>{descriptions[2]}</p>
+              <p className="paragraph">{descriptions[2]}</p>
             </Description>
-            <h2 style={{ fontSize: headingsProps.fontSize, fontWeight: headingsProps.fontWeight, transform: headingsProps.transform }}>{articles[2].title}</h2>
+            <h2
+              style={{
+                fontSize: headingsProps.fontSize,
+                fontWeight: headingsProps.fontWeight,
+                transform: headingsProps.transform
+              }}
+            >
+              {articles[2].title}
+            </h2>
             <p>{articles[2].subtitle}</p>
           </TextContainer>
           {articles[2].content.image.desktop_image_path.length > 0 && (
@@ -93,9 +123,17 @@ const Template5050: React.FC<Template5050Props> = ({
         <ArticlePreview>
           <TextContainer>
             <Description>
-            <p className='paragraph'>{descriptions[3]}</p>
+              <p className="paragraph">{descriptions[3]}</p>
             </Description>
-            <h2 style={{ fontSize: headingsProps.fontSize, fontWeight: headingsProps.fontWeight, transform: headingsProps.transform }}>{articles[3].title}</h2>
+            <h2
+              style={{
+                fontSize: headingsProps.fontSize,
+                fontWeight: headingsProps.fontWeight,
+                transform: headingsProps.transform
+              }}
+            >
+              {articles[3].title}
+            </h2>
             <p>{articles[3].subtitle}</p>
           </TextContainer>
           {articles[3].content.image.desktop_image_path.length > 0 && (
