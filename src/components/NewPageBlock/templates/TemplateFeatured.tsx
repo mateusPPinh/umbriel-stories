@@ -24,8 +24,11 @@ const TemplateFeatured: React.FC<TemplateFeaturedProps> = ({ articles }) => {
   return (
     <Container>
       <ImageArea>
-        {(articles[0].content.image.desktop_image_path.length > 0) && (
-          <Image src={articles[0].content.image.desktop_image_path} alt={articles[0].title} />
+        {articles[0].content.image.desktop_image_path.length > 0 && (
+          <Image
+            src={articles[0].content.image.desktop_image_path}
+            alt={articles[0].title}
+          />
         )}
       </ImageArea>
       <Caption>The captions here.</Caption>
@@ -39,22 +42,28 @@ const TemplateFeatured: React.FC<TemplateFeaturedProps> = ({ articles }) => {
       </ArticleTextArea>
       <Divider />
       <VerticalDividerWrapper>
-        <Column gridArea="col1">
+        <Column>
           <ArticlePreview>
             <h2>{articles[1].title}</h2>
             <p>{articles[1].subtitle}</p>
-            {(articles[1].content.image.desktop_image_path.length > 0) && (
-              <Image src={articles[1].content.image.desktop_image_path} alt={articles[1].title} />
+            {articles[1].content.image.desktop_image_path.length > 0 && (
+              <Image
+                src={articles[1].content.image.desktop_image_path}
+                alt={articles[1].title}
+              />
             )}
           </ArticlePreview>
         </Column>
         <DividerVertical />
-        <Column gridArea="col2">
+        <Column>
           <ArticlePreview>
             <h2>{articles[2].title}</h2>
             <p>{articles[2].subtitle}</p>
-            {(articles[2].content.image.desktop_image_path.length > 0) && (
-              <Image src={articles[2].content.image.desktop_image_path} alt={articles[2].title} />
+            {articles[2].content.image.desktop_image_path.length > 0 && (
+              <Image
+                src={articles[2].content.image.desktop_image_path}
+                alt={articles[2].title}
+              />
             )}
           </ArticlePreview>
         </Column>

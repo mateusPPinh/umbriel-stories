@@ -26,6 +26,10 @@ export interface Article {
     description: string
     slug: string
   }
+  links?: Array<{
+    title: string
+    url: string
+  }>
 }
 
 export interface Template5050Props {
@@ -50,6 +54,7 @@ export interface BlockData {
   articles: Article[]
   config: BlockConfig
   template50?: Template5050Props
+  blockTitle?: string
 }
 
 export interface PageBlockProps {

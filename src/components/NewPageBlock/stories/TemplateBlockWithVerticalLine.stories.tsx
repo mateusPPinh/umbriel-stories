@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import PageBlock from '../index'
 import { type BlockData } from '../PageBlock.types'
-import { templateLayoutThreeColumns } from '../mocks/templateLayoutThreeColumns.mock'
+import { templateBlockWithVerticalLine } from '../mocks/templateBlockWithVerticalLine.mock'
 
 const meta: Meta<typeof PageBlock> = {
-  title: 'Components/TemplateLayoutThreeColumns',
+  title: 'Components/TemplateBlockWithVerticalLine',
   component: PageBlock,
   argTypes: {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
@@ -23,31 +23,31 @@ export default meta
 type Story = StoryObj<typeof PageBlock>
 
 const layoutConfigurations = {
-  threeColumns: {
-    layout: '"col1 col2 col3"',
-    columns: [1, 1, 1]
+  blockWithVerticalLine: {
+    layout: '"col1 col1 col1 col1 col1"',
+    columns: [1, 1, 1, 1, 1]
   }
 }
 
-const blocksDataThreeColumns: BlockData[] = [
+const blocksDataBlockWithVerticalLine: BlockData[] = [
   {
     blockType: 'slot',
     blockPosition: '1',
     layout: 'layoutPadrao',
-    template: 'TemplateLayoutThreeColumns',
-    articles: templateLayoutThreeColumns,
-    config: layoutConfigurations.threeColumns,
-    blockTitle: 'Weekend Reads'
+    template: 'TemplateBlockWithVerticalLine',
+    articles: templateBlockWithVerticalLine,
+    config: layoutConfigurations.blockWithVerticalLine,
+    blockTitle: 'More News'
   }
 ]
 
-export const SeventyThirty: Story = {
+export const BlockWithVerticalLine: Story = {
   args: {
-    blocksData: blocksDataThreeColumns
+    blocksData: blocksDataBlockWithVerticalLine
   },
   render: (args) => (
-    <div className="flex items-center justify-center w-screen">
-      <div className="max-w-[1200px] w-full p-4">
+    <div className="flex items-center justify-center h-screen w-screen">
+      <div className="p-4">
         <PageBlock {...args} />
       </div>
     </div>
