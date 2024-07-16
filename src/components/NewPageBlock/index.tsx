@@ -16,7 +16,15 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
   return (
     <div className="page-block">
       {blocksData.map((blockData, index) => {
-        const { template, articles, config, template50 } = blockData
+        const { template, articles, config, template50, blockTitle } = blockData
+        // Parse layout if it's a stringified JSON
+        let parsedLayout = config.layout
+        try {
+          parsedLayout = typeof config.layout === 'string' ? JSON.parse(config.layout) : config.layout
+        } catch (error) {
+          console.error('Error parsing layout JSON:', error)
+        }
+
         switch (template) {
           case 'Template5050':
             return (
@@ -24,19 +32,19 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
                 key={index}
                 articles={articles}
                 descriptions={template50?.descriptions ?? []}
-                config={config}
+                config={{ ...config, layout: parsedLayout }}
                 blockTitle='What to Watch and Read'
                 headingsProps={template50?.headingsProps}
               />
             )
           case 'TemplateFeatured':
-            return <TemplateFeatured key={index} articles={articles} config={config} />
+            return <TemplateFeatured key={index} articles={articles} config={{ ...config, layout: parsedLayout }} />
           case 'TemplateFullWidth':
             return <TemplateFullWidth key={index} articles={articles} />
           case 'TemplateHalfAndHalf':
             return <TemplateHalfAndHalf key={index} articles={articles} />
           case 'TemplateLayoutThreeColumns':
-            return <TemplateLayoutThreeColumns key={index} articles={articles} blockTitle={blockData.blockTitle ?? ''}/>
+            return <TemplateLayoutThreeColumns key={index} articles={articles} blockTitle={blockTitle ?? ''} />
           case 'TemplateSeventyThirty':
             return <TemplateSeventyThirty key={index} articles={articles} />
           case 'TemplateSeventyThirtyWithTwoImages':
@@ -44,9 +52,9 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
           case 'TemplateMainWithSidebar':
             return <TemplateMainWithSidebar key={index} articles={articles} />
           case 'TemplateBlockWithVerticalLine':
-            return <TemplateBlockWithVerticalLine key={index} articles={articles} blockTitle={blockData.blockTitle ?? ''} />
+            return <TemplateBlockWithVerticalLine key={index} articles={articles} blockTitle={blockTitle ?? ''} />
           case 'TemplateWithVerticalAndHorizontalLines':
-            return <TemplateWithVerticalAndHorizontalLines key={index} articles={articles} blockTitle={blockData.blockTitle ?? ''} />
+            return <TemplateWithVerticalAndHorizontalLines key={index} articles={articles} blockTitle={blockTitle ?? ''} />
           case 'TemplateLayoutNewsBlock':
             return <TemplateLayoutNewsBlock key={index} articles={articles} />
           default:
