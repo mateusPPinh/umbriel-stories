@@ -36,6 +36,7 @@ export default defineConfig({
           'react-dom': 'ReactDOM',
           'styled-components': 'styled',
         },
+        interop: 'compat'
       },
     },
   },
