@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogClose
-} from '@/components/ui/dialog'
+} from '../../components/ui/dialog'
 import { type ModalProps } from './types'
 
 export default function Modal ({

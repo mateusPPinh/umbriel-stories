@@ -1,8 +1,10 @@
 import { ThemeProvider } from 'styled-components'
 import theme from '../../styles/index'
-import { type ReactElement } from 'react'
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import React, { ReactElement } from 'react'
 
-interface CustomThemeProviderProps {
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+type CustomThemeProviderProps = {
   theme?: typeof theme
   children: React.ReactNode
 }

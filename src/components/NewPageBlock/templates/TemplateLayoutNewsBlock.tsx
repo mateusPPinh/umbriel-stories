@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { type Article } from '../PageBlock.types'
-import useWindowWidth from '@/components/utils/useScreen'
+import useWindowWidth from '../../utils/useScreen'
 
 interface LayoutNewsBlockProps {
   articles: Article[]
