@@ -1,13 +1,14 @@
 import '../src/index.css'
-import Theme from '../src/styles/index'
+import theme from '../src/styles/index'
 import '@fontsource/roboto'
+import { ThemeProvider } from 'styled-components'
 
 export const decorators = [
   (Story) => {
     return (
-      <Theme>
+      <ThemeProvider theme={theme}> 
         <Story />
-      </Theme>
+      </ThemeProvider>
     )
   },
 ]
