@@ -45,7 +45,7 @@
     "@rollup/plugin-typescript": "^11.1.6",
     "@storybook/addon-themes": "^7.6.17",
     "@storybook/addons": "^7.6.17",
-    "@umbriel/components": "^0.1.26",
+    "@umbriel/components": "^0.1.27",
     "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -64,7 +64,8 @@
     "rollup-plugin-typescript-paths": "^1.5.0",
     "storybook": "^7.6.17",
     "storybook-addon-theme-provider": "^0.1.15",
-    "styled-components": "^6.1.8",
+    "styled-components": "^6.1.11",
+    "stylis": "^4.0.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "vite-plugin-dts": "^3.7.3"
