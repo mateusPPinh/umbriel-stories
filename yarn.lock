@@ -3398,6 +3398,11 @@
     "@typescript-eslint/types" "7.1.1"
     eslint-visitor-keys "^3.4.1"
 
+"@umbriel/components@^0.1.26":
+  version "0.1.26"
+  resolved "https://registry.yarnpkg.com/@umbriel/components/-/components-0.1.26.tgz#a29382b099fd4e2ed3314aa517c579741287cc09"
+  integrity sha512-h7mtWlGoIVRzVZ2BWFdFaK3oiFH2XxXUkTWi0bkVlhe3gSShP4taK8jk/DAkjRQIXPa4ajysFBwT+fSUU86kOg==
+
 "@umbriel/components@^0.1.4":
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/@umbriel/components/-/components-0.1.4.tgz#0de0d09f11060e75faa179333794268d63c32786"

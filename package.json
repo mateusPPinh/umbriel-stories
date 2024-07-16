@@ -11,8 +11,11 @@
   "exports": {
     ".": {
       "import": "./dist/index.es.js",
-      "require": "./dist/index.umd.cjs"
-    }
+      "require": "./dist/index.umd.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./theme": "./dist/theme.js",
+    "./styles": "./dist/index.css"
   },
   "scripts": {
     "dev": "vite",
@@ -42,7 +45,7 @@
     "@rollup/plugin-typescript": "^11.1.6",
     "@storybook/addon-themes": "^7.6.17",
     "@storybook/addons": "^7.6.17",
-    "@umbriel/components": "^0.1.4",
+    "@umbriel/components": "^0.1.26",
     "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
