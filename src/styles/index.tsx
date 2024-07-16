@@ -5,10 +5,6 @@ import '@fontsource-variable/rubik'
 import '@fontsource-variable/lora'
 import '@fontsource-variable/inter'
 
-import { ThemeProvider, StyleSheetManager } from 'styled-components'
-import { type PropsWithChildren } from 'react'
-import isPropValid from '@emotion/is-prop-valid'
-
 const theme = {
   colors: {
     blueDark: '#142634',
@@ -47,17 +43,5 @@ const theme = {
     mvpFont: 'Lora Variable'
   }
 }
-export default function CustomStyles ({ children }: PropsWithChildren): any {
-  return (
-    <StyleSheetManager
-      enableVendorPrefixes
-      shouldForwardProp={(propName, elementToBeRendered) => {
-        return typeof elementToBeRendered === 'string'
-          ? isPropValid(propName)
-          : true
-      }}
-    >
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
-    </StyleSheetManager>
-  )
-}
+
+export default theme
