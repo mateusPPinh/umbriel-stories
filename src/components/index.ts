@@ -1,4 +1,5 @@
 export { default as Theme } from '../styles/index'
+export { CustomThemeProvider } from './CustomThemeProvider'
 export { default as Gallery } from './Gallery'
 export { default as GalleryPreview } from './Gallery/components/Preview'
 export { default as UmbrielGallery } from './GalleryV2'
