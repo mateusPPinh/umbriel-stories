@@ -1,16 +1,6 @@
 import 'styled-components'
 declare module 'styled-components' {
   export interface DefaultTheme {
-    breakpoints: {
-      down: (size: 'sm' | 'md' | 'lg' | 'xl') => string
-      up: (size: 'sm' | 'md' | 'lg' | 'xl') => string
-      values: {
-        sm: number
-        md: number
-        lg: number
-        xl: number
-      }
-    }
     colors: {
       blueDark: string
       white: string
@@ -47,6 +37,5 @@ declare module 'styled-components' {
       heading2: string
       mvpFont: string
     }
-    spacing: (...args: number[]) => string
   }
 }

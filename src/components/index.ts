@@ -1,8 +1,4 @@
-export { default as Anchor } from './Anchor/Anchor'
-export { default as Box } from './Boxes/Boxes'
-export { default as Image } from './Image/Image'
 export { default as Theme } from '../styles/index'
-export { default as Typography } from './Typography'
 export { default as Gallery } from './Gallery'
 export { default as GalleryPreview } from './Gallery/components/Preview'
 export { default as UmbrielGallery } from './GalleryV2'

@@ -9,22 +9,7 @@ import { ThemeProvider, StyleSheetManager } from 'styled-components'
 import { type PropsWithChildren } from 'react'
 import isPropValid from '@emotion/is-prop-valid'
 
-const spacingSize = 8
 const theme = {
-  breakpoints: {
-    down: (size: 'sm' | 'md' | 'lg' | 'xl') => {
-      return `@media (max-width: ${theme.breakpoints.values[size]}px)`
-    },
-    up: (size: 'sm' | 'md' | 'lg' | 'xl') => {
-      return `@media (min-width: ${theme.breakpoints.values[size]}px)`
-    },
-    values: {
-      sm: 480,
-      md: 768,
-      lg: 976,
-      xl: 1440
-    }
-  },
   colors: {
     blueDark: '#142634',
     white: '#FFFFFF',
@@ -60,13 +45,6 @@ const theme = {
     heading: 'Rubik Variable',
     heading2: 'Inter Variable',
     mvpFont: 'Lora Variable'
-  },
-  spacing: function () {
-    const results = []
-    for (let i = 0; i < arguments.length; i++) {
-      results.push(arguments[i] * spacingSize + 'px')
-    }
-    return results.join(' ')
   }
 }
 export default function CustomStyles ({ children }: PropsWithChildren): any {
