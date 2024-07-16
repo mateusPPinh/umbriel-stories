@@ -1,10 +1,6 @@
 import styled from 'styled-components'
 
-interface ContainerProps {
-  hoverState: boolean
-}
-
-export const Container = styled.div<Pick<ContainerProps, 'hoverState'>>`
+export const Container = styled.div<{ hoverState: boolean }>`
    background-color: transparent;
    padding: 0px;
    max-width: 512px;
