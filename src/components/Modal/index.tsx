@@ -1,4 +1,5 @@
 import { type ReactElement } from 'react'
+import { X } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -8,7 +9,6 @@ import {
   DialogTrigger,
   DialogClose
 } from '@/components/ui/dialog'
-import { X } from 'lucide-react'
 import { type ModalProps } from './types'
 
 export default function Modal ({
