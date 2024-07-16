@@ -10,7 +10,7 @@ export default defineConfig({
     react(),
     dts({
       insertTypesEntry: true,
-      include: ['src/components/'],
+      include: ['src/components/', 'src/styles/'],
     }),
   ],
   resolve: {
