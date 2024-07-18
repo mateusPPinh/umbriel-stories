@@ -1,3 +1,4 @@
+
 name: Generate tag version
 on:
   workflow_dispatch:
@@ -27,7 +28,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '20.x'
+
       - name: Generate new version
+        run: npm version ${{ github.event.inputs.version }}
+
+      - name: Push new version tag to repository
+        env:
+          UMBRIEL_COMPONENTS_TOKEN: ${{ secrets.UMBRIEL_COMPONENTS_TOKEN }}
         run: |
-          npm version ${{ github.event.inputs.version }}
+          git remote set-url origin https://Umbriel-CMS:$(echo $UMBRIEL_COMPONENTS_TOKEN)@github.com/Umbriel-CMS/umbriel-stories.git
           git push origin develop --tags

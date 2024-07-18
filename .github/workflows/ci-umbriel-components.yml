@@ -1,9 +1,13 @@
-name: Publish package on NPM from develop
+name: Publish package on NPM from QA Branch
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - qa
+  release:
+    types: [created]
+    branches:
+      - qa
 
 jobs:
   build:
