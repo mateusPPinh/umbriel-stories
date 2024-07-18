@@ -4,17 +4,17 @@
   "version": "0.1.42",
   "type": "module",
  "scripts": {
-    "dev": "vite",
-    "build": "rollup -c",
-    "prepare": "npm run build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build -o storybook-static",
-    "prepack": "cp package.json package.backup.json && json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\"",
-    "postpack": "mv package.backup.json package.json",
-    "format": "prettier --write ."
-  },
+  "dev": "vite",
+  "build": "rollup -c",
+  "prepare": "npm run build",
+  "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+  "preview": "vite preview",
+  "storybook": "storybook dev -p 6006",
+  "build-storybook": "storybook build",
+  "prepack": "cp package.json package.backup.json && json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\"",
+  "postpack": "mv package.backup.json package.json",
+  "format": "prettier --write ."
+},
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || 18.x",
