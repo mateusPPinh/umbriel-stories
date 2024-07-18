@@ -3,9 +3,9 @@ import styled from 'styled-components'
 import { type Article, type BlockConfig } from '../PageBlock.types'
 
 interface Template5050GridProps {
+  blockTitle?: string
   articles: Article[]
   config: BlockConfig
-  blockTitle?: string
 }
 
 const Container = styled.div`
