@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import React, { type ReactElement } from 'react'
+import styled from 'styled-components'
 import { type Article, type BlockConfig } from '../PageBlock.types'
 
 interface TemplateSideColumnsProps {
@@ -7,26 +8,119 @@ interface TemplateSideColumnsProps {
   articles: Article[]
 }
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 330px;
+  width: 100%;
+`
+
+const Divider = styled.div`
+  width: 100%;
+  border-bottom: 1px solid #000;
+`
+
+const ArticleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+`
+
+const Author = styled.h2`
+  font-size: 13px;
+  color: #5A5A5A;
+  font-family: 'mvpFont';
+  text-transform: uppercase;
+  line-height: 140%;
+`
+
+const Title = styled.h3`
+  font-size: 19px;
+  font-weight: bold;
+  font-family: 'mvpFont';
+  color: #121212;
+  line-height: 120%;
+`
+
+const ArticleImage = styled.img`
+  margin-top: 8px;
+  width: 100%;
+  object-fit: cover;
+`
+
+const ArticleRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
+
+const ArticleRowText = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+`
+
+const ArticleRowImage = styled.img`
+  margin-left: 8px;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+`
+
+const Footer = styled.div`
+  display: flex;
+  border-top: 1px solid #000;
+  padding-top: 16px;
+  margin-top: 4px;
+`
+
+const FooterColumn = styled.div`
+  width: 50%;
+  padding-right: 16px;
+
+  &:last-child {
+    padding-right: 0;
+    padding-left: 16px;
+    border-left: 1px solid #000;
+  }
+`
+
+const FooterTitle = styled.h4`
+  font-size: 13px;
+  color: #5A5A5A;
+  font-family: 'mvpFont';
+  text-transform: uppercase;
+  line-height: 140%;
+`
+
+const FooterContent = styled.p`
+  font-size: 15px;
+  font-weight: bold;
+  font-family: 'mvpFont';
+  color: #121212;
+  line-height: 120%;
+`
+
 const TemplateSideColumns = ({ articles }: TemplateSideColumnsProps): ReactElement => {
   const displayedArticles = articles.slice(0, 6)
 
   return (
-    <div className="flex flex-col gap-4 max-w-[330px] w-full">
-      <div className="w-full border-b border-[#000]" />
+    <Container>
+      <Divider />
       {displayedArticles.map((article, index) => {
         if (index === 2) {
           return (
             <React.Fragment key={index}>
-              <div className="flex flex-col items-start">
-                <h2 className="text-[13px] text-[#5A5A5A] font-mvpFont uppercase leading-[140%]">{article.author}</h2>
-                <h3 className="text-lg font-bold font-mvpFont text-[19px] text-[#121212] leading-[120%]">
-                  {article.title}
-                </h3>
+              <ArticleContainer>
+                <Author>{article.author}</Author>
+                <Title>{article.title}</Title>
                 {Boolean(article.content.image) && (
-                  <img className="mt-2 w-full object-cover" src={article.content.image.desktop_image_path} alt={article.title} />
+                  <ArticleImage src={article.content.image.desktop_image_path} alt={article.title} />
                 )}
-              </div>
-              <div className="w-full border-b border-[#000]"></div>
+              </ArticleContainer>
+              <Divider />
             </React.Fragment>
           )
         }
@@ -37,39 +131,37 @@ const TemplateSideColumns = ({ articles }: TemplateSideColumnsProps): ReactEleme
 
         return (
           <React.Fragment key={index}>
-            <div>
-              <div className="flex items-center justify-between">
-                <div className='flex flex-col items-start'>
-                  <h2 className="text-[13px] text-[#5A5A5A] font-mvpFont uppercase leading-[140%]">{article.author}</h2>
-                  <h3 className="text-lg font-bold font-mvpFont text-[19px] text-[#121212] leading-[120%]">{article.title}</h3>
-                </div>
-                {Boolean(article.content.image) && (
-                  <img className="ml-2 w-10 h-10 object-cover rounded-[50%]" src={article.content.image.desktop_image_path} alt={article.title} />
-                )}
-              </div>
-            </div>
+            <ArticleRow>
+              <ArticleRowText>
+                <Author>{article.author}</Author>
+                <Title>{article.title}</Title>
+              </ArticleRowText>
+              {Boolean(article.content.image) && (
+                <ArticleRowImage src={article.content.image.desktop_image_path} alt={article.title} />
+              )}
+            </ArticleRow>
             {index < displayedArticles.length - 1 && index !== 2 && (
-              <div className="w-full border-b border-[#000]"></div>
+              <Divider />
             )}
           </React.Fragment>
         )
       })}
-      <div className="flex border-t pt-4 mt-1">
-        <div className="w-1/2 pr-4 border-r">
-          <h4 className="text-[13px] text-[#5A5A5A] font-mvpFont uppercase leading-[140%]">Letters from our readers</h4>
-          <p className="font-bold font-mvpFont text-[15px] text-[#121212] leading-[120%]">
+      <Footer>
+        <FooterColumn>
+          <FooterTitle>Letters from our readers</FooterTitle>
+          <FooterContent>
             {displayedArticles[0]?.title || 'Caring for Pet Companions'}
-          </p>
-        </div>
-        <div className="w-1/2 pl-4">
-          <h4 className="text-[13px] text-[#5A5A5A] font-mvpFont uppercase leading-[140%]">The Editorial</h4>
-          <p className="font-bold font-mvpFont text-[15px] text-[#121212] leading-[120%]">
+          </FooterContent>
+        </FooterColumn>
+        <FooterColumn>
+          <FooterTitle>The Editorial</FooterTitle>
+          <FooterContent>
             {displayedArticles[5]?.title || 'Scientists found evidence.'}
-          </p>
-        </div>
-      </div>
-      <div className="w-full border-b border-[#000]" />
-    </div>
+          </FooterContent>
+        </FooterColumn>
+      </Footer>
+      <Divider />
+    </Container>
   )
 }
 
