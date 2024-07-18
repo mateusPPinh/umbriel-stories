@@ -3,14 +3,14 @@
   "private": false,
   "version": "0.1.42",
   "type": "module",
-  "scripts": {
+ "scripts": {
     "dev": "vite",
     "build": "rollup -c",
     "prepare": "npm run build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
+    "build-storybook": "storybook build -o storybook-static",
     "prepack": "cp package.json package.backup.json && json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\"",
     "postpack": "mv package.backup.json package.json",
     "format": "prettier --write ."
