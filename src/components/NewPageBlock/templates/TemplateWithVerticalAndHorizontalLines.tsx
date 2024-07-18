@@ -1,14 +1,14 @@
 import React from 'react'
 import {
   ArticlePreview,
-  BlockTitle,
+  CenterColumn,
   Container,
   Image,
-  MainArticle,
-  MainContent,
-  MainImage,
-  Sidebar
-} from './styles/TemplateWithVerticalAndHorizontalLines.styles'
+  MainColumn,
+  SidebarColumn,
+  BorderBottom,
+  BorderTop
+} from './styles/TemplateMainWithSidebar.styles'
 import { type Article } from '../PageBlock.types'
 
 interface TemplateWithVerticalAndHorizontalLinesProps {
@@ -16,58 +16,45 @@ interface TemplateWithVerticalAndHorizontalLinesProps {
   blockTitle: string
 }
 
-const TemplateWithVerticalAndHorizontalLines: React.FC<
-TemplateWithVerticalAndHorizontalLinesProps
-> = ({ articles, blockTitle }) => {
+const TemplateMainWithSidebar: React.FC<TemplateWithVerticalAndHorizontalLinesProps> = ({
+  articles
+}) => {
   return (
-    <Container>
-      <BlockTitle>{blockTitle}</BlockTitle>
-      <MainContent>
-        <div>
+    <>
+      <BorderTop />
+      <Container>
+        <MainColumn>
+          {articles.slice(0, 4).map((article, index) => (
+            <ArticlePreview key={index} hasBorder={index < 3}>
+              <h2>{article.title}</h2>
+              <p>{article.subtitle}</p>
+            </ArticlePreview>
+          ))}
+        </MainColumn>
+        <CenterColumn>
           {articles[0].content.image.desktop_image_path.length > 0 && (
-            <MainImage
+            <Image
               src={articles[0].content.image.desktop_image_path}
               alt={articles[0].title}
             />
           )}
-          <MainArticle>
-            <h2>{articles[0].title}</h2>
-            <p>{articles[0].subtitle}</p>
-          </MainArticle>
-        </div>
-        <Sidebar>
-          {articles.slice(1, 5).map((article, index) => (
-            <ArticlePreview key={index}>
-              {article.content.image.desktop_image_path.length > 0 && (
-                <Image
-                  src={article.content.image.desktop_image_path}
-                  alt={article.title}
-                />
-              )}
-              <h2>{article.title}</h2>
-              <p>{article.subtitle}</p>
-            </ArticlePreview>
-          ))}
-        </Sidebar>
-      </MainContent>
-      <div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <ArticlePreview hasBorder={false}>
+            <h2>{articles[4].title}</h2>
+            <p>{articles[4].subtitle}</p>
+          </ArticlePreview>
+        </CenterColumn>
+        <SidebarColumn>
           {articles.slice(5).map((article, index) => (
-            <ArticlePreview key={index}>
-              {article.content.image.desktop_image_path.length > 0 && (
-                <Image
-                  src={article.content.image.desktop_image_path}
-                  alt={article.title}
-                />
-              )}
+            <ArticlePreview key={index} hasBorder={index < articles.slice(5).length - 1}>
               <h2>{article.title}</h2>
               <p>{article.subtitle}</p>
             </ArticlePreview>
           ))}
-        </div>
-      </div>
-    </Container>
+        </SidebarColumn>
+      </Container>
+      <BorderBottom />
+    </>
   )
 }
 
-export default TemplateWithVerticalAndHorizontalLines
+export default TemplateMainWithSidebar

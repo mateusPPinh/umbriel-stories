@@ -15,6 +15,7 @@ import Template5050Grid from './templates/Template5050Grid'
 import TemplateSlot100FeaturedRelated from './templates/TemplateSlot100-FeaturedRelated'
 import { type PageBlockProps, type BlockData } from './PageBlock.types'
 import TemplateSideColumns from './templates/TemplateSideColumns'
+import TemplateNewsletter from './templates/TemplateNewSletter'
 
 const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
   return (
@@ -119,6 +120,8 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
             )
           case 'TemplateSideColumns':
             return <TemplateSideColumns key={index} articles={articles} config={config}/>
+          case 'TemplateNewsletter':
+            return <TemplateNewsletter key={index} articles={articles} config={config}/>
           default:
             return <div key={index}>Template not found</div>
         }

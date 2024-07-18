@@ -1,4 +1,4 @@
-import { styled } from 'styled-components'
+import styled from 'styled-components'
 
 export const Container = styled.div`
   display: grid;
@@ -6,6 +6,7 @@ export const Container = styled.div`
   gap: 20px;
   max-width: 1200px;
   margin: auto;
+
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -44,10 +45,11 @@ export const SidebarColumn = styled.div`
   }
 `
 
-export const ArticlePreview = styled.div`
+export const ArticlePreview = styled.div<{ hasBorder: boolean }>`
   background-color: transparent;
   padding: 10px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: ${({ hasBorder }) => (hasBorder ? '1px solid #ddd' : 'none')};
+  width: 100%;
 
   h2,
   p {
@@ -78,4 +80,14 @@ export const Image = styled.img`
     height: 200px;
     object-fit: cover;
   }
+`
+
+export const BorderTop = styled.div`
+  border: 1px solid #121212;
+  margin: 0.8rem 0;
+`
+
+export const BorderBottom = styled.div`
+  border: 1px solid #121212;
+  margin: 0.8rem 0;
 `
