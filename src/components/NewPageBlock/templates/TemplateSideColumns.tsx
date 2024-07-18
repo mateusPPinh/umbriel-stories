@@ -3,8 +3,8 @@ import React, { type ReactElement } from 'react'
 import { type Article, type BlockConfig } from '../PageBlock.types'
 
 interface TemplateSideColumnsProps {
-  articles: Article[]
   config: BlockConfig
+  articles: Article[]
 }
 
 const TemplateSideColumns = ({ articles }: TemplateSideColumnsProps): ReactElement => {
