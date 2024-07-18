@@ -1,14 +1,14 @@
 import '../src/index.css'
-import theme from '../src/styles/index'
+import Theme from '../src/styles/index'
 import '@fontsource/roboto'
-import { ThemeProvider } from 'styled-components'
+import { INITIAL_VIEWPORTS, MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
 
 export const decorators = [
   (Story) => {
     return (
-      <ThemeProvider theme={theme}> 
+      <Theme>
         <Story />
-      </ThemeProvider>
+      </Theme>
     )
   },
 ]
@@ -16,6 +16,13 @@ export const decorators = [
 const preview = {
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
+    viewport: {
+      viewports: {
+        ...INITIAL_VIEWPORTS,
+        ...MINIMAL_VIEWPORTS,
+      },
+      defaultViewport: 'desktop',
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,

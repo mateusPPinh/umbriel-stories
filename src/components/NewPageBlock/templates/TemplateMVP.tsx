@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import { type Article, type BlockConfig } from '../PageBlock.types'
 
 interface TemplateMVPProps {
@@ -27,7 +27,7 @@ const ArticlePreview = styled.div`
 
   h2,
   p {
-    font-family: ${(props) => props.theme.fonts.mvpFont};
+    font-family: 'Lora Variable';
   }
 
   h2 {

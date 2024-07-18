@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import { type Article } from '../PageBlock.types'
 import useWindowWidth from '../../utils/useScreen'
 
@@ -21,7 +21,7 @@ const BlockTitle = styled.h2`
   margin-bottom: -1rem;
   margin-left: 0.8rem;
   font-weight: bold;
-  font-family: ${(props) => props.theme.fonts.heading2};
+  font-family: 'Inter Variable';
   color: #121212;
   cursor: pointer;
 
@@ -52,7 +52,7 @@ const ArticlePreview = styled.div`
 
   h2,
   p {
-    font-family: ${(props) => props.theme.fonts.mvpFont};
+    font-family: 'Lora Variable';
   }
 
   h2 {
@@ -86,7 +86,7 @@ const LinksList = styled.ul`
   }
 
   a {
-    font-family: ${(props) => props.theme.fonts.mvpFont};
+    font-family: 'Lora Variable';
     margin-top: -3px;
     transition: color 0.6s ease 0s;
     color: rgb(18, 18, 18);

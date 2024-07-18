@@ -57,7 +57,7 @@ const meta: Meta<typeof Modal> = {
       description: 'React Element to be displayed as the content of the modal',
       table: {
         type: { summary: 'ReactElement' },
-        defaultValue: { summary: null }
+        defaultValue: { summary: '' }
       }
     },
     modalTitle: { control: 'text' },
@@ -68,7 +68,7 @@ const meta: Meta<typeof Modal> = {
       description: 'React Element to be displayed as the trigger of the modal',
       table: {
         type: { summary: 'ReactElement' },
-        defaultValue: { summary: null }
+        defaultValue: { summary: '' }
       }
     }
   }
