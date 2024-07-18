@@ -12,7 +12,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-width: 330px;
   width: 100%;
 `
 

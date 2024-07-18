@@ -23,3 +23,4 @@ export { default as TemplateSeventyThirtyWithTwoImages } from './NewPageBlock/te
 export { default as TemplateWithVerticalAndHorizontalLines } from './NewPageBlock/templates/TemplateWithVerticalAndHorizontalLines'
 export { default as TemplateSideColumns } from './NewPageBlock/templates/TemplateSideColumns'
 export { default as Template5050Grid } from './NewPageBlock/templates/Template5050Grid'
+export { default as TemplateNewsletter } from './NewPageBlock/templates/TemplateNewSletter'
