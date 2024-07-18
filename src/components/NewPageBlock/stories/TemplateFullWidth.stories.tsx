@@ -2,10 +2,17 @@ import type { Meta, StoryObj } from '@storybook/react'
 import PageBlock from '../index'
 import { type BlockData } from '../PageBlock.types'
 import { sampleArticles } from '../mocks/sampleArticles'
+import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 
 const meta: Meta<typeof PageBlock> = {
   title: 'Components/TemplateFullWidthInColumn',
   component: PageBlock,
+  parameters: {
+    viewport: {
+      viewports: INITIAL_VIEWPORTS,
+      defaultViewport: 'desktop'
+    }
+  },
   argTypes: {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
     // @ts-ignore
@@ -33,16 +40,26 @@ const blocksDataFullWidth: BlockData[] = [
   {
     blockType: 'slot',
     blockPosition: '1',
-    layout: 'layoutPadrao',
     template: 'TemplateFullWidth',
-    articles: sampleArticles,
-    config: layoutConfigurations.fullWidth
+    config: layoutConfigurations.fullWidth,
+    blocksData: {
+      centerMiddle: {
+        articles: sampleArticles
+      },
+      components: []
+    },
+    pageId: ''
   }
 ]
 
 export const FullWidth: Story = {
   args: {
     blocksData: blocksDataFullWidth
+  },
+  parameters: {
+    viewport: {
+      defaultViewport: 'desktop'
+    }
   },
   render: (args) => (
     <div className="flex items-center justify-center w-screen">

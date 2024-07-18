@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 export const Container = styled.div`
   display: flex;
@@ -11,8 +11,8 @@ export const BlockTitle = styled.h2`
   line-height: 140%;
   margin-bottom: 1rem;
   font-weight: bold;
-  font-family: ${(props) => props.theme.fonts.heading2};
-  color: #121212
+  font-family: 'Inter Variable';
+  color: #121212;
 `
 
 export const ContentWrapper = styled.div`
@@ -55,7 +55,7 @@ export const ArticlePreview = styled.div`
 
   h2,
   p {
-    font-family: ${(props) => props.theme.fonts.mvpFont};
+    font-family: 'Lora Variable';
   }
 
   h2 {

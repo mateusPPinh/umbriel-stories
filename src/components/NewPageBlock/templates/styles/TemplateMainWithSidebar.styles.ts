@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 export const Container = styled.div`
   display: grid;
@@ -51,7 +51,7 @@ export const ArticlePreview = styled.div`
 
   h2,
   p {
-    font-family: ${(props) => props.theme.fonts.mvpFont};
+    font-family: 'Lora Variable';
   }
 
   h2 {

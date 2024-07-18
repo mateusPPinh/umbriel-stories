@@ -2,10 +2,17 @@ import type { Meta, StoryObj } from '@storybook/react'
 import PageBlock from '../index'
 import { type BlockData } from '../PageBlock.types'
 import { custom50Article } from '../mocks/custom50'
+import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 
 const meta: Meta<typeof PageBlock> = {
   title: 'Components/TemplateHeaderTwoColumn',
   component: PageBlock,
+  parameters: {
+    viewport: {
+      viewports: INITIAL_VIEWPORTS,
+      defaultViewport: 'desktop'
+    }
+  },
   argTypes: {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
     // @ts-ignore
@@ -33,10 +40,13 @@ const blocksData5050: BlockData[] = [
   {
     blockType: 'slot',
     blockPosition: '1',
-    layout: 'layoutPadrao',
     template: 'Template5050',
-    articles: custom50Article,
     config: layoutConfigurations.halfAndHalfWithImage,
+    blocksData: {
+      centerMiddle: { articles: custom50Article },
+      components: []
+    },
+    pageId: '',
     template50: {
       descriptions: ['BOOK REVIEW', 'STREAMING', 'BOOKS', 'MOVIE PREVIEW'],
       headingsProps: {
@@ -55,6 +65,12 @@ export const TemplateHeaderTwoColumn: Story = {
   render: (args) => (
     <div className="flex items-center justify-center w-screen">
       <div className="max-w-[1200px] w-full p-4">
+      <div className="flex mb-8 flex-col items-start ml-2">
+          <h1 className="text-3xl">T5050 - 2 columns - 2 rows without subtitle + editorial teaser- Desktop</h1>
+          <span className="text-[16px] text-gray-400 mt-2 mb-2 font-bold">
+          Title + Image
+          </span>
+        </div>
         <PageBlock {...args} />
       </div>
     </div>

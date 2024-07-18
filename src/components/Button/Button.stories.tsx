@@ -85,7 +85,8 @@ export const Info: Story = {
   args: {
     children: 'Umbriel like blue button',
     variant: 'info',
-    isFullWidth: false
+    isFullWidth: false,
+    className: 'hover:opacity-70 transtion:hover'
   }
 }
 

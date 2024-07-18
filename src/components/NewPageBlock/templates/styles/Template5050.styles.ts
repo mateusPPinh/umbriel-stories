@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 interface CSSProps {
   headingsProps?: {
@@ -17,7 +17,6 @@ const Container = styled.div`
     'col3 divider3 col4 divider4';
   grid-template-columns: 1fr auto 1fr auto;
   gap: 20px;
-  max-width: 1200px;
   margin: auto;
 
   @media (max-width: 768px) {
@@ -51,7 +50,7 @@ const Description = styled.div`
 
   .paragraph {
     font-size: 12px;
-    font-family: ${(props) => props.theme.fonts.mvpFont};
+    font-family: 'Lora Variable';
     line-height: 140%;
     color: #999;
     font-weight: bold;
@@ -88,7 +87,7 @@ const ArticlePreview = styled.div<CSSProps>`
   border-radius: 8px;
 
   h2, h3, p {
-    font-family: ${(props) => props.theme.fonts.mvpFont};
+    font-family: 'Lora Variable';
   }
 
   h2 {

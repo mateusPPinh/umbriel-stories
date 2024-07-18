@@ -1,14 +1,14 @@
-export const sampleArticles = [
+export const templateSideColumnsMock = [
   {
     id: '1',
-    title: 'Biden Holds Firm as Worried Democrats Take Their Case Directly to Mateus',
+    title: 'Biden Pushes Back as Worried Democrats Take Their Case Directly to Him',
     subtitle: 'After the House minority leader visited the White House to share Democrats’ concerns, President Biden held a tense virtual session with lawmakers.',
     author: 'Author 1',
     email: 'author1@example.com',
     content: {
       image: {
-        desktop_image_path: 'https://static01.nyt.com/images/2024/07/12/multimedia/12xp-biden-homepage-jfpt/12xp-biden-homepage-jfpt-threeByTwoSmallAt2X.jpg?format=pjpg&quality=75&auto=webp&disable=upscale',
-        image_mobile_path: 'https://static01.nyt.com/images/2024/07/12/multimedia/12xp-biden-homepage-jfpt/12xp-biden-homepage-jfpt-threeByTwoSmallAt2X.jpg?format=pjpg&quality=75&auto=webp&disable=upscale'
+        desktop_image_path: 'https://static01.nyt.com/images/2024/07/14/multimedia/14election-live-justice-presser-chqw/14election-live-justice-presser-chqw-superJumbo.jpg?quality=75&auto=webp',
+        image_mobile_path: 'https://static01.nyt.com/images/2024/07/14/multimedia/14election-live-justice-presser-chqw/14election-live-justice-presser-chqw-superJumbo.jpg?quality=75&auto=webp'
       }
     },
     slug: 'sample-article-1',
@@ -36,8 +36,8 @@ export const sampleArticles = [
     email: 'author2@example.com',
     content: {
       image: {
-        desktop_image_path: 'https://static01.nyt.com/images/2024/07/12/multimedia/12xp-biden-homepage-jfpt/12xp-biden-homepage-jfpt-threeByTwoSmallAt2X.jpg?format=pjpg&quality=75&auto=webp&disable=upscale',
-        image_mobile_path: 'https://static01.nyt.com/images/2024/07/12/multimedia/12xp-biden-homepage-jfpt/12xp-biden-homepage-jfpt-threeByTwoSmallAt2X.jpg?format=pjpg&quality=75&auto=webp&disable=upscale'
+        desktop_image_path: 'https://static01.nyt.com/images/2024/07/14/multimedia/14election-live-truth-social-chatter-vkjp/14election-live-truth-social-chatter-vkjp-superJumbo.jpg?quality=75&auto=webp',
+        image_mobile_path: 'https://static01.nyt.com/images/2024/07/14/multimedia/14election-live-truth-social-chatter-vkjp/14election-live-truth-social-chatter-vkjp-superJumbo.jpg?quality=75&auto=webp'
       }
     },
     slug: 'sample-article-2',
@@ -65,8 +65,8 @@ export const sampleArticles = [
     email: 'author3@example.com',
     content: {
       image: {
-        desktop_image_path: 'https://static01.nyt.com/images/2024/07/12/multimedia/12xp-biden-homepage-jfpt/12xp-biden-homepage-jfpt-threeByTwoSmallAt2X.jpg?format=pjpg&quality=75&auto=webp&disable=upscale',
-        image_mobile_path: 'https://static01.nyt.com/images/2024/07/12/multimedia/12xp-biden-homepage-jfpt/12xp-biden-homepage-jfpt-threeByTwoSmallAt2X.jpg?format=pjpg&quality=75&auto=webp&disable=upscale'
+        desktop_image_path: 'https://via.placeholder.com/1920x1080',
+        image_mobile_path: 'https://via.placeholder.com/1920x1080'
       }
     },
     slug: 'sample-article-3',
@@ -94,8 +94,66 @@ export const sampleArticles = [
     email: 'author4@example.com',
     content: {
       image: {
-        desktop_image_path: 'https://static01.nyt.com/images/2024/07/12/multimedia/12xp-biden-homepage-jfpt/12xp-biden-homepage-jfpt-threeByTwoSmallAt2X.jpg?format=pjpg&quality=75&auto=webp&disable=upscale',
-        image_mobile_path: 'https://static01.nyt.com/images/2024/07/12/multimedia/12xp-biden-homepage-jfpt/12xp-biden-homepage-jfpt-threeByTwoSmallAt2X.jpg?format=pjpg&quality=75&auto=webp&disable=upscale'
+        desktop_image_path: 'https://via.placeholder.com/1920x1080',
+        image_mobile_path: 'https://via.placeholder.com/1920x1080'
+      }
+    },
+    slug: 'sample-article-4',
+    schedulePublication: null,
+    articleBody: '<p>Content for article 4</p>',
+    status: 'published',
+    isAward: false,
+    metadata: null,
+    pageBgColor: '#FFF',
+    articleLayoutStruct: null,
+    created_at: '2024-07-13T00:00:00.000Z',
+    updated_at: '2024-07-13T00:00:00.000Z',
+    editorial: {
+      id: '4',
+      title: 'Editorial 4',
+      description: 'Description 4',
+      slug: 'editorial-4'
+    }
+  },
+  {
+    id: '5',
+    title: 'Live Updates: Trump Campaign',
+    subtitle: 'Donald Trump will hold a rally in Pennsylvania, as President Biden’s allies hit the campaign trail as well.',
+    author: 'Author 4',
+    email: 'author4@example.com',
+    content: {
+      image: {
+        desktop_image_path: 'https://via.placeholder.com/1920x1080',
+        image_mobile_path: 'https://via.placeholder.com/1920x1080'
+      }
+    },
+    slug: 'sample-article-4',
+    schedulePublication: null,
+    articleBody: '<p>Content for article 4</p>',
+    status: 'published',
+    isAward: false,
+    metadata: null,
+    pageBgColor: '#FFF',
+    articleLayoutStruct: null,
+    created_at: '2024-07-13T00:00:00.000Z',
+    updated_at: '2024-07-13T00:00:00.000Z',
+    editorial: {
+      id: '4',
+      title: 'Editorial 4',
+      description: 'Description 4',
+      slug: 'editorial-4'
+    }
+  },
+  {
+    id: '6',
+    title: 'Live Updates: Trump Campaign',
+    subtitle: 'Donald Trump will hold a rally in Pennsylvania, as President Biden’s allies hit the campaign trail as well.',
+    author: 'Author 4',
+    email: 'author4@example.com',
+    content: {
+      image: {
+        desktop_image_path: 'https://via.placeholder.com/1920x1080',
+        image_mobile_path: 'https://via.placeholder.com/1920x1080'
       }
     },
     slug: 'sample-article-4',

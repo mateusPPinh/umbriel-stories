@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 export const Container = styled.div`
   display: grid;
@@ -39,7 +39,7 @@ export const ArticleTextArea = styled.div`
 export const Title = styled.div`
    h2 {
     font-size: 23px;
-    font-family: ${(props) => props.theme.fonts.mvpFont};
+    font-family: 'Lora Variable';
     line-height: 120%;
   }
 `
@@ -47,7 +47,7 @@ export const Title = styled.div`
 export const Description = styled.div`
     p {
     font-size: 13px;
-    font-family: ${(props) => props.theme.fonts.mvpFont};
+    font-family: 'Lora Variable';
     line-height: 140%;
     color: #5A5A5A;
     margin-top: 1rem;
@@ -82,7 +82,7 @@ export const ArticlePreview = styled.div`
 
   h2,
   p {
-    font-family: ${(props) => props.theme.fonts.mvpFont};
+    font-family: 'Lora Variable';
   }
 
   h2 {

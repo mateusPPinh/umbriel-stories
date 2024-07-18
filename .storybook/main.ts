@@ -7,6 +7,7 @@ const config: StorybookConfig = {
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
     'storybook-addon-theme-provider',
+    '@storybook/addon-viewport'
   ],
   core: {
     builder: '@storybook/builder-vite',
