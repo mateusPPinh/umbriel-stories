@@ -22,7 +22,8 @@
   },
   "resolutions": {
     "storybook/**/jackspeak": "2.3.6",
-    "**/globby": "^11.0.1"
+    "**/globby": "^11.0.1",
+     "cli-table3/string-width": "4.2.3"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.0.19",
