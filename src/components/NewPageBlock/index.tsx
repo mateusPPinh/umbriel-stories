@@ -15,7 +15,7 @@ import Template5050Grid from './templates/Template5050Grid'
 import TemplateSlot100FeaturedRelated from './templates/TemplateSlot100-FeaturedRelated'
 import { type PageBlockProps, type BlockData } from './PageBlock.types'
 import TemplateSideColumns from './templates/TemplateSideColumns'
-import TemplateNewsletter from './templates/TemplateNewSletter'
+import TemplateNewsletter from './templates/TemplateNewsletter'
 
 const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
   return (

@@ -7,7 +7,6 @@ export const Container = styled.div`
   max-width: 1200px;
   margin: auto;
 
-
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
