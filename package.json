@@ -10,7 +10,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "webpack --config webpack.config.js && storybook build",
+    "build-storybook": "storybook build",
     "prepack": "cp package.json package.backup.json && json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\"",
     "postpack": "mv package.backup.json package.json",
     "format": "prettier --write ."
@@ -65,8 +65,7 @@
     "stylis": "^4.0.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "vite-plugin-dts": "^3.7.3",
-    "webpack": "^5.93.0"
+    "vite-plugin-dts": "^3.7.3"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.6.17",
