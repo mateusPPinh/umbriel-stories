@@ -3,18 +3,18 @@
   "private": false,
   "version": "0.1.42",
   "type": "module",
- "scripts": {
-  "dev": "vite",
-  "build": "rollup -c",
-  "prepare": "npm run build",
-  "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-  "preview": "vite preview",
-  "storybook": "storybook dev -p 6006",
-  "build-storybook": "storybook build",
-  "prepack": "cp package.json package.backup.json && json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\"",
-  "postpack": "mv package.backup.json package.json",
-  "format": "prettier --write ."
-},
+  "scripts": {
+    "dev": "vite",
+    "build": "rollup -c",
+    "prepare": "npm run build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "webpack --config webpack.config.js && storybook build",
+    "prepack": "cp package.json package.backup.json && json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\"",
+    "postpack": "mv package.backup.json package.json",
+    "format": "prettier --write ."
+  },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || 18.x",
@@ -23,7 +23,7 @@
   "resolutions": {
     "storybook/**/jackspeak": "2.3.6",
     "**/globby": "^11.0.1",
-     "cli-table3/string-width": "4.2.3"
+    "cli-table3/string-width": "4.2.3"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.0.19",
@@ -61,11 +61,13 @@
     "rollup-plugin-typescript2": "^0.36.0",
     "storybook": "^7.6.17",
     "storybook-addon-theme-provider": "^0.1.15",
+    "string-width": "^4.2.3",
     "styled-components": "^6.1.11",
     "stylis": "^4.0.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "vite-plugin-dts": "^3.7.3"
+    "vite-plugin-dts": "^3.7.3",
+    "webpack": "^5.93.0"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.6.17",
