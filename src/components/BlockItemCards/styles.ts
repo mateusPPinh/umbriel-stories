@@ -21,14 +21,14 @@ export const BlockItem = styled.div`
     flex-direction: column;
 
     span {
-      font-family: ${props => props.theme.fonts.heading};
+      font-family: 'Rubik Variable';
       line-height: 110%;
       font-weight: 500;
       font-size: 14px;
     }
 
     p {
-      font-family: ${props => props.theme.fonts.heading};
+      font-family: 'Rubik Variable';
       line-height: 110%;
       font-weight: 400;
       font-size: 12px;

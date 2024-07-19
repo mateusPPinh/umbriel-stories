@@ -32,7 +32,7 @@ const Container = styled.div<Pick<TemplateSlot100FeaturedRelatedProps, 'template
 `
 
 const Title = styled.h2`
-  font-family: ${(props) => props.theme.fonts.mvpFont};
+  font-family: 'Lora Variable';
   font-weight: bold;
   font-size: 28px;
   margin-bottom: 20px;
@@ -55,7 +55,7 @@ const Subject = styled.div<Pick<TemplateSlot100FeaturedRelatedProps, 'templateSl
 `
 
 const ArticleTitle = styled.h3<Pick<TemplateSlot100FeaturedRelatedProps, 'templateSlot100FeaturedRelatedProps'>>`
-  font-family: ${(props) => props.theme.fonts.mvpFont};
+  font-family: 'Lora Variable';
   font-weight: bold;
   font-size: 24px;
   color: ${(props) => props.templateSlot100FeaturedRelatedProps.articleTitleColor};

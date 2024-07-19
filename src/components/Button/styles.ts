@@ -82,7 +82,7 @@ const variantStyles = css<CSSProps>`
 
 const Container = styled.button<CSSProps>`
   ${variantStyles};
-  font-family: ${({ theme }) => theme.fonts.heading};
+  font-family: 'Rubik Variable';
   line-height: 110%;
   font-weight: 500;
   font-size: 12px;

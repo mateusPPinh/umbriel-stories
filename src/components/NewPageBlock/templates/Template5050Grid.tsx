@@ -40,14 +40,14 @@ const Image = styled.img`
 `
 
 const Title = styled.h3`
-  font-family: ${(props) => props.theme.fonts.mvpFont};
+  font-family: 'Rubik Variable';
   font-weight: bold;
   font-size: 18px;
   line-height: 1.4;
 `
 
 const Subtitle = styled.p`
-  font-family: ${(props) => props.theme.fonts.mvpFont};
+  font-family: 'Rubik Variable';
   font-size: 14px;
   color: #666;
   line-height: 1.4;

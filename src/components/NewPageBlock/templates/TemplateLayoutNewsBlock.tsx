@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { styled } from 'styled-components'
+'use client'
+
+import React from 'react'
+import styled from 'styled-components'
 import { type Article } from '../PageBlock.types'
-import useWindowWidth from '../../utils/useScreen'
 
 interface LayoutNewsBlockProps {
   articles: Article[]
@@ -30,14 +31,13 @@ const BlockTitle = styled.h2`
   }
 `
 
-const ArticleGrid = styled.div<{ isVisible: boolean }>`
-  display: ${props => props.isVisible ? 'grid' : 'none'};
+const ArticleGrid = styled.div`
+  display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   justify-content: center;
 
   @media (min-width: 768px) {
-    display: grid;
     grid-template-columns: repeat(5, 1fr);
   }
 `
@@ -102,42 +102,30 @@ const LinksList = styled.ul`
 `
 
 const TemplateLayoutNewsBlock: React.FC<LayoutNewsBlockProps> = ({ articles }) => {
-  const windowWidth = useWindowWidth()
-  const [isVisible, setIsVisible] = useState(windowWidth >= 768)
-
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const toggleVisibility = () => {
-    setIsVisible(!isVisible)
-  }
-
-  useEffect(() => {
-    if (windowWidth >= 768) {
-      setIsVisible(true)
-    } else {
-      setIsVisible(false)
-    }
-  }, [windowWidth])
-
   return (
-    <Container>
-      <BlockTitle onClick={toggleVisibility}>NEWS</BlockTitle>
-      <ArticleGrid isVisible={isVisible}>
-        {articles.map((article, index) => (
-          <ArticlePreview key={index}>
-            {article.content.image.desktop_image_path.length > 0 && (
-              <Image src={article.content.image.desktop_image_path} alt={article.title} />
-            )}
-            <LinksList>
-              {article.links?.map((link, linkIndex) => (
-                <li key={linkIndex}>
-                  <a href={link.url}>{link.title}</a>
-                </li>
-              ))}
-            </LinksList>
-          </ArticlePreview>
-        ))}
-      </ArticleGrid>
-    </Container>
+    <>
+      <div className="borderTop" />
+      <div className="borderBottom" />
+      <Container>
+        <BlockTitle>NEWS</BlockTitle>
+        <ArticleGrid>
+          {articles.map((article, index) => (
+            <ArticlePreview key={index}>
+              {article.content.image.desktop_image_path.length > 0 && (
+                <Image src={article.content.image.desktop_image_path} alt={article.title} />
+              )}
+              <LinksList>
+                {article.links?.map((link, linkIndex) => (
+                  <li key={linkIndex}>
+                    <a href={link.url}>{link.title}</a>
+                  </li>
+                ))}
+              </LinksList>
+            </ArticlePreview>
+          ))}
+        </ArticleGrid>
+      </Container>
+    </>
   )
 }
 
