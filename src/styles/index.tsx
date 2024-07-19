@@ -48,17 +48,15 @@ const theme = {
   }
 }
 
-export default function CustomStyles ({ children }: PropsWithChildren): any {
+export default function CustomStyles ({ children }: PropsWithChildren): JSX.Element {
   return (
     <StyleSheetManager
       enableVendorPrefixes
-      shouldForwardProp={(propName, elementToBeRendered) => {
-        return typeof elementToBeRendered === 'string'
-          ? isPropValid(propName)
-          : true
-      }}
+      shouldForwardProp={(propName, elementToBeRendered) =>
+        typeof elementToBeRendered === 'string' ? isPropValid(propName) : true
+      }
     >
-      { /* @ts-ignore */ }
+       { /* @ts-expect-error */ }
       <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </StyleSheetManager>
   )

@@ -12,13 +12,13 @@ const Container = styled.div`
 `
 
 const GalleryTitle = styled.h1<FontProps>`
-  font-family: ${props => props.theme.fonts.heading};
+  font-family: 'Rubik Variable';
   margin-bottom: 8px;
   ${customCSSFont}
 `
 
 const GallerySubtitle = styled.span<FontProps>`
-  font-family: ${props => props.theme.fonts.heading};
+  font-family: 'Rubik Variable';
   ${customCSSFont}
 `
 

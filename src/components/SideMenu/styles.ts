@@ -16,7 +16,7 @@ const Container = styled.div`
   }
 
   li {
-    font-family: ${props => props.theme.fonts.heading};
+    font-family: 'Rubik Variable';
     line-height: 110%;
     letter-spacing: 1.28px;
     color: ${props => props.theme.colors.gray500};
@@ -26,7 +26,7 @@ const Container = styled.div`
   span {
     margin: 0.8rem 0;
     margin-left: 10px;
-    font-family: ${props => props.theme.fonts.heading};
+    font-family: 'Rubik Variable';
     line-height: 110%;
     color: ${props => props.theme.colors.gray800};
     font-size: 16px;

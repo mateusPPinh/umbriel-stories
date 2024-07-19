@@ -12,6 +12,17 @@
   src: url(./fonts/Chomsky.otf);
 }
 
+.borderTop {
+  border-top-width: 1px;
+  border-top-color: #000;
+  margin-bottom: 0.25rem
+}
+.borderBottom {
+  border-top-width: 1px;
+  margin-bottom: 2rem;
+  border-top-color: #000;
+}
+
 .sb-main-padded {
   margin: 0 !important;
   padding: 0 !important;

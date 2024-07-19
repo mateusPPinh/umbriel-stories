@@ -37,7 +37,7 @@ TemplateWithVerticalAndHorizontalLinesProps
         </div>
         <Sidebar>
           {articles.slice(1, 5).map((article, index) => (
-            <ArticlePreview key={index} hasBorder={index < 3} hasVerticalBorder={index % 2 === 0}>
+            <ArticlePreview key={index} $hasBorder={index < 3} $hasVerticalBorder={index % 2 === 0}>
               {article.content.image.desktop_image_path.length > 0 && (
                 <Image
                   src={article.content.image.desktop_image_path}
@@ -53,7 +53,7 @@ TemplateWithVerticalAndHorizontalLinesProps
       <div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {articles.slice(5).map((article, index) => (
-            <ArticlePreview key={index} hasBorder={index < articles.slice(5).length - 1}>
+            <ArticlePreview key={index} $hasBorder={index < articles.slice(5).length - 1}>
               {article.content.image.desktop_image_path.length > 0 && (
                 <Image
                   src={article.content.image.desktop_image_path}

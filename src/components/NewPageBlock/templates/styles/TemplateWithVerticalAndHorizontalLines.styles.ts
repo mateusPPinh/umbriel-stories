@@ -69,11 +69,11 @@ export const Sidebar = styled.div`
   }
 `
 
-export const ArticlePreview = styled.div<{ hasBorder: boolean, hasVerticalBorder?: boolean }>`
+export const ArticlePreview = styled.div<{ $hasBorder: boolean, $hasVerticalBorder?: boolean }>`
   background-color: transparent;
   padding: 10px;
-  border-bottom: ${({ hasBorder }) => (hasBorder ? '1px solid #ddd' : 'none')};
-  border-right: ${({ hasVerticalBorder }) => ((hasVerticalBorder ?? false) ? '1px solid #ddd' : 'none')};
+  border-bottom: ${({ $hasBorder }) => ($hasBorder ? '1px solid #ddd' : 'none')};
+  border-right: ${({ $hasVerticalBorder }) => (($hasVerticalBorder ?? false) ? '1px solid #ddd' : 'none')};
   width: 100%;
 
   h2,

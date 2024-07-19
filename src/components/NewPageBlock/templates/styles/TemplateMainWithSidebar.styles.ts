@@ -44,11 +44,14 @@ export const SidebarColumn = styled.div`
   }
 `
 
-export const ArticlePreview = styled.div<{ hasBorder: boolean }>`
-  background-color: transparent;
-  padding: 10px;
-  border-bottom: ${({ hasBorder }) => (hasBorder ? '1px solid #ddd' : 'none')};
-  width: 100%;
+export const ArticlePreview = styled.div.attrs<{ $hasBorder: boolean }>(({ $hasBorder }) => ({
+  style: {
+    borderBottom: $hasBorder ? '1px solid #ddd' : 'none'
+  }
+}))<{ $hasBorder: boolean }>`
+    background-color: transparent;
+    padding: 10px;
+    width: 100%;
 
   h2,
   p {
