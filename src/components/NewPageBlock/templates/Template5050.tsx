@@ -32,7 +32,7 @@ const Template5050: React.FC<Template5050Props> = ({
 }) => {
   return (
     <Container>
-      <Column gridArea="col1">
+      <Column $gridArea="col1">
         <ArticlePreview>
           <TextContainer>
             <Title
@@ -67,7 +67,7 @@ const Template5050: React.FC<Template5050Props> = ({
         </ArticlePreview>
       </Column>
       <VerticalDivider style={{ gridArea: 'divider1' }} />
-      <Column gridArea="col2">
+      <Column $gridArea="col2">
         <ArticlePreview>
           <TextContainer>
             <Description>
@@ -93,7 +93,7 @@ const Template5050: React.FC<Template5050Props> = ({
         </ArticlePreview>
       </Column>
       <Divider />
-      <Column gridArea="col3">
+      <Column $gridArea="col3">
         <ArticlePreview>
           <TextContainer>
             <Description>
@@ -119,7 +119,7 @@ const Template5050: React.FC<Template5050Props> = ({
         </ArticlePreview>
       </Column>
       <VerticalDivider style={{ gridArea: 'divider3' }} />
-      <Column gridArea="col4">
+      <Column $gridArea="col4">
         <ArticlePreview>
           <TextContainer>
             <Description>

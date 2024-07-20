@@ -15,7 +15,7 @@ const BlockTitle = styled.h2`
   margin-bottom: 1rem;
   font-weight: bold;
   font-family: 'Inter Variable';
-  color: #121212
+  color: #121212;
 `
 
 const ArticleGrid = styled.div`

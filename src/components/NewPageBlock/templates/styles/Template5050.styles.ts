@@ -1,13 +1,5 @@
 import { styled } from 'styled-components'
 
-interface CSSProps {
-  headingsProps?: {
-    fontSize: string | number
-    fontWeight: string | number
-    transform: string
-  }
-}
-
 const Container = styled.div`
   display: grid;
   grid-template-areas:
@@ -68,8 +60,8 @@ const Divider = styled.div`
   }
 `
 
-const Column = styled.div<{ gridArea: string }>`
-  grid-area: ${({ gridArea }) => gridArea};
+const Column = styled.div<{ $gridArea: string }>`
+  grid-area: ${({ $gridArea }) => $gridArea};
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -79,7 +71,7 @@ const Column = styled.div<{ gridArea: string }>`
   }
 `
 
-const ArticlePreview = styled.div<CSSProps>`
+const ArticlePreview = styled.div`
   display: flex;
   gap: 20px;
   background-color: transparent;

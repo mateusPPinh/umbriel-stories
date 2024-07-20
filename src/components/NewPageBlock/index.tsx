@@ -16,6 +16,8 @@ import TemplateSlot100FeaturedRelated from './templates/TemplateSlot100-Featured
 import { type PageBlockProps, type BlockData } from './PageBlock.types'
 import TemplateSideColumns from './templates/TemplateSideColumns'
 import TemplateNewsletter from './templates/TemplateNewsletter'
+import TemplateWithImageAndArticles from './templates/TemplateWithImageAndArticles'
+import T3070Variation from './templates/variations/3070'
 
 const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
   return (
@@ -122,6 +124,10 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
             return <TemplateSideColumns key={index} articles={articles} config={config}/>
           case 'TemplateNewsletter':
             return <TemplateNewsletter key={index} articles={articles} config={config}/>
+          case 'TemplateWithImageAndArticles':
+            return <TemplateWithImageAndArticles key={index} articles={articles} blockTitle='Block de Image-Article'/>
+          case 'T3070Variation':
+            return <T3070Variation key={index} articles={articles} />
           default:
             return <div key={index}>Template not found</div>
         }

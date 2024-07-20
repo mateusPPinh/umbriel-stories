@@ -24,3 +24,6 @@ export { default as TemplateWithVerticalAndHorizontalLines } from './NewPageBloc
 export { default as TemplateSideColumns } from './NewPageBlock/templates/TemplateSideColumns'
 export { default as Template5050Grid } from './NewPageBlock/templates/Template5050Grid'
 export { default as TemplateNewsletter } from './NewPageBlock/templates/TemplateNewsletter'
+export { default as TemplateWithImagensAndArticles } from './NewPageBlock/templates/TemplateWithImageAndArticles'
+export { default as BlurredImagem } from './ImageBlur'
+export { default as T3070Variation } from './NewPageBlock/templates/variations/3070'
