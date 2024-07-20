@@ -10,6 +10,7 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  background-color: transparent;
 `
 
 const Column = styled.div`

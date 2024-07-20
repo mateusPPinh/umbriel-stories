@@ -1,4 +1,3 @@
-// components/PageBlock.types.ts
 export interface BlockConfig {
   layout: string
   columns: number[]
@@ -36,6 +35,8 @@ export interface Article {
     title: string
     url: string
   }>
+  articleEstimatedReadTime?: string
+  isArticleLive?: boolean
 }
 
 export interface BlockData {
