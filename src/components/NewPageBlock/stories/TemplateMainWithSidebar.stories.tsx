@@ -58,7 +58,7 @@ export const T304030Desktop: Story = {
   },
   render: (args) => (
     <div className="flex items-center justify-center h-screen w-screen">
-      <div className="max-w-[1200px] w-full p-4">
+      <div className="max-w-[1400px] w-full p-4">
       <div className="flex mb-8 flex-col items-start ml-2">
           <h1 className="text-3xl">Template 30% - 40% - 30% Desktop</h1>
         </div>
