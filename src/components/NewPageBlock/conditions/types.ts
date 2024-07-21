@@ -3,6 +3,7 @@ export interface CSSConditionProps {
   borderXTopColor?: string
   borderYColor?: string
   borderXBottomPadding?: string
-  borderYPadding?: string
-  borderXTopPadding?: string
+  borderYRightColor?: string
+  borderYRightPadding?: string
+  borderYLeftMargin?: string
 }

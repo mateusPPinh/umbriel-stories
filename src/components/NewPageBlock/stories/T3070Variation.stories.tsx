@@ -52,7 +52,7 @@ export const T3070Variation: Story = {
   },
   render: (args) => (
     <div className="flex items-center justify-center w-screen">
-      <div className="w-full max-w-[1200px] p-4">
+      <div className="w-full max-w-[1500px] p-4">
         <PageBlock {...args} />
       </div>
     </div>

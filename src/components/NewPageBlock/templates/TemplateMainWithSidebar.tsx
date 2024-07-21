@@ -6,8 +6,7 @@ import {
   Image,
   MainColumn,
   SidebarColumn,
-  BorderBottom,
-  BorderTop
+  BorderBottom
 } from './styles/TemplateMainWithSidebar.styles'
 import { type Article } from '../PageBlock.types'
 
@@ -20,7 +19,6 @@ const TemplateMainWithSidebar: React.FC<TemplateMainWithSidebarProps> = ({
 }) => {
   return (
     <>
-      <BorderTop />
       <Container>
         <MainColumn>
           {articles.slice(0, 4).map((article, index) => (
