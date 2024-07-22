@@ -2,9 +2,10 @@ import React from 'react'
 import {
   ArticlePreview,
   Container,
-  Image
+  Image,
 } from './styles/TemplateFullWidth.styles'
 import { type Article } from '../PageBlock.types'
+import Link from '../../Link'
 
 interface LayoutFullWidthProps {
   articles: Article[]
@@ -21,8 +22,13 @@ const LayoutFullWidth: React.FC<LayoutFullWidthProps> = ({ articles }) => {
               alt={article.title}
             />
           )}
-          <h2>{article.title}</h2>
-          <p>{article.subtitle}</p>
+          <Link
+            href={`/${article.editorial.slug}/${article.slug}`}
+            hover="hover:opacity-60"
+          >
+            <h2>{article.title}</h2>
+            <p>{article.subtitle}</p>
+          </Link>
         </ArticlePreview>
       ))}
     </Container>

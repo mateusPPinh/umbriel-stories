@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { type Article, type BlockConfig } from '../PageBlock.types'
+import Link from '../../Link'
 
 interface Template5050GridProps {
   blockTitle?: string
@@ -53,14 +54,25 @@ const Subtitle = styled.p`
   line-height: 1.4;
 `
 
-const Template5050Grid: React.FC<Template5050GridProps> = ({ articles, blockTitle }) => {
+const Template5050Grid: React.FC<Template5050GridProps> = ({
+  articles,
+  blockTitle,
+}) => {
   return (
     <Container>
-      {(blockTitle != null) && <BlockTitle>{blockTitle}</BlockTitle>}
+      {blockTitle != null && <BlockTitle>{blockTitle}</BlockTitle>}
       {articles.map((article, index) => (
         <ArticleContainer key={index}>
-          <Image src={article.content.image.desktop_image_path} alt={article.title} />
-          <Title>{article.title}</Title>
+          <Image
+            src={article.content.image.desktop_image_path}
+            alt={article.title}
+          />
+          <Link
+            href={`/${article.editorial.slug}/${article.slug}`}
+            hover="hover:opacity-60"
+          >
+            <Title>{article.title}</Title>
+          </Link>
           <Subtitle>{article.subtitle}</Subtitle>
         </ArticleContainer>
       ))}

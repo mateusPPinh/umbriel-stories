@@ -4,9 +4,10 @@ import {
   ArticlePreview,
   BlockTitle,
   Container,
-  Image
+  Image,
 } from './styles/TemplateBlockWithVerticalLine.styles'
 import { type Article } from '../PageBlock.types'
+import Link from '../../Link'
 
 interface TemplateBlockWithVerticalLineProps {
   articles: Article[]
@@ -14,7 +15,7 @@ interface TemplateBlockWithVerticalLineProps {
 }
 
 const TemplateBlockWithVerticalLine: React.FC<
-TemplateBlockWithVerticalLineProps
+  TemplateBlockWithVerticalLineProps
 > = ({ articles, blockTitle = 'TemplateBlockWithVerticalLine' }) => {
   return (
     <Container>
@@ -23,10 +24,18 @@ TemplateBlockWithVerticalLineProps
         {articles.map((article, index) => (
           <ArticlePreview key={index}>
             {article.content.image.desktop_image_path.length > 0 && (
-              <Image src={article.content.image.desktop_image_path} alt={article.title} />
+              <Image
+                src={article.content.image.desktop_image_path}
+                alt={article.title}
+              />
             )}
-            <h2>{article.title}</h2>
-            <p>{article.subtitle}</p>
+            <Link
+              href={`/${article.editorial.slug}/${article.slug}`}
+              hover="hover:opacity-60"
+            >
+              <h2>{article.title}</h2>
+              <p>{article.subtitle}</p>
+            </Link>
           </ArticlePreview>
         ))}
       </ArticleGrid>

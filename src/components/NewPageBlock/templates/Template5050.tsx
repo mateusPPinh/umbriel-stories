@@ -9,8 +9,9 @@ import {
   Image,
   Title,
   VerticalDivider,
-  TextContainer
+  TextContainer,
 } from './styles/Template5050.styles'
+import Link from '../../Link'
 
 interface Template5050Props {
   articles: Article[]
@@ -28,7 +29,7 @@ const Template5050: React.FC<Template5050Props> = ({
   articles,
   descriptions,
   blockTitle,
-  headingsProps = { fontSize: '15px', fontWeight: 'bold', transform: 'none' }
+  headingsProps = { fontSize: '15px', fontWeight: 'bold', transform: 'none' },
 }) => {
   return (
     <Container>
@@ -39,7 +40,7 @@ const Template5050: React.FC<Template5050Props> = ({
               style={{
                 fontSize: headingsProps.fontSize,
                 fontWeight: headingsProps.fontWeight,
-                transform: headingsProps.transform
+                transform: headingsProps.transform,
               }}
             >
               <h2>{blockTitle}</h2>
@@ -47,16 +48,21 @@ const Template5050: React.FC<Template5050Props> = ({
             <Description>
               <p className="paragraph">{descriptions[0]}</p>
             </Description>
-            <h2
-              style={{
-                fontSize: headingsProps.fontSize,
-                fontWeight: headingsProps.fontWeight,
-                transform: headingsProps.transform
-              }}
+            <Link
+              href={`/${articles[0].editorial.slug}/${articles[0].slug}`}
+              hover="hover:opacity-60"
             >
-              {articles[0].title}
-            </h2>
-            <p>{articles[0].subtitle}</p>
+              <h2
+                style={{
+                  fontSize: headingsProps.fontSize,
+                  fontWeight: headingsProps.fontWeight,
+                  transform: headingsProps.transform,
+                }}
+              >
+                {articles[0].title}
+              </h2>
+              <p>{articles[0].subtitle}</p>
+            </Link>
           </TextContainer>
           {articles[0].content.image.desktop_image_path.length > 0 && (
             <Image
@@ -73,16 +79,21 @@ const Template5050: React.FC<Template5050Props> = ({
             <Description>
               <p className="paragraph">{descriptions[1]}</p>
             </Description>
-            <h2
-              style={{
-                fontSize: headingsProps.fontSize,
-                fontWeight: headingsProps.fontWeight,
-                transform: headingsProps.transform
-              }}
+            <Link
+              href={`/${articles[1].editorial.slug}/${articles[1].slug}`}
+              hover="hover:opacity-60"
             >
-              {articles[1].title}
-            </h2>
-            <p>{articles[1].subtitle}</p>
+              <h2
+                style={{
+                  fontSize: headingsProps.fontSize,
+                  fontWeight: headingsProps.fontWeight,
+                  transform: headingsProps.transform,
+                }}
+              >
+                {articles[1].title}
+              </h2>
+              <p>{articles[1].subtitle}</p>
+            </Link>
           </TextContainer>
           {articles[1].content.image.desktop_image_path.length > 0 && (
             <Image
@@ -99,16 +110,21 @@ const Template5050: React.FC<Template5050Props> = ({
             <Description>
               <p className="paragraph">{descriptions[2]}</p>
             </Description>
-            <h2
-              style={{
-                fontSize: headingsProps.fontSize,
-                fontWeight: headingsProps.fontWeight,
-                transform: headingsProps.transform
-              }}
+            <Link
+              href={`/${articles[2].editorial.slug}/${articles[2].slug}`}
+              hover="hover:opacity-60"
             >
-              {articles[2].title}
-            </h2>
-            <p>{articles[2].subtitle}</p>
+              <h2
+                style={{
+                  fontSize: headingsProps.fontSize,
+                  fontWeight: headingsProps.fontWeight,
+                  transform: headingsProps.transform,
+                }}
+              >
+                {articles[2].title}
+              </h2>
+              <p>{articles[2].subtitle}</p>
+            </Link>
           </TextContainer>
           {articles[2].content.image.desktop_image_path.length > 0 && (
             <Image
@@ -125,16 +141,21 @@ const Template5050: React.FC<Template5050Props> = ({
             <Description>
               <p className="paragraph">{descriptions[3]}</p>
             </Description>
-            <h2
-              style={{
-                fontSize: headingsProps.fontSize,
-                fontWeight: headingsProps.fontWeight,
-                transform: headingsProps.transform
-              }}
+            <Link
+              href={`/${articles[3].editorial.slug}/${articles[3].slug}`}
+              hover="hover:opacity-60"
             >
-              {articles[3].title}
-            </h2>
-            <p>{articles[3].subtitle}</p>
+              <h2
+                style={{
+                  fontSize: headingsProps.fontSize,
+                  fontWeight: headingsProps.fontWeight,
+                  transform: headingsProps.transform,
+                }}
+              >
+                {articles[3].title}
+              </h2>
+              <p>{articles[3].subtitle}</p>
+            </Link>
           </TextContainer>
           {articles[3].content.image.desktop_image_path.length > 0 && (
             <Image

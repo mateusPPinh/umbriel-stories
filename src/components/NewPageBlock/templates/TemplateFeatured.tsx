@@ -11,9 +11,10 @@ import {
   VerticalDividerWrapper,
   ArticleTextArea,
   Description,
-  Title
+  Title,
 } from './styles/TemplateFeatured.styles'
 import { type Article, type BlockConfig } from '../PageBlock.types'
+import Link from '../../Link'
 
 interface TemplateFeaturedProps {
   articles: Article[]
@@ -33,19 +34,29 @@ const TemplateFeatured: React.FC<TemplateFeaturedProps> = ({ articles }) => {
       </ImageArea>
       <Caption>The captions here.</Caption>
       <ArticleTextArea>
-        <Title>
-          <h2>{articles[0].title}</h2>
-        </Title>
-        <Description>
-          <p>{articles[0].subtitle}</p>
-        </Description>
+        <Link
+          href={`/${articles[0].editorial.slug}/${articles[0].slug}`}
+          hover="hover:opacity-60"
+        >
+          <Title>
+            <h2>{articles[0].title}</h2>
+          </Title>
+          <Description>
+            <p>{articles[0].subtitle}</p>
+          </Description>
+        </Link>
       </ArticleTextArea>
       <Divider />
       <VerticalDividerWrapper>
         <Column>
           <ArticlePreview>
-            <h2>{articles[1].title}</h2>
-            <p>{articles[1].subtitle}</p>
+            <Link
+              href={`/${articles[1].editorial.slug}/${articles[2].slug}`}
+              hover="hover:opacity-60"
+            >
+              <h2>{articles[1].title}</h2>
+              <p>{articles[1].subtitle}</p>
+            </Link>
             {articles[1].content.image.desktop_image_path.length > 0 && (
               <Image
                 src={articles[1].content.image.desktop_image_path}
@@ -57,8 +68,13 @@ const TemplateFeatured: React.FC<TemplateFeaturedProps> = ({ articles }) => {
         <DividerVertical />
         <Column>
           <ArticlePreview>
-            <h2>{articles[2].title}</h2>
-            <p>{articles[2].subtitle}</p>
+            <Link
+              href={`/${articles[2].editorial.slug}/${articles[2].slug}`}
+              hover="hover:opacity-60"
+            >
+              <h2>{articles[2].title}</h2>
+              <p>{articles[2].subtitle}</p>
+            </Link>
             {articles[2].content.image.desktop_image_path.length > 0 && (
               <Image
                 src={articles[2].content.image.desktop_image_path}

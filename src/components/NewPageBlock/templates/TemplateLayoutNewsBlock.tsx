@@ -3,6 +3,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { type Article } from '../PageBlock.types'
+import Link from '../../Link'
 
 interface LayoutNewsBlockProps {
   articles: Article[]
@@ -101,7 +102,9 @@ const LinksList = styled.ul`
   }
 `
 
-const TemplateLayoutNewsBlock: React.FC<LayoutNewsBlockProps> = ({ articles }) => {
+const TemplateLayoutNewsBlock: React.FC<LayoutNewsBlockProps> = ({
+  articles,
+}) => {
   return (
     <>
       <div className="borderTop" />
@@ -112,12 +115,15 @@ const TemplateLayoutNewsBlock: React.FC<LayoutNewsBlockProps> = ({ articles }) =
           {articles.map((article, index) => (
             <ArticlePreview key={index}>
               {article.content.image.desktop_image_path.length > 0 && (
-                <Image src={article.content.image.desktop_image_path} alt={article.title} />
+                <Image
+                  src={article.content.image.desktop_image_path}
+                  alt={article.title}
+                />
               )}
               <LinksList>
                 {article.links?.map((link, linkIndex) => (
                   <li key={linkIndex}>
-                    <a href={link.url}>{link.title}</a>
+                    <Link href={link.url}>{link.title}</Link>
                   </li>
                 ))}
               </LinksList>

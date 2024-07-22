@@ -1,6 +1,7 @@
 import React, { type ReactElement } from 'react'
 import styled from 'styled-components'
 import { type Article, type BlockConfig } from '../PageBlock.types'
+import Link from '../../Link'
 
 interface TemplateNewsletterProps {
   articles: Article[]
@@ -16,7 +17,7 @@ const Container = styled.div`
 
 const Header = styled.h2`
   font-size: 13px;
-  color: #5A5A5A;
+  color: #5a5a5a;
   font-family: 'mvpFont', sans-serif;
   text-transform: uppercase;
   line-height: 140%;
@@ -38,14 +39,14 @@ const ArticleHeader = styled.h3`
 
 const ArticleSubtitle = styled.p`
   font-size: 14px;
-  color: #5A5A5A;
+  color: #5a5a5a;
   font-family: 'mvpFont', sans-serif;
   margin-top: 4px;
 `
 
 const ArticleReadTime = styled.p`
   font-size: 14px;
-  color: #5A5A5A;
+  color: #5a5a5a;
   font-family: 'mvpFont', sans-serif;
   margin-top: 4px;
 `
@@ -64,7 +65,9 @@ const Divider = styled.div`
   margin-top: 8px;
 `
 
-const TemplateNewsletter = ({ articles }: TemplateNewsletterProps): ReactElement => {
+const TemplateNewsletter = ({
+  articles,
+}: TemplateNewsletterProps): ReactElement => {
   const displayedArticles = articles.slice(0, 4)
 
   return (
@@ -76,11 +79,23 @@ const TemplateNewsletter = ({ articles }: TemplateNewsletterProps): ReactElement
             {index === 1 && <Header>In case you missed it</Header>}
             <div className="flex items-center justify-between">
               <div className="flex flex-col items-start">
-                <ArticleHeader>{article.title}</ArticleHeader>
-                {index === 0 && <ArticleSubtitle>{article.subtitle}</ArticleSubtitle>}
+                <Link
+                  href={`/${article.editorial.slug}/${article.slug}`}
+                  hover="hover:opacity-60"
+                >
+                  <ArticleHeader>{article.title}</ArticleHeader>
+                  {index === 0 && (
+                    <ArticleSubtitle>{article.subtitle}</ArticleSubtitle>
+                  )}
+                </Link>
                 <ArticleReadTime>5 min read</ArticleReadTime>
               </div>
-              {Boolean(article.content.image) && <Image src={article.content.image.desktop_image_path} alt={article.title} />}
+              {Boolean(article.content.image) && (
+                <Image
+                  src={article.content.image.desktop_image_path}
+                  alt={article.title}
+                />
+              )}
             </div>
           </ArticleContainer>
           {index < displayedArticles.length - 1 && <Divider />}

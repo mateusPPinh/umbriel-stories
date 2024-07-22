@@ -1,6 +1,7 @@
 import React from 'react'
 import { styled } from 'styled-components'
 import { type Article } from '../PageBlock.types'
+import Link from '../../Link'
 
 interface LayoutHalfAndHalfProps {
   articles: Article[]
@@ -52,14 +53,22 @@ const LayoutHalfAndHalf: React.FC<LayoutHalfAndHalfProps> = ({ articles }) => {
     <Container>
       <Column>
         <ArticlePreview>
-          <h2>{articles[0].title}</h2>
-          <p>{articles[0].subtitle}</p>
+          <Link
+            href={`/${articles[0].editorial.slug}/${articles[0].slug}`}
+            hover="hover:opacity-60"
+          >
+            <h2>{articles[0].title}</h2>
+            <p>{articles[0].subtitle}</p>
+          </Link>
         </ArticlePreview>
       </Column>
       <Column>
         <ArticlePreview>
           {articles[0].content.image.desktop_image_path.length > 0 && (
-            <Image src={articles[0].content.image.desktop_image_path} alt={articles[0].title} />
+            <Image
+              src={articles[0].content.image.desktop_image_path}
+              alt={articles[0].title}
+            />
           )}
         </ArticlePreview>
       </Column>

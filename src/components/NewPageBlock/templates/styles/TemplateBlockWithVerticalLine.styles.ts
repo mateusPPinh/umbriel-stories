@@ -6,7 +6,6 @@ const Container = styled.div`
   gap: 20px;
   max-width: 1200px;
   margin: auto;
-  background-color: aliceblue;
 `
 
 const BlockTitle = styled.h2`
@@ -65,10 +64,4 @@ const Image = styled.img`
   object-fit: cover;
 `
 
-export {
-  ArticleGrid,
-  ArticlePreview,
-  BlockTitle,
-  Container,
-  Image
-}
+export { ArticleGrid, ArticlePreview, BlockTitle, Container, Image }

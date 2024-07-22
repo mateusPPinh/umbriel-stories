@@ -2,6 +2,7 @@
 import React, { type ReactElement } from 'react'
 import styled from 'styled-components'
 import { type Article, type BlockConfig } from '../PageBlock.types'
+import Link from '../../Link'
 
 interface TemplateSideColumnsProps {
   config: BlockConfig
@@ -28,7 +29,7 @@ const ArticleContainer = styled.div`
 
 const Author = styled.h2`
   font-size: 13px;
-  color: #5A5A5A;
+  color: #5a5a5a;
   font-family: 'mvpFont';
   text-transform: uppercase;
   line-height: 140%;
@@ -88,7 +89,7 @@ const FooterColumn = styled.div`
 
 const FooterTitle = styled.h4`
   font-size: 13px;
-  color: #5A5A5A;
+  color: #5a5a5a;
   font-family: 'mvpFont';
   text-transform: uppercase;
   line-height: 140%;
@@ -102,7 +103,9 @@ const FooterContent = styled.p`
   line-height: 120%;
 `
 
-const TemplateSideColumns = ({ articles }: TemplateSideColumnsProps): ReactElement => {
+const TemplateSideColumns = ({
+  articles,
+}: TemplateSideColumnsProps): ReactElement => {
   const displayedArticles = articles.slice(0, 6)
 
   return (
@@ -114,9 +117,17 @@ const TemplateSideColumns = ({ articles }: TemplateSideColumnsProps): ReactEleme
             <React.Fragment key={index}>
               <ArticleContainer>
                 <Author>{article.author}</Author>
-                <Title>{article.title}</Title>
+                <Link
+                  href={`/${article.editorial.slug}/${article.slug}`}
+                  hover="hover:opacity-60"
+                >
+                  <Title>{article.title}</Title>
+                </Link>
                 {Boolean(article.content.image) && (
-                  <ArticleImage src={article.content.image.desktop_image_path} alt={article.title} />
+                  <ArticleImage
+                    src={article.content.image.desktop_image_path}
+                    alt={article.title}
+                  />
                 )}
               </ArticleContainer>
               <Divider />
@@ -133,30 +144,46 @@ const TemplateSideColumns = ({ articles }: TemplateSideColumnsProps): ReactEleme
             <ArticleRow>
               <ArticleRowText>
                 <Author>{article.author}</Author>
-                <Title>{article.title}</Title>
+                <Link
+                  href={`/${article.editorial.slug}/${article.slug}`}
+                  hover="hover:opacity-60"
+                >
+                  <Title>{article.title}</Title>
+                </Link>
               </ArticleRowText>
               {Boolean(article.content.image) && (
-                <ArticleRowImage src={article.content.image.desktop_image_path} alt={article.title} />
+                <ArticleRowImage
+                  src={article.content.image.desktop_image_path}
+                  alt={article.title}
+                />
               )}
             </ArticleRow>
-            {index < displayedArticles.length - 1 && index !== 2 && (
-              <Divider />
-            )}
+            {index < displayedArticles.length - 1 && index !== 2 && <Divider />}
           </React.Fragment>
         )
       })}
       <Footer>
         <FooterColumn>
           <FooterTitle>Letters from our readers</FooterTitle>
-          <FooterContent>
-            {displayedArticles[0]?.title || 'Caring for Pet Companions'}
-          </FooterContent>
+          <Link
+            href={`/${displayedArticles[0]?.editorial.slug}/${displayedArticles[0]?.slug}`}
+            hover="hover:opacity-60"
+          >
+            <FooterContent>
+              {displayedArticles[0]?.title || 'Caring for Pet Companions'}
+            </FooterContent>
+          </Link>
         </FooterColumn>
         <FooterColumn>
           <FooterTitle>The Editorial</FooterTitle>
-          <FooterContent>
-            {displayedArticles[5]?.title || 'Scientists found evidence.'}
-          </FooterContent>
+          <Link
+            href={`/${displayedArticles[5]?.editorial.slug}/${displayedArticles[5]?.slug}`}
+            hover="hover:opacity-60"
+          >
+            <FooterContent>
+              {displayedArticles[5]?.title || 'Scientists found evidence.'}
+            </FooterContent>
+          </Link>
         </FooterColumn>
       </Footer>
       <Divider />
