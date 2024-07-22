@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { type Article } from '../PageBlock.types'
 import BlurredImage from '../../../components/ImageBlur'
+import Link from '../../Link'
 
 interface TemplateWithImageAndArticlesProps {
   articles: Article[]
@@ -9,11 +10,9 @@ interface TemplateWithImageAndArticlesProps {
   className?: string
 }
 
-const TemplateWithImageAndArticles: React.FC<TemplateWithImageAndArticlesProps> = ({
-  articles,
-  blockTitle,
-  className
-}) => {
+const TemplateWithImageAndArticles: React.FC<
+  TemplateWithImageAndArticlesProps
+> = ({ articles, blockTitle, className }) => {
   const [loading, setIsLoading] = useState(false)
   if (articles.length === 0) {
     return <div>No articles available</div>
@@ -21,42 +20,58 @@ const TemplateWithImageAndArticles: React.FC<TemplateWithImageAndArticlesProps> 
 
   return (
     <Container>
-    <BlockTitle>{blockTitle}</BlockTitle>
-    <MainContent>
-      <LeftSection>
-        {articles[0] && (
-          <MainArticle>
-            {(articles[0].content.image.desktop_image_path !== '') && (
-              <BlurredImage
-                src={articles[0].content.image.desktop_image_path}
-                alt={articles[0].title}
-                loading="eager"
-                decoding="async"
-                isLoading={loading}
-                onLoad={() => { setIsLoading(false) }}
-                className='w-full h-auto rounded-[8px] object-cover'
+      <BlockTitle>{blockTitle}</BlockTitle>
+      <MainContent>
+        <LeftSection>
+          {articles[0] && (
+            <MainArticle>
+              {articles[0].content.image.desktop_image_path !== '' && (
+                <BlurredImage
+                  src={articles[0].content.image.desktop_image_path}
+                  alt={articles[0].title}
+                  loading="eager"
+                  decoding="async"
+                  isLoading={loading}
+                  onLoad={() => {
+                    setIsLoading(false)
+                  }}
+                  className="w-full h-auto rounded-[8px] object-cover"
+                />
+              )}
+              <Link
+                href={`/${articles[0].editorial.slug}/${articles[0].slug}`}
+                hover="hover:opacity-60"
+              >
+                <h2>{articles[0].title}</h2>
+                <p>{articles[0].subtitle}</p>
+              </Link>
+            </MainArticle>
+          )}
+          <ArticlesList>
+            {articles.slice(1, 3).map((article, index) => (
+              <ArticlePreview key={index} $hasBorder={index < 2}>
+                <Link
+                  href={`/${article.editorial.slug}/${article.slug}`}
+                  hover="hover:opacity-60"
+                >
+                  <h2>{article.title}</h2>
+                  <p>{article.subtitle}</p>
+                </Link>
+              </ArticlePreview>
+            ))}
+          </ArticlesList>
+        </LeftSection>
+        <RightSection>
+          {articles[3] &&
+            articles[3].content.image.desktop_image_path !== '' && (
+              <RightImage
+                src={articles[3].content.image.desktop_image_path}
+                alt="Right side image"
               />
             )}
-            <h2>{articles[0].title}</h2>
-            <p>{articles[0].subtitle}</p>
-          </MainArticle>
-        )}
-        <ArticlesList>
-          {articles.slice(1, 3).map((article, index) => (
-            <ArticlePreview key={index} $hasBorder={index < 2}>
-              <h2>{article.title}</h2>
-              <p>{article.subtitle}</p>
-            </ArticlePreview>
-          ))}
-        </ArticlesList>
-      </LeftSection>
-      <RightSection>
-        {articles[3] && (articles[3].content.image.desktop_image_path !== '') && (
-          <RightImage src={articles[3].content.image.desktop_image_path} alt="Right side image" />
-        )}
-      </RightSection>
-    </MainContent>
-  </Container>
+        </RightSection>
+      </MainContent>
+    </Container>
   )
 }
 
@@ -131,7 +146,8 @@ const ArticlesList = styled.div`
 const ArticlePreview = styled.div<{ $hasBorder: boolean }>`
   background-color: transparent;
   padding: 10px;
-  border-bottom: ${({ $hasBorder }) => ($hasBorder ? '1px solid #ddd' : 'none')};
+  border-bottom: ${({ $hasBorder }) =>
+    $hasBorder ? '1px solid #ddd' : 'none'};
   width: 100%;
 
   h2,
