@@ -71,6 +71,12 @@ export interface BlockData {
     articleTitleColor: string
     blockBorderRadius: string
   }
+  editorial?: {
+    id: string
+    title: string
+    description: string
+    slug: string
+  }
 }
 
 export interface PageBlockProps {

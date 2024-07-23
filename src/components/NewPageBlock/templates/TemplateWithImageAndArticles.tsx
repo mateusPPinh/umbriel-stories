@@ -14,8 +14,32 @@ const TemplateWithImageAndArticles: React.FC<
   TemplateWithImageAndArticlesProps
 > = ({ articles, blockTitle, className }) => {
   const [loading, setIsLoading] = useState(false)
+
   if (articles.length === 0) {
     return <div>No articles available</div>
+  }
+
+  if (
+    !articles[0]?.editorial ||
+    !articles[0].slug ||
+    !articles[0].content.image.desktop_image_path
+  ) {
+    console.error(
+      'First article editorial, slug or image path is missing',
+      articles[0]
+    )
+    return <div>Invalid first article data</div>
+  }
+
+  const validArticles = articles
+    .slice(1, 3)
+    .every((article) => article.editorial && article.slug)
+  if (!validArticles) {
+    console.error(
+      'Some subsequent articles have missing editorial or slug data',
+      articles.slice(1, 3)
+    )
+    return <div>Invalid subsequent article data</div>
   }
 
   return (
@@ -23,30 +47,28 @@ const TemplateWithImageAndArticles: React.FC<
       <BlockTitle>{blockTitle}</BlockTitle>
       <MainContent>
         <LeftSection>
-          {articles[0] && (
-            <MainArticle>
-              {articles[0].content.image.desktop_image_path !== '' && (
-                <BlurredImage
-                  src={articles[0].content.image.desktop_image_path}
-                  alt={articles[0].title}
-                  loading="eager"
-                  decoding="async"
-                  isLoading={loading}
-                  onLoad={() => {
-                    setIsLoading(false)
-                  }}
-                  className="w-full h-auto rounded-[8px] object-cover"
-                />
-              )}
-              <Link
-                href={`/${articles[0].editorial.slug}/${articles[0].slug}`}
-                hover="hover:opacity-60"
-              >
-                <h2>{articles[0].title}</h2>
-                <p>{articles[0].subtitle}</p>
-              </Link>
-            </MainArticle>
-          )}
+          <MainArticle>
+            {articles[0].content.image.desktop_image_path && (
+              <BlurredImage
+                src={articles[0].content.image.desktop_image_path}
+                alt={articles[0].title}
+                loading="eager"
+                decoding="async"
+                isLoading={loading}
+                onLoad={() => {
+                  setIsLoading(false)
+                }}
+                className="w-full h-auto rounded-[8px] object-cover"
+              />
+            )}
+            <Link
+              href={`/${articles[0].editorial.slug}/${articles[0].slug}`}
+              hover="hover:opacity-60"
+            >
+              <h2>{articles[0].title}</h2>
+              <p>{articles[0].subtitle}</p>
+            </Link>
+          </MainArticle>
           <ArticlesList>
             {articles.slice(1, 3).map((article, index) => (
               <ArticlePreview key={index} $hasBorder={index < 2}>
@@ -63,7 +85,7 @@ const TemplateWithImageAndArticles: React.FC<
         </LeftSection>
         <RightSection>
           {articles[3] &&
-            articles[3].content.image.desktop_image_path !== '' && (
+            articles[3].content.image.desktop_image_path.length > 0 && (
               <RightImage
                 src={articles[3].content.image.desktop_image_path}
                 alt="Right side image"

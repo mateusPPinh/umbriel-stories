@@ -1,5 +1,4 @@
-import { Fragment, memo, type ReactElement } from 'react'
-import { type Article } from '../../../PageBlock.types'
+import React, { Fragment, memo, type ReactElement } from 'react'
 import {
   Container,
   ArticlePreview,
@@ -18,35 +17,55 @@ import ShouldRenderXBorderBottomDivider from '../../../conditions/ShouldRenderXB
 import ShouldRenderYBorderRightDivider from '../../../conditions/ShouldRenderYBorderRightDivider'
 import Link from '../../../../Link'
 
+import { type Article } from '../../../PageBlock.types'
+
 interface T3070VariationProps {
   articles: Article[]
 }
 
 // eslint-disable-next-line react/display-name
-const ArticleCard = memo(({ article }: { article: Article }) => (
-  <ArticlePreview>
-    {article.isArticleLive === true ? (
-      <LiveBadge>LIVE 16m ago</LiveBadge>
-    ) : (
-      <></>
-    )}
-    <Link
-      href={`/${article.editorial.slug}/${article.slug}`}
-      hover="hover:opacity-60"
-    >
-      <h2>{article.title}</h2>
-      <p>{article.subtitle}</p>
-    </Link>
-    {(article.articleEstimatedReadTime ?? '').length > 0 && (
-      <span>{article.articleEstimatedReadTime} MIN READ</span>
-    )}
-  </ArticlePreview>
-))
+const ArticleCard = memo(({ article }: { article: Article }) => {
+  if (!article.editorial || !article.slug) {
+    console.error('Article editorial or slug is missing', article)
+    return null
+  }
+
+  return (
+    <ArticlePreview>
+      {article.isArticleLive === true ? (
+        <LiveBadge>LIVE 16m ago</LiveBadge>
+      ) : (
+        <></>
+      )}
+      <Link
+        href={`/${article.editorial.slug}/${article.slug}`}
+        hover="hover:opacity-60"
+      >
+        <h2>{article.title}</h2>
+        <p>{article.subtitle}</p>
+      </Link>
+      {(article.articleEstimatedReadTime ?? '').length > 0 && (
+        <span>{article.articleEstimatedReadTime} MIN READ</span>
+      )}
+    </ArticlePreview>
+  )
+})
+
+interface T3070VariationProps {
+  articles: Article[]
+}
 
 export default function T3070Variation({
   articles,
 }: T3070VariationProps): ReactElement {
   const [firstArticle, secondArticle, ...restArticles] = articles
+
+  if (!firstArticle?.editorial || firstArticle.slug.length === 0) {
+    console.error('First article editorial or slug is missing', firstArticle)
+    // @ts-expect-error
+    return null
+  }
+
   return (
     <Container>
       <MainContent>
@@ -79,13 +98,17 @@ export default function T3070Variation({
                   <span>{article.articleEstimatedReadTime} MIN READ</span>
                 )
               )}
-              <Link
-                href={`/${article.editorial.slug}/${article.slug}`}
-                hover="hover:opacity-60"
-              >
-                <h2>{article.title}</h2>
-                <p>{article.subtitle}</p>
-              </Link>
+              {article.editorial && article.slug ? (
+                <Link
+                  href={`/${article.editorial.slug}/${article.slug}`}
+                  hover="hover:opacity-60"
+                >
+                  <h2>{article.title}</h2>
+                  <p>{article.subtitle}</p>
+                </Link>
+              ) : (
+                <p>Article link is missing</p>
+              )}
               {article.articleEstimatedReadTime != null && (
                 <span>{article.articleEstimatedReadTime}</span>
               )}

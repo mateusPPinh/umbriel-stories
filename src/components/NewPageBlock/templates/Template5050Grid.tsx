@@ -58,10 +58,16 @@ const Template5050Grid: React.FC<Template5050GridProps> = ({
   articles,
   blockTitle,
 }) => {
+  const isValidArticle = (article: Article) =>
+    article &&
+    article.editorial &&
+    article.slug &&
+    article.content.image.desktop_image_path
+
   return (
     <Container>
       {blockTitle != null && <BlockTitle>{blockTitle}</BlockTitle>}
-      {articles.map((article, index) => (
+      {articles.filter(isValidArticle).map((article, index) => (
         <ArticleContainer key={index}>
           <Image
             src={article.content.image.desktop_image_path}

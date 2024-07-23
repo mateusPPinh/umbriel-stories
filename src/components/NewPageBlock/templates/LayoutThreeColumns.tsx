@@ -20,6 +20,12 @@ const LayoutThreeColumns: React.FC<LayoutThreeColumnsProps> = ({
   articles,
   blockTitle = 'LayoutThreeColumns',
 }) => {
+  const isValidArticle = (article: Article) =>
+    article &&
+    article.editorial &&
+    article.slug &&
+    article.content.image.desktop_image_path
+
   return (
     <Container>
       <BlockTitle>{blockTitle}</BlockTitle>
@@ -28,6 +34,7 @@ const LayoutThreeColumns: React.FC<LayoutThreeColumnsProps> = ({
           <Column key={colIndex}>
             {articles
               .slice(2 * colIndex, 2 * (colIndex + 1))
+              .filter(isValidArticle)
               .map((article, index) => (
                 <ArticlePreview key={index}>
                   {article.content.image.desktop_image_path.length > 0 && (

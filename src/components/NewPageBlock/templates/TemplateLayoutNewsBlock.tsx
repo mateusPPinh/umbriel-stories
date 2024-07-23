@@ -105,6 +105,12 @@ const LinksList = styled.ul`
 const TemplateLayoutNewsBlock: React.FC<LayoutNewsBlockProps> = ({
   articles,
 }) => {
+  const isValidArticle = (article: Article) =>
+    article &&
+    article.content &&
+    article.content.image &&
+    article.content.image.desktop_image_path
+
   return (
     <>
       <div className="borderTop" />
@@ -112,7 +118,7 @@ const TemplateLayoutNewsBlock: React.FC<LayoutNewsBlockProps> = ({
       <Container>
         <BlockTitle>NEWS</BlockTitle>
         <ArticleGrid>
-          {articles.map((article, index) => (
+          {articles.filter(isValidArticle).map((article, index) => (
             <ArticlePreview key={index}>
               {article.content.image.desktop_image_path.length > 0 && (
                 <Image

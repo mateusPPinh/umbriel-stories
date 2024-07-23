@@ -22,15 +22,32 @@ interface TemplateFeaturedProps {
 }
 
 const TemplateFeatured: React.FC<TemplateFeaturedProps> = ({ articles }) => {
+  const isValidArticle = (article: Article) =>
+    article &&
+    article.editorial &&
+    article.slug &&
+    article.content.image.desktop_image_path
+
+  if (
+    articles.length < 3 ||
+    !isValidArticle(articles[0]) ||
+    !isValidArticle(articles[1]) ||
+    !isValidArticle(articles[2])
+  ) {
+    console.error(
+      'Some articles are missing required fields or there are not enough articles',
+      articles
+    )
+    return <div>Invalid article data</div>
+  }
+
   return (
     <Container>
       <ImageArea>
-        {articles[0].content.image.desktop_image_path.length > 0 && (
-          <Image
-            src={articles[0].content.image.desktop_image_path}
-            alt={articles[0].title}
-          />
-        )}
+        <Image
+          src={articles[0].content.image.desktop_image_path}
+          alt={articles[0].title}
+        />
       </ImageArea>
       <Caption>The captions here.</Caption>
       <ArticleTextArea>
@@ -51,7 +68,7 @@ const TemplateFeatured: React.FC<TemplateFeaturedProps> = ({ articles }) => {
         <Column>
           <ArticlePreview>
             <Link
-              href={`/${articles[1].editorial.slug}/${articles[2].slug}`}
+              href={`/${articles[1].editorial.slug}/${articles[1].slug}`}
               hover="hover:opacity-60"
             >
               <h2>{articles[1].title}</h2>

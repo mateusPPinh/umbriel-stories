@@ -70,9 +70,18 @@ const TemplateNewsletter = ({
 }: TemplateNewsletterProps): ReactElement => {
   const displayedArticles = articles.slice(0, 4)
 
+  const isValidArticle = (article: Article) =>
+    article &&
+    article.editorial &&
+    article.slug &&
+    article.title &&
+    article.content &&
+    article.content.image &&
+    article.content.image.desktop_image_path
+
   return (
     <Container>
-      {displayedArticles.map((article, index) => (
+      {displayedArticles.filter(isValidArticle).map((article, index) => (
         <React.Fragment key={index}>
           <ArticleContainer>
             {index === 0 && <Header>The Morning Newsletter</Header>}

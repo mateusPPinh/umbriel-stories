@@ -20,7 +20,22 @@ const ImageWrapper = styled.div`
   width: 50%;
 `
 
-const TemplateImageRight: React.FC<TemplateImageRightProps> = ({ articles }) => {
+const TemplateImageRight: React.FC<TemplateImageRightProps> = ({
+  articles,
+}) => {
+  const isValidArticle = (article: Article) =>
+    article &&
+    article.title &&
+    article.subtitle &&
+    article.content &&
+    article.content.image &&
+    article.content.image.desktop_image_path
+
+  if (!articles[0] || !isValidArticle(articles[0])) {
+    console.error('The article is missing required fields', articles[0])
+    return <div>Invalid article data</div>
+  }
+
   return (
     <Container>
       <ArticlePreview>
@@ -28,7 +43,10 @@ const TemplateImageRight: React.FC<TemplateImageRightProps> = ({ articles }) => 
         <p>{articles[0].subtitle}</p>
       </ArticlePreview>
       <ImageWrapper>
-        <img src={articles[0].content.image.desktop_image_path} alt={articles[0].title} />
+        <img
+          src={articles[0].content.image.desktop_image_path}
+          alt={articles[0].title}
+        />
       </ImageWrapper>
     </Container>
   )

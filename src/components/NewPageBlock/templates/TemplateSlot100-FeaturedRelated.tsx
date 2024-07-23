@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import React from 'react'
 import styled from 'styled-components'
 import { type Article, type BlockConfig } from '../PageBlock.types'
@@ -88,6 +89,11 @@ const ArticleTitle = styled.h3<
 const TemplateSlot100FeaturedRelated: React.FC<
   TemplateSlot100FeaturedRelatedProps
 > = ({ articles, blockTitle, templateSlot100FeaturedRelatedProps }) => {
+  if (!articles[0]?.editorial || !articles[0].slug) {
+    console.error('Article editorial or slug is missing', articles[0])
+    return null
+  }
+
   return (
     <Container
       templateSlot100FeaturedRelatedProps={templateSlot100FeaturedRelatedProps}
