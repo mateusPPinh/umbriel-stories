@@ -55,6 +55,21 @@ const Image = styled.img`
 const TemplateSeventyThirty: React.FC<TemplateSeventyThirtyProps> = ({
   articles,
 }) => {
+  const isValidArticle = (article: Article) =>
+    article &&
+    article.editorial &&
+    article.slug &&
+    article.title &&
+    article.subtitle &&
+    article.content &&
+    article.content.image &&
+    article.content.image.desktop_image_path
+
+  if (!articles[0] || !isValidArticle(articles[0])) {
+    console.error('The article is missing required fields', articles[0])
+    return <div>Invalid article data</div>
+  }
+
   return (
     <Container>
       <TextColumn>

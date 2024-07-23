@@ -18,15 +18,23 @@ const ArticlePreview = styled.div`
   border-radius: 8px;
 `
 
-const TemplateHighlighted: React.FC<TemplateHighlightedProps> = ({ articles }) => {
+const TemplateHighlighted: React.FC<TemplateHighlightedProps> = ({
+  articles,
+}) => {
+  const isValidArticle = (article: Article) =>
+    article && article.title && article.subtitle
+
   return (
     <Container>
-      {articles.slice(0, 2).map((article) => (
-        <ArticlePreview key={article.id}>
-          <h2>{article.title}</h2>
-          <p>{article.subtitle}</p>
-        </ArticlePreview>
-      ))}
+      {articles
+        .slice(0, 2)
+        .filter(isValidArticle)
+        .map((article) => (
+          <ArticlePreview key={article.id}>
+            <h2>{article.title}</h2>
+            <p>{article.subtitle}</p>
+          </ArticlePreview>
+        ))}
     </Container>
   )
 }

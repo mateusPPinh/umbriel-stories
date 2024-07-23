@@ -17,11 +17,17 @@ interface TemplateBlockWithVerticalLineProps {
 const TemplateBlockWithVerticalLine: React.FC<
   TemplateBlockWithVerticalLineProps
 > = ({ articles, blockTitle = 'TemplateBlockWithVerticalLine' }) => {
+  const isValidArticle = (article: Article) =>
+    article &&
+    article.editorial &&
+    article.slug &&
+    article.content.image.desktop_image_path
+
   return (
     <Container>
       <BlockTitle>{blockTitle}</BlockTitle>
       <ArticleGrid>
-        {articles.map((article, index) => (
+        {articles.filter(isValidArticle).map((article, index) => (
           <ArticlePreview key={index}>
             {article.content.image.desktop_image_path.length > 0 && (
               <Image

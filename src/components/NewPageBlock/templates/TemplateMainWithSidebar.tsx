@@ -18,11 +18,26 @@ interface TemplateMainWithSidebarProps {
 const TemplateMainWithSidebar: React.FC<TemplateMainWithSidebarProps> = ({
   articles,
 }) => {
+  const isValidArticle = (article: Article) =>
+    article &&
+    article.editorial &&
+    article.slug &&
+    article.title &&
+    article.subtitle &&
+    article.content &&
+    article.content.image &&
+    article.content.image.desktop_image_path
+
+  const mainArticles = articles.slice(0, 4).filter(isValidArticle)
+  const centerArticle = isValidArticle(articles[0]) ? articles[0] : null
+  const sidebarArticles = articles.slice(5).filter(isValidArticle)
+  const extraArticle = isValidArticle(articles[4]) ? articles[4] : null
+
   return (
     <>
       <Container>
         <MainColumn>
-          {articles.slice(0, 4).map((article, index) => (
+          {mainArticles.map((article, index) => (
             <ArticlePreview key={index} $hasBorder={index < 3}>
               <Link
                 href={`/${article.editorial.slug}/${article.slug}`}
@@ -35,27 +50,30 @@ const TemplateMainWithSidebar: React.FC<TemplateMainWithSidebarProps> = ({
           ))}
         </MainColumn>
         <CenterColumn>
-          {articles[0].content.image.desktop_image_path.length > 0 && (
-            <Image
-              src={articles[0].content.image.desktop_image_path}
-              alt={articles[0].title}
-            />
+          {centerArticle &&
+            centerArticle.content.image.desktop_image_path.length > 0 && (
+              <Image
+                src={centerArticle.content.image.desktop_image_path}
+                alt={centerArticle.title}
+              />
+            )}
+          {extraArticle && (
+            <ArticlePreview $hasBorder={false}>
+              <Link
+                href={`/${extraArticle.editorial.slug}/${extraArticle.slug}`}
+                hover="hover:opacity-60"
+              >
+                <h2>{extraArticle.title}</h2>
+                <p>{extraArticle.subtitle}</p>
+              </Link>
+            </ArticlePreview>
           )}
-          <ArticlePreview $hasBorder={false}>
-            <Link
-              href={`/${articles[4].editorial.slug}/${articles[4].slug}`}
-              hover="hover:opacity-60"
-            >
-              <h2>{articles[4].title}</h2>
-              <p>{articles[4].subtitle}</p>
-            </Link>
-          </ArticlePreview>
         </CenterColumn>
         <SidebarColumn>
-          {articles.slice(5).map((article, index) => (
+          {sidebarArticles.map((article, index) => (
             <ArticlePreview
               key={index}
-              $hasBorder={index < articles.slice(5).length - 1}
+              $hasBorder={index < sidebarArticles.length - 1}
             >
               <Link
                 href={`/${article.editorial.slug}/${article.slug}`}

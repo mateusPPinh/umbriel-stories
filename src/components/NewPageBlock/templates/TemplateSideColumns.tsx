@@ -108,10 +108,20 @@ const TemplateSideColumns = ({
 }: TemplateSideColumnsProps): ReactElement => {
   const displayedArticles = articles.slice(0, 6)
 
+  const isValidArticle = (article: Article) =>
+    article &&
+    article.editorial &&
+    article.slug &&
+    article.title &&
+    article.author &&
+    article.content &&
+    article.content.image &&
+    article.content.image.desktop_image_path
+
   return (
     <Container>
       <Divider />
-      {displayedArticles.map((article, index) => {
+      {displayedArticles.filter(isValidArticle).map((article, index) => {
         if (index === 2) {
           return (
             <React.Fragment key={index}>

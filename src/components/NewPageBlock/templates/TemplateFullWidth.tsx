@@ -12,9 +12,15 @@ interface LayoutFullWidthProps {
 }
 
 const LayoutFullWidth: React.FC<LayoutFullWidthProps> = ({ articles }) => {
+  const isValidArticle = (article: Article) =>
+    article &&
+    article.editorial &&
+    article.slug &&
+    article.content.image.desktop_image_path
+
   return (
     <Container>
-      {articles.map((article, index) => (
+      {articles.filter(isValidArticle).map((article, index) => (
         <ArticlePreview key={index}>
           {article.content.image.desktop_image_path.length > 0 && (
             <Image
