@@ -12,7 +12,7 @@ import {
   ArticleRow,
   ArticleRowContainer,
   Divider,
-  MainContent
+  MainContent,
 } from './styles'
 import ShouldRenderXBorderBottomDivider from '../../../conditions/ShouldRenderXBorderBottomDivider'
 import ShouldRenderYBorderRightDivider from '../../../conditions/ShouldRenderYBorderRightDivider'
@@ -25,7 +25,11 @@ interface T3070VariationProps {
 // eslint-disable-next-line react/display-name
 const ArticleCard = memo(({ article }: { article: Article }) => (
   <ArticlePreview>
-    {article.isArticleLive === true && <LiveBadge>LIVE 16m ago</LiveBadge>}
+    {article.isArticleLive === true ? (
+      <LiveBadge>LIVE 16m ago</LiveBadge>
+    ) : (
+      <></>
+    )}
     <Link
       href={`/${article.editorial.slug}/${article.slug}`}
       hover="hover:opacity-60"
@@ -39,8 +43,8 @@ const ArticleCard = memo(({ article }: { article: Article }) => (
   </ArticlePreview>
 ))
 
-export default function T3070Variation ({
-  articles
+export default function T3070Variation({
+  articles,
 }: T3070VariationProps): ReactElement {
   const [firstArticle, secondArticle, ...restArticles] = articles
   return (
@@ -68,15 +72,13 @@ export default function T3070Variation ({
         {restArticles.slice(0, 3).map((article, i) => (
           <Fragment key={i}>
             <ArticleRow>
-              {article.isArticleLive ?? false
-                ? (
+              {article.isArticleLive ?? false ? (
                 <LiveBadge>LIVE 16m ago</LiveBadge>
-                  )
-                : (
-                    article.articleEstimatedReadTime != null && (
+              ) : (
+                article.articleEstimatedReadTime != null && (
                   <span>{article.articleEstimatedReadTime} MIN READ</span>
-                    )
-                  )}
+                )
+              )}
               <Link
                 href={`/${article.editorial.slug}/${article.slug}`}
                 hover="hover:opacity-60"
