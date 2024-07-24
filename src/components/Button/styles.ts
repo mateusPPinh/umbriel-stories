@@ -1,7 +1,16 @@
 import styled, { css } from 'styled-components'
 
 interface CSSProps {
-  variant: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info' | 'light' | 'dark' | 'underline'
+  variant:
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'warning'
+    | 'danger'
+    | 'info'
+    | 'light'
+    | 'dark'
+    | 'underline'
   isFullWidth?: boolean
 }
 
@@ -22,13 +31,13 @@ const variantStyles = css<CSSProps>`
     switch (variant) {
       case 'primary':
         return css`
-          background-color: ${theme.colors.gray900};
-          color: ${theme.colors.white};
+          background-color: ${theme.colors.lightBlue.lightBlue100};
+          color: ${theme.colors.lightBlue.lightBlue900};
           ${paddingStyles}
         `
       case 'secondary':
         return css`
-          background-color: #6c757d;
+          background-color: ${theme.colors.lightBlue.lightBlue800};
           color: white;
           ${paddingStyles}
         `
@@ -71,7 +80,7 @@ const variantStyles = css<CSSProps>`
       case 'underline':
         return css`
           background-color: transparent;
-          color: ${theme.colors.gray900};
+          color: ${theme.colors.lightBlue.lightBlue900};
           text-decoration: underline;
         `
       default:
