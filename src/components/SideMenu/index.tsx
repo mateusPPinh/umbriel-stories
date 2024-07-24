@@ -2,14 +2,21 @@ import { type ReactElement } from 'react'
 import { Container } from './styles'
 import { type SideMenuProps } from './types'
 
-export default function SideMenu ({ menu }: SideMenuProps): ReactElement {
+export default function SideMenu({
+  menu,
+  className,
+}: SideMenuProps): ReactElement {
   return (
-    <Container>
+    <Container className={className}>
       {menu.map((section, index) => (
         <ul key={index}>
-          <li>{section.title}</li>
+          <li className="font-heading">{section.title}</li>
           {section.items.map((item, itemIndex) => (
-            <span key={itemIndex} onClick={item.onClick}>
+            <span
+              className="font-heading"
+              key={itemIndex}
+              onClick={item.onClick}
+            >
               {item.label}
             </span>
           ))}

@@ -3,9 +3,10 @@ import { styled } from 'styled-components'
 const Container = styled.div`
   width: 100%;
   max-width: 300px;
-  background: ${props => props.theme.colors.gray50};
+  background: ${(props) => props.theme.colors.gray50};
   height: 100vh;
   padding: 1.5rem;
+  border-right: 1px solid #e4e4e7;
 
   ul {
     display: flex;
@@ -19,7 +20,7 @@ const Container = styled.div`
     font-family: 'Rubik Variable';
     line-height: 110%;
     letter-spacing: 1.28px;
-    color: ${props => props.theme.colors.gray500};
+    color: ${(props) => props.theme.colors.gray500};
     font-size: 12px;
   }
 
@@ -28,13 +29,13 @@ const Container = styled.div`
     margin-left: 10px;
     font-family: 'Rubik Variable';
     line-height: 110%;
-    color: ${props => props.theme.colors.gray800};
+    color: ${(props) => props.theme.colors.gray800};
     font-size: 16px;
     cursor: pointer;
     transition: opacity 0.2s;
 
     &:hover {
-      opacity: 0.7; 
+      opacity: 0.7;
     }
   }
 `

@@ -12,11 +12,15 @@ export default function Topbar({
   logo,
   centralContent,
   onLogoClick,
+  className = 'py-[10px]',
 }: TopbarProps): ReactElement {
   return (
     <Container
-      style={{ backgroundColor: topbarBgColor }}
-      className="py-[10px]"
+      style={{
+        backgroundColor: topbarBgColor,
+        borderBottom: '1px solid #E4E4E7',
+      }}
+      className={className}
       $variant={variant}
     >
       <nav>
