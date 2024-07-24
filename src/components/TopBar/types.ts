@@ -15,4 +15,5 @@ export interface TopbarProps {
       isNextIcon: boolean
     }
   }>
+  className?: string
 }
