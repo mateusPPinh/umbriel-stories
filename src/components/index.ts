@@ -27,3 +27,4 @@ export { default as TemplateNewsletter } from './NewPageBlock/templates/Template
 export { default as TemplateWithImagensAndArticles } from './NewPageBlock/templates/TemplateWithImageAndArticles'
 export { default as BlurredImagem } from './ImageBlur'
 export { default as T3070Variation } from './NewPageBlock/templates/variations/3070'
+export { default as TopBar } from './TopBar'
