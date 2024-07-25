@@ -7,6 +7,12 @@ const Container = styled.div<{ $variant: 'topbarArticle' | 'topbarDefault' }>`
   align-items: center;
   position: relative;
 
+  &.sticky {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
   nav {
     display: flex;
     align-items: center;

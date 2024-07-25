@@ -64,6 +64,11 @@ const meta: Meta<typeof Topbar> = {
         </>
       ),
     },
+    isSticky: {
+      control: { type: 'boolean' },
+      description: 'Make the topbar sticky',
+      defaultValue: false,
+    },
   },
 }
 
@@ -112,6 +117,7 @@ export const ArticleTopBar: Story = {
         </Button>
       </>
     ),
+    isSticky: false,
   },
   decorators: [
     (Story, context) => {
@@ -178,6 +184,7 @@ export const DefaultTopBar: Story = {
         </Button>
       </>
     ),
+    isSticky: true,
   },
   decorators: [
     (Story, context) => {
