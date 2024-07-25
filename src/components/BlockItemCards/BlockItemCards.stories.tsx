@@ -71,6 +71,9 @@ const meta: Meta<typeof BlockItemCards> = {
         type: { summary: 'Array of blocks' },
       },
     },
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
+    // @ts-ignore
     'blocks.title': {
       control: { type: 'text' },
       description: 'Title of the block',
