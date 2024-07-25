@@ -11,7 +11,10 @@ interface CSSProps {
     | 'light'
     | 'dark'
     | 'underline'
+    | 'rounded'
   isFullWidth?: boolean
+  disabled?: boolean
+  isLoading?: boolean
 }
 
 const paddingStyles = css`
@@ -83,6 +86,32 @@ const variantStyles = css<CSSProps>`
           color: ${theme.colors.lightBlue.lightBlue900};
           text-decoration: underline;
         `
+      case 'rounded':
+        return css`
+          background-color: ${theme.colors.lightBlue.lightBlue900};
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          color: ${theme.colors.white};
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+
+          & svg {
+            width: 16px;
+            height: 16px;
+          }
+
+          & span {
+            font-size: 12px;
+            line-height: 120%;
+            margin-top: 5px;
+            font-family: ${theme.fonts.fontPrimary};
+            font-weight: lighter;
+          }
+        `
       default:
         return css``
     }
@@ -95,6 +124,20 @@ const Container = styled.button<CSSProps>`
   line-height: 110%;
   font-weight: 500;
   font-size: 12px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  ${({ disabled, theme }) => {
+    if (disabled) {
+      return css`
+        background-color: ${theme.colors.gray100};
+        cursor: not-allowed;
+        color: ${theme.colors.white};
+      `
+    }
+  }}
 
   ${({ isFullWidth }) => {
     if (isFullWidth === true) {
