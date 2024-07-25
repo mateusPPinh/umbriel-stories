@@ -16,4 +16,5 @@ export interface TopbarProps {
     }
   }>
   className?: string
+  isSticky?: boolean
 }

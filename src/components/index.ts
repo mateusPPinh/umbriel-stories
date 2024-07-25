@@ -1,3 +1,4 @@
+import '../index.css'
 export { default as Theme } from '../styles/index'
 export { default as CustomThemeProvider } from '../styles/index'
 export { default as UmbrielGallery } from './GalleryV2'
@@ -28,3 +29,4 @@ export { default as TemplateWithImagensAndArticles } from './NewPageBlock/templa
 export { default as BlurredImagem } from './ImageBlur'
 export { default as T3070Variation } from './NewPageBlock/templates/variations/3070'
 export { default as TopBar } from './TopBar'
+export { default as Link } from './Link'

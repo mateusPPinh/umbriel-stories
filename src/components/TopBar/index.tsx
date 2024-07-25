@@ -13,6 +13,7 @@ export default function Topbar({
   centralContent,
   onLogoClick,
   className = 'py-[10px]',
+  isSticky,
 }: TopbarProps): ReactElement {
   return (
     <Container
@@ -20,7 +21,7 @@ export default function Topbar({
         backgroundColor: topbarBgColor,
         borderBottom: '1px solid #E4E4E7',
       }}
-      className={className}
+      className={`${className} ${isSticky ? 'sticky' : ''}`}
       $variant={variant}
     >
       <nav>
