@@ -6,4 +6,7 @@ export interface ModalProps {
   modalContent: ReactNode
   useCustomCloseButton: boolean
   dialogTriggerChild: ReactNode
+  customDialogContentStyles?: string
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }

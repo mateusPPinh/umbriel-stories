@@ -10,42 +10,65 @@ import imageBlockText from '../../../public/image-block-text-block-1:2-width.svg
 import textBlockImage from '../../../public/text-block-image-block-1:2-width.svg'
 import imageBlockOnly from '../../../public/image-block-image-block-1:2-width.svg'
 import nextProjectFullWidth from '../../../public/next-project-fullwidth.svg'
+import { useState } from 'react'
 
 const dialogTriggerChild = () => {
-  return <Button variant="primary" className='hover:opacity-80 transition-opacity'>Open add block modal</Button>
+  return (
+    <Button variant="primary" className="hover:opacity-80 transition-opacity">
+      Open add block modal
+    </Button>
+  )
 }
 
 const defaultBlocks = [
   {
     title: 'Bloco de imagem',
     description: 'Largura: 100% da tela',
-    img: imageBlockFullWidth
+    img: imageBlockFullWidth,
+    onClick: () => {
+      console.log('Bloco de imagem')
+    },
   },
   {
     title: 'Bloco de texto',
     description: 'Largura: 100% da tela',
-    img: textBlockFullWidth
+    img: textBlockFullWidth,
+    onClick: () => {
+      console.log('Bloco de Texto')
+    },
   },
   {
     title: 'Bloco de imagem + texto',
     description: 'Largura: 50% + 50% da tela',
-    img: imageBlockText
+    img: imageBlockText,
+    onClick: () => {
+      console.log('Bloco de imagem + texto')
+    },
   },
   {
     title: 'Bloco de texto + imagem',
     description: 'Largura: 50% + 50% da tela',
-    img: textBlockImage
+    img: textBlockImage,
+    onClick: () => {
+      console.log('Bloco de texto + imagem')
+    },
   },
   {
     title: 'Bloco de imagem + imagem',
     description: 'Largura: 50% + 50% da tela',
-    img: imageBlockOnly
+    img: imageBlockOnly,
+    onClick: () => {
+      console.log('Bloco de imagem + imagem')
+    },
   },
   {
     title: 'Bloco de próximo projeto',
     description: 'Largura: 100% da tela',
-    img: nextProjectFullWidth
-  }
+    img: nextProjectFullWidth,
+    onClick: () => {
+      console.log('Bloco de próximo projeto')
+    },
+  },
 ]
 
 const meta: Meta<typeof Modal> = {
@@ -57,8 +80,8 @@ const meta: Meta<typeof Modal> = {
       description: 'React Element to be displayed as the content of the modal',
       table: {
         type: { summary: 'ReactElement' },
-        defaultValue: { summary: '' }
-      }
+        defaultValue: { summary: '' },
+      },
     },
     modalTitle: { control: 'text' },
     modalSubtitle: { control: 'text' },
@@ -68,10 +91,12 @@ const meta: Meta<typeof Modal> = {
       description: 'React Element to be displayed as the trigger of the modal',
       table: {
         type: { summary: 'ReactElement' },
-        defaultValue: { summary: '' }
-      }
-    }
-  }
+        defaultValue: { summary: '' },
+      },
+    },
+    open: { control: 'boolean' },
+    onOpenChange: { action: 'opened/closed' },
+  },
 }
 
 export default meta
@@ -79,19 +104,29 @@ type Story = StoryObj<typeof Modal>
 
 export const AddBlockModal: Story = {
   args: {
-    modalContent: <BlockItemCards blocks={defaultBlocks} />,
+    modalContent: (
+      <BlockItemCards
+        blocks={defaultBlocks}
+        onCardSelect={(cardType) => {
+          console.log(`Selected card: ${cardType}`)
+        }}
+      />
+    ),
     modalTitle: 'Adicionar Bloco',
     modalSubtitle: '',
     useCustomCloseButton: false,
-    dialogTriggerChild: dialogTriggerChild()
+    dialogTriggerChild: dialogTriggerChild(),
+    open: true,
   },
   decorators: [
     (Story, context) => {
+      const [open, setOpen] = useState(context.args.open)
+
       return (
         <div className="flex items-center justify-center h-screen w-screen">
-          <Story {...context.args} />
+          <Story {...context.args} open={open} onOpenChange={setOpen} />
         </div>
       )
-    }
-  ]
+    },
+  ],
 }

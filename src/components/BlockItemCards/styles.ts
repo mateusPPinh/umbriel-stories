@@ -8,13 +8,19 @@ export const Container = styled.div`
   row-gap: 16px;
 `
 
-export const BlockItem = styled.div`
+export const BlockItem = styled.button`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid ${props => props.theme.colors.gray100};
+  border: 1px solid ${(props) => props.theme.colors.gray100};
   padding: 16px;
+  transition: box-shadow 0.4s;
+
+  &:hover,
+  &:focus {
+    box-shadow: inset 15em 0 0 0 rgba(246, 246, 246, 0.8);
+  }
 
   main {
     display: flex;

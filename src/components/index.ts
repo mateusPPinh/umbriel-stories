@@ -1,3 +1,4 @@
+import '../index.css'
 export { default as Theme } from '../styles/index'
 export { default as CustomThemeProvider } from '../styles/index'
 export { default as UmbrielGallery } from './GalleryV2'

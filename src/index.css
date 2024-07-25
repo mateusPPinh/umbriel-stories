@@ -2,16 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: GeistMono-Medium;
-  src: url(./assets/fonts/GeistMono-Regular.otf);
-}
-
-@font-face {
-  font-family: Chomsky;
-  src: url(./fonts/Chomsky.otf);
-}
-
 .borderTop {
   border-top-width: 1px;
   border-top-color: #000;
