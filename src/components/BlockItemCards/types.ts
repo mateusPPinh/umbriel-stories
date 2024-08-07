@@ -8,4 +8,8 @@ interface Block {
 export interface BlockItemCardsProps {
   blocks?: Block[]
   onCardSelect: (cardType: string) => void
+  customMainCss?: string
+  customParagraphCSS?: string
+  customSpanCSS?: string
+  customImgCSS?: string
 }

@@ -5,6 +5,10 @@ import { type BlockItemCardsProps } from './types'
 export default function BlockItemCards({
   blocks,
   onCardSelect,
+  customImgCSS,
+  customMainCss,
+  customParagraphCSS,
+  customSpanCSS,
 }: BlockItemCardsProps & {
   onCardSelect: (cardType: string) => void
 }): ReactElement {
@@ -17,11 +21,11 @@ export default function BlockItemCards({
             onCardSelect(block.title)
           }}
         >
-          <main>
-            <span>{block.title}</span>
-            <p>{block.description}</p>
+          <main className={customMainCss}>
+            <span className={customSpanCSS}>{block.title}</span>
+            <p className={customParagraphCSS}>{block.description}</p>
           </main>
-          <img src={block.img} alt={block.title} />
+          <img className={customImgCSS} src={block.img} alt={block.title} />
         </BlockItem>
       ))}
     </Container>
