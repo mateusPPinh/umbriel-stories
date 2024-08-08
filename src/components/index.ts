@@ -31,3 +31,4 @@ export { default as T3070Variation } from './NewPageBlock/templates/variations/3
 export { default as TopBar } from './TopBar'
 export { default as Link } from './Link'
 export { default as TemplateSeventyThirtyWithCarousel } from './NewPageBlock/templates/TemplateSeventyThirtyWithCarousel'
+export { default as LazyImage } from './LazyImage'

@@ -18,13 +18,15 @@ const BorderYRight = styled.div<{
   top: 0;
 `
 
-export default function ShouldRenderYBorderRightDivider ({
+export default function ShouldRenderYBorderRightDivider({
   borderYRightColor = '#DFDFDF',
   borderYRightPadding = '10px',
-  borderYLeftMargin = '-20px'
+  borderYLeftMargin = '-20px',
+  customStyles,
 }: CSSConditionProps): ReactElement {
   return (
     <BorderYRight
+      className={customStyles}
       $borderYRightColor={borderYRightColor}
       $borderYRightPadding={borderYRightPadding}
       $borderYLeftMargin={borderYLeftMargin}

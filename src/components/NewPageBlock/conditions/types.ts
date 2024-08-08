@@ -6,4 +6,5 @@ export interface CSSConditionProps {
   borderYRightColor?: string
   borderYRightPadding?: string
   borderYLeftMargin?: string
+  customStyles?: string
 }

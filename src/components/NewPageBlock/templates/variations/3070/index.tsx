@@ -31,9 +31,9 @@ const ArticleCard = memo(({ article }: { article: Article }) => {
   }
 
   return (
-    <ArticlePreview>
+    <ArticlePreview className="articlePreview">
       {article.isArticleLive === true ? (
-        <LiveBadge>LIVE 16m ago</LiveBadge>
+        <LiveBadge className="liveBadge">LIVE 16m ago</LiveBadge>
       ) : (
         <></>
       )}
@@ -41,11 +41,13 @@ const ArticleCard = memo(({ article }: { article: Article }) => {
         href={`/${article.editorial.slug}/${article.slug}`}
         hover="hover:opacity-60"
       >
-        <h2>{article.title}</h2>
-        <p>{article.subtitle}</p>
+        <h2 className="articleTitle">{article.title}</h2>
+        <p className="articleSubtitle">{article.subtitle}</p>
       </Link>
       {(article.articleEstimatedReadTime ?? '').length > 0 && (
-        <span>{article.articleEstimatedReadTime} MIN READ</span>
+        <span className="articleEstimatedReadTime">
+          {article.articleEstimatedReadTime} MIN READ
+        </span>
       )}
     </ArticlePreview>
   )
@@ -82,6 +84,7 @@ export default function T3070Variation({
           <Image
             src={firstArticle.content.image.desktop_image_path}
             alt={firstArticle.title}
+            loading="lazy"
           />
           <div className="captions">The captions here.</div>
         </SideColumn>
@@ -116,8 +119,11 @@ export default function T3070Variation({
           </Fragment>
         ))}
       </ArticleRowContainer>
-      <ShouldRenderXBorderBottomDivider />
-      <ShouldRenderYBorderRightDivider borderYRightPadding="10px" />
+      <ShouldRenderXBorderBottomDivider customStyles="borderXCustomClass" />
+      <ShouldRenderYBorderRightDivider
+        customStyles="borderYCustomClass"
+        borderYRightPadding="10px"
+      />
     </Container>
   )
 }
