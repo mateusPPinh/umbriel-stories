@@ -12,6 +12,7 @@ export interface ButtonProps
     | 'dark'
     | 'underline'
     | 'rounded'
+    | 'transparent'
   className?: string
   isFullWidth?: boolean
   disabled?: boolean

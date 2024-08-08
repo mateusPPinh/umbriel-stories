@@ -72,6 +72,7 @@ declare module 'styled-components' {
       heading: 'Rubik Variable'
       heading2: 'Inter Variable'
       mvpFont: 'Lora Variable'
+      dmSans: 'DM Sans Variable'
     }
   }
 }

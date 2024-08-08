@@ -12,6 +12,7 @@ interface CSSProps {
     | 'dark'
     | 'underline'
     | 'rounded'
+    | 'transparent'
   isFullWidth?: boolean
   disabled?: boolean
   isLoading?: boolean
@@ -86,6 +87,11 @@ const variantStyles = css<CSSProps>`
           color: ${theme.colors.lightBlue.lightBlue900};
           text-decoration: underline;
         `
+      case 'transparent':
+        return css`
+          background-color: transparent;
+          text-decoration: none;
+        `
       case 'rounded':
         return css`
           background-color: ${theme.colors.lightBlue.lightBlue900};
@@ -132,9 +138,15 @@ const Container = styled.button<CSSProps>`
   ${({ disabled, theme }) => {
     if (disabled) {
       return css`
-        background-color: ${theme.colors.gray100};
+        background-color: transparent;
         cursor: not-allowed;
         color: ${theme.colors.white};
+        opacity: 0.5;
+
+        &:hover {
+          opacity: none;
+          transition: none;
+        }
       `
     }
   }}
