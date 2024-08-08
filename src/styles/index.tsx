@@ -4,6 +4,7 @@ import '@fontsource-variable/noto-sans'
 import '@fontsource-variable/rubik'
 import '@fontsource-variable/lora'
 import '@fontsource-variable/inter'
+import '@fontsource-variable/dm-sans'
 
 import { ThemeProvider, StyleSheetManager } from 'styled-components'
 import { type PropsWithChildren } from 'react'
@@ -81,6 +82,7 @@ const theme = {
     heading: 'Rubik Variable',
     heading2: 'Inter Variable',
     mvpFont: 'Lora Variable',
+    dmSans: 'DM Sans Variable',
   },
 }
 

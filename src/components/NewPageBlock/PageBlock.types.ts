@@ -77,6 +77,9 @@ export interface BlockData {
     description: string
     slug: string
   }
+  templateSeventyCarouselProps?: {
+    shouldRenderBorderBottom: boolean
+  }
 }
 
 export interface PageBlockProps {

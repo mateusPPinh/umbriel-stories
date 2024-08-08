@@ -18,6 +18,7 @@ import TemplateSideColumns from './templates/TemplateSideColumns'
 import TemplateNewsletter from './templates/TemplateNewsletter'
 import TemplateWithImageAndArticles from './templates/TemplateWithImageAndArticles'
 import T3070Variation from './templates/variations/3070'
+import TemplateSeventyThirtyWithCarousel from './templates/TemplateSeventyThirtyWithCarousel'
 
 const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
   return (
@@ -29,7 +30,7 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
           config,
           template50,
           blockTitle,
-          templateSlot100FeaturedRelatedProps
+          templateSlot100FeaturedRelatedProps,
         } = blockData
         const articles = blocksData.centerMiddle.articles
 
@@ -114,20 +115,50 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
                     bgColor: '#fff',
                     blockSubjectColor: '#333',
                     articleTitleColor: '#000',
-                    blockBorderRadius: '4px'
+                    blockBorderRadius: '4px',
                   }
                 }
                 blockTitle={blockTitle}
               />
             )
           case 'TemplateSideColumns':
-            return <TemplateSideColumns key={index} articles={articles} config={config}/>
+            return (
+              <TemplateSideColumns
+                key={index}
+                articles={articles}
+                config={config}
+              />
+            )
           case 'TemplateNewsletter':
-            return <TemplateNewsletter key={index} articles={articles} config={config}/>
+            return (
+              <TemplateNewsletter
+                key={index}
+                articles={articles}
+                config={config}
+              />
+            )
           case 'TemplateWithImageAndArticles':
-            return <TemplateWithImageAndArticles key={index} articles={articles} blockTitle='Block de Image-Article'/>
+            return (
+              <TemplateWithImageAndArticles
+                key={index}
+                articles={articles}
+                blockTitle="Block de Image-Article"
+              />
+            )
           case 'T3070Variation':
             return <T3070Variation key={index} articles={articles} />
+          case 'TemplateSeventyThirtyWithCarousel':
+            return (
+              <TemplateSeventyThirtyWithCarousel
+                key={index}
+                articles={articles}
+                config={config}
+                shouldRenderBorderBottom={
+                  blockData.templateSeventyCarouselProps
+                    ?.shouldRenderBorderBottom
+                }
+              />
+            )
           default:
             return <div key={index}>Template not found</div>
         }
