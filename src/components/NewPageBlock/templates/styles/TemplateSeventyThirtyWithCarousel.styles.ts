@@ -348,3 +348,19 @@ export const Carousel = styled.div`
     }
   }
 `
+export const Skeleton = styled.div`
+  background: #e0e0e0;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  animation: shimmer 2s infinite linear;
+
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+`

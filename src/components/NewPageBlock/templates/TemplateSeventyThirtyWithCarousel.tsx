@@ -64,6 +64,7 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
                   <img
                     src={article.content.image.desktop_image_path}
                     alt={article.title}
+                    loading="lazy"
                   />
                   <Overlay>
                     <TextOverlay>
@@ -113,6 +114,7 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
                 <img
                   src={article.content.image.desktop_image_path}
                   alt={article.title}
+                  loading="lazy"
                 />
                 <div className="text-content">
                   <Link
@@ -140,11 +142,13 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
               <img
                 src={articles[5].content.image.desktop_image_path}
                 alt={articles[5].title}
+                loading="lazy"
               />
             </BottomBlock>
           )}
         </RightSection>
       </Container>
+
       {shouldRenderBorderBottom && (
         <div className="border-b b-[#DFDFDF] my-4" />
       )}
