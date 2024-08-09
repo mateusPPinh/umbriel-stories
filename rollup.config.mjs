@@ -50,7 +50,15 @@ export default [
         limit: 8192, // Inline files smaller than 8k, copy files larger than 8k
         emitFiles: true // Ensures that the files are copied to the output directory
       }),
-      terser()
+      terser({
+        compress: {
+          drop_console: true,
+          drop_debugger: true
+        },
+        output: {
+          comments: false
+        }
+      })      
     ],
     external: ['react', 'react-dom', 'styled-components']
   },
