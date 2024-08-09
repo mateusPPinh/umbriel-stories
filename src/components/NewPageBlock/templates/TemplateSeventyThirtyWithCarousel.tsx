@@ -44,10 +44,7 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
   }
 
   const truncateTitle = (title: string) => {
-    if (title.length > 80) {
-      return truncate(title, { length: 80, omission: '...' })
-    }
-    return title
+    return truncate(title, { length: 80, omission: '...' })
   }
 
   return (
@@ -63,8 +60,14 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
                 <div className="carousel-item" key={index}>
                   <img
                     src={article.content.image.desktop_image_path}
+                    srcSet={`${article.content.image.desktop_image_path}?width=480 480w,
+                            ${article.content.image.desktop_image_path}?width=768 768w,
+                            ${article.content.image.desktop_image_path}?width=1024 1024w`}
+                    sizes="(max-width: 768px) 480px,
+                          (max-width: 1024px) 768px,
+                          1024px"
                     alt={article.title}
-                    loading="lazy"
+                    loading="eager"
                   />
                   <Overlay>
                     <TextOverlay>
@@ -113,8 +116,14 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
               <ArticleBlock key={index}>
                 <img
                   src={article.content.image.desktop_image_path}
+                  srcSet={`${article.content.image.desktop_image_path}?width=480 480w,
+                          ${article.content.image.desktop_image_path}?width=768 768w,
+                          ${article.content.image.desktop_image_path}?width=1024 1024w`}
+                  sizes="(max-width: 768px) 480px,
+                        (max-width: 1024px) 768px,
+                        1024px"
                   alt={article.title}
-                  loading="lazy"
+                  loading="eager"
                 />
                 <div className="text-content">
                   <Link
@@ -141,8 +150,14 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
               </div>
               <img
                 src={articles[5].content.image.desktop_image_path}
+                srcSet={`${articles[5].content.image.desktop_image_path}?width=480 480w,
+                        ${articles[5].content.image.desktop_image_path}?width=768 768w,
+                        ${articles[5].content.image.desktop_image_path}?width=1024 1024w`}
+                sizes="(max-width: 768px) 480px,
+                      (max-width: 1024px) 768px,
+                      1024px"
                 alt={articles[5].title}
-                loading="lazy"
+                loading="eager"
               />
             </BottomBlock>
           )}
