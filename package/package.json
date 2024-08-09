@@ -1,0 +1,45 @@
+{
+  "name": "@umbriel/components",
+  "private": false,
+  "version": "0.1.61",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "rollup -c",
+    "prepare": "npm run build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "prepack": "cp package.json package.backup.json && json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\"",
+    "postpack": "mv package.backup.json package.json",
+    "format": "prettier --write ."
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || 18.x",
+    "styled-components": "^6.0.0"
+  },
+  "resolutions": {
+    "wrap-ansi": "7.0.0",
+    "string-width": "4.1.0"
+  },
+  "main": "dist/cjs/index.cjs",
+  "module": "dist/esm/index.es.js",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "types": "dist/index.d.ts",
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Umbriel-CMS/umbriel-stories.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Umbriel-CMS/umbriel-stories/issues"
+  },
+  "homepage": "https://github.com/Umbriel-CMS/umbriel-stories#readme"
+}

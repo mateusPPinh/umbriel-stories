@@ -1,11 +1,10 @@
 *.tgz
-.storybook
-**/*.stories.*
-**/mocks/*.mock.*
-mocks
-*.tgz
 src/mocks/
 src/stories/
 .storybook/
 *.test.*
 *.spec.*
+**/*.stories.*
+**/mocks/*.mock.*
+**/mocks/**/*.ts
+**/mock.d.ts

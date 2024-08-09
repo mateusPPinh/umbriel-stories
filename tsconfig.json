@@ -23,6 +23,7 @@
     },
     "typeRoots": ["node_modules/@types", "src/components/index.d.ts"]
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["**/*.stories.tsx", "**/mocks/*.mock.*", "**/mocks/**/*.ts", "**/mock.d.ts"],
+  "references": [{ "path": "./tsconfig.node.json" }],
 }
