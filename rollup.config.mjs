@@ -1,15 +1,15 @@
-import resolve from '@rollup/plugin-node-resolve'
-import commonjs from '@rollup/plugin-commonjs'
-import terser from '@rollup/plugin-terser'
-import typescript from 'rollup-plugin-typescript2'
-import dts from 'rollup-plugin-dts'
-import packageJson from './package.json' assert { type: 'json' }
-import postcss from 'rollup-plugin-postcss'
-import url from '@rollup/plugin-url'
-import { fileURLToPath } from 'url'
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import terser from '@rollup/plugin-terser';
+import typescript from 'rollup-plugin-typescript2';
+import dts from 'rollup-plugin-dts';
+import packageJson from './package.json' assert { type: 'json' };
+import postcss from 'rollup-plugin-postcss';
+import url from '@rollup/plugin-url';
+import { fileURLToPath } from 'url';
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const __filename = fileURLToPath(import.meta.url)
-global.__filename = __filename
+const __filename = fileURLToPath(import.meta.url);
+global.__filename = __filename;
 
 export default [
   {
@@ -31,7 +31,10 @@ export default [
     plugins: [
       resolve(),
       commonjs(),
-      typescript({ tsconfig: './tsconfig.json' }),
+      typescript({
+        tsconfig: './tsconfig.json',
+        exclude: ['**/*.stories.tsx', '**/mocks/*.mock.*', '**/mocks/**/*.ts', '**/mock.d.ts']
+      }),
       postcss({
         extensions: ['.css'],
         extract: false,
@@ -58,14 +61,16 @@ export default [
         output: {
           comments: false
         }
-      })      
+      })
     ],
     external: ['react', 'react-dom', 'styled-components']
   },
   {
     input: 'src/components/index.ts',
     output: [{ file: 'dist/index.d.ts', format: 'es' }],
-    plugins: [dts()],
+    plugins: [dts({
+      exclude: ['**/*.stories.tsx', '**/mocks/*.mock.*', '**/mocks/**/*.ts']
+    })],
     external: [/\.css$/]
   }
-]
+];

@@ -1,7 +1,6 @@
 import '../index.css'
 export { default as Theme } from '../styles/index'
 export { default as CustomThemeProvider } from '../styles/index'
-export { default as UmbrielGallery } from './GalleryV2'
 export { default as SideMenu } from './SideMenu'
 export { default as Modal } from './Modal'
 export { default as ArticleLayoutCards } from './BlockItemCards'
