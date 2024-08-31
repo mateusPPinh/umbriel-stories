@@ -5,9 +5,6 @@ import {
   Column,
   Image,
   SideColumn,
-  LiveBadge,
-  UpdatesContainer,
-  Update,
   ArticleRow,
   ArticleRowContainer,
   Divider,
@@ -32,11 +29,11 @@ const ArticleCard = memo(({ article }: { article: Article }) => {
 
   return (
     <ArticlePreview className="articlePreview">
-      {article.isArticleLive === true ? (
+      {/* {article.isArticleLive === true ? (
         <LiveBadge className="liveBadge">LIVE 16m ago</LiveBadge>
       ) : (
         <></>
-      )}
+      )} */}
       <Link
         href={`/${article.editorial.slug}/${article.slug}`}
         hover="hover:opacity-60"
@@ -44,11 +41,11 @@ const ArticleCard = memo(({ article }: { article: Article }) => {
         <h2 className="articleTitle">{article.title}</h2>
         <p className="articleSubtitle">{article.subtitle}</p>
       </Link>
-      {(article.articleEstimatedReadTime ?? '').length > 0 && (
+      {/* {(article.articleEstimatedReadTime ?? '').length > 0 && (
         <span className="articleEstimatedReadTime">
           {article.articleEstimatedReadTime} MIN READ
         </span>
-      )}
+      )} */}
     </ArticlePreview>
   )
 })
@@ -60,7 +57,7 @@ interface T3070VariationProps {
 export default function T3070Variation({
   articles,
 }: T3070VariationProps): ReactElement {
-  const [firstArticle, secondArticle, ...restArticles] = articles
+  const [firstArticle, secondArticle, thirdArticle, ...restArticles] = articles
 
   if (!firstArticle?.editorial || firstArticle.slug.length === 0) {
     console.error('First article editorial or slug is missing', firstArticle)
@@ -75,10 +72,8 @@ export default function T3070Variation({
           <ArticleCard article={firstArticle} />
           <Divider />
           <ArticleCard article={secondArticle} />
-          <UpdatesContainer>
-            <span>See more updates</span>
-            <Update>9+</Update>
-          </UpdatesContainer>
+          <Divider />
+          <ArticleCard article={thirdArticle} />
         </Column>
         <SideColumn>
           <Image
@@ -86,21 +81,13 @@ export default function T3070Variation({
             alt={firstArticle.title}
             loading="lazy"
           />
-          <div className="captions">The captions here.</div>
         </SideColumn>
       </MainContent>
       <div className="border-t bg-gray-300" />
       <ArticleRowContainer>
-        {restArticles.slice(0, 3).map((article, i) => (
+        {restArticles.slice(0, 4).map((article, i) => (
           <Fragment key={i}>
             <ArticleRow>
-              {article.isArticleLive ?? false ? (
-                <LiveBadge>LIVE 16m ago</LiveBadge>
-              ) : (
-                article.articleEstimatedReadTime != null && (
-                  <span>{article.articleEstimatedReadTime} MIN READ</span>
-                )
-              )}
               {article.editorial && article.slug ? (
                 <Link
                   href={`/${article.editorial.slug}/${article.slug}`}
@@ -111,9 +98,6 @@ export default function T3070Variation({
                 </Link>
               ) : (
                 <p>Article link is missing</p>
-              )}
-              {article.articleEstimatedReadTime != null && (
-                <span>{article.articleEstimatedReadTime}</span>
               )}
             </ArticleRow>
           </Fragment>

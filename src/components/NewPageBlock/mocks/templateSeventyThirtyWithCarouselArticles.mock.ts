@@ -10,9 +10,9 @@ export const templateSeventyThirtyWithCarouselArticles = [
     content: {
       image: {
         desktop_image_path:
-          'https://images.unsplash.com/photo-1612708463731-baacc6f39b85?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          'http://localhost:3001/uploads/bfcdd80018034c278a21-2.webp?width=2256&height=1504',
         image_mobile_path:
-          'https://images.unsplash.com/photo-1612708463731-baacc6f39b85?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          'http://localhost:3001/uploads/bfcdd80018034c278a21-2.webp?width=2256&height=1504',
       },
     },
     slug: 'sample-article-1',
@@ -43,9 +43,9 @@ export const templateSeventyThirtyWithCarouselArticles = [
     content: {
       image: {
         desktop_image_path:
-          'https://www.intercept.com.br/wp-content/plugins/seox-image-magick/imagick_convert.php?format=webp&quality=91&imagick=uploads.intercept.com.br/2024/08/SCHLICKMANN-1495-1024x684.jpg',
+          'http://localhost:3001/uploads/53ec4cc60f4e85953de0-3.webp?width=1024&height=684',
         image_mobile_path:
-          'https://www.intercept.com.br/wp-content/plugins/seox-image-magick/imagick_convert.php?format=webp&quality=91&imagick=uploads.intercept.com.br/2024/08/SCHLICKMANN-1495-1024x684.jpg',
+          'http://localhost:3001/uploads/53ec4cc60f4e85953de0-3.webp?width=1024&height=684',
       },
     },
     slug: 'sample-article-2',
@@ -76,9 +76,9 @@ export const templateSeventyThirtyWithCarouselArticles = [
     content: {
       image: {
         desktop_image_path:
-          'https://www.intercept.com.br/wp-content/plugins/seox-image-magick/imagick_convert.php?format=webp&quality=91&imagick=uploads.intercept.com.br/2023/06/Os-crimes-continuam-onde-Dom-e-Bruno-morreram.jpg',
+          'http://localhost:3001/uploads/b96ea65b75fc70000a68-1.webp?width=1500&height=1000',
         image_mobile_path:
-          'https://www.intercept.com.br/wp-content/plugins/seox-image-magick/imagick_convert.php?format=webp&quality=91&imagick=uploads.intercept.com.br/2023/06/Os-crimes-continuam-onde-Dom-e-Bruno-morreram.jpg',
+          'http://localhost:3001/uploads/b96ea65b75fc70000a68-1.webp?width=1500&height=1000',
       },
     },
     slug: 'sample-article-3',
@@ -107,9 +107,9 @@ export const templateSeventyThirtyWithCarouselArticles = [
     content: {
       image: {
         desktop_image_path:
-          'https://www.intercept.com.br/wp-content/plugins/seox-image-magick/imagick_convert.php?width=1024&height=683&format=webp&quality=91&imagick=uploads.intercept.com.br/2024/07/1719538475038-1024x683.jpg',
+          'http://localhost:3001/uploads/dab4f99f498dd2ca6cba-9.jpg?width=1118&height=1456',
         image_mobile_path:
-          'https://www.intercept.com.br/wp-content/plugins/seox-image-magick/imagick_convert.php?width=1024&height=683&format=webp&quality=91&imagick=uploads.intercept.com.br/2024/07/1719538475038-1024x683.jpg',
+          'http://localhost:3001/uploads/dab4f99f498dd2ca6cba-9.jpg?width=1118&height=1456',
       },
     },
     slug: 'criminalizacao-de-liderancas-indigenas-no-maranhao',
@@ -138,9 +138,9 @@ export const templateSeventyThirtyWithCarouselArticles = [
     content: {
       image: {
         desktop_image_path:
-          'https://www.intercept.com.br/wp-content/plugins/seox-image-magick/imagick_convert.php?width=1024&height=683&format=webp&quality=91&imagick=uploads.intercept.com.br/2024/07/1719538475038-1024x683.jpg',
+          'http://localhost:3001/uploads/dab4f99f498dd2ca6cba-9.jpg?width=1118&height=1456',
         image_mobile_path:
-          'https://www.intercept.com.br/wp-content/plugins/seox-image-magick/imagick_convert.php?width=1024&height=683&format=webp&quality=91&imagick=uploads.intercept.com.br/2024/07/1719538475038-1024x683.jpg',
+          'http://localhost:3001/uploads/dab4f99f498dd2ca6cba-9.jpg?width=1118&height=1456',
       },
     },
     slug: 'vitoria-do-povos-indigenas-contra-o-marco-temporal',
@@ -169,9 +169,9 @@ export const templateSeventyThirtyWithCarouselArticles = [
     content: {
       image: {
         desktop_image_path:
-          'https://www.intercept.com.br/wp-content/plugins/seox-image-magick/imagick_convert.php?width=1024&height=683&format=webp&quality=91&imagick=uploads.intercept.com.br/2024/07/1719538475038-1024x683.jpg',
+          'http://localhost:3001/uploads/a50b4d61ab5ce2fbdc4d-8.webp?width=1920&height=440',
         image_mobile_path:
-          'https://www.intercept.com.br/wp-content/plugins/seox-image-magick/imagick_convert.php?width=1024&height=683&format=webp&quality=91&imagick=uploads.intercept.com.br/2024/07/1719538475038-1024x683.jpg',
+          'http://localhost:3001/uploads/a50b4d61ab5ce2fbdc4d-8.webp?width=1920&height=440',
       },
     },
     slug: 'sample-article-6',
@@ -200,9 +200,9 @@ export const templateSeventyThirtyWithCarouselArticles = [
     content: {
       image: {
         desktop_image_path:
-          'https://www.intercept.com.br/wp-content/plugins/seox-image-magick/imagick_convert.php?width=1024&height=683&format=webp&quality=91&imagick=uploads.intercept.com.br/2024/07/1719538475038-1024x683.jpg',
+          'http://localhost:3001/uploads/dab4f99f498dd2ca6cba-9.jpg?width=1118&height=1456',
         image_mobile_path:
-          'https://www.intercept.com.br/wp-content/plugins/seox-image-magick/imagick_convert.php?width=1024&height=683&format=webp&quality=91&imagick=uploads.intercept.com.br/2024/07/1719538475038-1024x683.jpg',
+          'http://localhost:3001/uploads/dab4f99f498dd2ca6cba-9.jpg?width=1118&height=1456',
       },
     },
     slug: 'sample-article-7',
