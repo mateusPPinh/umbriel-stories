@@ -18,6 +18,9 @@ import {
   NewsletterSection,
   DividerBottom,
   NewsletterPreview,
+  NewSletterPreviewSection,
+  NewSletterPreviewImage,
+  BorderLeft,
 } from '../../styles/T7030WihtinNewsletter.styles'
 
 const ArticleCard = memo(({ article }: { article: Article }) => {
@@ -62,12 +65,20 @@ const NewsletterCard = memo(({ article }: { article: Article }) => {
       ) : (
         <></>
       )} */}
-      <Link
-        href={`/${article.editorial.slug}/${article.slug}`}
-        hover="hover:opacity-60"
-      >
-        <h2 className="newsletter_articleTitle">{article.title}</h2>
-      </Link>
+      <NewSletterPreviewSection>
+        <NewSletterPreviewImage
+          src={article.content.image.desktop_image_path}
+          alt={article.title}
+          loading="lazy"
+        />
+        <Link
+          href={`/${article.editorial.slug}/${article.slug}`}
+          hover="hover:opacity-60"
+        >
+          <h2 className="newsletter_articleTitle">{article.title}</h2>
+        </Link>
+      </NewSletterPreviewSection>
+      <div className="border-t bg-gray-300 mt-2" />
     </NewsletterPreview>
   )
 })
@@ -116,7 +127,7 @@ export default function T7030WithinNewsletter({
           />
         </SideColumn>
         <NewsletterContainer>
-          <div className="border-l border-gray-300" />
+          <BorderLeft />
           <NewsletterSection>
             <div>
               <Link

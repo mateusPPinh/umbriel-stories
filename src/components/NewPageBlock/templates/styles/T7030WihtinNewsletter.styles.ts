@@ -15,7 +15,7 @@ export const Container = styled.div`
 
 export const MainContent = styled.div`
   display: grid;
-  grid-template-columns: minmax(0, 347px) minmax(0, 705px) minmax(0, 352px);
+  grid-template-columns: minmax(0, 275px) minmax(0, auto) minmax(0, 300px);
   gap: 20px;
 
   @media (max-width: 1024px) {
@@ -166,6 +166,12 @@ export const NewsletterContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100% !important;
+
+  @media (max-width: 1024px) {
+    display: flex;
+    align-items: center;
+    border-left: none;
+  }
 `
 
 export const NewsletterSection = styled.section`
@@ -174,6 +180,13 @@ export const NewsletterSection = styled.section`
   align-items: center;
   flex-direction: column;
   justify-content: center;
+
+  /* @media (max-width: 1024px) {
+    > :first-child {
+      display: flex;
+      align-items: center;
+    }
+  } */
 
   h3 {
     font-family: 'Lora Variable';
@@ -193,4 +206,20 @@ export const NewsletterPreview = styled.div`
     font-family: 'Lora Variable';
     margin-left: 0.8rem;
   }
+`
+export const NewSletterPreviewSection = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`
+
+export const NewSletterPreviewImage = styled.img`
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid #f87171;
+`
+export const BorderLeft = styled.div`
+  border-left-width: 1px;
+  border-color: #d1d5db;
 `
