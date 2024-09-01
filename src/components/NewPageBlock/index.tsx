@@ -20,6 +20,7 @@ import TemplateWithImageAndArticles from './templates/TemplateWithImageAndArticl
 import T3070Variation from './templates/variations/3070'
 import TemplateSeventyThirtyWithCarousel from './templates/TemplateSeventyThirtyWithCarousel'
 import EditorialTemplate from './templates/EditorialTemplate'
+import T7030WithinNewsletter from './templates/variations/T7030WithinNewsletter'
 
 const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
   return (
@@ -150,6 +151,8 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
             return <T3070Variation key={index} articles={articles} />
           case 'EditorialTemplate':
             return <EditorialTemplate key={index} articles={articles} />
+          case 'T7030WithinNewsletter':
+            return <T7030WithinNewsletter key={index} articles={articles} />
           case 'TemplateSeventyThirtyWithCarousel':
             return (
               <TemplateSeventyThirtyWithCarousel

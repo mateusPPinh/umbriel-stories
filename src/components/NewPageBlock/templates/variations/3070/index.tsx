@@ -80,6 +80,7 @@ export default function T3070Variation({
             src={firstArticle.content.image.desktop_image_path}
             alt={firstArticle.title}
             loading="lazy"
+            decoding="async"
           />
         </SideColumn>
       </MainContent>

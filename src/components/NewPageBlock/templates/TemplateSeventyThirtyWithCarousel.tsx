@@ -67,7 +67,8 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
                           (max-width: 1024px) 768px,
                           1024px"
                     alt={article.title}
-                    loading="eager"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <Overlay>
                     <TextOverlay>
@@ -123,7 +124,8 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
                         (max-width: 1024px) 768px,
                         1024px"
                   alt={article.title}
-                  loading="eager"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="text-content">
                   <Link
@@ -157,7 +159,8 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
                       (max-width: 1024px) 768px,
                       1024px"
                 alt={articles[5].title}
-                loading="eager"
+                loading="lazy"
+                decoding="async"
               />
             </BottomBlock>
           )}
