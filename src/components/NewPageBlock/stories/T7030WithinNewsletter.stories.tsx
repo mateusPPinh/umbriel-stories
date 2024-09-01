@@ -52,7 +52,7 @@ export const T7030WithinNewsletter: Story = {
   },
   render: (args) => (
     <div className="flex items-center justify-center w-screen">
-      <div className="w-full max-w-[1532px] p-4">
+      <div className="w-full max-w-[1332px] p-4">
         <PageBlock {...args} />
       </div>
     </div>
