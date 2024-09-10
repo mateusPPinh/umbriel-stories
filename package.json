@@ -54,6 +54,7 @@
     "react-image": "^4.1.0",
     "react-intersection-observer": "^9.13.0",
     "react-photo-album": "^2.3.1",
+    "react-player": "^2.16.0",
     "react-router-dom": "^6.23.0",
     "react-spinners": "^0.14.1",
     "react-vite-library": "^0.0.3",
