@@ -16,6 +16,7 @@ import { type Article, type BlockConfig } from '../PageBlock.types'
 import truncate from 'lodash/truncate'
 import Button from '../../Button'
 import { Link } from '@umbriel/components'
+import Player from '../../Player'
 
 import CarouselArrowLeft from '../../../../public/icons/CarouselArrowLeft'
 import CarouselArrowRight from '../../../../public/icons/CarouselArrowRight'
@@ -106,10 +107,7 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
         </LeftSection>
         <RightSection>
           <VideoBlock>
-            <video controls>
-              <source src="video-source.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            <Player />
             <div className="video__border_bottom" />
           </VideoBlock>
           <ArticleContainer>
