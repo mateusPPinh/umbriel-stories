@@ -7,6 +7,7 @@ import packageJson from './package.json' assert { type: 'json' };
 import postcss from 'rollup-plugin-postcss';
 import url from '@rollup/plugin-url';
 import { fileURLToPath } from 'url';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const __filename = fileURLToPath(import.meta.url);
 global.__filename = __filename;
@@ -16,13 +17,13 @@ export default [
     input: 'src/components/index.ts',
     output: [
       {
-        file: packageJson.main,
+        dir: packageJson.main,  // Defina o diretório para CommonJS
         format: 'cjs',
         sourcemap: true,
         interop: 'compat'
       },
       {
-        file: packageJson.module,
+        dir: packageJson.module,  // Defina o diretório para ES modules
         format: 'esm',
         sourcemap: true,
         interop: 'compat'
@@ -67,7 +68,7 @@ export default [
   },
   {
     input: 'src/components/index.ts',
-    output: [{ file: 'dist/index.d.ts', format: 'es' }],
+    output: [{ file: 'dist/index.d.ts', format: 'es'}],
     plugins: [dts({
       exclude: ['**/*.stories.tsx', '**/mocks/*.mock.*', '**/mocks/**/*.ts']
     })],
