@@ -16,7 +16,7 @@ import { type Article, type BlockConfig } from '../PageBlock.types'
 import truncate from 'lodash/truncate'
 import Button from '../../Button'
 import { Link } from '@umbriel/components'
-import Player from '../../Player'
+import Video from '../../Player'
 
 import CarouselArrowLeft from '../../../../public/icons/CarouselArrowLeft'
 import CarouselArrowRight from '../../../../public/icons/CarouselArrowRight'
@@ -107,7 +107,7 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
         </LeftSection>
         <RightSection>
           <VideoBlock>
-            <Player />
+            <Video />
             <div className="video__border_bottom" />
           </VideoBlock>
           <ArticleContainer>
