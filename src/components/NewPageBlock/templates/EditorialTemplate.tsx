@@ -10,13 +10,10 @@ import {
   Image,
   BottomSection,
 } from './styles/EditorialTemploate.styles'
+import SkeletonEditorial from '../../Skeleton'
 
 import { type Article } from '../PageBlock.types'
 import { SideColumn } from './variations/3070/styles'
-
-interface EditorialTemplateProps {
-  articles: Article[]
-}
 
 const ArticleCard = memo(({ article }: { article: Article }) => {
   if (!article.editorial || !article.slug) {
@@ -48,10 +45,29 @@ const ArticleCard = memo(({ article }: { article: Article }) => {
   )
 })
 
-export default function EditorialTemplate({
+interface EditorialTemplateProps {
+  articles: Article[]
+  loading: boolean | undefined
+}
+
+function EditorialTemplate({
   articles,
+  loading,
 }: EditorialTemplateProps): ReactElement {
+  const skeletonCount = 1
+
+  if (loading) {
+    return (
+      <div className="skeleton-wrapper">
+        {[...Array(skeletonCount)].map((_, i) => (
+          <SkeletonEditorial key={i} />
+        ))}
+      </div>
+    )
+  }
+
   const [firstArticle, ...restArticles] = articles
+
   return (
     <Container>
       <MainContent>
@@ -71,31 +87,18 @@ export default function EditorialTemplate({
         {restArticles.slice(0, 3).map((article, i) => (
           <Fragment key={i}>
             <main>
-              {article.editorial && article.slug ? (
-                <>
-                  <figure>
-                    <Image
-                      src={article.content.image.desktop_image_path}
-                      alt={article.title}
-                      loading="lazy"
-                    />
-                  </figure>
-                  <Link
-                    href={`/${article.editorial.slug}/${article.slug}`}
-                    hover="hover:opacity-60"
-                  >
-                    <div>
-                      <div>
-                        <h3>{article.title}</h3>
-                      </div>
-                    </div>
-                  </Link>
-                  <p>{article.subtitle}</p>
-                  <small>Por: {article.author}</small>
-                </>
-              ) : (
-                <p>Article anchor missing</p>
-              )}
+              <figure>
+                <Image
+                  src={article.content.image.desktop_image_path}
+                  alt={article.title}
+                  loading="lazy"
+                />
+              </figure>
+              <Link href={`/${article.editorial.slug}/${article.slug}`}>
+                <h3>{article.title}</h3>
+              </Link>
+              <p>{article.subtitle}</p>
+              <small>Por: {article.author}</small>
             </main>
           </Fragment>
         ))}
@@ -103,3 +106,5 @@ export default function EditorialTemplate({
     </Container>
   )
 }
+
+export default EditorialTemplate

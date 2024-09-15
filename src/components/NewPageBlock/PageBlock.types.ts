@@ -86,4 +86,5 @@ export interface PageBlockProps {
   blocksData: BlockData[]
   className?: string
   customStyles?: React.CSSProperties
+  loading?: boolean | undefined
 }

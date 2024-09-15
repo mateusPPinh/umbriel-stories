@@ -1,12 +1,16 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable @typescript-eslint/prefer-optional-chain */
 'use client'
 
 import React from 'react'
 import styled from 'styled-components'
 import { type Article } from '../PageBlock.types'
 import Link from '../../Link'
+import ArticleSkeleton from '../../ArticleSkeleton'
 
 interface LayoutNewsBlockProps {
   articles: Article[]
+  loading: boolean | undefined
 }
 
 const Container = styled.div`
@@ -104,6 +108,7 @@ const LinksList = styled.ul`
 
 const TemplateLayoutNewsBlock: React.FC<LayoutNewsBlockProps> = ({
   articles,
+  loading,
 }) => {
   const isValidArticle = (article: Article) =>
     article &&
@@ -111,12 +116,23 @@ const TemplateLayoutNewsBlock: React.FC<LayoutNewsBlockProps> = ({
     article.content.image &&
     article.content.image.desktop_image_path
 
+  const skeletonCount = articles.length
+
+  if (loading) {
+    return (
+      <div className="skeleton-wrapper">
+        {[...Array(skeletonCount)].map((_, i) => (
+          <ArticleSkeleton key={i} />
+        ))}
+      </div>
+    )
+  }
   return (
     <>
       <div className="borderTop" />
       <div className="borderBottom" />
       <Container>
-        <BlockTitle>NEWS</BlockTitle>
+        <BlockTitle>Mais notícias</BlockTitle>
         <ArticleGrid>
           {articles.filter(isValidArticle).map((article, index) => (
             <ArticlePreview key={index}>
@@ -129,7 +145,9 @@ const TemplateLayoutNewsBlock: React.FC<LayoutNewsBlockProps> = ({
               <LinksList>
                 {article.links?.map((link, linkIndex) => (
                   <li key={linkIndex}>
-                    <Link href={link.url}>{link.title}</Link>
+                    <Link href={`${article.editorial.slug}/${link.url}`}>
+                      {link.title}
+                    </Link>
                   </li>
                 ))}
               </LinksList>
