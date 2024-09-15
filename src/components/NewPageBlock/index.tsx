@@ -22,7 +22,7 @@ import TemplateSeventyThirtyWithCarousel from './templates/TemplateSeventyThirty
 import EditorialTemplate from './templates/EditorialTemplate'
 import T7030WithinNewsletter from './templates/variations/T7030WithinNewsletter'
 
-const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
+const PageBlock: React.FC<PageBlockProps> = ({ blocksData, loading }) => {
   return (
     <div className="page-block">
       {blocksData.map((blockData: BlockData, index) => {
@@ -96,7 +96,13 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
               />
             )
           case 'TemplateLayoutNewsBlock':
-            return <TemplateLayoutNewsBlock key={index} articles={articles} />
+            return (
+              <TemplateLayoutNewsBlock
+                key={index}
+                articles={articles}
+                loading={loading}
+              />
+            )
           case 'Template5050Grid':
             return (
               <Template5050Grid
@@ -150,7 +156,13 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData }) => {
           case 'T3070Variation':
             return <T3070Variation key={index} articles={articles} />
           case 'EditorialTemplate':
-            return <EditorialTemplate key={index} articles={articles} />
+            return (
+              <EditorialTemplate
+                key={index}
+                articles={articles}
+                loading={loading}
+              />
+            )
           case 'T7030WithinNewsletter':
             return <T7030WithinNewsletter key={index} articles={articles} />
           case 'TemplateSeventyThirtyWithCarousel':
