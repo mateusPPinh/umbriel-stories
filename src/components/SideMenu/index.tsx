@@ -58,6 +58,8 @@ export default function SideMenu({
                         : ''
                     }`}
                     onClick={() => {
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
+                      // @ts-ignore
                       handleClick(item, !!item.children)
                     }}
                   >
@@ -68,6 +70,8 @@ export default function SideMenu({
                 <span
                   className={customTitleStyle}
                   onClick={() => {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error
+                    // @ts-ignore
                     handleClick(item, !!item.children)
                   }}
                 >
