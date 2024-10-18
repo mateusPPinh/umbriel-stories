@@ -4,7 +4,7 @@ import SideMenu from './index'
 
 const meta: Meta<typeof SideMenu> = {
   title: 'Components/SideMenu',
-  component: SideMenu
+  component: SideMenu,
 }
 
 export default meta
@@ -15,25 +15,135 @@ export const Primary: Story = {
     menu: [
       {
         title: 'ESTATÍSTICAS',
-        items: [{ label: 'Painel', onClick: () => { alert('Navegando para Painel') } }]
+        items: [
+          {
+            label: 'Painel',
+            onClick: () => {
+              console.log('Navegando para Painel')
+            },
+            childrenUniqueId: 'panel_identity',
+          },
+        ],
       },
       {
         title: 'CONTEÚDO',
         items: [
-          { label: 'Matérias', onClick: () => { alert('Navegando para Matérias') } },
-          { label: 'Editorias', onClick: () => { alert('Navegando para Editorias') } },
-          { label: 'Páginas', onClick: () => { alert('Navegando para Páginas') } }
-        ]
+          {
+            label: 'Matérias',
+            onClick: () => {
+              alert('Navegando para Matérias')
+            },
+            childrenUniqueId: 'articles_identity',
+          },
+          {
+            label: 'Editorias',
+            onClick: () => {
+              alert('Navegando para Editorias')
+            },
+            children: [
+              {
+                label: 'Esportes',
+                onClick: () => {
+                  alert('Navegando para Esportes')
+                },
+              },
+              {
+                label: 'Política',
+                onClick: () => {
+                  alert('Navegando para Política')
+                },
+              },
+              {
+                label: 'Projetos',
+                onClick: () => {
+                  alert('Navegando para Política')
+                },
+              },
+            ],
+            childrenUniqueId: 'editorials_identity',
+          },
+          {
+            label: 'Site',
+            onClick: () => {
+              alert('Navegando para Editorias')
+            },
+            children: [
+              {
+                label: 'Configurações gerais',
+                onClick: () => {
+                  alert('Navegando para Esportes')
+                },
+              },
+              {
+                label: 'Guia de estilos',
+                onClick: () => {
+                  alert('Navegando para Política')
+                },
+              },
+              {
+                label: 'Componentes',
+                onClick: () => {
+                  alert('Navegando para Política')
+                },
+              },
+              {
+                label: 'Usuários e Permissões',
+                onClick: () => {
+                  alert('Navegando para Usuários e Permissões')
+                },
+              },
+            ],
+            childrenUniqueId: 'site_identity',
+          },
+          {
+            label: 'Páginas',
+            onClick: () => {
+              alert('Navegando para Páginas')
+            },
+            childrenUniqueId: 'pages_identity',
+          },
+        ],
       },
       {
-        title: 'CONFIGURAÇÕES',
+        title: 'CONFIGURAÇÕES DO UMBRIEL',
         items: [
-          { label: 'Tema do Site', onClick: () => { alert('Navegando para Tema do Site') } },
-          { label: 'Componentes', onClick: () => { alert('Navegando para Componentes') } },
-          { label: 'Usuários e Permissões', onClick: () => { alert('Navegando para Usuários e Permissões') } }
-        ]
-      }
-    ]
+          {
+            label: 'Blocos',
+            onClick: () => {
+              alert('Navegando para Editorias')
+            },
+            children: [
+              {
+                label: 'Configurações gerais',
+                onClick: () => {
+                  alert('Navegando para Esportes')
+                },
+              },
+              {
+                label: 'Guia de estilos',
+                onClick: () => {
+                  alert('Navegando para Política')
+                },
+              },
+              {
+                label: 'Componentes',
+                onClick: () => {
+                  alert('Navegando para Política')
+                },
+              },
+              {
+                label: 'Usuários e Permissões',
+                onClick: () => {
+                  alert('Navegando para Usuários e Permissões')
+                },
+              },
+            ],
+            childrenUniqueId: 'umbriel_settings_identity',
+          },
+        ],
+      },
+    ],
+    hiddeSideMenu: true,
   },
   decorators: [
     (Story, context) => {
@@ -42,6 +152,6 @@ export const Primary: Story = {
           <Story {...context.args} />
         </>
       )
-    }
-  ]
+    },
+  ],
 }
