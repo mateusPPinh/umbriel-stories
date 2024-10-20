@@ -9,4 +9,5 @@ export interface ModalProps {
   customDialogContentStyles?: string
   open: boolean
   onOpenChange: (open: boolean) => void
+  shouldBeSticy?: boolean
 }
