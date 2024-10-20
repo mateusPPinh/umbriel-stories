@@ -42,7 +42,7 @@ export default function Modal({
             </div>
             <button
               onClick={() => {
-                onOpenChange(open)
+                onOpenChange(false)
               }}
             >
               <X className="h-4 w-4" />
