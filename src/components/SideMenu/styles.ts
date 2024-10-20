@@ -43,7 +43,7 @@ const Container = styled.div<{
       margin: 0.4rem 0;
       padding: 0;
       margin-left: 10px;
-      font-family: 'Rubik Variable';
+      font-family: ${(props) => props.theme.fonts.heading};
       font-size: 1rem;
       list-style: square;
       visibility: visible;
@@ -69,10 +69,11 @@ const Container = styled.div<{
     display: block;
     transition: max-height 0.3s ease, opacity 0.3s ease;
     height: auto;
+    margin-bottom: -2rem;
   }
 
   .highlight {
-    font-family: 'Rubik Variable';
+    font-family: ${(props) => props.theme.fonts.heading};
     line-height: 110%;
     color: ${(props) => props.theme.colors.gray800};
     font-size: 16px;
@@ -85,12 +86,13 @@ const Container = styled.div<{
     background-color: #e0f2fe;
     padding: 0.5rem;
     border-radius: 2px;
+    margin-bottom: -1rem;
   }
   ul.submenu.open .submenu-item {
     margin: 1rem 0;
     padding: 0;
     margin-left: 5px;
-    font-family: 'Rubik Variable';
+    font-family: ${(props) => props.theme.fonts.heading};
     font-size: 1rem;
     list-style: square;
     visibility: visible;
@@ -113,7 +115,7 @@ const Container = styled.div<{
   }
 
   li {
-    font-family: 'Rubik Variable';
+    font-family: ${(props) => props.theme.fonts.heading};
     line-height: 110%;
     letter-spacing: 1.28px;
     color: ${(props) => props.theme.colors.gray500};
@@ -123,7 +125,7 @@ const Container = styled.div<{
   span {
     margin: 0.8rem 0;
     margin-left: 10px;
-    font-family: 'Rubik Variable';
+    font-family: ${(props) => props.theme.fonts.heading};
     line-height: 110%;
     color: ${(props) => props.theme.colors.gray800};
     font-size: 16px;

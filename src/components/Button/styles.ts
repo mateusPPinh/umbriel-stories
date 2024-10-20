@@ -135,12 +135,13 @@ const Container = styled.button<CSSProps>`
   justify-content: center;
   align-items: center;
 
-  ${({ disabled, theme }) => {
+  ${({ disabled }) => {
     if (disabled) {
       return css`
-        background-color: transparent;
+        background-color: ${(props) => props.theme.colors.white};
         cursor: not-allowed;
-        color: ${theme.colors.white};
+        color: ${(props) => props.theme.colors.gray900};
+        border: 1px solid ${(props) => props.theme.colors.red.red500};
         opacity: 0.5;
 
         &:hover {

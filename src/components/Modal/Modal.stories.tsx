@@ -69,6 +69,22 @@ const defaultBlocks = [
       console.log('Bloco de próximo projeto')
     },
   },
+  {
+    title: 'Bloco de próximo projeto',
+    description: 'Largura: 100% da tela',
+    img: nextProjectFullWidth,
+    onClick: () => {
+      console.log('Bloco de próximo projeto')
+    },
+  },
+  {
+    title: 'Bloco de próximo projeto',
+    description: 'Largura: 100% da tela',
+    img: nextProjectFullWidth,
+    onClick: () => {
+      console.log('Bloco de próximo projeto')
+    },
+  },
 ]
 
 const meta: Meta<typeof Modal> = {
@@ -84,6 +100,7 @@ const meta: Meta<typeof Modal> = {
       },
     },
     modalTitle: { control: 'text' },
+    shouldBeSticy: { control: 'boolean' },
     modalSubtitle: { control: 'text' },
     useCustomCloseButton: { control: 'boolean' },
     dialogTriggerChild: {
@@ -116,7 +133,8 @@ export const AddBlockModal: Story = {
     modalSubtitle: '',
     useCustomCloseButton: false,
     dialogTriggerChild: dialogTriggerChild(),
-    open: true,
+    open: false,
+    shouldBeSticy: false,
   },
   decorators: [
     (Story, context) => {
