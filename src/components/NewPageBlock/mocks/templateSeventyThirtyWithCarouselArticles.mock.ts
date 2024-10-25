@@ -10,9 +10,9 @@ export const templateSeventyThirtyWithCarouselArticles = [
     content: {
       image: {
         desktop_image_path:
-          'http://localhost:3001/uploads/bfcdd80018034c278a21-2.webp?width=2256&height=1504',
+          'http://api.midiaindigena.com.br/uploads/2f4d2788a0200de1d0ae-climate-week-ny-2024-1.webp?width=1000&height=667',
         image_mobile_path:
-          'http://localhost:3001/uploads/bfcdd80018034c278a21-2.webp?width=2256&height=1504',
+          'http://api.midiaindigena.com.br/uploads/2f4d2788a0200de1d0ae-climate-week-ny-2024-1.webp?width=1000&height=667',
       },
     },
     slug: 'sample-article-1',
@@ -76,9 +76,9 @@ export const templateSeventyThirtyWithCarouselArticles = [
     content: {
       image: {
         desktop_image_path:
-          'http://localhost:3001/uploads/b96ea65b75fc70000a68-1.webp?width=1500&height=1000',
+          'http://api.midiaindigena.com.br/uploads/a45be286302696625e5c-climate-week-ny-2024-3.webp?width=1000&height=667',
         image_mobile_path:
-          'http://localhost:3001/uploads/b96ea65b75fc70000a68-1.webp?width=1500&height=1000',
+          'http://api.midiaindigena.com.br/uploads/a45be286302696625e5c-climate-week-ny-2024-3.webp?width=1000&height=667',
       },
     },
     slug: 'sample-article-3',
@@ -107,9 +107,9 @@ export const templateSeventyThirtyWithCarouselArticles = [
     content: {
       image: {
         desktop_image_path:
-          'http://localhost:3001/uploads/dab4f99f498dd2ca6cba-9.jpg?width=1118&height=1456',
+          'http://api.midiaindigena.com.br/uploads/024ea30c8f091b7f90ae-climate-week-ny-2024-4.webp?width=1000&height=667',
         image_mobile_path:
-          'http://localhost:3001/uploads/dab4f99f498dd2ca6cba-9.jpg?width=1118&height=1456',
+          'http://api.midiaindigena.com.br/uploads/024ea30c8f091b7f90ae-climate-week-ny-2024-4.webp?width=1000&height=667',
       },
     },
     slug: 'criminalizacao-de-liderancas-indigenas-no-maranhao',
@@ -138,9 +138,9 @@ export const templateSeventyThirtyWithCarouselArticles = [
     content: {
       image: {
         desktop_image_path:
-          'http://localhost:3001/uploads/dab4f99f498dd2ca6cba-9.jpg?width=1118&height=1456',
+          'http://api.midiaindigena.com.br/uploads/a45be286302696625e5c-climate-week-ny-2024-3.webp?width=1000&height=667',
         image_mobile_path:
-          'http://localhost:3001/uploads/dab4f99f498dd2ca6cba-9.jpg?width=1118&height=1456',
+          'http://api.midiaindigena.com.br/uploads/a45be286302696625e5c-climate-week-ny-2024-3.webp?width=1000&height=667',
       },
     },
     slug: 'vitoria-do-povos-indigenas-contra-o-marco-temporal',
@@ -169,9 +169,9 @@ export const templateSeventyThirtyWithCarouselArticles = [
     content: {
       image: {
         desktop_image_path:
-          'http://localhost:3001/uploads/a50b4d61ab5ce2fbdc4d-8.webp?width=1920&height=440',
+          'http://api.midiaindigena.com.br/uploads/a45be286302696625e5c-climate-week-ny-2024-3.webp?width=1000&height=6670',
         image_mobile_path:
-          'http://localhost:3001/uploads/a50b4d61ab5ce2fbdc4d-8.webp?width=1920&height=440',
+          'http://api.midiaindigena.com.br/uploads/a45be286302696625e5c-climate-week-ny-2024-3.webp?width=1000&height=6670',
       },
     },
     slug: 'sample-article-6',
@@ -200,9 +200,9 @@ export const templateSeventyThirtyWithCarouselArticles = [
     content: {
       image: {
         desktop_image_path:
-          'http://localhost:3001/uploads/dab4f99f498dd2ca6cba-9.jpg?width=1118&height=1456',
+          'http://api.midiaindigena.com.br/uploads/a45be286302696625e5c-climate-week-ny-2024-3.webp?width=1000&height=667',
         image_mobile_path:
-          'http://localhost:3001/uploads/dab4f99f498dd2ca6cba-9.jpg?width=1118&height=1456',
+          'http://api.midiaindigena.com.br/uploads/a45be286302696625e5c-climate-week-ny-2024-3.webp?width=1000&height=667',
       },
     },
     slug: 'sample-article-7',

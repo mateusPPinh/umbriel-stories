@@ -45,18 +45,15 @@ export const RightSection = styled.div`
 `
 
 export const VideoBlock = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 
   .video__border_bottom {
-    border-bottom: 1px solid #dfdfdf;
-    margin-top: 19px;
-    margin-bottom: 19px;
+    border-bottom: none;
   }
 
   video {
     width: 100%;
     height: 100%;
-    min-height: 216px;
   }
 
   @media (max-width: 768px) {
@@ -115,7 +112,7 @@ export const ArticleBlock = styled.div`
 
   img {
     width: 100%;
-    height: auto;
+    height: 100%;
     margin-bottom: 10px;
     border-radius: 6px;
   }
@@ -160,6 +157,9 @@ export const BottomBlock = styled.div`
   .text-content {
     flex: 1;
     margin-right: 10px;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
 
     h3 {
       font-size: 1rem;
