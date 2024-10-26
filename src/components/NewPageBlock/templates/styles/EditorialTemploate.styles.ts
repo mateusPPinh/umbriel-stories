@@ -87,6 +87,9 @@ export const BottomSection = styled.div`
 
       img {
         border-radius: 0;
+        width: 100%;
+        height: 100%;
+        max-height: 320px;
       }
     }
 

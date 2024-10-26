@@ -94,7 +94,10 @@ function EditorialTemplate({
                   loading="lazy"
                 />
               </figure>
-              <Link href={`/${article.editorial.slug}/${article.slug}`}>
+              <Link
+                href={`/${article.editorial.slug}/${article.slug}`}
+                hover="hover:opacity-60"
+              >
                 <h3>{article.title}</h3>
               </Link>
               <p>{article.subtitle}</p>
