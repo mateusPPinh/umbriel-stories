@@ -78,7 +78,7 @@ export const SideColumn = styled.div`
 `
 
 export const LiveBadge = styled.div`
-  color: #D0021B;
+  color: #d0021b;
   font-size: 12px;
   font-weight: bold;
 `
@@ -87,7 +87,7 @@ export const UpdatesContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
-  
+
   span {
     font-size: 12px;
   }
