@@ -71,7 +71,7 @@ const AuthorSection = ({
             $fontFamily={fontFamily}
             $fontSize={fontSize}
             $lineHeight={lineHeight}
-            $authorNameMarginLeft={authorNameMarginLeft}
+            $authorNameMarginLeft={authorNameMarginLeft ?? ''}
           >
             {value}
           </AuthorNameParagraph>
