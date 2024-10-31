@@ -9,7 +9,11 @@ interface LinkProps {
 
 const Link = ({ href, children, target, hover }: LinkProps): ReactElement => {
   return (
-    <a href={href} target={target} className={`transition duration-300 ${hover}`}>
+    <a
+      href={href}
+      target={target}
+      className={`transition duration-300 ${hover}`}
+    >
       {children}
     </a>
   )
