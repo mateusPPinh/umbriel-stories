@@ -32,3 +32,7 @@ export { default as Link } from './Link'
 export { default as TemplateSeventyThirtyWithCarousel } from './NewPageBlock/templates/TemplateSeventyThirtyWithCarousel'
 export { default as LazyImage } from './LazyImage'
 export { default as T7030WithinNewsletter } from './NewPageBlock/templates/variations/T7030WithinNewsletter'
+export { default as Article } from './Article'
+
+// theme
+export * from '../styles/deliveryThemeFunc'

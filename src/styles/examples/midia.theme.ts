@@ -1,15 +1,3 @@
-import '@fontsource-variable/roboto-condensed'
-import '@fontsource/roboto'
-import '@fontsource-variable/noto-sans'
-import '@fontsource-variable/rubik'
-import '@fontsource-variable/lora'
-import '@fontsource-variable/inter'
-import '@fontsource-variable/dm-sans'
-
-import { ThemeProvider, StyleSheetManager } from 'styled-components'
-import { type PropsWithChildren } from 'react'
-import isPropValid from '@emotion/is-prop-valid'
-
 export const theme = {
   colors: {
     blueDark: '#142634',
@@ -91,20 +79,4 @@ export const theme = {
     lg: '1016px',
     xl: '1280px',
   },
-}
-
-export default function CustomStyles({
-  children,
-}: PropsWithChildren): JSX.Element {
-  return (
-    <StyleSheetManager
-      enableVendorPrefixes
-      shouldForwardProp={(propName, elementToBeRendered) =>
-        typeof elementToBeRendered === 'string' ? isPropValid(propName) : true
-      }
-    >
-      {/* @ts-expect-error */}
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
-    </StyleSheetManager>
-  )
 }

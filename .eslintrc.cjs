@@ -27,6 +27,7 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'warn',
     '@typescript-eslint/strict-boolean-expressions': 'warn',
     '@typescript-eslint/prefer-ts-expect-error': 'warn',
-    "etc/prefer-interface": 0
+    "etc/prefer-interface": 0,
+    '@typescript-eslint/consistent-type-definitions': 0
   },
 }
