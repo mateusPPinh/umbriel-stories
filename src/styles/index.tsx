@@ -98,7 +98,6 @@ export default function CustomStyles({
         typeof elementToBeRendered === 'string' ? isPropValid(propName) : true
       }
     >
-      {/* @ts-expect-error */}
       <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </StyleSheetManager>
   )
