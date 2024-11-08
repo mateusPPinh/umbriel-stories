@@ -17,4 +17,7 @@ export interface LinkedinShareButtonProps {
   editorialSlug: string
   clientSiteAddressUrl?: string
   articleTitle?: string
+  isLinkedinHovered: boolean
+  onLinkedinMouseEnter?: React.MouseEventHandler<HTMLAnchorElement> | undefined
+  onLinkedinMouseLeave?: React.MouseEventHandler<HTMLAnchorElement> | undefined
 }

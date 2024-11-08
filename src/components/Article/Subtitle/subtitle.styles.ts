@@ -26,7 +26,7 @@ export const Heading = styled.h1<{
   letter-spacing: ${(props) => props.$letterSpacing};
   color: ${(props) => props.theme.colors[props.$color]};
 
-  @media (min-width: ${(props) => props.theme.queries.xl}) {
+  /* @media (min-width: ${(props) => props.theme.queries.xl}) {
     font-size: 18px !important;
     line-height: 1.4 !important;
   }
@@ -49,5 +49,5 @@ export const Heading = styled.h1<{
   @media (width: 320px) {
     font-size: 28px;
     line-height: 1.5;
-  }
+  } */
 `

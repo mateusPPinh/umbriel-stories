@@ -11,6 +11,9 @@ const WhatsappShare = ({
   editorialSlug,
   articleTitle,
   clientSiteAddressUrl,
+  isWhatsappHovered,
+  onWhatsappMouseEnter,
+  onWhatsappMouseLeave,
   ...rest
 }: WhatsAppShareButtonProps): ReactElement => {
   const encodedTitle = encodeURIComponent(articleTitle ?? '')
@@ -27,7 +30,12 @@ const WhatsappShare = ({
       $ml={whatsappProps?.ml}
       {...rest}
     >
-      <Link href={shareUrl} target="_blank">
+      <Link
+        href={shareUrl}
+        target="_blank"
+        onMouseEnter={onWhatsappMouseEnter}
+        onMouseLeave={onWhatsappMouseLeave}
+      >
         {icon}
       </Link>
     </WhatsppContainer>

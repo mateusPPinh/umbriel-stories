@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type ReactElement } from 'react'
 import {
   AuthorContainer,
   AuthorImage,
   AuthorNameSection,
   AuthorNameParagraph,
+  PublicationDateParagraph,
 } from './author.styles'
 import { type AuthorProps } from './types'
 import Link from '../../../components/Link'
@@ -33,6 +35,10 @@ const AuthorSection = ({
   imageHeight,
   imageWidth,
   authorNameMarginLeft,
+  fontWeight,
+  publicationDate,
+  showPublicationDate,
+  shouldDisableAuthorNameClick,
 }: AuthorProps): ReactElement => {
   return (
     <AuthorContainer
@@ -53,7 +59,7 @@ const AuthorSection = ({
           $hasThumb={Boolean(authorThumb)}
           $borderRadius={borderRadius}
           $height={height}
-          $borderColor={borderColor}
+          $borderColor={borderColor ?? 'gray300'}
           $borderWidth={borderWidth}
           $imageWidth={imageWidth}
           $imageHeight={imageHeight}
@@ -61,21 +67,33 @@ const AuthorSection = ({
       )}
       <AuthorNameSection
         $color={color}
-        $fontFamily={fontFamily}
         $fontSize={fontSize}
         $lineHeight={lineHeight}
+        $fontWeight={fontWeight}
+        $showPublicationDate={showPublicationDate}
       >
-        <Link href={authorPageLink ?? ''} target="_blank" hover="opacity:45">
+        <Link
+          href={authorPageLink ?? ''}
+          target="_blank"
+          hover="opacity:45"
+          shouldDisableClick={shouldDisableAuthorNameClick}
+        >
           <AuthorNameParagraph
             $color={color}
-            $fontFamily={fontFamily}
+            $fontFamily={fontFamily ?? 'dm'}
             $fontSize={fontSize}
             $lineHeight={lineHeight}
             $authorNameMarginLeft={authorNameMarginLeft ?? ''}
+            $fontWeight={fontWeight}
           >
             {value}
           </AuthorNameParagraph>
         </Link>
+        {showPublicationDate && (
+          <PublicationDateParagraph>
+            {publicationDate ?? ''}
+          </PublicationDateParagraph>
+        )}
       </AuthorNameSection>
     </AuthorContainer>
   )

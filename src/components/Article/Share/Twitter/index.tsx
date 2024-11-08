@@ -13,6 +13,9 @@ const TwitterShare = ({
   clientSiteAddressUrl,
   articleTitle,
   clientTwitterHandle,
+  isHovered,
+  onMouseEnter,
+  onMouseLeave,
   ...rest
 }: TwitterShareButtonProps): ReactElement => {
   const encodedTitle = encodeURIComponent(articleTitle ?? '')
@@ -28,7 +31,12 @@ const TwitterShare = ({
       $ml={twitterProps?.ml}
       {...rest}
     >
-      <Link href={shareUrl} target="_blank">
+      <Link
+        href={shareUrl}
+        target="_blank"
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
         {icon}
       </Link>
     </TwitterContainer>

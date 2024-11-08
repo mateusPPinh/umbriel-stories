@@ -12,6 +12,9 @@ const LinkedinShare = ({
   slug,
   articleTitle,
   clientSiteAddressUrl,
+  isLinkedinHovered,
+  onLinkedinMouseEnter,
+  onLinkedinMouseLeave,
   ...rest
 }: LinkedinShareButtonProps): ReactElement => {
   const encodedTitle = encodeURIComponent(articleTitle ?? '')
@@ -28,7 +31,12 @@ const LinkedinShare = ({
       $ml={linkedinProps?.ml}
       {...rest}
     >
-      <Link href={shareUrl} target="_blank">
+      <Link
+        href={shareUrl}
+        target="_blank"
+        onMouseEnter={onLinkedinMouseEnter}
+        onMouseLeave={onLinkedinMouseLeave}
+      >
         {icon}
       </Link>
     </LinkedinContainer>

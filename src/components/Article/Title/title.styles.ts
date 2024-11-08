@@ -4,11 +4,13 @@ import { type theme } from '../../../styles/index'
 export const Container = styled.div<{
   $containerWidth: string
   $marginBottom: string
+  $containerMaxWidth: string
 }>`
   width: ${(props) => props.$containerWidth};
   margin-bottom: ${(props) => props.$marginBottom};
+  max-width: ${(props) => props.$containerMaxWidth};
 
-  @media (min-width: ${(props) => props.theme.queries.xl}) {
+  /* @media (min-width: ${(props) => props.theme.queries.xl}) {
     width: 100%;
   }
 
@@ -18,7 +20,7 @@ export const Container = styled.div<{
 
   @media (width: 320px) {
     max-width: 600px;
-  }
+  } */
 `
 
 export const Heading = styled.h1<{
@@ -36,7 +38,7 @@ export const Heading = styled.h1<{
   letter-spacing: ${(props) => props.$letterSpacing};
   color: ${(props) => props.theme.colors[props.$color]};
 
-  @media (min-width: ${(props) => props.theme.queries.xs}) {
+  /* @media (min-width: ${(props) => props.theme.queries.xs}) {
     font-size: 30px;
     line-height: 1.5;
   }
@@ -55,5 +57,5 @@ export const Heading = styled.h1<{
   @media (min-width: 320px) {
     font-size: 33px;
     line-height: 1.5;
-  }
+  } */
 `

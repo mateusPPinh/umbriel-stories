@@ -1,4 +1,4 @@
-import { type theme } from '../../../styles/index'
+import { type theme } from '../../../styles/examples/midia.theme'
 
 export interface AuthorProps {
   value?: string
@@ -25,4 +25,8 @@ export interface AuthorProps {
   imageWidth?: string
   imageHeight?: string
   authorNameMarginLeft?: string
+  fontWeight?: string
+  showPublicationDate?: boolean
+  publicationDate?: any
+  shouldDisableAuthorNameClick?: boolean
 }

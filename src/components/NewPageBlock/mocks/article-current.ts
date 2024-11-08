@@ -7,10 +7,10 @@ export enum ArticleStatus {
 export const currentArticleStruct = {
   id: '5343b1c8-5988-40e6-a046-08bed51770e1',
   title:
-    'Congress tried to fix presidential transitions. Trump is testing the changes.',
+    'Campanha Indígena 2024: Aumenta o número de indígenas eleitos em todo Brasil',
   subtitle:
-    'The first test of a little-known change to the presidential transition process is causing anxiety as Trump is potentially poised to return to power.',
-  author: 'Mateus Pinheiro',
+    'Candidaturas indígenas receberam mais de 1 milhão de votos em todo o país nas eleições municipais, que registrou o maior número de indígenas disputando as eleições na história',
+  author: 'Por Mateus Pinheiro',
   email: '',
   social_networks: '',
   content: {
@@ -43,27 +43,37 @@ export const currentArticleStruct = {
     {
       id: '4',
       type: 'text',
-      html: ' <p class="p__hero">After Donald Trump refused to concede the 2020 election, Congress moved to fend off a repeat of the 20 days of chaos that had obstructed the executive branch handover to Joe Biden. But the first test of one little-known change to the presidential transition process is now causing anxiety among government officials as Trump is potentially poised to return to power. If there’s no apparent winner within five days of the election, every federal agency will be required on Nov. 11 to open its doors to both Trump’s and Vice President Kamala Harris’s campaigns so they can simultaneously begin the sprint to install a new administration. Each department is already working to find office space, ideally on separate floors, for the two campaigns and preparing two sets of career staffers to brief each team. Even if the former president again contests the election results over baseless claims of voting fraud, his campaign staff could still have access to key operations of government, including sensitive information, while courts and lawmakers battle over the final results.</p> ',
+      html: ' <p class="p__hero"> A Campanha Indígena, iniciativa da Articulação dos Povos Indígenas do Brasil (Apib), registrou um crescimento 8% de indígenas eleitos, em 2024, em comparação com as eleições de 2020. Ao todo, 256 candidaturas indígenas conquistaram mandatos em câmaras municipais, em todas as regiões do país e em prefeituras de nove cidades. Levantamento da Campanha com dados do Tribunal Superior Eleitoral (TSE) aponta um total de 1.635.530 votos dados a candidaturas indígenas, mostrando a crescente relevância na política partidária brasileira. </p> ',
     },
-    {
-      id: '5',
-      type: 'new-publication/saveYoutubeEmbedHTMLContent',
-      html: '<div class="youtube__hero"><iframe width="youtube__hero__iframe iframe-width" height="youtube__hero__iframe iframe-height" src="https://www.youtube.com/embed/sFlXpXCHUvg?si=L-DTK7X2c1uXwdkj" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>',
-    },
+    // {
+    //   id: '5',
+    //   type: 'new-publication/saveYoutubeEmbedHTMLContent',
+    //   html: '<div class="youtube__hero"><iframe width="youtube__hero__iframe iframe-width" height="youtube__hero__iframe iframe-height" src="https://www.youtube.com/embed/sFlXpXCHUvg?si=L-DTK7X2c1uXwdkj" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>',
+    // },
     {
       id: '6',
       type: 'text',
-      html: ' <p class="p__hero">Concerns about the change lawmakers approved in 2022 have only been exacerbated by the Republican nominee’s decision thus far to sit out the official federal transition process in the run-up to Election Day.</p><p class="p__hero">Trump’s team is working out of a Manhattan office and inside the Willard Hotel in Washington, vetting candidates for some of the roughly 4,000 political jobs he’ll need to quickly fill if he wins — including by evaluating whether the nominees will be sufficiently loyal to the president, according to campaign officials who spoke on the condition of anonymity to describe private discussions.</p><p class="p__hero">But Trump himself has so far failed to sign an ethics pledge and agreements on transition fundraising disclosures and limits — both of which are requirements for any candidate to be able to gain access to agencies, secure computer equipment, government email systems and about $7 million in funding, and to participate in the formal process run by the General Services Administration. Trump would be the first presidential candidate to decline to participate in the formal federal process.</p><p class="p__hero">His campaign is expected to eventually sign the documents, according to a senior Biden administration official involved in transition planning, who was not authorized to speak publicly about the election and spoke on the condition of anonymity.</p><p class="p__hero">Even if that happens, his team would have a late start on applying for security clearances to receive briefings on classified and sensitive material.</p><p class="p__hero">Meanwhile, many career employees across the government who would be tasked with helping Trump’s campaign with a handover of power from the Biden administration could soon lose their jobs if he revives a plan to fire civil servants his administration deems resistant to his policies. Trump and his allies have railed against government workers throughout the campaign, promising to pick up where his first administration left off in eradicating the “deep state” of bureaucrats they accuse of undermining his policies.</p><p class="p__hero">Less than a week out from the election, with polls showing the race deadlocked, officials and outside experts worry that the federal government is poised on the edge of significant confusion and turmoil yet again — exactly the scenario Congress had hoped to avoid after 2020.</p> ',
+      html: ' <p class="p__hero"> Entre os grupos raciais autodeclarados brancos, pardos, negros e amarelos, apenas os indígenas apresentaram crescimento, enquanto as demais tiveram uma redução de cerca de 20%. As candidaturas indígenas foram as que mais cresceram proporcionalmente nas eleições municipais deste ano, apesar das dificuldades persistentes em eleger representantes. Em 2024, 169 povos indígenas tiveram candidaturas concorrendo a cargos nas câmaras municipais e prefeituras em todas as regiões do Brasil. </p> ',
     },
-    {
-      id: '7',
-      type: 'img',
-      html: ' <figure class="img__hero"><img src="https://www.washingtonpost.com/wp-apps/imrs.php?src=https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/L6HZSRDVLAI6XFJXJFQVRTC73E.jpg&w=916" alt="Indígenas na Região Norte do País - Foto/Reprodução: Mateus Pinheiro" sizes="((min-width: 600px) and (max-width: 1004px)) 84vw, (min-width: 1005px) 60vw, 100vw" decoding="async" loading="lazy" /><figcaption class="figcaption__hero"><p class="figcaption__paragraph">President Donald Trump greets Supreme Court Justice Brett M. Kavanaugh at his White House swearing-in on Oct. 8, 2018. (Jabin Botsford/The Washington Post)</p></figcaption></figure> ',
-    },
+    // {
+    //   id: '7',
+    //   type: 'img',
+    //   html: ' <figure class="img__hero"><img src="https://www.washingtonpost.com/wp-apps/imrs.php?src=https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/L6HZSRDVLAI6XFJXJFQVRTC73E.jpg&w=916" alt="Indígenas na Região Norte do País - Foto/Reprodução: Mateus Pinheiro" sizes="((min-width: 600px) and (max-width: 1004px)) 84vw, (min-width: 1005px) 60vw, 100vw" decoding="async" loading="lazy" /><figcaption class="figcaption__hero"><p class="figcaption__paragraph">President Donald Trump greets Supreme Court Justice Brett M. Kavanaugh at his White House swearing-in on Oct. 8, 2018. (Jabin Botsford/The Washington Post)</p></figcaption></figure> ',
+    // },
     {
       id: '8',
       type: 'text',
-      html: '<strong class="strong__hero__pre">The Other Women for Trump</strong><p class="p__hero">Ms. Trump’s low-to-no profile at other significant events in her father’s life has also been conspicuous: Unlike her brothers Eric Trump and Donald Trump Jr., she did not attend her father’s trial in Manhattan, where he was convicted of 34 felony counts. And though she did briefly appear at the last night of the Republican National Convention in July, she did not speak — a stark contrast with the two previous conventions, when she introduced Mr. Trump.</p><p class="p__hero">Ms. Trump was also not in the audience this month at an all-female town hall-style meeting held in Georgia and hosted by Fox News, nor was Melania Trump, the former first lady, who has also largely kept her distance, save for rare appearances, like at her husband’s rally at Madison Square Garden on Sunday.</p><p class="p__hero">In the past, the Trump women have tried to pitch Mr. Trump as a champion for women and framed his presidency as uplifting for women in the work force, particularly during moments when Mr. Trump’s comments and behavior were under scrutiny.</p><p class="p__hero">Susan Del Percio, a Republican political strategist, said it was unclear whether — after several political campaigns in which Mr. Trump has alienated and insulted women — either his daughter or his wife could be an effective surrogate in the race. Their absence, however, was telling, she added.</p><p class="p__hero">“The positives that she could make on the trail is marginal, but the fact that she and Melania are not on the trail could be significant,” Ms. Del Percio said, noting that issues like reproductive rights were motivating many voters.</p>',
+      html: '<p class="p__hero"> De acordo com Kleber Karipuna, coordenador executivo da Apib pela Coordenação das Organizações Indígenas da Amazônia Brasileira (Coiab), o objetivo da campanha sempre foi nítido: “Nossa proposta com a Campanha Indígena é fortalecer a participação dos povos indígenas nos espaços institucionais da política. Sabemos que a representatividade é uma arma poderosa na luta pelos nossos direitos e na construção de políticas que respeitem nossas vidas e nossos territórios.” Apesar dos avanços na participação, a falta de investimentos financeiros em candidaturas indígenas e o baixo engajamento dos partidos ainda são grandes obstáculos para a eleição de representantes indígenas. Uma das principais lutas da Campanha Indígena é garantir que, nas próximas eleições, a decisão do Tribunal Superior Eleitoral (TSE) que estabelece cotas para candidaturas indígenas, com acesso a recursos do fundo eleitoral e mais tempo de propaganda, seja plenamente implementada. </p>',
+    },
+    {
+      id: '13',
+      type: 'image',
+      html: '<figure class="img__hero"><img src="https://www.washingtonpost.com/wpCongress tried to fix presidential transitions. Trump is testing the changes.-apps/imrs.php?src=https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/2VJWUXCTHHMGYX4NFYNP4IMEEA.JPG&w=916" alt="Indígenas na Região Norte do País - Foto/Reprodução: Mateus Pinheiro" sizes="((min-width: 600px) and (max-width: 1004px)) 84vw, (min-width: 1005px) 60vw, 100vw" decoding="async" loading="lazy" /><figcaption class="figcaption__hero"><p class="figcaption__paragraph">Republican presidential nominee Donald Trump departs the stage following a campaign event in Detroit on Oct. 18. (Jabin Botsford/The Washington Post)</p></figcaption></figure>',
+    },
+    {
+      id: '10',
+      type: 'text',
+      html: '<p class="p__hero"> Dinamam Tuxá, coordenador executivo da Apib pela Articulação dos Povos Indígenas do Nordeste, Minas Gerais e Espírito Santo (Apoinme), reforçou que ainda há muito a ser feito. “Os partidos precisam dar mais suporte para que as candidaturas indígenas tenham condições de concorrer de forma justa. Além disso, o Tribunal Superior Eleitoral (TSE) deve garantir a aplicação de uma medida de apoio às candidaturas indígenas através do fundo eleitoral, para equilibrar o jogo e promover a diversidade na política.” </p>',
     },
     {
       id: '9',
@@ -71,11 +81,54 @@ export const currentArticleStruct = {
       html: '<figure class="img__hero"><img src="https://www.washingtonpost.com/wpCongress tried to fix presidential transitions. Trump is testing the changes.-apps/imrs.php?src=https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/2VJWUXCTHHMGYX4NFYNP4IMEEA.JPG&w=916" alt="Indígenas na Região Norte do País - Foto/Reprodução: Mateus Pinheiro" sizes="((min-width: 600px) and (max-width: 1004px)) 84vw, (min-width: 1005px) 60vw, 100vw" decoding="async" loading="lazy" /><figcaption class="figcaption__hero"><p class="figcaption__paragraph">Republican presidential nominee Donald Trump departs the stage following a campaign event in Detroit on Oct. 18. (Jabin Botsford/The Washington Post)</p></figcaption></figure>',
     },
     {
-      id: '10',
+      id: '11',
       type: 'text',
-      html: '<strong class="strong__hero__pre">Leaving Washington</strong><p class="p__hero">Ms. Trump’s low-to-no profile at other significant events in her father’s life has also been conspicuous: Unlike her brothers Eric Trump and Donald Trump Jr., she did not attend her father’s trial in Manhattan, where he was convicted of 34 felony counts. And though she did briefly appear at the last night of the Republican National Convention in July, she did not speak — a stark contrast with the two previous conventions, when she introduced Mr. Trump.</p><p class="p__hero">Ms. Trump was also not in the audience this month at an all-female town hall-style meeting held in Georgia and hosted by Fox News, nor was Melania Trump, the former first lady, who has also largely kept her distance, save for rare appearances, like at her husband’s rally at Madison Square Garden on Sunday.</p><p class="p__hero">In the past, the Trump women have tried to pitch Mr. Trump as a champion for women and framed his presidency as uplifting for women in the work force, particularly during moments when Mr. Trump’s comments and behavior were under scrutiny.</p><p class="p__hero">Susan Del Percio, a Republican political strategist, said it was unclear whether — after several political campaigns in which Mr. Trump has alienated and insulted women — either his daughter or his wife could be an effective surrogate in the race. Their absence, however, was telling, she added.</p><p class="p__hero">“The positives that she could make on the trail is marginal, but the fact that she and Melania are not on the trail could be significant,” Ms. Del Percio said, noting that issues like reproductive rights were motivating many voters.</p>',
+      html: ' <p class="p__hero">A Campanha Indígena, iniciativa da Articulação dos Povos  Indígenas do Brasil (Apib), registrou um crescimento 8% de indígenas  eleitos, em 2024, em comparação com as eleições de 2020. Ao todo, 256  candidaturas indígenas conquistaram mandatos em câmaras municipais, em  todas as regiões do país e em prefeituras de nove cidades. Levantamento  da Campanha com dados do Tribunal Superior Eleitoral (TSE) aponta um  total de 1.635.530 votos dados a candidaturas indígenas, mostrando a  crescente relevância na política partidária brasileira.</p> ',
+    },
+    {
+      id: '12',
+      type: 'text',
+      html: ' <p class="p__hero">Levantamento da Campanha com dados do Tribunal Superior Eleitoral (TSE) aponta um total de 1.635.530 votos dados a candidaturas indígenas, mostrando a crescente relevância na política partidária brasileira.</p> ',
     },
   ],
   user_id: '',
   editorialId: '',
+  articlesList: [
+    {
+      id: '1',
+      thumb:
+        'http://api.midiaindigena.com.br/uploads/f06d42a3c0ff649e184a-photo_4920281764153371951_y.jpg?width=1080&height=675?width=1024',
+      title:
+        'Campanha Indígena 2024: Aumenta o número de indígenas eleitos em todo Brasil',
+      url: 'https://www.midiaindigena.com.br/ultimas-noticias/campanha-indigena-2024:-aumenta-o-numero-de-indigenas-eleitos-em-todo-brasil',
+      shouldOpenBlank: true,
+    },
+    {
+      id: '2',
+      thumb:
+        'http://api.midiaindigena.com.br/uploads/a78d9a9d4749baa491da-Meta_discurso-de-odio_anti-LGBT.jpg.webp?width=1600&height=900',
+      title:
+        'Desafios dos indígenas LGBTQIA+ dentro e fora das suas comunidades',
+      url: 'https://www.midiaindigena.com.br/opiniao/desafios-dos-indigenas-lgbtqia+-dentro-e-fora-das-suas-comunidades',
+      shouldOpenBlank: true,
+    },
+    {
+      id: '3',
+      thumb:
+        'http://api.midiaindigena.com.br/uploads/fbc5317c1f8c4401075e-1.jpeg?width=1080&height=675',
+      title:
+        'Nota sobre as indicações do MPI para Câmara de Conciliação criada pelo ministro Gilmar Mendes',
+      url: 'https://www.midiaindigena.com.br/ultimas-noticias/nota-sobre-as-indicacoes-do-mpi-para-camara-de-conciliacao-criada-pelo-ministro-gilmar-mendes',
+      shouldOpenBlank: true,
+    },
+    {
+      id: '4',
+      thumb:
+        'http://api.midiaindigena.com.br/uploads/176017636b23622bbd55-INDIA-TUIRA-KAYAPO-FOTO-PROTASSIO-NENE-AE-21-02-19893-1024x769.webp?width=1024&height=769',
+      title:
+        'Brasil Em Luto: A Perda de Tuíre Kayapó, Símbolo de Resistência Indígena e Ambiental',
+      url: 'https://www.midiaindigena.com.br/opiniao/brasil-em-luto:-a-perda-de-tuire-kayapo-simbolo-de-resistencia-indigena-e-ambiental',
+      shouldOpenBlank: true,
+    },
+  ],
 }
