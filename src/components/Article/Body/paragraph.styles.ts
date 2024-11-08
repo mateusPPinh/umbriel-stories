@@ -81,7 +81,7 @@ export const BodyContainer = styled.div<{
   }
 
   figcaption.figcaption__hero {
-    ${({ $figcaptionProps }) => {
+    ${({ $figcaptionProps }): any => {
       $figcaptionProps != null && css``
     }}
 
