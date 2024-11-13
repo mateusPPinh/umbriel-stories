@@ -31,7 +31,7 @@ export const BlockItem = styled.button`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: ${(props) => props.theme.colors.lightBlue.lightBlue100};
+    background-color: ${(props) => props.theme.colors.lightBlue100};
     z-index: -1;
     transition: transform 0.4s;
     transform: translateX(-100%);

@@ -1,6 +1,6 @@
 import { type ReactElement } from 'react'
 import { Container, Heading } from './title.styles'
-import { type theme } from '../../../styles/index'
+import { type theme } from '../../../styles/examples/midia.theme'
 
 interface TitleProps {
   title: string
@@ -14,6 +14,7 @@ interface TitleProps {
   color: keyof typeof theme.colors
   customContainerCSS?: string
   customHeadingCSS?: string
+  containerMaxWidth?: string
 }
 const Title = ({
   title,
@@ -27,10 +28,12 @@ const Title = ({
   color,
   customContainerCSS,
   customHeadingCSS,
+  containerMaxWidth,
 }: TitleProps): ReactElement => {
   return (
     <Container
       $containerWidth={containerWidth}
+      $containerMaxWidth={containerMaxWidth ?? ''}
       $marginBottom={marginBottom}
       style={
         typeof customContainerCSS === 'object' ? customContainerCSS : undefined

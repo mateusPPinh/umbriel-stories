@@ -1,5 +1,4 @@
 import { type theme } from '../../styles/index'
-import { type AuthorProps } from './Author/types'
 import { type ShareProps } from './Share/types'
 
 enum ArticleStatus {
@@ -88,7 +87,36 @@ export interface IArticleWrapperTypes {
   shouldHiddeTitleAndSubtitle?: boolean
   authorContainerMaxWidth?: string
   customCSS?: string
-  author?: AuthorProps
+  author?: {
+    value?: string
+    email?: string
+    color?: keyof typeof theme.colors
+    fontFamily?: keyof typeof theme.fonts
+    fontSize?: string
+    lineHeight?: string
+    width?: string
+    maxWidth?: string
+    mt?: number | string
+    mr?: number | string
+    mb?: number | string
+    ml?: number | string
+    flexDirection?: string
+    justifyContent?: string
+    alignItems?: string
+    borderRadius?: string
+    height?: string
+    borderColor?: keyof typeof theme.colors
+    borderWidth: string
+    authorThumb?: string
+    authorPageLink?: string
+    imageWidth?: string
+    imageHeight?: string
+    authorNameMarginLeft?: string
+    fontWeight?: string
+    showPublicationDate?: boolean
+    publicationDate?: any
+    shouldDisableAuthorNameClick?: boolean
+  }
   paragraphProps: {
     fontFamily: string
     fontSize: string
@@ -112,6 +140,7 @@ export interface IArticleWrapperTypes {
     color: keyof typeof theme.colors
     customContainerCSS?: string
     customHeadingCSS?: string
+    containerMaxWidth?: string
   }
   subtitleProps?: {
     containerWidth: string
@@ -127,6 +156,48 @@ export interface IArticleWrapperTypes {
     customHeadingCSS?: string
   }
   clientSiteAddressUrl?: string
+  articlesList?: Array<{
+    thumb: string
+    title: string
+  }>
+  articleParagraphBodyProps: {
+    fontFamily?: keyof typeof theme.fonts
+    fontSize?: string
+    lineHeight?: string
+    mt?: string
+    mb?: string
+    ml?: string
+    mr?: string
+    color: keyof typeof theme.colors
+    fontWeight?: string
+  }
+  imgProps: {
+    width?: string
+    height?: string
+    maxWidth?: string
+    maxHeight?: string
+    customAlt?: string
+    borderRadius?: string
+  }
+  figcaptionProps: {
+    fontSize?: string
+    fontFamily?: keyof typeof theme.fonts
+    color?: keyof typeof theme.colors
+    linHeight?: string
+    width?: string
+    maxWidth?: string
+    height?: string
+    maxHeight?: string
+    pt?: string
+    pb?: string
+    pr?: string
+    pl?: string
+    mt?: string
+    mb?: string
+    mr?: string
+    ml?: string
+    align?: string
+  }
 }
 
 export interface AlignmentType {

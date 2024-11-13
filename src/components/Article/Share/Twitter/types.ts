@@ -18,4 +18,7 @@ export interface TwitterShareButtonProps {
   clientSiteAddressUrl?: string
   articleTitle?: string
   clientTwitterHandle?: string
+  isHovered: boolean
+  onMouseEnter?: React.MouseEventHandler<HTMLAnchorElement> | undefined
+  onMouseLeave?: React.MouseEventHandler<HTMLAnchorElement> | undefined
 }

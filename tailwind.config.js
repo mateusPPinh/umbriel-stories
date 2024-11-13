@@ -65,7 +65,8 @@ module.exports = {
         secondary: ['Roboto', 'serif'],
         tertiary: ['GeistMono-Medium', 'sans-serif'],
         heading: ['Rubik Variable'],
-        dmSans: ['DM Sans Variable']
+        dmSans: ['DM Sans Variable'],
+        dm: ["DM Sans"]
       },
       borderRadius: {
         lg: "var(--radius)",

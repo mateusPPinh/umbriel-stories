@@ -3,6 +3,7 @@ import { type FacebookProps } from './Facebook/types'
 import { type TwitterProps } from './Twitter/types'
 import { type WhatsAppProps } from './Whatsapp/types'
 import { type LinkedinProps } from './Linkedin/types'
+import { type CopyArticleType } from './CopyArticle/types'
 
 export interface ContainerProps {
   mt?: number | string
@@ -40,4 +41,18 @@ export interface ShareProps {
   clientSiteAddressUrl?: string
   articleTitle?: string
   clientTwitterHandle?: string
+  copyArticleProps?: Pick<CopyArticleType, 'copyArticleProps'>
+  copyIcon?: ReactNode
+  onCopy: () => void
+  copyButtonChildren?: ReactNode
+  isCopied?: boolean
+  isHovered: boolean
+  onMouseEnter?: React.MouseEventHandler<HTMLAnchorElement> | undefined
+  onMouseLeave?: React.MouseEventHandler<HTMLAnchorElement> | undefined
+  isLinkedinHovered: boolean
+  onLinkedinMouseEnter?: React.MouseEventHandler<HTMLAnchorElement> | undefined
+  onLinkedinMouseLeave?: React.MouseEventHandler<HTMLAnchorElement> | undefined
+  isWhatsappHovered: boolean
+  onWhatsappMouseEnter?: React.MouseEventHandler<HTMLAnchorElement> | undefined
+  onWhatsappMouseLeave?: React.MouseEventHandler<HTMLAnchorElement> | undefined
 }

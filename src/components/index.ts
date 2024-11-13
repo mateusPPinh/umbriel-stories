@@ -43,3 +43,10 @@ export { default as Title } from './Article/Title'
 export * from '../styles/deliveryThemeFunc'
 // types
 export * from './Article/types'
+
+// icons and types
+export * from '../../public/icons/types'
+export { default as WhatsappIcon } from '../../public/icons/Whats'
+export { default as XIcon } from '../../public/icons/x'
+export { default as LinkedinIcon } from '../../public/icons/Linkedin'
+export { default as CopyIcon } from '../../public/icons/Copy'

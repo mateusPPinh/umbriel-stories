@@ -35,13 +35,13 @@ const variantStyles = css<CSSProps>`
     switch (variant) {
       case 'primary':
         return css`
-          background-color: ${theme.colors.lightBlue.lightBlue100};
-          color: ${theme.colors.lightBlue.lightBlue900};
+          background-color: ${theme.colors.lightBlue100};
+          color: ${theme.colors.lightBlue900};
           ${paddingStyles}
         `
       case 'secondary':
         return css`
-          background-color: ${theme.colors.lightBlue.lightBlue800};
+          background-color: ${theme.colors.lightBlue800};
           color: white;
           ${paddingStyles}
         `
@@ -84,7 +84,7 @@ const variantStyles = css<CSSProps>`
       case 'underline':
         return css`
           background-color: transparent;
-          color: ${theme.colors.lightBlue.lightBlue900};
+          color: ${theme.colors.lightBlue900};
           text-decoration: underline;
         `
       case 'transparent':
@@ -94,7 +94,7 @@ const variantStyles = css<CSSProps>`
         `
       case 'rounded':
         return css`
-          background-color: ${theme.colors.lightBlue.lightBlue900};
+          background-color: ${theme.colors.lightBlue900};
           width: 80px;
           height: 80px;
           border-radius: 50%;
@@ -141,7 +141,7 @@ const Container = styled.button<CSSProps>`
         background-color: ${(props) => props.theme.colors.white};
         cursor: not-allowed;
         color: ${(props) => props.theme.colors.gray900};
-        border: 1px solid ${(props) => props.theme.colors.red.red500};
+        border: 1px solid ${(props) => props.theme.colors.red500};
         opacity: 0.5;
 
         &:hover {

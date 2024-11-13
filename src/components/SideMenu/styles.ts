@@ -78,7 +78,7 @@ const Container = styled.div<{
     color: ${(props) => props.theme.colors.gray800};
     font-size: 16px;
     font-weight: 700;
-    color: ${(props) => props.theme.colors.lightBlue.lightBlue800};
+    color: ${(props) => props.theme.colors800};
   }
 
   .isChildren {

@@ -26,6 +26,9 @@ const Article = ({
   authorAndShareContainerTop,
   authorContainerMaxWidth,
   authorContainerWidth,
+  articleParagraphBodyProps,
+  imgProps,
+  figcaptionProps,
 }: IArticleWrapperTypes): ReactElement => {
   const {
     containerProps,
@@ -46,6 +49,20 @@ const Article = ({
     clientSiteAddressUrl,
     articleTitle,
     clientTwitterHandle,
+    onCopy,
+    copyArticleProps,
+    copyButtonChildren,
+    copyIcon,
+    isCopied,
+    isHovered,
+    onMouseEnter,
+    onMouseLeave,
+    onLinkedinMouseEnter,
+    onLinkedinMouseLeave,
+    isLinkedinHovered,
+    isWhatsappHovered,
+    onWhatsappMouseEnter,
+    onWhatsappMouseLeave,
   } = shareProps
 
   const shareComponent = (
@@ -65,6 +82,20 @@ const Article = ({
       clientSiteAddressUrl={clientSiteAddressUrl}
       articleTitle={articleTitle}
       clientTwitterHandle={clientTwitterHandle}
+      onCopy={onCopy}
+      copyArticleProps={copyArticleProps}
+      copyButtonChildren={copyButtonChildren}
+      copyIcon={copyIcon}
+      isCopied={isCopied}
+      isHovered={isHovered}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      isLinkedinHovered={isLinkedinHovered}
+      onLinkedinMouseEnter={onLinkedinMouseEnter}
+      onLinkedinMouseLeave={onLinkedinMouseLeave}
+      isWhatsappHovered={isWhatsappHovered}
+      onWhatsappMouseEnter={onWhatsappMouseEnter}
+      onWhatsappMouseLeave={onWhatsappMouseLeave}
     />
   )
 
@@ -94,6 +125,10 @@ const Article = ({
       imageWidth={author?.imageWidth}
       imageHeight={author?.imageHeight}
       authorNameMarginLeft={author?.authorNameMarginLeft}
+      fontWeight={author?.fontWeight}
+      publicationDate={author?.publicationDate}
+      showPublicationDate={author?.showPublicationDate}
+      shouldDisableAuthorNameClick={author?.shouldDisableAuthorNameClick}
     />
   )
 
@@ -138,6 +173,24 @@ const Article = ({
       <ArticleBody
         blocks={article.blocks}
         articleBodyCustomCss={articleBodyCustomCss ?? ''}
+        color={articleParagraphBodyProps.color}
+        fontFamily={articleParagraphBodyProps.fontFamily}
+        fontSize={articleParagraphBodyProps.fontSize}
+        fontWeight={articleParagraphBodyProps.fontWeight}
+        lineHeight={articleParagraphBodyProps.lineHeight}
+        mb={articleParagraphBodyProps.mb}
+        mt={articleParagraphBodyProps.mt}
+        mr={articleParagraphBodyProps.mr}
+        ml={articleParagraphBodyProps.ml}
+        figcaptionProps={{ ...figcaptionProps }}
+        imgProps={{
+          borderRadius: imgProps.borderRadius ?? '',
+          customAlt: imgProps.customAlt ?? '',
+          height: imgProps.height ?? '',
+          maxHeight: imgProps.maxHeight ?? '',
+          maxWidth: imgProps.maxWidth ?? '',
+          width: imgProps.width ?? '',
+        }}
       />
 
       {!shouldRenderAuthorAndShare &&
@@ -147,4 +200,4 @@ const Article = ({
   )
 }
 
-export default withTheme(Article)
+export default withTheme(Article) as React.FC<IArticleWrapperTypes>

@@ -16,4 +16,7 @@ export interface WhatsAppShareButtonProps {
   editorialSlug: string
   clientSiteAddressUrl?: string
   articleTitle?: string
+  isWhatsappHovered: boolean
+  onWhatsappMouseEnter?: React.MouseEventHandler<HTMLAnchorElement> | undefined
+  onWhatsappMouseLeave?: React.MouseEventHandler<HTMLAnchorElement> | undefined
 }
