@@ -38,7 +38,6 @@ export { default as Body } from './Article/Body'
 export { default as Share } from './Article/Share'
 export { default as Subtitle } from './Article/Subtitle'
 export { default as Title } from './Article/Title'
-export { default as EditorialTemplate } from './NewPageBlock/templates/EditorialTemplate'
 
 // theme
 export * from '../styles/deliveryThemeFunc'
