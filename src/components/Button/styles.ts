@@ -141,13 +141,7 @@ const Container = styled.button<CSSProps>`
         background-color: ${(props) => props.theme.colors.white};
         cursor: not-allowed;
         color: ${(props) => props.theme.colors.gray900};
-        border: 1px solid ${(props) => props.theme.colors.red500};
-        opacity: 0.5;
-
-        &:hover {
-          opacity: none;
-          transition: none;
-        }
+        border: 1px solid ${(props) => props.theme.colors.gray800};
       `
     }
   }}
