@@ -20,9 +20,10 @@ export default function Modal({
   open,
   onOpenChange,
   shouldBeSticy,
+  ...rest
 }: ModalProps): ReactElement {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange} {...rest}>
       <DialogTrigger>{dialogTriggerChild}</DialogTrigger>
       <DialogContent
         className={customDialogContentStyles}
