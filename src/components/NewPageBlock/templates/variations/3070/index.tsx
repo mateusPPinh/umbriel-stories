@@ -23,7 +23,7 @@ interface T3070VariationProps {
 
 // eslint-disable-next-line react/display-name
 const ArticleCard = memo(({ article }: { article: Article | undefined }) => {
-  if (!article.editorial || !article.slug) {
+  if (!article?.editorial || !article?.slug) {
     console.error('Article editorial or slug is missing', article)
     return null
   }
@@ -31,11 +31,11 @@ const ArticleCard = memo(({ article }: { article: Article | undefined }) => {
   return (
     <ArticlePreview className="articlePreview">
       <Link
-        href={`/${article.editorial.slug}/${article.slug}`}
+        href={`/${article?.editorial.slug}/${article?.slug}`}
         hover="hover:opacity-60"
       >
-        <h2 className="articleTitle font-primary">{article.title}</h2>
-        <p className="articleSubtitle font-primary">{article.subtitle}</p>
+        <h2 className="articleTitle font-primary">{article?.title}</h2>
+        <p className="articleSubtitle font-primary">{article?.subtitle}</p>
       </Link>
     </ArticlePreview>
   )
@@ -67,11 +67,13 @@ export default function T3070Variation({
   const chunkArticles = (articles: Article[], size: number) => {
     const result: Article[][] = []
     for (let i = 0; i < articles.length; i += size) {
-      result.push(articles.slice(i, i + size))
+      result.push(articles?.slice(i, i + size))
     }
     return result
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   const groupedArticles = chunkArticles(rowArticles ?? 0, articlesPerRow || 3)
 
   return (
