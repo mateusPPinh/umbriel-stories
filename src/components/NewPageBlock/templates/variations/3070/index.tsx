@@ -22,7 +22,7 @@ interface T3070VariationProps {
 }
 
 // eslint-disable-next-line react/display-name
-const ArticleCard = memo(({ article }: { article: Article }) => {
+const ArticleCard = memo(({ article }: { article: Article | undefined }) => {
   if (!article.editorial || !article.slug) {
     console.error('Article editorial or slug is missing', article)
     return null
