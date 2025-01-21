@@ -80,6 +80,12 @@ export interface BlockData {
   templateSeventyCarouselProps?: {
     shouldRenderBorderBottom: boolean
   }
+  articlesPerRow?: number
+  articlesLayout: {
+    column: string[] // Array com os IDs ou slugs dos artigos que irão para a column
+    sideColumn: string // ID ou slug do artigo para o side column
+    articleRows: string[] // Array com os IDs ou slugs dos artigos para as article rows
+  }
 }
 
 export interface PageBlockProps {
