@@ -12,4 +12,5 @@ export interface BlockItemCardsProps {
   customParagraphCSS?: string
   customSpanCSS?: string
   customImgCSS?: string
+  isDarkMode: boolean | null
 }

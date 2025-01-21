@@ -9,6 +9,7 @@ export default function BlockItemCards({
   customMainCss,
   customParagraphCSS,
   customSpanCSS,
+  isDarkMode,
 }: BlockItemCardsProps & {
   onCardSelect: (cardType: string) => void
 }): ReactElement {
@@ -16,6 +17,7 @@ export default function BlockItemCards({
     <Container>
       {blocks?.map((block, index) => (
         <BlockItem
+          $isDarkMode={isDarkMode}
           key={index}
           onClick={() => {
             onCardSelect(block.title)
