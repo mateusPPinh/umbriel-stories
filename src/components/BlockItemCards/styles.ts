@@ -1,4 +1,4 @@
-import { styled } from 'styled-components'
+import { css, styled } from 'styled-components'
 
 export const Container = styled.div`
   max-width: 432px;
@@ -8,12 +8,23 @@ export const Container = styled.div`
   row-gap: 16px;
 `
 
-export const BlockItem = styled.button`
+export const BlockItem = styled.button<{ $isDarkMode: boolean | null }>`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid ${(props) => props.theme.colors.gray100};
+  border-radius: 2px;
+  border: ${({ $isDarkMode }) => {
+    if ($isDarkMode ?? false) {
+      return css`
+        1px solid ${(props) => props.theme.colors.gray500}
+      `
+    } else {
+      return css`
+        1px solid ${(props) => props.theme.colors.gray100}
+      `
+    }
+  }};
   padding: 16px;
   position: relative;
   overflow: hidden;
@@ -31,7 +42,17 @@ export const BlockItem = styled.button`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: ${(props) => props.theme.colors.lightBlue100};
+    background-color: ${({ $isDarkMode }) => {
+      if ($isDarkMode ?? false) {
+        return css`
+          ${(props) => props.theme.colors.gray200}
+        `
+      } else {
+        return css`
+          ${(props) => props.theme.colors.lightBlue100}
+        `
+      }
+    }};
     z-index: -1;
     transition: transform 0.4s;
     transform: translateX(-100%);
@@ -57,6 +78,15 @@ export const BlockItem = styled.button`
       font-weight: 500;
       font-size: 14px;
       text-align: start;
+      color: ${({ $isDarkMode }) => {
+        if ($isDarkMode) {
+          return css`
+            ${(props) => props.theme.colors.gray800}
+          `
+        } else {
+          return css`currentColor`
+        }
+      }};
     }
 
     p {
@@ -65,6 +95,15 @@ export const BlockItem = styled.button`
       font-weight: 400;
       font-size: 12px;
       text-align: start;
+      color: ${({ $isDarkMode }) => {
+        if ($isDarkMode) {
+          return css`
+            ${(props) => props.theme.colors.gray800}
+          `
+        } else {
+          return css`currentColor`
+        }
+      }};
     }
   }
 

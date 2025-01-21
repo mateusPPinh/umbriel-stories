@@ -34,9 +34,13 @@ export const ArticlePreview = styled.div`
   padding: 10px;
   border-radius: 8px;
 
-  h2,
+  /* h2,
   p {
     font-family: 'Lora Variable';
+  } */
+
+  h2 + p {
+    margin-top: 0.8rem;
   }
 
   h2 {
@@ -46,7 +50,7 @@ export const ArticlePreview = styled.div`
   }
 
   p {
-    font-size: 13px;
+    font-size: 16px;
     line-height: 140%;
     color: #5a5a5a;
   }
@@ -103,24 +107,36 @@ export const Update = styled.div`
   text-align: center;
 `
 
-export const ArticleRowContainer = styled.div`
+export const ArticleRowContainer = styled.div<{
+  articlesPerRow: number | boolean
+}>`
   display: flex;
   gap: 20px;
   width: 100%;
+  flex-wrap: wrap;
 
   @media (max-width: 768px) {
     flex-direction: column;
     gap: 10px;
   }
+
+  ${({ articlesPerRow }) =>
+    articlesPerRow === 6 &&
+    `
+      gap: 20px;
+      flex-direction: row;
+      justify-content: space-between;
+    `}
 `
 
-export const ArticleRow = styled.div`
+export const ArticleRow = styled.div<{ articlesPerRow: number }>`
   flex: 1;
   background-color: transparent;
   padding: 10px;
+  display: flex;
+  flex-direction: column; /* Organiza artigos em coluna */
 
   h2 {
-    font-family: 'Lora Variable';
     font-weight: bold;
     line-height: 140%;
     font-size: 14px;
@@ -134,6 +150,15 @@ export const ArticleRow = styled.div`
   &:not(:last-child) {
     border-right: 1px solid #e0e0e0;
   }
+
+  /* Se for 6 artigos, remove o border-right e aplica o espaçamento vertical */
+  ${({ articlesPerRow }) =>
+    articlesPerRow === 6 &&
+    `
+      border-right: none;
+      border-bottom: 1px solid #e0e0e0;
+      margin-bottom: 20px; /* Adiciona espaçamento vertical entre os artigos */
+    `}
 
   @media (max-width: 768px) {
     border-right: none;

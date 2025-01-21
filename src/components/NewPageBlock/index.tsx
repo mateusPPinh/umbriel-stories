@@ -33,6 +33,8 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData, loading }) => {
           template50,
           blockTitle,
           templateSlot100FeaturedRelatedProps,
+          articlesPerRow,
+          articlesLayout,
         } = blockData
         const articles = blocksData.centerMiddle.articles
 
@@ -154,7 +156,14 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData, loading }) => {
               />
             )
           case 'T3070Variation':
-            return <T3070Variation key={index} articles={articles} />
+            return (
+              <T3070Variation
+                key={index}
+                articles={articles}
+                articlesPerRow={articlesPerRow}
+                articlesLayout={articlesLayout}
+              />
+            )
           case 'EditorialTemplate':
             return (
               <EditorialTemplate
