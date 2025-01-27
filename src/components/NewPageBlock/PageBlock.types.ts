@@ -93,4 +93,15 @@ export interface PageBlockProps {
   className?: string
   customStyles?: React.CSSProperties
   loading?: boolean | undefined
+  isDarkMode?: boolean | null
+  columnCSSProps?: {
+    titleColor: string
+    subtitleColor: string
+  }
+  rowColumnCSSProps?: {
+    titleColor: string
+  }
+  borderRightColor?: string
+  rowColumnBorderTopColor?: string
+  borderBottomColor?: string
 }

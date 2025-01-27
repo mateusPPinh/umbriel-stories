@@ -22,7 +22,16 @@ import TemplateSeventyThirtyWithCarousel from './templates/TemplateSeventyThirty
 import EditorialTemplate from './templates/EditorialTemplate'
 import T7030WithinNewsletter from './templates/variations/T7030WithinNewsletter'
 
-const PageBlock: React.FC<PageBlockProps> = ({ blocksData, loading }) => {
+const PageBlock: React.FC<PageBlockProps> = ({
+  blocksData,
+  loading,
+  isDarkMode,
+  borderBottomColor,
+  borderRightColor,
+  columnCSSProps,
+  rowColumnBorderTopColor,
+  rowColumnCSSProps,
+}) => {
   return (
     <div className="page-block">
       {blocksData.map((blockData: BlockData, index) => {
@@ -162,6 +171,12 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData, loading }) => {
                 articles={articles}
                 articlesPerRow={articlesPerRow}
                 articlesLayout={articlesLayout}
+                isDarkMode={isDarkMode}
+                borderBottomColor={borderBottomColor}
+                borderRightColor={borderRightColor}
+                columnCSSProps={columnCSSProps}
+                rowColumnBorderTopColor={rowColumnBorderTopColor}
+                rowColumnCSSProps={rowColumnCSSProps}
               />
             )
           case 'EditorialTemplate':

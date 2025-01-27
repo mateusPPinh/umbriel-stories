@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const Container = styled.div`
   display: flex;
@@ -11,6 +11,22 @@ export const Container = styled.div`
   @media (max-width: 768px) {
     padding: 0 10px;
   }
+`
+
+export const ArticleRowBorderTop = styled.div<{
+  $rowColumnBorderTopColor?: string
+  $isDarkMode?: boolean | null
+}>`
+  border-top-width: 1px;
+  ${({ $rowColumnBorderTopColor, $isDarkMode }) => {
+    if ($isDarkMode) {
+      return `background-color: ${$rowColumnBorderTopColor}`
+    } else {
+      return css`
+        background-color: #d1d5db;
+      `
+    }
+  }};
 `
 
 export const MainContent = styled.div`
@@ -29,15 +45,16 @@ export const Column = styled.div`
   gap: 20px;
 `
 
-export const ArticlePreview = styled.div`
+export const ArticlePreview = styled.div<{
+  isDarkMode?: boolean | null
+  columnCSSProps?: {
+    $titleColor: string
+    $subtitleColor: string
+  }
+}>`
   background-color: transparent;
   padding: 10px;
   border-radius: 8px;
-
-  /* h2,
-  p {
-    font-family: 'Lora Variable';
-  } */
 
   h2 + p {
     margin-top: 0.8rem;
@@ -47,12 +64,20 @@ export const ArticlePreview = styled.div`
     font-weight: bold;
     line-height: 140%;
     font-size: 19px;
+    ${({ isDarkMode, columnCSSProps }) => {
+      if (isDarkMode) {
+        return css`
+          color: ${columnCSSProps?.$titleColor || '#FFFFFF'};
+        `
+      }
+    }}
   }
 
   p {
     font-size: 16px;
     line-height: 140%;
-    color: #5a5a5a;
+    color: ${({ columnCSSProps }) =>
+      columnCSSProps?.$subtitleColor || '#5a5a5a'};
   }
 
   span {
@@ -129,7 +154,12 @@ export const ArticleRowContainer = styled.div<{
     `}
 `
 
-export const ArticleRow = styled.div<{ articlesPerRow: number }>`
+export const ArticleRow = styled.div<{
+  articlesPerRow: number
+  $rowColumnCSSProps?: {
+    titleColor: string
+  }
+}>`
   flex: 1;
   background-color: transparent;
   padding: 10px;
@@ -140,6 +170,8 @@ export const ArticleRow = styled.div<{ articlesPerRow: number }>`
     font-weight: bold;
     line-height: 140%;
     font-size: 14px;
+    color: ${({ $rowColumnCSSProps }) =>
+      $rowColumnCSSProps?.titleColor || '#5a5a5a'};
   }
 
   span {
