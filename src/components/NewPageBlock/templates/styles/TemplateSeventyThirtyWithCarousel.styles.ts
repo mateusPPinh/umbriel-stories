@@ -97,7 +97,7 @@ export const ArticleContainer = styled.div`
       &:not(:last-child) {
         border-right: none;
         padding: 0;
-        padding-bottom: 1rem;
+        padding-bottom: 0.5rem;
         border-bottom: none;
       }
     }
@@ -119,16 +119,14 @@ export const ArticleBlock = styled.div`
 
   h3 {
     font-size: 1rem;
-    line-height: 130%;
-    font-family: ${(props) => props.theme.fonts.dmSans};
+    line-height: 130%
     width: 100%;
     font-weight: bold;
   }
 
   p {
     font-size: 14px;
-    color: #555;
-    font-family: ${(props) => props.theme.fonts.dmSans};
+    color: #555
   }
 
   @media (max-width: 768px) {
@@ -164,7 +162,6 @@ export const BottomBlock = styled.div`
     h3 {
       font-size: 1rem;
       line-height: 130%;
-      font-family: ${(props) => props.theme.fonts.dmSans};
       width: calc(325px - 101px);
       font-weight: bold;
     }
@@ -174,7 +171,6 @@ export const BottomBlock = styled.div`
       color: #555;
       line-height: 140%;
       width: calc(325px - 101px);
-      font-family: ${(props) => props.theme.fonts.dmSans};
       margin-top: 6px;
     }
   }
@@ -263,16 +259,14 @@ export const TextOverlay = styled.div`
     margin: 0;
     font-size: 48px;
     font-weight: bold;
-    line-height: 120%;
-    font-family: ${(props) => props.theme.fonts.dmSans};
+    line-height: 120%
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
   p {
     margin: 5px 0 0;
-    font-size: 16px;
-    font-family: ${(props) => props.theme.fonts.dmSans};
+    font-size: 16px
     line-height: 140%;
     font-weight: 400;
     max-width: 655px;

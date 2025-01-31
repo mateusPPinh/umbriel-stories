@@ -25,15 +25,45 @@ interface TemplateSeventyThirtyWithCarouselProps {
   articles: Article[]
   config: BlockConfig
   shouldRenderBorderBottom?: boolean
+  articlesLayout: {
+    carouselSlugs: string[]
+    videoUrl: string
+    bottomBlocksSlugs: string[]
+    poster?: string
+    isYoutube?: boolean
+  }
+  customTemplateSeventyThirtyWithCarouselSyles?: {
+    customContainerStyle: string
+    customTextOverlayStyles: string
+    customCarouselControllsStyle: string
+    customArticleContainerStyles: string
+    customBottomBlockStyles: string
+    customRightSectionStyles: string
+  }
 }
 
 const TemplateSeventyThirtyWithCarousel: React.FC<
   TemplateSeventyThirtyWithCarouselProps
-> = ({ articles, config, shouldRenderBorderBottom = true }) => {
+> = ({
+  articles,
+  config,
+  shouldRenderBorderBottom = true,
+  articlesLayout,
+  customTemplateSeventyThirtyWithCarouselSyles,
+}) => {
   const [currentSlide, setCurrentSlide] = React.useState(0)
 
+  const carouselArticles = articlesLayout.carouselSlugs
+    .map((slug) => articles.find((a) => a.slug === slug))
+    .filter(Boolean) as Article[]
+
+  const bottomArticles = articlesLayout.bottomBlocksSlugs
+    .map((slug) => articles.find((a) => a.slug === slug))
+    .filter(Boolean) as Article[]
+
+  // Controles do carrossel
   const nextSlide = () => {
-    if (currentSlide < articles.slice(0, 3).length - 1) {
+    if (currentSlide < carouselArticles.length - 1) {
       setCurrentSlide((prev) => prev + 1)
     }
   }
@@ -47,32 +77,33 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
   const truncateTitle = (title: string) => {
     return truncate(title, { length: 80, omission: '...' })
   }
-
   return (
     <>
-      <Container>
+      <Container
+        className={
+          customTemplateSeventyThirtyWithCarouselSyles?.customContainerStyle
+        }
+      >
         <LeftSection>
           <Carousel>
             <div
               className="carousel-inner"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
-              {articles.slice(0, 3).map((article, index) => (
+              {carouselArticles.map((article, index) => (
                 <div className="carousel-item" key={index}>
                   <img
                     src={article.content.image.desktop_image_path}
-                    srcSet={`${article.content.image.desktop_image_path}?width=480 480w,
-                            ${article.content.image.desktop_image_path}?width=768 768w,
-                            ${article.content.image.desktop_image_path}?width=1024 1024w`}
-                    sizes="(max-width: 768px) 480px,
-                          (max-width: 1024px) 768px,
-                          1024px"
                     alt={article.title}
                     loading="lazy"
                     decoding="async"
                   />
                   <Overlay>
-                    <TextOverlay>
+                    <TextOverlay
+                      className={
+                        customTemplateSeventyThirtyWithCarouselSyles?.customTextOverlayStyles
+                      }
+                    >
                       <Link
                         href={`/${article.editorial.slug}/${article.slug}`}
                         hover="hover:opacity-70"
@@ -85,7 +116,11 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
                 </div>
               ))}
             </div>
-            <CarrouselControlls>
+            <CarrouselControlls
+              className={
+                customTemplateSeventyThirtyWithCarouselSyles?.customCarouselControllsStyle
+              }
+            >
               <Button
                 className="ml-[20px] hover:opacity-70 hover:transition-opacity"
                 onClick={prevSlide}
@@ -97,7 +132,7 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
               <Button
                 className="mr-[20px] hover:opacity-70 hover:transition-opacity"
                 onClick={nextSlide}
-                disabled={currentSlide === articles.slice(0, 3).length - 1}
+                disabled={currentSlide === carouselArticles.length - 1}
                 variant="transparent"
               >
                 <CarouselArrowRight />
@@ -105,22 +140,28 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
             </CarrouselControlls>
           </Carousel>
         </LeftSection>
-        <RightSection>
+        <RightSection
+          className={
+            customTemplateSeventyThirtyWithCarouselSyles?.customRightSectionStyles
+          }
+        >
           <VideoBlock>
-            <Video />
+            <Video
+              source={articlesLayout.videoUrl}
+              poster={articlesLayout.poster}
+              isYoutube={articlesLayout.isYoutube}
+            />
             <div className="video__border_bottom" />
           </VideoBlock>
-          <ArticleContainer>
-            {articles.slice(3, 5).map((article, index) => (
+          <ArticleContainer
+            className={
+              customTemplateSeventyThirtyWithCarouselSyles?.customArticleContainerStyles
+            }
+          >
+            {bottomArticles.slice(0, 2).map((article, index) => (
               <ArticleBlock key={index}>
                 <img
                   src={article.content.image.desktop_image_path}
-                  srcSet={`${article.content.image.desktop_image_path}?width=480 480w,
-                          ${article.content.image.desktop_image_path}?width=768 768w,
-                          ${article.content.image.desktop_image_path}?width=1024 1024w`}
-                  sizes="(max-width: 768px) 480px,
-                        (max-width: 1024px) 768px,
-                        1024px"
                   alt={article.title}
                   loading="lazy"
                   decoding="async"
@@ -137,26 +178,24 @@ const TemplateSeventyThirtyWithCarousel: React.FC<
             ))}
           </ArticleContainer>
           <div className="articleContainer__border_bottom" />
-          {articles[5] && (
-            <BottomBlock>
+          {bottomArticles[2] && (
+            <BottomBlock
+              className={
+                customTemplateSeventyThirtyWithCarouselSyles?.customBottomBlockStyles
+              }
+            >
               <div className="text-content">
                 <Link
-                  href={`/${articles[5].editorial.slug}/${articles[5].slug}`}
+                  href={`/${bottomArticles[2].editorial.slug}/${bottomArticles[2].slug}`}
                   hover="hover:opacity-70"
                 >
-                  <h3>{articles[5].title}</h3>
+                  <h3>{bottomArticles[2].title}</h3>
                 </Link>
-                <p>{articles[5].subtitle}</p>
+                <p>{bottomArticles[2].subtitle}</p>
               </div>
               <img
-                src={articles[5].content.image.desktop_image_path}
-                srcSet={`${articles[5].content.image.desktop_image_path}?width=480 480w,
-                        ${articles[5].content.image.desktop_image_path}?width=768 768w,
-                        ${articles[5].content.image.desktop_image_path}?width=1024 1024w`}
-                sizes="(max-width: 768px) 480px,
-                      (max-width: 1024px) 768px,
-                      1024px"
-                alt={articles[5].title}
+                src={bottomArticles[2].content.image.desktop_image_path}
+                alt={bottomArticles[2].title}
                 loading="lazy"
                 decoding="async"
               />

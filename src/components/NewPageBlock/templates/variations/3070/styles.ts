@@ -1,12 +1,68 @@
 import styled, { css } from 'styled-components'
 
-export const Container = styled.div`
+export const Container = styled.div<{
+  $t3070ContainerProps?: {
+    backgroundColor?: string
+    padding?: string
+    paddingBottom?: string
+    paddingTop?: string
+    width?: string
+    maxWidth?: string
+    height?: string
+    maxHeight?: string
+    tailwindClasses?: string
+    mr?: string
+    ml?: string
+    mt?: string
+    mb?: string
+    radius?: string
+  }
+}>`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background-color: transparent;
-  padding: 0 20px;
   position: relative;
+
+  ${({ $t3070ContainerProps }) => {
+    const {
+      backgroundColor = 'transparent',
+      padding = '0 20px',
+      paddingBottom,
+      paddingTop,
+      width = 'auto',
+      maxWidth = 'none',
+      height = 'auto',
+      maxHeight = 'none',
+      tailwindClasses = '',
+      mr = 'none',
+      ml = 'none',
+      mt = 'none',
+      mb = 'none',
+      radius = 'none',
+    } = $t3070ContainerProps ?? {}
+
+    return css`
+      background-color: ${backgroundColor};
+      padding: ${padding};
+      ${paddingTop &&
+      css`
+        padding-top: ${paddingTop};
+      `}
+      ${paddingBottom &&
+      css`
+        padding-bottom: ${paddingBottom};
+      `}
+      width: ${width};
+      max-width: ${maxWidth};
+      height: ${height};
+      max-height: ${maxHeight};
+      margin-right: ${mr};
+      margin-left: ${ml};
+      margin-top: ${mt};
+      margin-bottom: ${mb};
+      border-radius: ${radius} ${tailwindClasses};
+    `
+  }}
 
   @media (max-width: 768px) {
     padding: 0 10px;
@@ -46,8 +102,8 @@ export const Column = styled.div`
 `
 
 export const ArticlePreview = styled.div<{
-  isDarkMode?: boolean | null
-  columnCSSProps?: {
+  $isDarkMode?: boolean | null
+  $columnCSSProps?: {
     $titleColor: string
     $subtitleColor: string
   }
@@ -64,10 +120,10 @@ export const ArticlePreview = styled.div<{
     font-weight: bold;
     line-height: 140%;
     font-size: 19px;
-    ${({ isDarkMode, columnCSSProps }) => {
-      if (isDarkMode) {
+    ${({ $isDarkMode, $columnCSSProps }) => {
+      if ($isDarkMode) {
         return css`
-          color: ${columnCSSProps?.$titleColor || '#FFFFFF'};
+          color: ${$columnCSSProps?.$titleColor ?? '#FFFFFF'};
         `
       }
     }}
@@ -76,8 +132,8 @@ export const ArticlePreview = styled.div<{
   p {
     font-size: 16px;
     line-height: 140%;
-    color: ${({ columnCSSProps }) =>
-      columnCSSProps?.$subtitleColor || '#5a5a5a'};
+    color: ${({ $columnCSSProps }) =>
+      $columnCSSProps?.$subtitleColor || '#5a5a5a'};
   }
 
   span {
@@ -133,7 +189,11 @@ export const Update = styled.div`
 `
 
 export const ArticleRowContainer = styled.div<{
-  articlesPerRow: number | boolean
+  $articlesPerRow: number | boolean
+  $articleRowContainerProps: {
+    direction?: string
+    bgColor?: string
+  }
 }>`
   display: flex;
   gap: 20px;
@@ -145,17 +205,31 @@ export const ArticleRowContainer = styled.div<{
     gap: 10px;
   }
 
-  ${({ articlesPerRow }) =>
-    articlesPerRow === 6 &&
+  ${({ $articlesPerRow }) => {
+    if ($articlesPerRow === 6) {
+      return css`
+        gap: 20px;
+        flex-direction: row;
+        justify-content: space-between;
+      `
+    } else {
+      return null
+    }
+  }};
+
+  ${({ $articleRowContainerProps }) => {
+    const { direction = 'row', bgColor = 'transparent' } =
+      $articleRowContainerProps ?? {}
+
+    return css`
+      flex-direction: ${direction};
+      background-color: ${bgColor};
     `
-      gap: 20px;
-      flex-direction: row;
-      justify-content: space-between;
-    `}
+  }}
 `
 
 export const ArticleRow = styled.div<{
-  articlesPerRow: number
+  $articlesPerRow: number
   $rowColumnCSSProps?: {
     titleColor: string
   }
@@ -184,8 +258,8 @@ export const ArticleRow = styled.div<{
   }
 
   /* Se for 6 artigos, remove o border-right e aplica o espaçamento vertical */
-  ${({ articlesPerRow }) =>
-    articlesPerRow === 6 &&
+  ${({ $articlesPerRow }) =>
+    $articlesPerRow === 6 &&
     `
       border-right: none;
       border-bottom: 1px solid #e0e0e0;

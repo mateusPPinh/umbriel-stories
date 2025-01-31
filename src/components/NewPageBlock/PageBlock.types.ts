@@ -82,9 +82,15 @@ export interface BlockData {
   }
   articlesPerRow?: number
   articlesLayout: {
-    column: string[] // Array com os IDs ou slugs dos artigos que irão para a column
-    sideColumn: string // ID ou slug do artigo para o side column
-    articleRows: string[] // Array com os IDs ou slugs dos artigos para as article rows
+    column: string[]
+    sideColumn: string
+    articleRows: string[]
+    rows?: Array<{ slugs: string[] }>
+    carouselSlugs?: string[]
+    videoUrl?: string
+    bottomBlocksSlugs?: string[]
+    poster?: string
+    isYoutube?: boolean
   }
 }
 
@@ -104,4 +110,36 @@ export interface PageBlockProps {
   borderRightColor?: string
   rowColumnBorderTopColor?: string
   borderBottomColor?: string
+  t3070ContainerProps?: {
+    backgroundColor: string
+    padding?: string
+    paddingBottom?: string
+    paddingTop?: string
+    width?: string
+    maxWidth?: string
+    height?: string
+    maxHeight?: string
+    tailwindClasses?: string
+    mr?: string
+    ml?: string
+    mt?: string
+    mb?: string
+    radius?: string
+    custom3070ContainerClassname?: string
+  }
+  articleRowContainerProps?: {
+    direction: string
+    bgColor: string
+  }
+  articleRowCustomCss?: string
+  customGrid5050Style?: string
+  customGrid505ArticleContainerStyle?: string
+  customTemplateSeventyThirtyWithCarouselSyles?: {
+    customContainerStyle: string
+    customTextOverlayStyles: string
+    customCarouselControllsStyle: string
+    customArticleContainerStyles: string
+    customBottomBlockStyles: string
+    customRightSectionStyles: string
+  }
 }
