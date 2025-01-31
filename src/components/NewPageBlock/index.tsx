@@ -22,7 +22,22 @@ import TemplateSeventyThirtyWithCarousel from './templates/TemplateSeventyThirty
 import EditorialTemplate from './templates/EditorialTemplate'
 import T7030WithinNewsletter from './templates/variations/T7030WithinNewsletter'
 
-const PageBlock: React.FC<PageBlockProps> = ({ blocksData, loading }) => {
+const PageBlock: React.FC<PageBlockProps> = ({
+  blocksData,
+  loading,
+  isDarkMode,
+  borderBottomColor,
+  borderRightColor,
+  columnCSSProps,
+  rowColumnBorderTopColor,
+  rowColumnCSSProps,
+  t3070ContainerProps,
+  articleRowContainerProps,
+  articleRowCustomCss,
+  customGrid5050Style,
+  customGrid505ArticleContainerStyle,
+  customTemplateSeventyThirtyWithCarouselSyles,
+}) => {
   return (
     <div className="page-block">
       {blocksData.map((blockData: BlockData, index) => {
@@ -111,6 +126,12 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData, loading }) => {
                 key={index}
                 articles={articles}
                 config={config}
+                articlesLayout={{ rows: articlesLayout.rows ?? [] }}
+                articlesPerRow={articlesPerRow}
+                customGrid5050Style={customGrid5050Style}
+                customGrid505ArticleContainerStyle={
+                  customGrid505ArticleContainerStyle
+                }
               />
             )
           case 'TemplateSlot100FeaturedRelated':
@@ -162,6 +183,35 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData, loading }) => {
                 articles={articles}
                 articlesPerRow={articlesPerRow}
                 articlesLayout={articlesLayout}
+                isDarkMode={isDarkMode}
+                borderBottomColor={borderBottomColor}
+                borderRightColor={borderRightColor}
+                columnCSSProps={columnCSSProps}
+                rowColumnBorderTopColor={rowColumnBorderTopColor}
+                rowColumnCSSProps={rowColumnCSSProps}
+                t3070ContainerProps={{
+                  backgroundColor: t3070ContainerProps?.backgroundColor ?? '',
+                  height: t3070ContainerProps?.height ?? '',
+                  maxHeight: t3070ContainerProps?.maxHeight ?? '',
+                  maxWidth: t3070ContainerProps?.maxWidth ?? '',
+                  padding: t3070ContainerProps?.padding ?? '',
+                  paddingBottom: t3070ContainerProps?.paddingBottom ?? '',
+                  paddingTop: t3070ContainerProps?.paddingTop ?? '',
+                  width: t3070ContainerProps?.width ?? '',
+                  tailwindClasses: t3070ContainerProps?.tailwindClasses,
+                  mb: t3070ContainerProps?.mb ?? '',
+                  mt: t3070ContainerProps?.mt ?? '',
+                  ml: t3070ContainerProps?.ml ?? '',
+                  mr: t3070ContainerProps?.mr ?? '',
+                  radius: t3070ContainerProps?.radius ?? '',
+                  custom3070ContainerClassname:
+                    t3070ContainerProps?.custom3070ContainerClassname ?? '',
+                }}
+                articleRowContainerProps={{
+                  bgColor: articleRowContainerProps?.bgColor ?? '',
+                  direction: articleRowContainerProps?.direction ?? '',
+                }}
+                articleRowCustomCss={articleRowCustomCss ?? ''}
               />
             )
           case 'EditorialTemplate':
@@ -180,6 +230,33 @@ const PageBlock: React.FC<PageBlockProps> = ({ blocksData, loading }) => {
                 key={index}
                 articles={articles}
                 config={config}
+                articlesLayout={{
+                  bottomBlocksSlugs: articlesLayout.bottomBlocksSlugs ?? [],
+                  carouselSlugs: articlesLayout.carouselSlugs ?? [],
+                  videoUrl: articlesLayout.videoUrl ?? '',
+                  poster: articlesLayout.poster ?? '',
+                  isYoutube: articlesLayout.isYoutube ?? false,
+                }}
+                customTemplateSeventyThirtyWithCarouselSyles={{
+                  customContainerStyle:
+                    customTemplateSeventyThirtyWithCarouselSyles?.customContainerStyle ??
+                    '',
+                  customTextOverlayStyles:
+                    customTemplateSeventyThirtyWithCarouselSyles?.customTextOverlayStyles ??
+                    '',
+                  customCarouselControllsStyle:
+                    customTemplateSeventyThirtyWithCarouselSyles?.customCarouselControllsStyle ??
+                    '',
+                  customArticleContainerStyles:
+                    customTemplateSeventyThirtyWithCarouselSyles?.customArticleContainerStyles ??
+                    '',
+                  customBottomBlockStyles:
+                    customTemplateSeventyThirtyWithCarouselSyles?.customBottomBlockStyles ??
+                    '',
+                  customRightSectionStyles:
+                    customTemplateSeventyThirtyWithCarouselSyles?.customRightSectionStyles ??
+                    '',
+                }}
                 shouldRenderBorderBottom={
                   blockData.templateSeventyCarouselProps
                     ?.shouldRenderBorderBottom

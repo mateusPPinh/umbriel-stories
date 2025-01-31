@@ -30,6 +30,28 @@ const meta: Meta<typeof PageBlock> = {
       description:
         'Defina os artigos que ocuparão as Article Rows. Ex: ["slug1", "slug2", "slug3"]',
     },
+    isDarkMode: {
+      control: 'boolean',
+      description: 'Ativa ou desativa o modo escuro para o componente.',
+      defaultValue: false,
+    },
+
+    // columnCSSProps
+    'columnCSSProps.titleColor': {
+      control: 'color',
+      description: 'Cor do título (Title) na coluna.',
+      defaultValue: '#000000',
+    },
+    'columnCSSProps.subtitleColor': {
+      control: 'color',
+      description: 'Cor do subtítulo (Subtitle) na coluna.',
+      defaultValue: '#5a5a5a',
+    },
+    'rowColumnCSSProps.titleColor': {
+      control: 'color',
+      description: 'Cor do título na column row.',
+      defaultValue: '#5a5a5a',
+    },
   },
 }
 
@@ -81,9 +103,22 @@ const blocksDataSeventyThirtyWithTwoImages: BlockData[] = [
 export const T3070Variation: Story = {
   args: {
     blocksData: blocksDataSeventyThirtyWithTwoImages,
+    isDarkMode: false,
+    rowColumnBorderTopColor: '#aaaa',
+    columnCSSProps: {
+      subtitleColor: '#5a5a5a', // Valor inicial para o subtitleColor
+      titleColor: '#000000', // Valor inicial para o titleColor
+    },
+    rowColumnCSSProps: {
+      titleColor: '#f3f3f3',
+    },
   },
   render: (args) => (
-    <div className="flex items-center justify-center w-screen">
+    <div
+      className={`flex items-center justify-center w-screen ${
+        args.isDarkMode ? 'bg-[#000]' : 'bg-[#fff]'
+      }`}
+    >
       <div className="w-full max-w-[1238px] p-4">
         <PageBlock {...args} />
       </div>
