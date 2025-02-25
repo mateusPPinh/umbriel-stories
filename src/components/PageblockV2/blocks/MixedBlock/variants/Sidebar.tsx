@@ -1,95 +1,238 @@
 import React from 'react';
-import { BlockVariant } from '../../../types';
 import { useBlockStyles } from '../../../hooks/useBlockStyles';
-import { useResponsiveGrid } from '../../../hooks/useResponsiveGrid';
-import Image from '../../../components/Image';
+import { BlockVariant, Article } from '../../../types';
 import { defaultClasses } from '../../../constants/defaultClasses';
 
-interface SidebarProps {
+interface BaseVariantProps {
   variant: BlockVariant;
   isDarkTheme?: boolean;
   customStyles?: any;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ variant, isDarkTheme = false, customStyles }) => {
-  const { articles, styles } = variant.config;
-  const { paddingClass } = useResponsiveGrid(variant.config);
-  const { containerStyle, columnStyle, headingStyle, subtitleStyle } = useBlockStyles({
-    config: variant.config as any,
+// Helper function to merge styles
+const mergeStyles = (defaultStyles: any, customStyles: any) => {
+  if (!customStyles) return defaultStyles;
+  return {
+    ...defaultStyles,
+    ...customStyles,
+    columnStyles: {
+      ...defaultStyles.columnStyles,
+      ...customStyles.columnStyles
+    },
+    theme: {
+      light: {
+        ...defaultStyles.theme?.light,
+        ...customStyles.theme?.light,
+        columnStyle: {
+          ...defaultStyles.theme?.light?.columnStyle,
+          ...customStyles.theme?.light?.columnStyle
+        }
+      },
+      dark: {
+        ...defaultStyles.theme?.dark,
+        ...customStyles.theme?.dark,
+        columnStyle: {
+          ...defaultStyles.theme?.dark?.columnStyle,
+          ...customStyles.theme?.dark?.columnStyle
+        }
+      }
+    }
+  };
+};
+
+const Sidebar: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
+  const classes = defaultClasses.mixed.sidebar;
+  const { articles } = variant.config;
+
+  // Define default styles
+  const defaultStyles = {
+    theme: {
+      light: {
+        mainColumnStyle: {
+          background: "#ffffff",
+          padding: "24px",
+          borderRadius: "8px"
+        },
+        sidebarStyle: {
+          background: "#f7fafc",
+          padding: "20px",
+          borderRadius: "8px"
+        },
+        headingProps: {
+          fontSize: {
+            main: "2xl",
+            sidebar: "lg"
+          },
+          fontWeight: {
+            main: "bold",
+            sidebar: "medium"
+          },
+          color: "#1a1a1a"
+        },
+        subtitleProps: {
+          fontSize: {
+            main: "lg",
+            sidebar: "sm"
+          },
+          color: "#4a5568"
+        }
+      },
+      dark: {
+        mainColumnStyle: {
+          background: "#1a1a1a",
+          padding: "24px",
+          borderRadius: "8px"
+        },
+        sidebarStyle: {
+          background: "#2d3748",
+          padding: "20px",
+          borderRadius: "8px"
+        },
+        headingProps: {
+          fontSize: {
+            main: "2xl",
+            sidebar: "lg"
+          },
+          fontWeight: {
+            main: "bold",
+            sidebar: "medium"
+          },
+          color: "#ffffff"
+        },
+        subtitleProps: {
+          fontSize: {
+            main: "lg",
+            sidebar: "sm"
+          },
+          color: "#a0aec0"
+        }
+      }
+    },
+    layout: {
+      sidebarPosition: 'right', // 'left' | 'right'
+      sidebarWidth: '300px',
+      gap: '24px'
+    },
+    showExcerpt: {
+      main: true,
+      sidebar: true
+    },
+    showImage: {
+      main: true,
+      sidebar: true
+    },
+    imageStyle: {
+      main: {
+        aspectRatio: '16/9',
+        borderRadius: '8px'
+      },
+      sidebar: {
+        aspectRatio: '4/3',
+        borderRadius: '6px'
+      }
+    }
+  };
+
+  // Merge default styles with variant styles
+  const mergedStyles = mergeStyles(defaultStyles, variant.config.styles);
+  
+  // Use merged styles in useBlockStyles
+  const { containerStyle, columnStyle } = useBlockStyles({
+    config: {
+      ...variant.config,
+      styles: mergedStyles
+    } as any,
     isDarkTheme
   });
 
-  const classes = defaultClasses.mixed.sidebar;
-  const sidebarPosition = variant.config.layout.styles?.columnStyles?.sidebarPosition || 'right';
+  // Get theme-specific styles
+  const theme = mergedStyles.theme[isDarkTheme ? 'dark' : 'light'];
+
+  // Helper functions to get specific styles
+  const getHeadingStyle = (type: 'main' | 'sidebar') => ({
+    fontSize: theme.headingProps.fontSize[type],
+    fontWeight: theme.headingProps.fontWeight[type],
+    color: theme.headingProps.color
+  });
+
+  const getSubtitleStyle = (type: 'main' | 'sidebar') => ({
+    fontSize: theme.subtitleProps.fontSize[type],
+    color: theme.subtitleProps.color
+  });
+
+  const mainArticle = articles['col-0']?.[0];
+  const sidebarArticles = articles['col-1'] || [];
 
   return (
-    <div className={`${classes.container} ${paddingClass} ${customStyles?.container || ''}`} style={containerStyle}>
-      <div className={`${classes.grid} ${
-        sidebarPosition === 'left' 
-          ? 'md:grid-cols-[300px,1fr]' 
-          : 'md:grid-cols-[1fr,300px]'
-      }`}>
-        {/* Main Content */}
-        <div className={sidebarPosition === 'left' ? 'order-2' : 'order-1'}>
-          {articles['col-0']?.[0] && (
-            <div className="space-y-6" style={columnStyle('col-0')}>
-              {articles['col-0'][0].content.image?.desktop_image_path && (
-                <div className="relative aspect-video rounded-lg overflow-hidden">
-                  <Image
-                    src={articles['col-0'][0].content.image.desktop_image_path}
-                    alt={articles['col-0'][0].title}
+    <div className={`${classes.container} ${customStyles?.container || ''}`} style={containerStyle}>
+      <div 
+        className={`
+          grid grid-cols-1 lg:grid-cols-[1fr_${mergedStyles.layout.sidebarWidth}]
+          ${mergedStyles.layout.sidebarPosition === 'left' ? 'lg:grid-cols-[${mergedStyles.layout.sidebarWidth}_1fr]' : ''}
+          gap-${mergedStyles.layout.gap}
+        `}
+      >
+        {/* Main Column */}
+        <div 
+          className={`${mergedStyles.layout.sidebarPosition === 'left' ? 'lg:order-2' : ''}`}
+          style={mergedStyles.theme[isDarkTheme ? 'dark' : 'light'].mainColumnStyle}
+        >
+          {mainArticle && (
+            <article>
+              {mergedStyles.showImage.main && mainArticle.content.image?.desktop_image_path && (
+                <div 
+                  className="relative w-full overflow-hidden mb-6"
+                  style={{ 
+                    aspectRatio: mergedStyles.imageStyle.main.aspectRatio,
+                    borderRadius: mergedStyles.imageStyle.main.borderRadius
+                  }}
+                >
+                  <img
+                    src={mainArticle.content.image.desktop_image_path}
+                    alt={mainArticle.title}
                     className="w-full h-full object-cover"
                   />
                 </div>
               )}
-              <div className="space-y-4">
-                <h2 className="text-3xl font-bold" style={headingStyle}>
-                  {articles['col-0'][0].title}
-                </h2>
-                {styles.showExcerpt && (
-                  <p className="text-lg" style={subtitleStyle}>
-                    {articles['col-0'][0].subtitle}
-                  </p>
-                )}
-              </div>
-            </div>
+              
+              <h2 className="text-2xl font-bold mb-4" style={getHeadingStyle('main')}>
+                {mainArticle.title}
+              </h2>
+              
+              {mergedStyles.showExcerpt.main && (
+                <p className="text-lg mb-4" style={getSubtitleStyle('main')}>
+                  {mainArticle.subtitle}
+                </p>
+              )}
+            </article>
           )}
         </div>
 
-        {/* Sidebar */}
-        <div className={`${classes.article} ${sidebarPosition === 'left' ? 'order-1' : 'order-2'}`}>
-          {['col-1', 'col-2', 'col-3', 'col-4'].map((colKey) => (
-            articles[colKey]?.[0] && (
+        {/* Sidebar - Lista de artigos relacionados */}
+        <aside 
+          className={`${mergedStyles.layout.sidebarPosition === 'left' ? 'lg:order-1' : ''}`}
+          style={mergedStyles.theme[isDarkTheme ? 'dark' : 'light'].sidebarStyle}
+        >
+          <h3 className="text-lg font-semibold mb-4">Artigos Relacionados</h3>
+          <div className="space-y-4">
+            {sidebarArticles.map((article: Article) => (
               <div 
-                key={colKey} 
-                className="flex gap-4 pb-6 border-b last:border-0 last:pb-0" 
-                style={columnStyle(colKey)}
+                key={article.id} 
+                className="flex flex-col border-b border-gray-200 dark:border-gray-700 last:border-0 pb-4 last:pb-0"
               >
-                {articles[colKey][0].content.image?.desktop_image_path && (
-                  <div className="flex-shrink-0 w-24">
-                    <div className="relative aspect-square rounded overflow-hidden">
-                      <Image
-                        src={articles[colKey][0].content.image.desktop_image_path}
-                        alt={articles[colKey][0].title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  </div>
+                <h4 className="text-base mb-1" style={getHeadingStyle('sidebar')}>
+                  {article.title}
+                </h4>
+                
+                {mergedStyles.showExcerpt.sidebar && (
+                  <p className="text-sm" style={getSubtitleStyle('sidebar')}>
+                    {article.subtitle}
+                  </p>
                 )}
-                <div className={articles[colKey][0].content.image ? '' : 'w-full'}>
-                  <h3 className="text-base font-medium mb-1" style={headingStyle}>
-                    {articles[colKey][0].title}
-                  </h3>
-                  {styles.showExcerpt && (
-                    <p className="text-sm" style={subtitleStyle}>
-                      {articles[colKey][0].subtitle}
-                    </p>
-                  )}
-                </div>
               </div>
-            )
-          ))}
-        </div>
+            ))}
+          </div>
+        </aside>
       </div>
     </div>
   );

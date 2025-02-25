@@ -21,20 +21,9 @@ export const defaultClasses = {
       ].join(' ')
     },
     masonry: {
-      container: [
-        'w-full max-w-[1238px] mx-auto',
-        'mb-[40px] mt-[40px]'
-      ].join(' '),
-      grid: [
-        'grid grid-cols-1',
-        'md:grid-cols-2',
-        'lg:grid-cols-2',
-        'gap-6'
-      ].join(' '),
-      article: [
-        'flex flex-col gap-4',
-        'hover:shadow-lg transition-all duration-300'
-      ].join(' ')
+      container: 'w-full',
+      grid: 'grid gap-4',
+      article: 'relative'
     },
     featured: {
       container: [
@@ -91,89 +80,31 @@ export const defaultClasses = {
   },
   list: {
     compact: {
-      container: [
-        'w-full max-w-[1238px] mx-auto',
-        'mb-[40px] mt-[40px]',
-        'bg-white dark:bg-[#1b1b1b]',
-        'p-6 rounded-sm'
-      ].join(' '),
-      grid: 'space-y-6',
-      article: [
-        'border-b border-gray-100 dark:border-gray-800',
-        'last:border-0 pb-6 last:pb-0',
-        'hover:bg-gray-50 dark:hover:bg-[#262626]',
-        'transition-colors duration-300'
-      ].join(' ')
+      container: 'w-full',
+      list: 'space-y-4'
     },
     thumbnail: {
-      container: [
-        'w-full max-w-[1238px] mx-auto',
-        'mb-[40px] mt-[40px]',
-        'bg-white dark:bg-[#1b1b1b]',
-        'p-6 rounded-sm'
-      ].join(' '),
-      grid: 'space-y-6',
-      article: [
-        'flex items-start gap-4 p-4 rounded-lg',
-        'hover:bg-gray-50 dark:hover:bg-[#262626]',
-        'transition-colors duration-300',
-        'border-b border-gray-100 dark:border-gray-800 last:border-0'
-      ].join(' ')
+      container: 'w-full',
+      list: 'space-y-4',
+      article: 'relative'
     },
     chronological: {
-      container: [
-        'w-full max-w-[1238px] mx-auto',
-        'mb-[40px] mt-[40px]'
-      ].join(' '),
-      grid: 'space-y-8',
-      article: [
-        'flex items-start gap-6',
-        'hover:bg-gray-50 dark:hover:bg-[#262626]',
-        'transition-colors duration-300',
-        'p-4 rounded-lg'
-      ].join(' ')
+      container: 'w-full',
+      list: 'relative'
     }
   },
   mixed: {
+    sidebar: {
+      container: 'w-full'
+    },
     magazine: {
-      container: [
-        'w-full max-w-[1238px] mx-auto',
-        'mb-[40px] mt-[40px]',
-        'bg-white dark:bg-[#1b1b1b]',
-        'p-6 rounded-sm'
-      ].join(' '),
-      grid: 'grid grid-cols-1 md:grid-cols-[2.5fr,1fr,1fr] gap-6',
-      article: [
-        'flex flex-col gap-4',
-        'hover:opacity-90 transition-opacity'
-      ].join(' ')
+      container: 'w-full'
+    },
+    showcase: {
+      container: 'w-full'
     },
     newspaper: {
-      container: [
-        'w-full max-w-[1238px] mx-auto',
-        'mb-[40px] mt-[40px]',
-        'bg-white dark:bg-[#1b1b1b]',
-        'p-6 rounded-sm'
-      ].join(' '),
-      grid: 'grid grid-cols-1 md:grid-cols-[3fr,1fr,1fr] gap-6',
-      article: [
-        'flex flex-col gap-4',
-        'hover:opacity-90 transition-opacity'
-      ].join(' ')
-    },
-    sidebar: {
-      container: [
-        'w-full max-w-[1238px] mx-auto',
-        'mb-[40px] mt-[40px]',
-        'bg-white dark:bg-[#1b1b1b]',
-        'p-6 rounded-sm'
-      ].join(' '),
-      grid: 'grid gap-6',
-      article: [
-        'flex gap-4',
-        'hover:bg-gray-50 dark:hover:bg-[#262626]',
-        'transition-colors duration-300'
-      ].join(' ')
+      container: 'w-full'
     }
   }
 }; 

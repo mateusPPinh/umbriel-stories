@@ -54,6 +54,7 @@ export interface Article {
       image_mobile_path: string | null;
     };
   };
+  publishedAt?: string;
 }
 
 export interface BlockConfig {
