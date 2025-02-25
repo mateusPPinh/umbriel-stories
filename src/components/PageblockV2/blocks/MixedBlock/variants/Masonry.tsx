@@ -16,7 +16,8 @@ interface BaseVariantProps {
 }
 
 const defaultColumnStyle = {
-  background: 'transparent'
+  background: 'transparent',
+  padding: 16
 };
 
 const defaultHeadingProps: StyleProps = {
@@ -95,8 +96,8 @@ const defaultStyles: BlockConfig['styles'] = {
   showExcerpt: true
 };
 
-const Sidebar: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
-  const classes = defaultClasses.mixed.sidebar || { container: '' };
+const Masonry: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
+  const classes = defaultClasses.mixed.masonry || { container: '' };
   const { articles } = variant.config;
   const items = Object.values(articles).flat();
   const styles = variant.config.styles || defaultStyles;
@@ -116,23 +117,29 @@ const Sidebar: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyle
     isDarkTheme
   });
 
-  const mainArticle = items[0];
-  const sidebarArticles = items.slice(1);
+  const columnCount = variant.config.layout?.columns || 3;
+  const gap = variant.config.layout?.gap || '24px';
+
+  // Construct the columns class based on configuration
+  const columnsClass = `columns-1 md:columns-2 lg:columns-${columnCount}`;
+  const gapClass = `gap-x-[${gap}]`;
 
   return (
     <div className={`${classes.container} ${customStyles?.container || ''}`} style={containerStyle}>
-      <div className={customStyles?.grid || 'grid grid-cols-1 md:grid-cols-3 gap-6'}>
-        {/* Main Article */}
-        <div className={customStyles?.mainColumn || 'md:col-span-2'}>
+      <div className={customStyles?.masonryGrid || `${columnsClass} ${gapClass}`}>
+        {items.map((article: Article) => (
           <article 
-            className={customStyles?.mainArticle || 'break-inside-avoid mb-6'}
+            key={article.id} 
+            className={customStyles?.article || 'break-inside-avoid mb-6'}
             style={theme.columnStyle}
           >
-            {mainArticle.content.image?.desktop_image_path && (
-              <div className={customStyles?.imageWrapper || 'relative w-full overflow-hidden mb-4'}>
+            {article.content.image?.desktop_image_path && (
+              <div 
+                className={customStyles?.imageWrapper || 'relative w-full overflow-hidden mb-4'}
+              >
                 <img
-                  src={mainArticle.content.image.desktop_image_path}
-                  alt={mainArticle.title}
+                  src={article.content.image.desktop_image_path}
+                  alt={article.title}
                   className={customStyles?.image || 'w-full h-full object-cover'}
                 />
               </div>
@@ -143,7 +150,7 @@ const Sidebar: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyle
                 className={customStyles?.heading || 'mb-3'} 
                 style={theme.headingProps}
               >
-                {mainArticle.title}
+                {article.title}
               </h2>
               
               {styles.showExcerpt && (
@@ -151,54 +158,15 @@ const Sidebar: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyle
                   className={customStyles?.subtitle || ''} 
                   style={theme.subtitleProps}
                 >
-                  {mainArticle.subtitle}
+                  {article.subtitle}
                 </p>
               )}
             </div>
           </article>
-        </div>
-
-        {/* Sidebar Articles */}
-        <div className={customStyles?.sidebarColumn || 'md:col-span-1'}>
-          {sidebarArticles.map((article: Article) => (
-            <article 
-              key={article.id} 
-              className={customStyles?.sidebarArticle || 'break-inside-avoid mb-6'}
-              style={theme.columnStyle}
-            >
-              {article.content.image?.desktop_image_path && (
-                <div className={customStyles?.imageWrapper || 'relative w-full overflow-hidden mb-4'}>
-                  <img
-                    src={article.content.image.desktop_image_path}
-                    alt={article.title}
-                    className={customStyles?.image || 'w-full h-full object-cover'}
-                  />
-                </div>
-              )}
-              
-              <div className={customStyles?.content || 'p-4'}>
-                <h2 
-                  className={customStyles?.heading || 'mb-3'} 
-                  style={theme.headingProps}
-                >
-                  {article.title}
-                </h2>
-                
-                {styles.showExcerpt && (
-                  <p 
-                    className={customStyles?.subtitle || ''} 
-                    style={theme.subtitleProps}
-                  >
-                    {article.subtitle}
-                  </p>
-                )}
-              </div>
-            </article>
-          ))}
-        </div>
+        ))}
       </div>
     </div>
   );
 };
 
-export default Sidebar; 
+export default Masonry; 

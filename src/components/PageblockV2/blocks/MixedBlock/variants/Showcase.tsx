@@ -1,6 +1,6 @@
 import React from 'react';
 import { useBlockStyles } from '../../../hooks/useBlockStyles';
-import { BlockVariant, Article } from '../../../types';
+import { BlockVariant, Article, ThemeProps, StyleProps, BlockConfig } from '../../../types/index';
 import { defaultClasses } from '../../../constants/defaultClasses';
 
 interface BaseVariantProps {
@@ -9,205 +9,106 @@ interface BaseVariantProps {
   customStyles?: any;
 }
 
-// Helper function to merge styles
-const mergeStyles = (defaultStyles: any, customStyles: any) => {
-  if (!customStyles) return defaultStyles;
-  return {
-    ...defaultStyles,
-    ...customStyles,
-    columnStyles: {
-      ...defaultStyles.columnStyles,
-      ...customStyles.columnStyles
-    },
-    theme: {
-      light: {
-        ...defaultStyles.theme?.light,
-        ...customStyles.theme?.light,
-        columnStyle: {
-          ...defaultStyles.theme?.light?.columnStyle,
-          ...customStyles.theme?.light?.columnStyle
-        }
+const defaultColumnStyle = {
+  background: 'transparent',
+  padding: 16
+};
+
+const defaultHeadingProps: StyleProps = {
+  fontSize: 'xl',
+  fontWeight: 'bold',
+  color: '#1a1a1a'
+};
+
+const defaultSubtitleProps: StyleProps = {
+  fontSize: 'lg',
+  color: '#4a5568'
+};
+
+const defaultTheme: ThemeProps = {
+  columnStyle: defaultColumnStyle,
+  headingProps: defaultHeadingProps,
+  subtitleProps: defaultSubtitleProps,
+  bodyProps: {},
+  linkProps: {
+    color: '#000',
+    hoverColor: '#000'
+  }
+};
+
+const darkTheme: ThemeProps = {
+  ...defaultTheme,
+  columnStyle: {
+    ...defaultColumnStyle,
+    background: '#1a1a1a'
+  },
+  headingProps: {
+    ...defaultHeadingProps,
+    color: '#ffffff'
+  },
+  subtitleProps: {
+    ...defaultSubtitleProps,
+    color: '#a0aec0'
+  },
+  linkProps: {
+    color: '#fff',
+    hoverColor: '#fff'
+  }
+};
+
+const defaultStyles: BlockConfig['styles'] = {
+  theme: {
+    light: {
+      columnStyle: {
+        background: '#ffffff'
       },
-      dark: {
-        ...defaultStyles.theme?.dark,
-        ...customStyles.theme?.dark,
-        columnStyle: {
-          ...defaultStyles.theme?.dark?.columnStyle,
-          ...customStyles.theme?.dark?.columnStyle
-        }
+      headingProps: {
+        fontSize: 'xl',
+        fontWeight: 700,
+        color: '#1a1a1a'
+      },
+      subtitleProps: {
+        fontSize: 'lg',
+        color: '#4a5568'
+      }
+    },
+    dark: {
+      columnStyle: {
+        background: '#1a1a1a'
+      },
+      headingProps: {
+        fontSize: 'xl',
+        fontWeight: 700,
+        color: '#ffffff'
+      },
+      subtitleProps: {
+        fontSize: 'lg',
+        color: '#a0aec0'
       }
     }
-  };
+  },
+  showExcerpt: true
 };
 
 const Showcase: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
-  const classes = defaultClasses.mixed.showcase;
+  const classes = defaultClasses.mixed.showcase || { container: '' };
   const { articles } = variant.config;
+  const styles = variant.config.styles || defaultStyles;
+  const theme = styles.theme?.[isDarkTheme ? 'dark' : 'light'] || (isDarkTheme ? darkTheme : defaultTheme);
 
-  // Define default styles
-  const defaultStyles = {
-    theme: {
-      light: {
-        featuredStyle: {
-          background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)",
-          padding: "24px",
-          borderRadius: "16px"
-        },
-        gridStyle: {
-          background: "#ffffff",
-          padding: "20px",
-          borderRadius: "12px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.1)"
-        },
-        listStyle: {
-          background: "#f8fafc",
-          padding: "16px",
-          borderRadius: "8px"
-        },
-        headingProps: {
-          fontSize: {
-            featured: "4xl",
-            grid: "xl",
-            list: "lg"
-          },
-          fontWeight: {
-            featured: "bold",
-            grid: "semibold",
-            list: "medium"
-          },
-          color: {
-            featured: "#ffffff",
-            grid: "#1a1a1a",
-            list: "#1a1a1a"
-          }
-        },
-        subtitleProps: {
-          fontSize: {
-            featured: "xl",
-            grid: "lg",
-            list: "base"
-          },
-          color: {
-            featured: "rgba(255,255,255,0.9)",
-            grid: "#4a5568",
-            list: "#4a5568"
-          }
-        }
-      },
-      dark: {
-        featuredStyle: {
-          background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.9) 100%)",
-          padding: "24px",
-          borderRadius: "16px"
-        },
-        gridStyle: {
-          background: "#1a1a1a",
-          padding: "20px",
-          borderRadius: "12px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.3)"
-        },
-        listStyle: {
-          background: "#2d3748",
-          padding: "16px",
-          borderRadius: "8px"
-        },
-        headingProps: {
-          fontSize: {
-            featured: "4xl",
-            grid: "xl",
-            list: "lg"
-          },
-          fontWeight: {
-            featured: "bold",
-            grid: "semibold",
-            list: "medium"
-          },
-          color: {
-            featured: "#ffffff",
-            grid: "#ffffff",
-            list: "#ffffff"
-          }
-        },
-        subtitleProps: {
-          fontSize: {
-            featured: "xl",
-            grid: "lg",
-            list: "base"
-          },
-          color: {
-            featured: "rgba(255,255,255,0.9)",
-            grid: "#a0aec0",
-            list: "#a0aec0"
-          }
-        }
-      }
-    },
-    showExcerpt: {
-      featured: true,
-      grid: true,
-      list: true
-    },
-    showImage: {
-      featured: true,
-      grid: true,
-      list: false
-    },
-    imageStyle: {
-      featured: {
-        aspectRatio: '21/9',
-        borderRadius: '16px'
-      },
-      grid: {
-        aspectRatio: '16/9',
-        borderRadius: '8px'
-      }
-    },
-    hoverEffect: {
-      featured: 'scale',
-      grid: 'lift',
-      list: 'highlight'
-    }
-  };
-
-  // Merge default styles with variant styles
-  const mergedStyles = mergeStyles(defaultStyles, variant.config.styles);
-  
-  // Use merged styles in useBlockStyles
   const { containerStyle } = useBlockStyles({
     config: {
       ...variant.config,
-      styles: mergedStyles
-    } as any,
+      styles: {
+        ...styles,
+        theme: {
+          light: defaultTheme,
+          dark: darkTheme
+        }
+      }
+    },
     isDarkTheme
   });
-
-  // Get theme-specific styles
-  const theme = mergedStyles.theme[isDarkTheme ? 'dark' : 'light'];
-
-  // Helper functions to get specific styles
-  const getHeadingStyle = (type: 'featured' | 'grid' | 'list') => ({
-    fontSize: theme.headingProps.fontSize[type],
-    fontWeight: theme.headingProps.fontWeight[type],
-    color: theme.headingProps.color[type]
-  });
-
-  const getSubtitleStyle = (type: 'featured' | 'grid' | 'list') => ({
-    fontSize: theme.subtitleProps.fontSize[type],
-    color: theme.subtitleProps.color[type]
-  });
-
-  const getHoverClass = (type: 'featured' | 'grid' | 'list') => {
-    switch (mergedStyles.hoverEffect[type]) {
-      case 'scale':
-        return 'transform transition-transform duration-300 hover:scale-[1.02]';
-      case 'lift':
-        return 'transition-shadow duration-300 hover:shadow-lg';
-      case 'highlight':
-        return 'transition-colors duration-300 hover:bg-gray-50 dark:hover:bg-gray-800';
-      default:
-        return '';
-    }
-  };
 
   const featuredArticle = articles['col-0']?.[0];
   const gridArticles = articles['col-1'] || [];
@@ -215,61 +116,47 @@ const Showcase: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
 
   return (
     <div className={`${classes.container} ${customStyles?.container || ''}`} style={containerStyle}>
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className={customStyles?.grid || 'grid grid-cols-12 gap-6'}>
         {/* Featured Article */}
-        <div className="lg:col-span-12">
+        <div className={customStyles?.featuredColumn || 'col-span-12 lg:col-span-6'}>
           {featuredArticle && (
-            <article className={`relative ${getHoverClass('featured')}`}>
-              {mergedStyles.showImage.featured && featuredArticle.content.image?.desktop_image_path && (
-                <div 
-                  className="relative w-full overflow-hidden"
-                  style={{ 
-                    aspectRatio: mergedStyles.imageStyle.featured.aspectRatio,
-                    borderRadius: mergedStyles.imageStyle.featured.borderRadius
-                  }}
-                >
+            <article className={`${customStyles?.article || ''} relative w-full h-full bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden`}>
+              {featuredArticle.content.image?.desktop_image_path && (
+                <>
                   <img
                     src={featuredArticle.content.image.desktop_image_path}
                     alt={featuredArticle.title}
                     className="w-full h-full object-cover"
                   />
-                  <div 
-                    className="absolute inset-0 flex flex-col justify-end p-8"
-                    style={theme.featuredStyle}
-                  >
-                    <h1 className="mb-4" style={getHeadingStyle('featured')}>
-                      {featuredArticle.title}
-                    </h1>
-                    
-                    {mergedStyles.showExcerpt.featured && (
-                      <p className="mb-4" style={getSubtitleStyle('featured')}>
-                        {featuredArticle.subtitle}
-                      </p>
-                    )}
-                  </div>
-                </div>
+                </>
               )}
+
+              <div className="p-8">
+                <h1 className="text-4xl font-bold mb-4" style={theme.headingProps}>
+                  {featuredArticle.title}
+                </h1>
+                
+                {styles.showExcerpt && (
+                  <p className="text-xl mb-4" style={theme.subtitleProps}>
+                    {featuredArticle.subtitle}
+                  </p>
+                )}
+              </div>
             </article>
           )}
         </div>
 
         {/* Grid Articles */}
-        <div className="lg:col-span-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className={customStyles?.gridColumn || 'col-span-12 lg:col-span-3'}>
+          <div className={customStyles?.gridLayout || 'grid grid-cols-1 gap-6'}>
             {gridArticles.map((article: Article) => (
               <article 
-                key={article.id}
-                className={`${getHoverClass('grid')}`}
-                style={theme.gridStyle}
+                key={article.id} 
+                className={`${customStyles?.gridArticle || ''} flex flex-col bg-white dark:bg-gray-900 rounded-lg overflow-hidden`}
+                style={theme.columnStyle}
               >
-                {mergedStyles.showImage.grid && article.content.image?.desktop_image_path && (
-                  <div 
-                    className="relative w-full overflow-hidden mb-4"
-                    style={{ 
-                      aspectRatio: mergedStyles.imageStyle.grid.aspectRatio,
-                      borderRadius: mergedStyles.imageStyle.grid.borderRadius
-                    }}
-                  >
+                {article.content.image?.desktop_image_path && (
+                  <div className="relative aspect-video overflow-hidden">
                     <img
                       src={article.content.image.desktop_image_path}
                       alt={article.title}
@@ -278,34 +165,37 @@ const Showcase: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
                   </div>
                 )}
                 
-                <h2 className="mb-3" style={getHeadingStyle('grid')}>
-                  {article.title}
-                </h2>
-                
-                {mergedStyles.showExcerpt.grid && (
-                  <p style={getSubtitleStyle('grid')}>
-                    {article.subtitle}
-                  </p>
-                )}
+                <div className="flex-1 p-4">
+                  <h2 className="mb-2 line-clamp-2" style={theme.headingProps}>
+                    {article.title}
+                  </h2>
+                  
+                  {styles.showExcerpt && (
+                    <p className="line-clamp-2" style={theme.subtitleProps}>
+                      {article.subtitle}
+                    </p>
+                  )}
+                </div>
               </article>
             ))}
           </div>
         </div>
 
         {/* List Articles */}
-        <div className="lg:col-span-4" style={theme.listStyle}>
-          <div className="space-y-6">
+        <div className={customStyles?.listColumn || 'col-span-12 lg:col-span-3'}>
+          <div className={customStyles?.listLayout || 'space-y-6'}>
             {listArticles.map((article: Article) => (
               <article 
-                key={article.id}
-                className={`p-4 ${getHoverClass('list')}`}
+                key={article.id} 
+                className={`${customStyles?.listArticle || ''} flex flex-col bg-white dark:bg-gray-900 rounded-lg overflow-hidden p-4`}
+                style={theme.columnStyle}
               >
-                <h3 className="mb-2" style={getHeadingStyle('list')}>
+                <h3 className="mb-2 line-clamp-2" style={theme.headingProps}>
                   {article.title}
                 </h3>
                 
-                {mergedStyles.showExcerpt.list && (
-                  <p style={getSubtitleStyle('list')}>
+                {styles.showExcerpt && (
+                  <p className="line-clamp-2" style={theme.subtitleProps}>
                     {article.subtitle}
                   </p>
                 )}

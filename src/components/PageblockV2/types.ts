@@ -5,13 +5,13 @@ export interface Theme {
     };
     headingProps: {
       fontSize: string;
-      fontWeight?: string;
+      fontWeight?: number;
       color?: string;
     };
     subtitleProps: {
-      fontSize?: string;
+      fontSize: string;
       fontWeight?: string;
-      color?: string;
+      color: string;
     };
   };
   light: {
@@ -19,14 +19,14 @@ export interface Theme {
       background: string;
     };
     headingProps: {
-      fontSize?: string;
-      fontWeight?: string;
-      color?: string;
+      fontSize: string;
+      fontWeight?: number;
+      color: string;
     };
     subtitleProps: {
-      fontSize?: string;
+      fontSize: string;
       fontWeight?: string;
-      color?: string;
+      color: string;
     };
   };
 }
@@ -45,16 +45,90 @@ export interface MediaConfig {
 
 export interface Article {
   id: string;
-  tenant_id: string;
   title: string;
-  subtitle: string;
+  subtitle?: string;
   content: {
-    image: {
-      desktop_image_path: string | null;
-      image_mobile_path: string | null;
+    image?: {
+      desktop_image_path?: string;
     };
   };
   publishedAt?: string;
+}
+
+export type FontSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
+export type FontWeight = 'normal' | 'medium' | 'semibold' | 'bold';
+
+export interface StyleProps {
+  fontSize?: FontSize;
+  fontWeight?: FontWeight;
+  color?: string;
+}
+
+export interface ColumnStyleProps {
+  background: string;
+  padding?: string;
+  borderRadius?: string;
+  mainColumnStyle?: ColumnStyleProps;
+  secondaryColumnStyle?: ColumnStyleProps;
+  compactListStyle?: {
+    background: string;
+    borderTop?: string;
+  };
+}
+
+export interface ThemeProps {
+  columnStyle: ColumnStyleProps;
+  mainColumnStyle?: ColumnStyleProps;
+  secondaryColumnStyle?: ColumnStyleProps;
+  compactListStyle?: {
+    background: string;
+    borderTop?: string;
+  };
+  headingProps: StyleProps;
+  subtitleProps: StyleProps;
+  bodyProps: Record<string, unknown>;
+  linkProps: {
+    color: string;
+    hoverColor: string;
+  };
+}
+
+export interface ImageStyle {
+  main?: {
+    aspectRatio: string;
+    borderRadius?: string;
+  };
+  secondary?: {
+    aspectRatio: string;
+    borderRadius?: string;
+  };
+  compact?: {
+    aspectRatio: string;
+    borderRadius?: string;
+  };
+}
+
+export interface ShowConfig {
+  main?: boolean;
+  secondary?: boolean;
+  compact?: boolean;
+}
+
+export interface BlockStyles {
+  theme: Theme;
+  titleSize: string;
+  columnStyle: Record<string, any>;
+  imageHeight: string;
+  showExcerpt: ShowConfig;
+  showImage: ShowConfig;
+  imageStyle: ImageStyle;
+  showMetadata: boolean;
+}
+
+export interface BlockVariant {
+  variantType: string;
+  variantPosition: number;
+  config: BlockConfig;
 }
 
 export interface BlockConfig {
@@ -91,12 +165,6 @@ export interface BlockConfig {
   };
   articles: Record<string, Article[]>;
   mediaConfig: MediaConfig;
-}
-
-export interface BlockVariant {
-  config: BlockConfig;
-  variantType: string;
-  variantPosition: number;
 }
 
 export interface PageBlock {

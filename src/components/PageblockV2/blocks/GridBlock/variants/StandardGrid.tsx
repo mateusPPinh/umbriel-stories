@@ -1,6 +1,12 @@
 import React from 'react';
 import { useBlockStyles } from '../../../hooks/useBlockStyles';
-import { BlockVariant, Article } from '../../../types';
+import { 
+  BlockVariant, 
+  Article, 
+  ThemeProps, 
+  StyleProps,
+  BlockConfig
+} from '../../../types/index';
 import { defaultClasses } from '../../../constants/defaultClasses';
 
 interface BaseVariantProps {
@@ -45,51 +51,38 @@ const StandardGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
   const { articles } = variant.config;
 
   // Define default styles
-  const defaultStyles = {
+  const defaultStyles: BlockConfig['styles'] = {
     theme: {
       light: {
         columnStyle: {
-          background: "#ffffff",
-          padding: 16,
-          borderRadius: '8px'
+          background: '#ffffff'
         },
         headingProps: {
-          fontSize: "xl",
-          fontWeight: "semibold",
-          color: "#1a1a1a"
+          fontSize: 'xl',
+          fontWeight: 700,
+          color: '#1a1a1a'
         },
         subtitleProps: {
-          fontSize: "md",
-          color: "#4a4a4a"
+          fontSize: 'lg',
+          color: '#4a5568'
         }
       },
       dark: {
         columnStyle: {
-          background: "#1a1a1a",
-          padding: 16,
-          borderRadius: '8px'
+          background: '#1a1a1a'
         },
         headingProps: {
-          fontSize: "xl",
-          fontWeight: "semibold",
-          color: "#ffffff"
+          fontSize: 'xl',
+          fontWeight: 700,
+          color: '#ffffff'
         },
         subtitleProps: {
-          fontSize: "md",
-          color: "#e0e0e0"
+          fontSize: 'lg',
+          color: '#a0aec0'
         }
       }
     },
-    titleSize: 'xl',
-    imageHeight: '200px',
-    showExcerpt: true,
-    showMetadata: false,
-    gridGap: '24px',
-    gridColumns: {
-      mobile: 1,
-      tablet: 2,
-      desktop: 3
-    }
+    showExcerpt: true
   };
 
   // Merge default styles with variant styles
@@ -100,42 +93,57 @@ const StandardGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
     config: {
       ...variant.config,
       styles: mergedStyles
-    } as any,
+    },
     isDarkTheme
   });
 
+  const items = Object.values(articles).flat();
+  const columnCount = variant.config.layout?.columns || 3;
+  const gap = variant.config.layout?.gap || '24px';
+
+  // Construct the columns class based on configuration
+  const columnsClass = `columns-1 md:columns-2 lg:columns-${columnCount}`;
+  const gapClass = `gap-x-[${gap}]`;
+
   return (
     <div className={`${classes.container} ${customStyles?.container || ''}`} style={containerStyle}>
-      <div className={`${classes.grid} ${customStyles?.grid || ''}`}>
-        {Object.entries(articles).map(([colKey, colArticles]) => (
-          colArticles.map((article: Article) => (
-            <div 
-              key={article.id}
-              className={classes.article}
-              style={columnStyle(colKey)}
-            >
-              {article.content.image?.desktop_image_path && (
-                <div className="relative aspect-video rounded-lg overflow-hidden mb-4">
-                  <img
-                    src={article.content.image.desktop_image_path}
-                    alt={article.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
-              
-              <div className="p-4">
-                <h3 className="font-medium mb-2" style={headingStyle}>
-                  {article.title}
-                </h3>
-                {mergedStyles.showExcerpt && (
-                  <p style={subtitleStyle}>
-                    {article.subtitle}
-                  </p>
-                )}
+      <div className={customStyles?.grid || `${columnsClass} ${gapClass}`}>
+        {items.map((article: Article) => (
+          <article 
+            key={article.id} 
+            className={customStyles?.article || 'break-inside-avoid mb-6'}
+            style={columnStyle()}
+          >
+            {article.content.image?.desktop_image_path && (
+              <div 
+                className={customStyles?.imageWrapper || 'relative w-full overflow-hidden mb-4'}
+              >
+                <img
+                  src={article.content.image.desktop_image_path}
+                  alt={article.title}
+                  className={customStyles?.image || 'w-full h-full object-cover'}
+                />
               </div>
+            )}
+            
+            <div className={customStyles?.content || 'p-4'}>
+              <h2 
+                className={customStyles?.heading || 'mb-3'} 
+                style={headingStyle}
+              >
+                {article.title}
+              </h2>
+              
+              {mergedStyles.showExcerpt && (
+                <p 
+                  className={customStyles?.subtitle || ''} 
+                  style={subtitleStyle}
+                >
+                  {article.subtitle}
+                </p>
+              )}
             </div>
-          ))
+          </article>
         ))}
       </div>
     </div>

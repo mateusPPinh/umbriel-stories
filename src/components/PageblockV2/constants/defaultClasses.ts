@@ -105,6 +105,9 @@ export const defaultClasses = {
     },
     newspaper: {
       container: 'w-full'
+    },
+    masonry: {
+      container: 'w-full'
     }
   }
 }; 

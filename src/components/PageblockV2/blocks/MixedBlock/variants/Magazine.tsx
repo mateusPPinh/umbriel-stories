@@ -1,6 +1,12 @@
 import React from 'react';
 import { useBlockStyles } from '../../../hooks/useBlockStyles';
-import { BlockVariant, Article } from '../../../types';
+import { 
+  BlockVariant, 
+  Article, 
+  ThemeProps, 
+  StyleProps,
+  BlockConfig
+} from '../../../types/index';
 import { defaultClasses } from '../../../constants/defaultClasses';
 
 interface BaseVariantProps {
@@ -9,259 +15,229 @@ interface BaseVariantProps {
   customStyles?: any;
 }
 
-// Helper function to merge styles
-const mergeStyles = (defaultStyles: any, customStyles: any) => {
-  if (!customStyles) return defaultStyles;
-  return {
-    ...defaultStyles,
-    ...customStyles,
-    columnStyles: {
-      ...defaultStyles.columnStyles,
-      ...customStyles.columnStyles
-    },
-    theme: {
-      light: {
-        ...defaultStyles.theme?.light,
-        ...customStyles.theme?.light,
-        columnStyle: {
-          ...defaultStyles.theme?.light?.columnStyle,
-          ...customStyles.theme?.light?.columnStyle
-        }
+const defaultColumnStyle = {
+  background: 'transparent'
+};
+
+const defaultHeadingProps: StyleProps = {
+  fontSize: 'xl',
+  fontWeight: 'bold',
+  color: '#1a1a1a'
+};
+
+const defaultSubtitleProps: StyleProps = {
+  fontSize: 'lg',
+  color: '#4a5568'
+};
+
+const defaultTheme: ThemeProps = {
+  columnStyle: defaultColumnStyle,
+  headingProps: defaultHeadingProps,
+  subtitleProps: defaultSubtitleProps,
+  bodyProps: {},
+  linkProps: {
+    color: '#000',
+    hoverColor: '#000'
+  }
+};
+
+const darkTheme: ThemeProps = {
+  ...defaultTheme,
+  columnStyle: {
+    ...defaultColumnStyle,
+    background: '#1a1a1a'
+  },
+  headingProps: {
+    ...defaultHeadingProps,
+    color: '#ffffff'
+  },
+  subtitleProps: {
+    ...defaultSubtitleProps,
+    color: '#a0aec0'
+  },
+  linkProps: {
+    color: '#fff',
+    hoverColor: '#fff'
+  }
+};
+
+const defaultStyles: BlockConfig['styles'] = {
+  theme: {
+    light: {
+      columnStyle: {
+        background: '#ffffff'
       },
-      dark: {
-        ...defaultStyles.theme?.dark,
-        ...customStyles.theme?.dark,
-        columnStyle: {
-          ...defaultStyles.theme?.dark?.columnStyle,
-          ...customStyles.theme?.dark?.columnStyle
-        }
+      headingProps: {
+        fontSize: 'xl',
+        fontWeight: 700,
+        color: '#1a1a1a'
+      },
+      subtitleProps: {
+        fontSize: 'lg',
+        color: '#4a5568'
+      }
+    },
+    dark: {
+      columnStyle: {
+        background: '#1a1a1a'
+      },
+      headingProps: {
+        fontSize: 'xl',
+        fontWeight: 700,
+        color: '#ffffff'
+      },
+      subtitleProps: {
+        fontSize: 'lg',
+        color: '#a0aec0'
       }
     }
-  };
+  },
+  showExcerpt: true
 };
 
 const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
-  const classes = defaultClasses.mixed.magazine;
+  const classes = defaultClasses.mixed.magazine || { container: '' };
   const { articles } = variant.config;
+  const styles = variant.config.styles || defaultStyles;
+  const theme = styles.theme?.[isDarkTheme ? 'dark' : 'light'] || (isDarkTheme ? darkTheme : defaultTheme);
 
-  // Define default styles
-  const defaultStyles = {
-    theme: {
-      light: {
-        mainArticleStyle: {
-          background: "#ffffff",
-          padding: "24px",
-          borderRadius: "12px"
-        },
-        secondaryArticleStyle: {
-          background: "#f8fafc",
-          padding: "16px",
-          borderRadius: "8px"
-        },
-        compactListStyle: {
-          background: "transparent",
-          borderTop: "2px solid #e2e8f0"
-        },
-        headingProps: {
-          fontSize: {
-            main: "3xl",
-            secondary: "xl",
-            compact: "lg"
-          },
-          fontWeight: {
-            main: "bold",
-            secondary: "semibold",
-            compact: "medium"
-          },
-          color: "#1a1a1a"
-        },
-        subtitleProps: {
-          fontSize: {
-            main: "xl",
-            secondary: "lg",
-            compact: "base"
-          },
-          color: "#4a5568"
-        }
-      },
-      dark: {
-        mainArticleStyle: {
-          background: "#1a1a1a",
-          padding: "24px",
-          borderRadius: "12px"
-        },
-        secondaryArticleStyle: {
-          background: "#2d3748",
-          padding: "16px",
-          borderRadius: "8px"
-        },
-        compactListStyle: {
-          background: "transparent",
-          borderTop: "2px solid #4a5568"
-        },
-        headingProps: {
-          fontSize: {
-            main: "3xl",
-            secondary: "xl",
-            compact: "lg"
-          },
-          fontWeight: {
-            main: "bold",
-            secondary: "semibold",
-            compact: "medium"
-          },
-          color: "#ffffff"
-        },
-        subtitleProps: {
-          fontSize: {
-            main: "xl",
-            secondary: "lg",
-            compact: "base"
-          },
-          color: "#a0aec0"
-        }
-      }
-    },
-    showExcerpt: {
-      main: true,
-      secondary: true,
-      compact: false
-    },
-    showImage: {
-      main: true,
-      secondary: true,
-      compact: false
-    },
-    imageStyle: {
-      main: {
-        aspectRatio: '16/9',
-        borderRadius: '12px'
-      },
-      secondary: {
-        aspectRatio: '4/3',
-        borderRadius: '8px'
-      }
-    }
-  };
-
-  // Merge default styles with variant styles
-  const mergedStyles = mergeStyles(defaultStyles, variant.config.styles);
-  
-  // Use merged styles in useBlockStyles
   const { containerStyle } = useBlockStyles({
     config: {
       ...variant.config,
-      styles: mergedStyles
-    } as any,
+      styles: {
+        ...styles,
+        theme: {
+          light: defaultTheme,
+          dark: darkTheme
+        }
+      }
+    },
     isDarkTheme
   });
 
-  // Get theme-specific styles
-  const theme = mergedStyles.theme[isDarkTheme ? 'dark' : 'light'];
-
-  // Helper functions to get specific styles
-  const getHeadingStyle = (type: 'main' | 'secondary' | 'compact') => ({
-    fontSize: theme.headingProps.fontSize[type],
-    fontWeight: theme.headingProps.fontWeight[type],
-    color: theme.headingProps.color
-  });
-
-  const getSubtitleStyle = (type: 'main' | 'secondary' | 'compact') => ({
-    fontSize: theme.subtitleProps.fontSize[type],
-    color: theme.subtitleProps.color
-  });
-
+  // Get main article and secondary articles
   const mainArticle = articles['col-0']?.[0];
   const secondaryArticles = articles['col-1'] || [];
-  const compactArticles = articles['col-2'] || [];
+  const tertiaryArticles = articles['col-2'] || [];
 
   return (
     <div className={`${classes.container} ${customStyles?.container || ''}`} style={containerStyle}>
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className={customStyles?.grid || 'grid grid-cols-1 lg:grid-cols-12 gap-6'}>
         {/* Main Article */}
-        <div className="lg:col-span-7" style={theme.mainArticleStyle}>
-          {mainArticle && (
-            <article>
-              {mergedStyles.showImage.main && mainArticle.content.image?.desktop_image_path && (
-                <div 
-                  className="relative w-full overflow-hidden mb-6"
-                  style={{ 
-                    aspectRatio: mergedStyles.imageStyle.main.aspectRatio,
-                    borderRadius: mergedStyles.imageStyle.main.borderRadius
-                  }}
-                >
+        {mainArticle && (
+          <div className={customStyles?.mainColumn || 'lg:col-span-6'}>
+            <article 
+              className={customStyles?.mainArticle || 'flex flex-col'}
+              style={theme.columnStyle}
+            >
+              {mainArticle.content.image?.desktop_image_path && (
+                <div className={customStyles?.imageWrapper || 'relative w-full aspect-[16/9] overflow-hidden mb-4'}>
                   <img
                     src={mainArticle.content.image.desktop_image_path}
                     alt={mainArticle.title}
-                    className="w-full h-full object-cover"
+                    className={customStyles?.image || 'w-full h-full object-cover'}
                   />
                 </div>
               )}
               
-              <h1 className="mb-4" style={getHeadingStyle('main')}>
-                {mainArticle.title}
-              </h1>
-              
-              {mergedStyles.showExcerpt.main && (
-                <p className="mb-4" style={getSubtitleStyle('main')}>
-                  {mainArticle.subtitle}
-                </p>
-              )}
-            </article>
-          )}
-        </div>
-
-        {/* Secondary Articles */}
-        <div className="lg:col-span-5 space-y-6">
-          {secondaryArticles.map((article: Article) => (
-            <article 
-              key={article.id}
-              style={theme.secondaryArticleStyle}
-              className="flex flex-col"
-            >
-              {mergedStyles.showImage.secondary && article.content.image?.desktop_image_path && (
-                <div 
-                  className="relative w-full overflow-hidden mb-4"
-                  style={{ 
-                    aspectRatio: mergedStyles.imageStyle.secondary.aspectRatio,
-                    borderRadius: mergedStyles.imageStyle.secondary.borderRadius
-                  }}
+              <div className={customStyles?.content || 'p-4'}>
+                <h2 
+                  className={customStyles?.heading || 'text-2xl font-bold mb-3'} 
+                  style={theme.headingProps}
                 >
-                  <img
-                    src={article.content.image.desktop_image_path}
-                    alt={article.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
-              
-              <h2 className="mb-2" style={getHeadingStyle('secondary')}>
-                {article.title}
-              </h2>
-              
-              {mergedStyles.showExcerpt.secondary && (
-                <p style={getSubtitleStyle('secondary')}>
-                  {article.subtitle}
-                </p>
-              )}
-            </article>
-          ))}
-        </div>
-
-        {/* Compact List */}
-        <div className="lg:col-span-12 mt-8" style={theme.compactListStyle}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-6">
-            {compactArticles.map((article: Article) => (
-              <article key={article.id} className="flex flex-col">
-                <h3 className="mb-2" style={getHeadingStyle('compact')}>
-                  {article.title}
-                </h3>
+                  {mainArticle.title}
+                </h2>
                 
-                {mergedStyles.showExcerpt.compact && (
-                  <p style={getSubtitleStyle('compact')}>
-                    {article.subtitle}
+                {styles.showExcerpt && (
+                  <p 
+                    className={customStyles?.subtitle || 'text-lg'} 
+                    style={theme.subtitleProps}
+                  >
+                    {mainArticle.subtitle}
                   </p>
                 )}
+              </div>
+            </article>
+          </div>
+        )}
+
+        {/* Secondary Articles */}
+        <div className={customStyles?.secondaryColumn || 'lg:col-span-3'}>
+          <div className={customStyles?.secondaryGrid || 'space-y-6'}>
+            {secondaryArticles.map((article: Article) => (
+              <article 
+                key={article.id} 
+                className={customStyles?.secondaryArticle || 'flex flex-col'}
+                style={theme.columnStyle}
+              >
+                {article.content.image?.desktop_image_path && (
+                  <div className={customStyles?.imageWrapper || 'relative w-full aspect-[4/3] overflow-hidden mb-4'}>
+                    <img
+                      src={article.content.image.desktop_image_path}
+                      alt={article.title}
+                      className={customStyles?.image || 'w-full h-full object-cover'}
+                    />
+                  </div>
+                )}
+                
+                <div className={customStyles?.content || 'p-4'}>
+                  <h2 
+                    className={customStyles?.heading || 'text-xl font-semibold mb-2'} 
+                    style={theme.headingProps}
+                  >
+                    {article.title}
+                  </h2>
+                  
+                  {styles.showExcerpt && (
+                    <p 
+                      className={customStyles?.subtitle || 'text-base'} 
+                      style={theme.subtitleProps}
+                    >
+                      {article.subtitle}
+                    </p>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        {/* Tertiary Articles */}
+        <div className={customStyles?.tertiaryColumn || 'lg:col-span-3'}>
+          <div className={customStyles?.tertiaryGrid || 'space-y-6'}>
+            {tertiaryArticles.map((article: Article) => (
+              <article 
+                key={article.id} 
+                className={customStyles?.tertiaryArticle || 'flex flex-col'}
+                style={theme.columnStyle}
+              >
+                {article.content.image?.desktop_image_path && (
+                  <div className={customStyles?.imageWrapper || 'relative w-full aspect-[4/3] overflow-hidden mb-4'}>
+                    <img
+                      src={article.content.image.desktop_image_path}
+                      alt={article.title}
+                      className={customStyles?.image || 'w-full h-full object-cover'}
+                    />
+                  </div>
+                )}
+                
+                <div className={customStyles?.content || 'p-4'}>
+                  <h2 
+                    className={customStyles?.heading || 'text-xl font-semibold mb-2'} 
+                    style={theme.headingProps}
+                  >
+                    {article.title}
+                  </h2>
+                  
+                  {styles.showExcerpt && (
+                    <p 
+                      className={customStyles?.subtitle || 'text-base'} 
+                      style={theme.subtitleProps}
+                    >
+                      {article.subtitle}
+                    </p>
+                  )}
+                </div>
               </article>
             ))}
           </div>

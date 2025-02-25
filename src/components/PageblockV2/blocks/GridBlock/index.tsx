@@ -15,11 +15,11 @@ const GridBlock: React.FC<GridBlockProps> = ({ block, isDarkTheme }) => {
   const renderVariant = () => {
     switch (variant.variantType) {
       case 'standard':
-        return <StandardGrid variant={variant} isDarkTheme={isDarkTheme} />;
+        return <StandardGrid variant={variant as any} isDarkTheme={isDarkTheme} />;
       case 'featured':
-        return <FeaturedGrid variant={variant} isDarkTheme={isDarkTheme} />;
+        return <FeaturedGrid variant={variant as any} isDarkTheme={isDarkTheme} />;
       case 'masonry':
-        return <MasonryGrid variant={variant} isDarkTheme={isDarkTheme} />;
+        return <MasonryGrid variant={variant as any} isDarkTheme={isDarkTheme} />;
       default:
         return null;
     }

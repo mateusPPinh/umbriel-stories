@@ -2,7 +2,7 @@ import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import Showcase from './Showcase';
 import { BlockVariant } from '../../../types';
-import { createArticles } from '../../../stories/mockData';
+import { createArticles, baseVariantConfig } from '../../../stories/mockData';
 import { ResponsiveDeviceProvider } from '../../../contexts/ResponsiveDeviceContext';
 
 export default {
@@ -32,80 +32,68 @@ const baseShowcaseVariant: BlockVariant = {
   variantPosition: 1,
   config: {
     layout: {
-      columns: 3,
+      columns: 12,
       gap: '24px',
       padding: '24px',
+      imageSize: '100%',
+      aspectRatio: '16/9',
       responsive: {
-        mobile: 1,
-        tablet: 2,
-        desktop: 3
+        mobile: 12,
+        tablet: 12,
+        desktop: 12
+      },
+      styles: {
+        grid: {
+          autoRows: 'auto',
+          templateColumns: 'repeat(12, 1fr)'
+        },
+        width: '100%',
+        backgroundColor: 'transparent',
+        columnStyles: {}
       }
     },
     articles: showcaseArticles,
     styles: {
       theme: {
         light: {
-          featuredStyle: {
-            background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)",
-            padding: "24px",
-            borderRadius: "16px"
+          columnStyle: {
+            background: '#ffffff'
           },
-          gridStyle: {
-            background: "#ffffff",
-            padding: "20px",
-            borderRadius: "12px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.1)"
+          headingProps: {
+            fontSize: 'xl',
+            fontWeight: 700,
+            color: '#1a1a1a'
           },
-          listStyle: {
-            background: "#f8fafc",
-            padding: "16px",
-            borderRadius: "8px"
+          subtitleProps: {
+            fontSize: 'lg',
+            color: '#4a5568'
           }
         },
         dark: {
-          featuredStyle: {
-            background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.9) 100%)",
-            padding: "24px",
-            borderRadius: "16px"
+          columnStyle: {
+            background: '#1a1a1a'
           },
-          gridStyle: {
-            background: "#1a1a1a",
-            padding: "20px",
-            borderRadius: "12px",
-            boxShadow: "0 1px 3px rgba(0,0,0,0.3)"
+          headingProps: {
+            fontSize: 'xl',
+            fontWeight: 700,
+            color: '#ffffff'
           },
-          listStyle: {
-            background: "#2d3748",
-            padding: "16px",
-            borderRadius: "8px"
+          subtitleProps: {
+            fontSize: 'lg',
+            color: '#a0aec0'
           }
         }
       },
-      showExcerpt: {
-        featured: true,
-        grid: true,
-        list: true
-      },
-      showImage: {
-        featured: true,
-        grid: true,
-        list: false
-      },
-      imageStyle: {
-        featured: {
-          aspectRatio: '21/9',
-          borderRadius: '16px'
-        },
-        grid: {
-          aspectRatio: '16/9',
-          borderRadius: '8px'
-        }
-      },
-      hoverEffect: {
-        featured: 'scale',
-        grid: 'lift',
-        list: 'highlight'
-      }
+      titleSize: 'xl',
+      columnStyle: {},
+      imageHeight: '300px',
+      showExcerpt: true,
+      showMetadata: false
+    },
+    mediaConfig: {
+      type: "image",
+      customUrl: "",
+      useArticleMedia: true
     }
   }
 };
@@ -128,52 +116,32 @@ ModernStyle.args = {
         ...baseShowcaseVariant.config.styles,
         theme: {
           light: {
-            featuredStyle: {
-              background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.9) 100%)",
-              padding: "32px",
-              borderRadius: "24px"
+            columnStyle: {
+              background: '#ffffff'
             },
-            gridStyle: {
-              background: "#ffffff",
-              padding: "24px",
-              borderRadius: "16px",
-              boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)"
+            headingProps: {
+              fontSize: '2xl',
+              fontWeight: 700,
+              color: '#1a1a1a'
             },
-            listStyle: {
-              background: "#f8fafc",
-              padding: "24px",
-              borderRadius: "12px",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.05)"
+            subtitleProps: {
+              fontSize: 'xl',
+              color: '#4a5568'
             }
           },
           dark: {
-            featuredStyle: {
-              background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%)",
-              padding: "32px",
-              borderRadius: "24px"
+            columnStyle: {
+              background: '#1a1a1a'
             },
-            gridStyle: {
-              background: "#1a1a1a",
-              padding: "24px",
-              borderRadius: "16px",
-              boxShadow: "0 4px 6px -1px rgba(0,0,0,0.3)"
+            headingProps: {
+              fontSize: '2xl',
+              fontWeight: 700,
+              color: '#ffffff'
             },
-            listStyle: {
-              background: "#2d3748",
-              padding: "24px",
-              borderRadius: "12px",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.2)"
+            subtitleProps: {
+              fontSize: 'xl',
+              color: '#a0aec0'
             }
-          }
-        },
-        imageStyle: {
-          featured: {
-            aspectRatio: '2/1',
-            borderRadius: '24px'
-          },
-          grid: {
-            aspectRatio: '16/9',
-            borderRadius: '12px'
           }
         }
       }
@@ -191,46 +159,33 @@ MinimalStyle.args = {
       ...baseShowcaseVariant.config,
       styles: {
         ...baseShowcaseVariant.config.styles,
-        showExcerpt: {
-          featured: true,
-          grid: false,
-          list: false
-        },
         theme: {
           light: {
-            featuredStyle: {
-              background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%)",
-              padding: "24px",
-              borderRadius: "0"
+            columnStyle: {
+              background: 'transparent'
             },
-            gridStyle: {
-              background: "transparent",
-              padding: "16px",
-              borderRadius: "0"
+            headingProps: {
+              fontSize: 'xl',
+              fontWeight: 600,
+              color: '#1a1a1a'
             },
-            listStyle: {
-              background: "transparent",
-              padding: "16px",
-              borderRadius: "0",
-              borderLeft: "1px solid #e2e8f0"
+            subtitleProps: {
+              fontSize: 'lg',
+              color: '#4a5568'
             }
           },
           dark: {
-            featuredStyle: {
-              background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)",
-              padding: "24px",
-              borderRadius: "0"
+            columnStyle: {
+              background: 'transparent'
             },
-            gridStyle: {
-              background: "transparent",
-              padding: "16px",
-              borderRadius: "0"
+            headingProps: {
+              fontSize: 'xl',
+              fontWeight: 600,
+              color: '#ffffff'
             },
-            listStyle: {
-              background: "transparent",
-              padding: "16px",
-              borderRadius: "0",
-              borderLeft: "1px solid #4a5568"
+            subtitleProps: {
+              fontSize: 'lg',
+              color: '#a0aec0'
             }
           }
         }
