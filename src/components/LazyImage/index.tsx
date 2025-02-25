@@ -1,6 +1,5 @@
 import React from 'react'
 import { useInView } from 'react-intersection-observer'
-import { Skeleton } from '../NewPageBlock/templates/styles/TemplateSeventyThirtyWithCarousel.styles'
 
 interface LazyImageProps {
   src: string
@@ -15,7 +14,7 @@ const LazyImage: React.FC<LazyImageProps> = ({ src, alt }) => {
 
   return (
     <>
-      {!inView && <Skeleton />}{' '}
+      {!inView && <div />}{' '}
       <img
         ref={ref}
         src={inView ? src : undefined}
