@@ -1,10 +1,14 @@
 import React from 'react';
 import { useBlockStyles } from '../../../hooks/useBlockStyles';
-import { BlockVariant, Article } from '../../../types';
+import { BlockVariant, Article, GridStyles } from '../../../types';
 import { defaultClasses } from '../../../constants/defaultClasses';
 
 interface BaseVariantProps {
-  variant: BlockVariant;
+  variant: BlockVariant & {
+    config: {
+      styles: GridStyles;
+    };
+  };
   isDarkTheme?: boolean;
   customStyles?: any;
 }
@@ -43,100 +47,59 @@ const mergeStyles = (defaultStyles: any, customStyles: any) => {
 const FeaturedGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
   const classes = defaultClasses.grid.featured;
   const { articles } = variant.config;
+  const styles = variant.config.styles || {};
 
-  // Define default styles
-  const defaultStyles = {
-    theme: {
-      light: {
-        columnStyle: {
-          background: "#ffffff",
-          padding: 0,
-          borderRadius: '12px',
-          overflow: 'hidden'
-        },
-        headingProps: {
-          fontSize: "2xl",
-          fontWeight: "bold",
-          color: "#1a1a1a"
-        },
-        subtitleProps: {
-          fontSize: "lg",
-          color: "#4a4a4a"
-        }
-      },
-      dark: {
-        columnStyle: {
-          background: "#1a1a1a",
-          padding: 0,
-          borderRadius: '12px',
-          overflow: 'hidden'
-        },
-        headingProps: {
-          fontSize: "2xl",
-          fontWeight: "bold",
-          color: "#ffffff"
-        },
-        subtitleProps: {
-          fontSize: "lg",
-          color: "#e0e0e0"
-        }
-      }
+  const featuredClasses = {
+    container: 'w-full',
+    grid: [
+      'grid grid-cols-1',
+      'md:grid-cols-2',
+      'lg:grid-cols-3',
+      'gap-8'
+    ].join(' '),
+    article: [
+      'flex flex-col',
+      'rounded-xl overflow-hidden',
+      'transition-all duration-300',
+      'hover:shadow-lg'
+    ].join(' '),
+    image: {
+      wrapper: 'relative aspect-[16/10] overflow-hidden',
+      img: 'w-full h-full object-cover',
+      overlay: 'absolute inset-0 bg-gradient-to-b from-transparent to-black/80'
     },
-    titleSize: '2xl',
-    imageHeight: '300px',
-    showExcerpt: true,
-    showMetadata: true,
-    featuredImageOverlay: true,
-    overlayGradient: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)',
-    gridGap: '32px',
-    gridColumns: {
-      mobile: 1,
-      tablet: 2,
-      desktop: 3
+    content: {
+      wrapper: 'absolute bottom-0 left-0 right-0 p-6',
+      title: 'text-2xl font-bold text-white mb-2',
+      subtitle: 'text-lg text-white/80'
     }
   };
 
-  // Merge default styles with variant styles
-  const mergedStyles = mergeStyles(defaultStyles, variant.config.styles);
-  
-  // Use merged styles in useBlockStyles
-  const { containerStyle, columnStyle, headingStyle, subtitleStyle } = useBlockStyles({
-    config: {
-      ...variant.config,
-      styles: mergedStyles
-    } as any,
-    isDarkTheme
-  });
-
   return (
-    <div className={`${classes.container} ${customStyles?.container || ''}`} style={containerStyle}>
-      <div className={`${classes.grid} ${customStyles?.grid || ''}`}>
+    <div className={`${featuredClasses.container} ${customStyles?.container || ''}`}>
+      <div className={`${featuredClasses.grid} ${customStyles?.grid || ''}`}>
         {Object.entries(articles).map(([colKey, colArticles]) => (
           colArticles.map((article: Article) => (
             <div 
               key={article.id}
-              className={classes.article}
-              style={columnStyle(colKey)}
+              className={featuredClasses.article}
             >
               {article.content.image?.desktop_image_path && (
-                <div className="relative aspect-[16/10] overflow-hidden">
+                <div className={featuredClasses.image.wrapper}>
                   <img
                     src={article.content.image.desktop_image_path}
                     alt={article.title}
-                    className="w-full h-full object-cover"
+                    className={featuredClasses.image.img}
                   />
-                  {mergedStyles.featuredImageOverlay && (
-                    <div 
-                      className="absolute inset-0" 
-                      style={{ background: mergedStyles.overlayGradient }}
-                    />
+                  {styles.featuredImageOverlay && (
+                    <div className={featuredClasses.image.overlay} />
                   )}
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <h3 className="text-white mb-2" style={headingStyle}>
+                  <div className={featuredClasses.content.wrapper}>
+                    <h3 className={featuredClasses.content.title}>
                       {article.title}
                     </h3>
-                    {mergedStyles.showExcerpt && (
-                      <p className="text-white/80" style={subtitleStyle}>
+                    {styles.showExcerpt && (
+                      <p className={featuredClasses.content.subtitle}>
                         {article.subtitle}
                       </p>
                     )}

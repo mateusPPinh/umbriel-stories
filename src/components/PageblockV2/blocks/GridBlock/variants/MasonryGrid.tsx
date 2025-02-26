@@ -1,172 +1,96 @@
 import React from 'react';
 import { useBlockStyles } from '../../../hooks/useBlockStyles';
-import { BlockVariant, Article } from '../../../types';
+import { BlockVariant, Article, MasonryStyles } from '../../../types';
 import { defaultClasses } from '../../../constants/defaultClasses';
 
 interface BaseVariantProps {
-  variant: BlockVariant;
+  variant: BlockVariant & {
+    config: {
+      styles: MasonryStyles;
+    };
+  };
   isDarkTheme?: boolean;
   customStyles?: any;
 }
 
-// Helper function to merge styles
-const mergeStyles = (defaultStyles: any, customStyles: any) => {
-  if (!customStyles) return defaultStyles;
-  return {
-    ...defaultStyles,
-    ...customStyles,
-    columnStyles: {
-      ...defaultStyles.columnStyles,
-      ...customStyles.columnStyles
-    },
-    theme: {
-      light: {
-        ...defaultStyles.theme?.light,
-        ...customStyles.theme?.light,
-        columnStyle: {
-          ...defaultStyles.theme?.light?.columnStyle,
-          ...customStyles.theme?.light?.columnStyle
-        }
-      },
-      dark: {
-        ...defaultStyles.theme?.dark,
-        ...customStyles.theme?.dark,
-        columnStyle: {
-          ...defaultStyles.theme?.dark?.columnStyle,
-          ...customStyles.theme?.dark?.columnStyle
-        }
-      }
-    }
-  };
-};
-
 const MasonryGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
   const classes = defaultClasses.grid.masonry;
   const { articles } = variant.config;
+  const styles = variant.config.styles || {};
 
-  // Define default styles
-  const defaultStyles = {
-    theme: {
-      light: {
-        columnStyle: {
-          background: "#ffffff",
-          padding: 16,
-          borderRadius: '8px'
-        },
-        headingProps: {
-          fontSize: "xl",
-          fontWeight: "semibold",
-          color: "#1a1a1a"
-        },
-        subtitleProps: {
-          fontSize: "md",
-          color: "#4a4a4a"
-        }
-      },
-      dark: {
-        columnStyle: {
-          background: "#1a1a1a",
-          padding: 16,
-          borderRadius: '8px'
-        },
-        headingProps: {
-          fontSize: "xl",
-          fontWeight: "semibold",
-          color: "#ffffff"
-        },
-        subtitleProps: {
-          fontSize: "md",
-          color: "#e0e0e0"
-        }
-      }
+  // Classes base do Tailwind para o masonry
+  const masonryClasses = {
+    container: 'w-full',
+    grid: [
+      'columns-1 md:columns-2 lg:columns-3',
+      'gap-6'
+    ].join(' '),
+    article: [
+      'break-inside-avoid',
+      'mb-6',
+      'bg-transparent dark:bg-transparent', // Garante transparência
+      'p-4',
+      'rounded-lg'
+    ].join(' '),
+    image: {
+      wrapper: 'relative overflow-hidden rounded-lg mb-4',
+      img: 'w-full h-full object-cover'
     },
-    titleSize: 'xl',
-    showExcerpt: true,
-    showMetadata: true,
-    masonryGap: '24px',
-    masonryColumns: {
-      mobile: 1,
-      tablet: 2,
-      desktop: 3
-    },
-    imageVariations: ['square', 'portrait', 'landscape'],
-    hoverEffect: 'scale' // 'scale' | 'lift' | 'none'
+    content: {
+      title: 'text-xl font-semibold text-gray-900 dark:text-white mb-2',
+      subtitle: 'text-md text-gray-600 dark:text-gray-300'
+    }
   };
 
-  // Merge default styles with variant styles
-  const mergedStyles = mergeStyles(defaultStyles, variant.config.styles);
-  
-  // Use merged styles in useBlockStyles
-  const { containerStyle, columnStyle, headingStyle, subtitleStyle } = useBlockStyles({
-    config: {
-      ...variant.config,
-      styles: mergedStyles
-    } as any,
-    isDarkTheme
-  });
+  // Classes para diferentes aspect ratios
+  const aspectRatios = {
+    square: 'aspect-square',
+    portrait: 'aspect-[3/4]',
+    landscape: 'aspect-[4/3]'
+  };
 
-  // Helper to get random aspect ratio
+  // Classes para diferentes efeitos hover
+  const hoverEffects = {
+    scale: 'hover:scale-[1.02] transition-transform duration-300',
+    lift: 'hover:-translate-y-2 transition-transform duration-300',
+    none: ''
+  };
+
+  // Helper para aspect ratio aleatório
   const getRandomAspectRatio = () => {
-    const variations = mergedStyles.imageVariations;
+    const variations = styles.imageVariations || ['square'];
     const random = Math.floor(Math.random() * variations.length);
-    switch (variations[random]) {
-      case 'portrait':
-        return 'aspect-[3/4]';
-      case 'landscape':
-        return 'aspect-[4/3]';
-      default:
-        return 'aspect-square';
-    }
-  };
-
-  // Helper to get hover effect class
-  const getHoverEffectClass = () => {
-    switch (mergedStyles.hoverEffect) {
-      case 'scale':
-        return 'hover:scale-[1.02] transition-transform duration-300';
-      case 'lift':
-        return 'hover:-translate-y-2 transition-transform duration-300';
-      default:
-        return '';
-    }
+    return aspectRatios[variations[random] as keyof typeof aspectRatios] || aspectRatios.square;
   };
 
   return (
-    <div className={`${classes.container} ${customStyles?.container || ''}`} style={containerStyle}>
-      <div 
-        className={`
-          columns-1 md:columns-2 lg:columns-3
-          gap-6
-          ${getHoverEffectClass()}
-        `}
-      >
+    <div className={`${masonryClasses.container} ${customStyles?.container || ''}`}>
+      <div className={`
+        ${masonryClasses.grid}
+        ${hoverEffects[styles.hoverEffect as keyof typeof hoverEffects] || ''}
+      `}>
         {Object.entries(articles).map(([colKey, colArticles]) => (
           colArticles.map((article: Article) => (
             <div 
               key={article.id}
-              className={`
-                break-inside-avoid
-                mb-6
-                ${classes.article}
-              `}
-              style={columnStyle(colKey)}
+              className={masonryClasses.article}
             >
               {article.content.image?.desktop_image_path && (
-                <div className={`relative ${getRandomAspectRatio()} overflow-hidden rounded-lg mb-4`}>
+                <div className={`${masonryClasses.image.wrapper} ${getRandomAspectRatio()}`}>
                   <img
                     src={article.content.image.desktop_image_path}
                     alt={article.title}
-                    className="w-full h-full object-cover"
+                    className={masonryClasses.image.img}
                   />
                 </div>
               )}
               
-              <div className="p-4">
-                <h3 className="font-medium mb-2" style={headingStyle}>
+              <div>
+                <h3 className={masonryClasses.content.title}>
                   {article.title}
                 </h3>
-                {mergedStyles.showExcerpt && (
-                  <p style={subtitleStyle}>
+                {styles.showExcerpt && (
+                  <p className={masonryClasses.content.subtitle}>
                     {article.subtitle}
                   </p>
                 )}

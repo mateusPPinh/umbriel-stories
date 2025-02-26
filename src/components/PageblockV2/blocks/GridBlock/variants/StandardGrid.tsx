@@ -49,96 +49,67 @@ const mergeStyles = (defaultStyles: any, customStyles: any) => {
 const StandardGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
   const classes = defaultClasses.grid.standard;
   const { articles } = variant.config;
+  const styles = variant.config.styles || {};
+  const layout = variant.config.layout || {};
 
-  // Define default styles
-  const defaultStyles: BlockConfig['styles'] = {
-    theme: {
-      light: {
-        columnStyle: {
-          background: '#ffffff'
-        },
-        headingProps: {
-          fontSize: 'xl',
-          fontWeight: 700,
-          color: '#1a1a1a'
-        },
-        subtitleProps: {
-          fontSize: 'lg',
-          color: '#4a5568'
-        }
-      },
-      dark: {
-        columnStyle: {
-          background: '#1a1a1a'
-        },
-        headingProps: {
-          fontSize: 'xl',
-          fontWeight: 700,
-          color: '#ffffff'
-        },
-        subtitleProps: {
-          fontSize: 'lg',
-          color: '#a0aec0'
-        }
-      }
+  const standardClasses = {
+    container: [
+      'w-full max-w-[1238px] mx-auto',
+      'mb-[40px] mt-[40px]',
+      'bg-white dark:bg-gray-900',
+      'p-8 rounded-lg'
+    ].join(' '),
+    grid: [
+      'grid grid-cols-1',
+      'md:grid-cols-2',
+      `lg:grid-cols-${layout.columns || 3}`,
+      `gap-[${layout.gap || '24px'}]`
+    ].join(' '),
+    article: [
+      'flex flex-col',
+      'bg-white dark:bg-gray-800',
+      'rounded-lg overflow-hidden',
+      'transition-all duration-300',
+      'hover:shadow-lg'
+    ].join(' '),
+    image: {
+      wrapper: 'relative aspect-[16/10] overflow-hidden mb-4',
+      img: 'w-full h-full object-cover'
     },
-    showExcerpt: true
+    content: {
+      wrapper: 'p-4',
+      title: 'text-xl font-bold text-gray-900 dark:text-white mb-2',
+      subtitle: 'text-lg text-gray-600 dark:text-gray-300'
+    }
   };
 
-  // Merge default styles with variant styles
-  const mergedStyles = mergeStyles(defaultStyles, variant.config.styles);
-  
-  // Use merged styles in useBlockStyles
-  const { containerStyle, columnStyle, headingStyle, subtitleStyle } = useBlockStyles({
-    config: {
-      ...variant.config,
-      styles: mergedStyles
-    },
-    isDarkTheme
-  });
-
   const items = Object.values(articles).flat();
-  const columnCount = variant.config.layout?.columns || 3;
-  const gap = variant.config.layout?.gap || '24px';
-
-  // Construct the columns class based on configuration
-  const columnsClass = `columns-1 md:columns-2 lg:columns-${columnCount}`;
-  const gapClass = `gap-x-[${gap}]`;
 
   return (
-    <div className={`${classes.container} ${customStyles?.container || ''}`} style={containerStyle}>
-      <div className={customStyles?.grid || `${columnsClass} ${gapClass}`}>
+    <div className={`${standardClasses.container} ${customStyles?.container || ''}`}>
+      <div className={`${standardClasses.grid} ${customStyles?.grid || ''}`}>
         {items.map((article: Article) => (
           <article 
             key={article.id} 
-            className={customStyles?.article || 'break-inside-avoid mb-6'}
-            style={columnStyle()}
+            className={standardClasses.article}
           >
             {article.content.image?.desktop_image_path && (
-              <div 
-                className={customStyles?.imageWrapper || 'relative w-full overflow-hidden mb-4'}
-              >
+              <div className={standardClasses.image.wrapper}>
                 <img
                   src={article.content.image.desktop_image_path}
                   alt={article.title}
-                  className={customStyles?.image || 'w-full h-full object-cover'}
+                  className={standardClasses.image.img}
                 />
               </div>
             )}
             
-            <div className={customStyles?.content || 'p-4'}>
-              <h2 
-                className={customStyles?.heading || 'mb-3'} 
-                style={headingStyle}
-              >
+            <div className={standardClasses.content.wrapper}>
+              <h2 className={standardClasses.content.title}>
                 {article.title}
               </h2>
               
-              {mergedStyles.showExcerpt && (
-                <p 
-                  className={customStyles?.subtitle || ''} 
-                  style={subtitleStyle}
-                >
+              {styles.showExcerpt && (
+                <p className={standardClasses.content.subtitle}>
                   {article.subtitle}
                 </p>
               )}

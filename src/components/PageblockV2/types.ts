@@ -165,6 +165,7 @@ export interface BlockConfig {
   };
   articles: Record<string, Article[]>;
   mediaConfig: MediaConfig;
+  timelineStyle?: string;
 }
 
 export interface PageBlock {
@@ -182,3 +183,39 @@ export interface PageBlock {
   };
   pageId: string;
 } 
+
+export interface TimelineStyles {
+  timelineStyle?: 'solid' | 'dashed' | 'dotted';
+  markerStyle?: 'circle' | 'square' | 'diamond';
+  hoverEffect?: 'highlight' | 'scale' | 'none';
+  showDate?: boolean;
+  theme?: BlockConfig['styles']['theme'];
+  showExcerpt?: boolean;
+  showMetadata?: boolean;
+}
+export interface MasonryStyles {
+  masonryStyle?: 'masonry' | 'grid';
+  columnCount?: number;
+  gap?: string;
+  itemWidth?: string;
+  itemHeight?: string;
+  showExcerpt?: boolean;
+  showMetadata?: boolean;
+  showImage?: boolean;
+  showTitle?: boolean;
+  showSubtitle?: boolean;
+  imageVariations?: string[];
+  hoverEffect?: string;
+}
+
+export interface GridStyles {
+  gridStyle?: 'standard' | 'featured';
+  showExcerpt?: boolean;
+  showMetadata?: boolean;
+  showImage?: boolean;
+  showTitle?: boolean;
+  showSubtitle?: boolean;
+  imageVariations?: string[];
+  hoverEffect?: string;
+  featuredImageOverlay?: boolean;
+}
