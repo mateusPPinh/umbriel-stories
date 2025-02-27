@@ -153,7 +153,14 @@ const Masonry: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyle
                 {article.title}
               </h2>
               
-              {styles.showExcerpt && (
+              {styles.showExcerpt ? (
+                <p 
+                  className={customStyles?.subtitle || ''} 
+                  style={theme.subtitleProps}
+                >
+                  {article.subtitle}
+                </p>
+                ) : (
                 <p 
                   className={customStyles?.subtitle || ''} 
                   style={theme.subtitleProps}

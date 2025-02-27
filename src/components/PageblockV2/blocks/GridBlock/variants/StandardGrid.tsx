@@ -54,9 +54,9 @@ const StandardGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
 
   const standardClasses = {
     container: [
-      'w-full max-w-[1238px] mx-auto',
+      'w-full max-w-[1238px] mx-auto bg-transparent',
       'mb-[40px] mt-[40px]',
-      'bg-white dark:bg-gray-900',
+      'bg-transparent',
       'p-8 rounded-lg'
     ].join(' '),
     grid: [
@@ -67,10 +67,7 @@ const StandardGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
     ].join(' '),
     article: [
       'flex flex-col',
-      'bg-white dark:bg-gray-800',
-      'rounded-lg overflow-hidden',
-      'transition-all duration-300',
-      'hover:shadow-lg'
+      'bg-transparent',
     ].join(' '),
     image: {
       wrapper: 'relative aspect-[16/10] overflow-hidden mb-4',
@@ -108,7 +105,11 @@ const StandardGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
                 {article.title}
               </h2>
               
-              {styles.showExcerpt && (
+              {styles.showExcerpt ? (
+                <p className={standardClasses.content.subtitle}>
+                  {article.subtitle}
+                </p>
+              ) : (
                 <p className={standardClasses.content.subtitle}>
                   {article.subtitle}
                 </p>

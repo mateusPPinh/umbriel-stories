@@ -163,12 +163,20 @@ const ListWithThumbnail: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, c
                 <h3 className="mb-2" style={headingStyle}>
                   {article.title}
                 </h3>
-                {mergedStyles.showExcerpt && (
+                {mergedStyles.showExcerpt ? (
+                  <p className="mb-2" style={subtitleStyle}>
+                    {article.subtitle}
+                  </p>
+                ) : (
                   <p className="mb-2" style={subtitleStyle}>
                     {article.subtitle}
                   </p>
                 )}
-                {mergedStyles.showMetadata && (
+                {mergedStyles.showMetadata ? (
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    {/* Add metadata rendering here */}
+                  </div>
+                ) : (
                   <div className="text-sm text-gray-500 dark:text-gray-400">
                     {/* Add metadata rendering here */}
                   </div>

@@ -20,26 +20,26 @@ const MasonryGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
 
   // Classes base do Tailwind para o masonry
   const masonryClasses = {
-    container: 'w-full',
-    grid: [
-      'columns-1 md:columns-2 lg:columns-3',
-      'gap-6'
-    ].join(' '),
-    article: [
-      'break-inside-avoid',
-      'mb-6',
-      'bg-transparent dark:bg-transparent', // Garante transparência
-      'p-4',
-      'rounded-lg'
-    ].join(' '),
-    image: {
-      wrapper: 'relative overflow-hidden rounded-lg mb-4',
-      img: 'w-full h-full object-cover'
-    },
-    content: {
-      title: 'text-xl font-semibold text-gray-900 dark:text-white mb-2',
-      subtitle: 'text-md text-gray-600 dark:text-gray-300'
-    }
+    container: 'w-full mt-12 mb-12 bg-transparent',
+      grid: [
+        'columns-1 md:columns-2 lg:columns-3',
+        'gap-6'
+      ].join(' '),
+      article: [
+        'break-inside-avoid',
+        'mb-6',
+        'bg-transparent',
+        'p-4',
+        'rounded-lg'
+      ].join(' '),
+      image: {
+        wrapper: 'relative overflow-hidden rounded-lg mb-4',
+        img: 'w-full h-full object-cover'
+      },
+      content: {
+        title: 'text-xl font-semibold text-gray-900 dark:text-white mb-2',
+        subtitle: 'text-md text-gray-600 dark:text-gray-300'
+      }
   };
 
   // Classes para diferentes aspect ratios
@@ -89,7 +89,11 @@ const MasonryGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
                 <h3 className={masonryClasses.content.title}>
                   {article.title}
                 </h3>
-                {styles.showExcerpt && (
+                {styles.showExcerpt ? (
+                  <p className={masonryClasses.content.subtitle}>
+                    {article.subtitle}
+                  </p>
+                ) : (
                   <p className={masonryClasses.content.subtitle}>
                     {article.subtitle}
                   </p>

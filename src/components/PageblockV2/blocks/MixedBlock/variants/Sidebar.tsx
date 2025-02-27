@@ -47,7 +47,11 @@ const Sidebar: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyle
                     {mainArticle.title}
                   </h2>
                   
-                  {styles.showExcerpt && (
+                  {styles.showExcerpt ? (
+                    <p className={customStyles?.subtitle || classes.subtitle}>
+                      {mainArticle.subtitle}
+                    </p>
+                  ) : (
                     <p className={customStyles?.subtitle || classes.subtitle}>
                       {mainArticle.subtitle}
                     </p>
@@ -84,7 +88,11 @@ const Sidebar: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyle
                     {article.title}
                   </h2>
                   
-                  {styles.showExcerpt && (
+                  {styles.showExcerpt ? (
+                    <p className={customStyles?.subtitle || classes.subtitle}>
+                      {article.subtitle}
+                    </p>
+                  ) : (
                     <p className={customStyles?.subtitle || classes.subtitle}>
                       {article.subtitle}
                     </p>

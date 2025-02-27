@@ -59,9 +59,6 @@ const FeaturedGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
     ].join(' '),
     article: [
       'flex flex-col',
-      'rounded-xl overflow-hidden',
-      'transition-all duration-300',
-      'hover:shadow-lg'
     ].join(' '),
     image: {
       wrapper: 'relative aspect-[16/10] overflow-hidden',
@@ -98,7 +95,11 @@ const FeaturedGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
                     <h3 className={featuredClasses.content.title}>
                       {article.title}
                     </h3>
-                    {styles.showExcerpt && (
+                    {styles.showExcerpt ? (
+                      <p className={featuredClasses.content.subtitle}>
+                        {article.subtitle}
+                      </p>
+                    ) : (
                       <p className={featuredClasses.content.subtitle}>
                         {article.subtitle}
                       </p>

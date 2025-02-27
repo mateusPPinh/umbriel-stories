@@ -43,7 +43,11 @@ const Showcase: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
                   {featuredArticle.title}
                 </h1>
                 
-                {styles.showExcerpt && (
+                {styles.showExcerpt ? (
+                  <p className={customStyles?.subtitle || classes.subtitle.featured}>
+                    {featuredArticle.subtitle}
+                  </p>
+                ) : (
                   <p className={customStyles?.subtitle || classes.subtitle.featured}>
                     {featuredArticle.subtitle}
                   </p>
@@ -76,7 +80,11 @@ const Showcase: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
                     {article.title}
                   </h2>
                   
-                  {styles.showExcerpt && (
+                  {styles.showExcerpt ? (
+                    <p className={customStyles?.subtitle || classes.subtitle.grid}>
+                      {article.subtitle}
+                    </p>
+                  ) : (
                     <p className={customStyles?.subtitle || classes.subtitle.grid}>
                       {article.subtitle}
                     </p>
@@ -99,7 +107,11 @@ const Showcase: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
                   {article.title}
                 </h3>
                 
-                {styles.showExcerpt && (
+                {styles.showExcerpt ? (
+                  <p className={customStyles?.subtitle || classes.subtitle.list}>
+                    {article.subtitle}
+                  </p>
+                ) : (
                   <p className={customStyles?.subtitle || classes.subtitle.list}>
                     {article.subtitle}
                   </p>

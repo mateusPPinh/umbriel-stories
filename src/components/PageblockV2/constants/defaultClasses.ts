@@ -2,22 +2,20 @@ export const defaultClasses = {
   grid: {
     standard: {
       container: [
-        'w-full max-w-[1238px] mx-auto mt-12 mb-12',
-        'bg-white dark:bg-gray-900',
+        'w-full max-w-[1238px] mx-auto bg-transparent',
+        'mb-[40px] mt-[40px]',
+        'bg-transparent',
         'p-8 rounded-lg'
       ].join(' '),
       grid: [
         'grid grid-cols-1',
         'md:grid-cols-2',
-        'lg:grid-cols-3',
-        'gap-6'
+        `lg:grid-cols-3`,
+        `gap-[24px]`
       ].join(' '),
       article: [
         'flex flex-col',
-        'bg-white dark:bg-gray-800',
-        'rounded-lg overflow-hidden',
-        'transition-all duration-300',
-        'hover:shadow-lg'
+        'bg-transparent',
       ].join(' '),
       image: {
         wrapper: 'relative aspect-[16/10] overflow-hidden mb-4',
@@ -30,7 +28,7 @@ export const defaultClasses = {
       }
     },
     masonry: {
-      container: 'w-full mt-12 mb-12',
+      container: 'w-full mt-12 mb-12 bg-transparent',
       grid: [
         'columns-1 md:columns-2 lg:columns-3',
         'gap-6'
@@ -52,18 +50,15 @@ export const defaultClasses = {
       }
     },
     featured: {
-      container: 'w-full mt-12 mb-12',
+      container: 'w-full mt-12 mb-12 bg-transparent',
       grid: [
         'grid grid-cols-1',
         'md:grid-cols-2',
         'lg:grid-cols-3',
-        'gap-8'
+        'gap-4'
       ].join(' '),
       article: [
         'flex flex-col',
-        'rounded-xl overflow-hidden',
-        'transition-all duration-300',
-        'hover:shadow-lg'
       ].join(' '),
       image: {
         wrapper: 'relative aspect-[16/10] overflow-hidden',
@@ -72,16 +67,26 @@ export const defaultClasses = {
       },
       content: {
         wrapper: 'absolute bottom-0 left-0 right-0 p-6',
-        title: 'text-2xl font-bold text-white mb-2',
-        subtitle: 'text-lg text-white/80'
+        title: 'text-[1.5rem] sm:text-[1rem] font-bold text-white mb-2 dark:text-white',
+        subtitle: 'text-[1rem] sm:text-[0.8rem] text-white/80 dark:text-white/80'
       }
     },
     sidebar: {
-      container: 'w-full mt-12 mb-12',
-      wrapper: 'flex flex-col lg:flex-row w-full gap-6',
-      mainContent: 'flex-1 grid gap-6',
+      container: 'w-full bg-transparent',
+      wrapper: [
+        'flex flex-col',
+        'lg:flex-row',
+        'w-full',
+        'max-w-[600px]',
+        'gap-6'
+      ].join(' '),
+      mainContent: [
+        'flex-1',
+        'grid',
+        'gap-6'
+      ].join(' '),
       sidebar: [
-        'w-full lg:w-[360px]' ,
+        'w-full lg:w-[360px]',
         'shrink-0 ',
         'border-l ',
         'border-gray-200 ',
@@ -89,18 +94,157 @@ export const defaultClasses = {
         'space-y-6',
         'pl-6'
       ].join(' '),
+      article: {
+        main: [
+          'flex flex-col',
+        ].join(' '),
+        sidebar: [
+          'flex gap-4',
+        ].join(' ')
+      },
+      image: {
+        main: 'w-full aspect-[16/9] object-cover mb-4',
+        sidebar: 'w-24 h-24 object-cover shrink-0 rounded-lg'
+      },
+      content: {
+        main: {
+          title: 'text-xl font-semibold mb-2',
+          subtitle: 'text-base text-gray-600 dark:text-gray-400'
+        },
+        sidebar: {
+          title: 'text-base font-medium mb-1',
+          subtitle: 'text-sm text-gray-600 dark:text-gray-400'
+        }
+      }
+    },
+    sidebargrid: {
+      container: 'w-full bg-transparent',
+      wrapper: [
+        'flex flex-col',
+        'lg:flex-row',
+        'w-full',
+        'gap-6'
+      ].join(' '),
+      mainContent: [
+        'flex-1',
+        'grid',
+        'gap-6'
+      ].join(' '),
+      sidebar: [
+        'w-full lg:w-[360px]',
+        'shrink-0',
+        'border-l',
+        'border-gray-200',
+        'dark:border-gray-700',
+        'space-y-6',
+        'pl-6'
+      ].join(' '),
+      article: {
+        main: [
+          'flex flex-col',
+        ].join(' '),
+        sidebar: [
+          'flex gap-4',
+        ].join(' ')
+      },
+      image: {
+        main: 'w-full aspect-[16/9] object-cover mb-4',
+        sidebar: 'w-24 h-24 object-cover shrink-0 rounded-lg'
+      },
+      content: {
+        main: {
+          title: 'text-xl font-semibold mb-2',
+          subtitle: 'text-base text-gray-600 dark:text-gray-400'
+        },
+        sidebar: {
+          title: 'text-base font-medium mb-1',
+          subtitle: 'text-sm text-gray-600 dark:text-gray-400'
+        }
+      }
+    },
+    newsfeed: {
+      container: [
+        'w-full max-w-[1238px] mx-auto mt-12 mb-12 bg-transparent',
+        'p-6',
+        'space-y-12'
+      ].join(' '),
+      grid: [
+        'grid grid-cols-1',
+        'md:grid-cols-2',
+        'lg:grid-cols-3',
+        'gap-6'
+      ].join(' '),
+      article: [
+        'flex flex-col',
+        'bg-transparent',
+      ].join(' '),
+      image: {
+        wrapper: 'relative aspect-[16/10] overflow-hidden mb-4',
+        img: 'w-full h-full object-cover'
+      },
+      content: {
+        wrapper: 'p-4',
+        title: 'text-xl font-bold text-gray-900 dark:text-white mb-2',
+        subtitle: 'text-lg text-gray-600 dark:text-gray-300'
+      }
+    },
+    newsgrid: {
+      container: [
+        'w-full max-w-[1238px] mx-auto mt-12 mb-12 bg-transparent',
+        'p-6',
+        'space-y-12'
+      ].join(' '),
+      grid: [
+        'grid grid-cols-1',
+        'md:grid-cols-3',
+        'lg:grid-cols-5',
+        'gap-6'
+      ].join(' '),
+      column: [
+        'flex flex-col space-y-4',
+        'gap-6'
+      ].join(' '),
+      mainArticle: [
+        'flex flex-col gap-4',
+        'hover:opacity-90 transition-opacity'
+      ].join(' '),
+      secondaryArticle: [
+        'border-t border-gray-200 dark:border-gray-800',
+        'pt-4',
+        'hover:opacity-90 transition-opacity'
+      ].join(' '),
+      imageWrapper: 'relative aspect-[16/10] overflow-hidden mb-3',
+      image: 'w-full h-full object-cover',
+      mainTitle: [
+        'text-[1rem] sm:text-[0.8rem] font-normal',
+        'text-gray-900 dark:text-white',
+        'leading-tight'
+      ].join(' '),
+      secondaryTitle: [
+        'text-[1rem] sm:text-[0.8rem] font-medium',
+        'text-gray-800 dark:text-gray-200',
+        'leading-snug'
+      ].join(' ')
     }
   },
+
   featured: {
     hero: {
       container: [
-        'w-full max-w-[1238px] mx-auto mt-12 mb-12',
+        'w-full max-w-[1238px] mx-auto mt-12 mb-12 bg-transparent',
       ].join(' '),
       grid: 'relative aspect-[21/9]',
       article: [
         'relative w-full h-full',
-        'rounded-lg overflow-hidden',
-        'hover:opacity-95 transition-opacity'
+      ].join(' '),
+      image: 'w-full h-full object-cover',
+      content: 'p-2',
+      heading: [
+        'mb-0',
+        'text-[1.5rem] text-white font-bold sm:text-[1rem] dark:text-white',
+      ].join(' '),
+      subtitle: [
+        'text-lg text-white/80 dark:text-white/80',
       ].join(' ')
     },
     split: {
@@ -112,6 +256,15 @@ export const defaultClasses = {
       article: [
         'flex flex-col gap-4',
         'hover:opacity-90 transition-opacity'
+      ].join(' '),
+      image: 'w-full h-full object-cover',
+      content: 'p-2',
+      heading: [
+        'mb-0',
+        'text-[1.5rem] text-white font-bold sm:text-[1rem] dark:text-white',
+      ].join(' '),
+      subtitle: [
+        'text-lg text-white/80 dark:text-white/80',
       ].join(' ')
     },
     triple: {
@@ -123,6 +276,15 @@ export const defaultClasses = {
       article: [
         'flex flex-col gap-4',
         'hover:opacity-90 transition-opacity'
+      ].join(' '),
+      image: 'w-full h-full object-cover',
+      content: 'p-2',
+      heading: [
+        'mb-0',
+        'text-[1.5rem] text-white font-bold sm:text-[1rem] dark:text-white',
+      ].join(' '),
+      subtitle: [
+        'text-lg text-white/80 dark:text-white/80',
       ].join(' ')
     }
   },
@@ -370,8 +532,8 @@ export const defaultClasses = {
   newsgrid: {
     container: [
       "w-full max-w-[1238px] mx-auto mt-12 mb-12",
-      "bg-white dark:bg-[#1b1b1b]",
-      "p-6 rounded-sm",
+      "bg-transparent",
+      "p-6",
       "space-y-12",
     ].join(" "),
     grid: [
@@ -393,12 +555,12 @@ export const defaultClasses = {
     imageWrapper: "relative aspect-[16/10] overflow-hidden mb-3",
     image: "w-full h-full object-cover",
     mainTitle: [
-      "text-lg font-semibold",
+      "text-[1rem] sm:text-[0.8rem] font-normal",
       "text-gray-900 dark:text-white",
       "leading-tight",
     ].join(" "),
     secondaryTitle: [
-      "text-base font-medium",
+      "text-[1rem] sm:text-[0.8rem] font-medium",
       "text-gray-800 dark:text-gray-200",
       "leading-snug",
     ].join(" "),

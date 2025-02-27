@@ -10,95 +10,38 @@ interface BaseVariantProps {
   customStyles?: any;
 }
 
-// Helper function to merge styles
-const mergeStyles = (defaultStyles: any, customStyles: any) => {
-  if (!customStyles) return defaultStyles;
-  return {
-    ...defaultStyles,
-    ...customStyles,
-    columnStyles: {
-      ...defaultStyles.columnStyles,
-      ...customStyles.columnStyles
-    },
-    theme: {
-      light: {
-        ...defaultStyles.theme?.light,
-        ...customStyles.theme?.light,
-        columnStyle: {
-          ...defaultStyles.theme?.light?.columnStyle,
-          ...customStyles.theme?.light?.columnStyle
-        }
-      },
-      dark: {
-        ...defaultStyles.theme?.dark,
-        ...customStyles.theme?.dark,
-        columnStyle: {
-          ...defaultStyles.theme?.dark?.columnStyle,
-          ...customStyles.theme?.dark?.columnStyle
-        }
-      }
-    }
-  };
-};
-
 const Split: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
   const classes = defaultClasses.featured.split;
   const { articles } = variant.config;
+  const styles = variant.config.styles || {};
+
 
   // Define default styles
   const defaultStyles = {
-    theme: {
-      light: {
-        columnStyle: {
-          background: "#ffffff"
-        },
-        headingProps: {
-          fontSize: "2xl",
-          fontWeight: "bold",
-          color: "#1a1a1a"
-        },
-        subtitleProps: {
-          fontSize: "lg",
-          color: "#4a4a4a"
-        }
-      },
-      dark: {
-        columnStyle: {
-          background: "#1a1a1a"
-        },
-        headingProps: {
-          fontSize: "2xl",
-          fontWeight: "bold",
-          color: "#ffffff"
-        },
-        subtitleProps: {
-          fontSize: "lg",
-          color: "#e0e0e0"
-        }
-      }
-    },
-    titleSize: '2xl',
-    columnStyle: {},
-    imageHeight: '400px',
-    showExcerpt: true,
-    showMetadata: true
+    container: [
+      'w-full max-w-[1238px] mx-auto bg-transparent',
+      'mb-[40px] mt-[40px]'
+    ].join(' '),
+    grid: 'grid grid-cols-1 lg:grid-cols-2 gap-8',
+    article: [
+      'flex flex-col gap-4',
+      'hover:opacity-90 transition-opacity'
+    ].join(' '),
+    image: 'w-full h-full object-cover',
+    content: 'p-2',
+    heading: [
+      'mb-0',
+      'text-[1.5rem] text-gray-900 font-bold sm:text-[1rem] dark:text-white',
+    ].join(' '),
+    subtitle: [
+      'text-lg text-gray-600 dark:text-gray-400',
+    ].join(' ')
   };
 
-  // Merge default styles with variant styles
-  const mergedStyles = mergeStyles(defaultStyles, variant.config.styles);
-  
-  // Use merged styles in useBlockStyles
-  const { containerStyle, columnStyle, headingStyle, subtitleStyle } = useBlockStyles({
-    config: {
-      ...variant.config,
-      styles: mergedStyles
-    } as any,
-    isDarkTheme
-  });
 
   return (
-    <div className={`${classes.container} ${customStyles?.container || ''}`} style={containerStyle}>
-      <div className={`${classes.grid} ${customStyles?.grid || ''}`}>
+    <div className={`${defaultStyles.container} ${customStyles?.container || ''}`}>
+      <div className={`${defaultStyles.grid} ${customStyles?.grid || ''}`}>
         {Object.entries(articles).map(([colKey, colArticles]) => (
           colArticles.map((article: Article) => (
             <div 
@@ -107,7 +50,6 @@ const Split: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles 
                 flex flex-col md:flex-row gap-6
                 mb-8 last:mb-0
               `}
-              style={columnStyle(colKey)}
             >
               {article.content.image?.desktop_image_path && (
                 <div className="w-full md:w-1/2">
@@ -122,11 +64,15 @@ const Split: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles 
               )}
               
               <div className={article.content.image ? 'w-full md:w-1/2' : 'w-full'}>
-                <h3 className="text-2xl font-medium mb-3" style={headingStyle}>
+                <h3 className={defaultStyles.heading}>
                   {article.title}
                 </h3>
-                {mergedStyles.showExcerpt && (
-                  <p className="text-lg" style={subtitleStyle}>
+                {styles.showExcerpt ? (
+                  <p className={defaultStyles.subtitle}>
+                    {article.subtitle}
+                  </p>
+                ) : (
+                  <p className={defaultStyles.subtitle}>
                     {article.subtitle}
                   </p>
                 )}

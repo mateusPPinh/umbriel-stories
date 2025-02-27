@@ -28,8 +28,8 @@ const NewsGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme }) => {
     container: [
       "w-full max-w-[1238px] mx-auto",
       "mb-[40px] mt-[40px]",
-      "bg-white dark:bg-[#1b1b1b]",
-      "p-6 rounded-sm",
+      "bg-transparent",
+      "p-6",
     ].join(" "),
     grid: [
       "grid grid-cols-1",
@@ -50,12 +50,12 @@ const NewsGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme }) => {
     imageWrapper: "relative aspect-[16/10] overflow-hidden mb-3",
     image: "w-full h-full object-cover",
     mainTitle: [
-      "text-lg font-semibold",
+      "text-[1rem] sm:text-[0.8rem] font-normal",
       "text-gray-900 dark:text-white",
       "leading-tight",
     ].join(" "),
     secondaryTitle: [
-      "text-base font-medium",
+      "text-[1rem] sm:text-[0.8rem] font-medium",
       "text-gray-800 dark:text-gray-200",
       "leading-snug",
     ].join(" "),

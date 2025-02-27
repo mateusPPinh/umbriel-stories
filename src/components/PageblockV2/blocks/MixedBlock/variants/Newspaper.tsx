@@ -141,7 +141,11 @@ const Newspaper: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customSty
                 {mainArticle.title}
               </h2>
               
-              {styles.showExcerpt && (
+              {styles.showExcerpt ? (
+                <p className={customStyles?.subtitle || ''} style={theme.subtitleProps}>
+                  {mainArticle.subtitle}
+                </p>
+              ) : (
                 <p className={customStyles?.subtitle || ''} style={theme.subtitleProps}>
                   {mainArticle.subtitle}
                 </p>
@@ -173,7 +177,11 @@ const Newspaper: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customSty
                   {article.title}
                 </h2>
                 
-                {styles.showExcerpt && (
+                  {styles.showExcerpt ? (
+                  <p className={customStyles?.subtitle || ''} style={theme.subtitleProps}>
+                    {article.subtitle}
+                  </p>
+                ) : (
                   <p className={customStyles?.subtitle || ''} style={theme.subtitleProps}>
                     {article.subtitle}
                   </p>
@@ -206,7 +214,11 @@ const Newspaper: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customSty
                   {article.title}
                 </h2>
                 
-                {styles.showExcerpt && (
+                {styles.showExcerpt ? (
+                  <p className={customStyles?.subtitle || ''} style={theme.subtitleProps}>
+                    {article.subtitle}
+                  </p>
+                ) : (
                   <p className={customStyles?.subtitle || ''} style={theme.subtitleProps}>
                     {article.subtitle}
                   </p>

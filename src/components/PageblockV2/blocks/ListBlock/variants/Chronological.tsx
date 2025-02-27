@@ -55,13 +55,21 @@ const Chronological: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custo
                 {article.title}
               </h3>
               
-              {styles.showExcerpt && (
+              {styles.showExcerpt ? (
+                <p className={classes.content.subtitle}>
+                  {article.subtitle}
+                </p>
+              ) : (
                 <p className={classes.content.subtitle}>
                   {article.subtitle}
                 </p>
               )}
 
-              {styles.showMetadata && (
+              {styles.showMetadata ? (
+                <div className={classes.content.metadata}>
+                  {/* Metadata aqui */}
+                </div>
+              ) : (
                 <div className={classes.content.metadata}>
                   {/* Metadata aqui */}
                 </div>

@@ -19,12 +19,11 @@ const SidebarGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
   const styles = variant.config.styles || {};
 
   const sidebarClasses = {
-    container: 'w-full',
+    container: 'w-full bg-transparent',
     wrapper: [
       'flex flex-col',
       'lg:flex-row',
       'w-full',
-      'max-w-[600px]',
       'gap-6'
     ].join(' '),
     mainContent: [
@@ -33,28 +32,20 @@ const SidebarGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
       'gap-6'
     ].join(' '),
     sidebar: [
-      'w-full',
-      'lg:w-[360px]',
-      'shrink-0',
-      'border-l',
-      'border-gray-200',
-      'dark:border-gray-700',
-      'space-y-6',
-      'pl-6'
+     'w-full lg:w-[360px]' ,
+        'shrink-0 ',
+        'border-l ',
+        'border-gray-200 ',
+        'dark:border-gray-700',
+        'space-y-6',
+        'pl-6'
     ].join(' '),
     article: {
       main: [
         'flex flex-col',
-        'rounded-lg overflow-hidden',
-        'transition-all duration-300',
-        'hover:shadow-lg'
       ].join(' '),
       sidebar: [
         'flex gap-4',
-        'rounded-lg',
-        'transition-all duration-300',
-        'hover:bg-gray-50',
-        'dark:hover:bg-gray-800'
       ].join(' ')
     },
     image: {
@@ -94,7 +85,11 @@ const SidebarGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
                 <h3 className={sidebarClasses.content.main.title}>
                   {article.title}
                 </h3>
-                {styles.showExcerpt && article.subtitle && (
+                {styles.showExcerpt ? (
+                  <p className={sidebarClasses.content.main.subtitle}>
+                    {article.subtitle}
+                  </p>
+                ) : (
                   <p className={sidebarClasses.content.main.subtitle}>
                     {article.subtitle}
                   </p>
@@ -125,7 +120,11 @@ const SidebarGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
                 <h3 className={sidebarClasses.content.sidebar.title}>
                   {article.title}
                 </h3>
-                {styles.showExcerpt && article.subtitle && (
+                {styles.showExcerpt ? (
+                  <p className={sidebarClasses.content.sidebar.subtitle}>
+                    {article.subtitle}
+                  </p>
+                ) : (
                   <p className={sidebarClasses.content.sidebar.subtitle}>
                     {article.subtitle}
                   </p>

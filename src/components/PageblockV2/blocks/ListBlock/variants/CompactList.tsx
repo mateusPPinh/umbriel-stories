@@ -146,12 +146,20 @@ const CompactList: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
                 <h3 className="mb-1" style={headingStyle}>
                   {article.title}
                 </h3>
-                {mergedStyles.showExcerpt && (
+                {mergedStyles.showExcerpt ? (
+                  <p style={subtitleStyle}>
+                    {article.subtitle}
+                  </p>
+                ) : (
                   <p style={subtitleStyle}>
                     {article.subtitle}
                   </p>
                 )}
-                {mergedStyles.showMetadata && (
+                {mergedStyles.showMetadata ? (
+                  <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                    {/* Add metadata rendering here */}
+                  </div>
+                ) : (
                   <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                     {/* Add metadata rendering here */}
                   </div>

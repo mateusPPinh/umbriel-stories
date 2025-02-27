@@ -148,7 +148,14 @@ const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
                   {mainArticle.title}
                 </h2>
                 
-                {styles.showExcerpt && (
+                {styles.showExcerpt ? (
+                  <p 
+                    className={customStyles?.subtitle || 'text-lg'} 
+                    style={theme.subtitleProps}
+                  >
+                    {mainArticle.subtitle}
+                  </p>
+                ) : (
                   <p 
                     className={customStyles?.subtitle || 'text-lg'} 
                     style={theme.subtitleProps}
@@ -188,7 +195,14 @@ const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
                     {article.title}
                   </h2>
                   
-                  {styles.showExcerpt && (
+                  {styles.showExcerpt ? (
+                    <p 
+                      className={customStyles?.subtitle || 'text-base'} 
+                      style={theme.subtitleProps}
+                    >
+                      {article.subtitle}
+                    </p>
+                    ) : (
                     <p 
                       className={customStyles?.subtitle || 'text-base'} 
                       style={theme.subtitleProps}
@@ -229,7 +243,14 @@ const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
                     {article.title}
                   </h2>
                   
-                  {styles.showExcerpt && (
+                  {styles.showExcerpt ? (
+                    <p 
+                      className={customStyles?.subtitle || 'text-base'} 
+                      style={theme.subtitleProps}
+                    >
+                      {article.subtitle}
+                    </p>
+                    ) : (
                     <p 
                       className={customStyles?.subtitle || 'text-base'} 
                       style={theme.subtitleProps}
