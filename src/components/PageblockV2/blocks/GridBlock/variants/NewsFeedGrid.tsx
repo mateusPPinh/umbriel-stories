@@ -1,7 +1,6 @@
 import React from 'react';
 import { defaultClasses } from '../../../constants/defaultClasses';
-import { GridStyles } from 'src/components/PageblockV2/types';
-import { BlockVariant } from 'src/components/PageblockV2/types';
+import { BlockVariant, Article, GridStyles } from '../../../types';
 
 interface BaseVariantProps {
   variant: BlockVariant & {
@@ -13,108 +12,72 @@ interface BaseVariantProps {
   customStyles?: any;
 }
 
-const NewsFeedGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme }) => {
-  const { articles, styles } = variant.config;
-  
-  // Tratamento de segurança para theme
-  const defaultTheme = {
-    columnStyle: {},
-    headingProps: {
-      fontSize: 'lg',
-      fontWeight: 600,
-      color: isDarkTheme ? '#ffffff' : '#1a1a1a'
-    },
-    subtitleProps: {
-      fontSize: 'base',
-      color: isDarkTheme ? '#a0aec0' : '#4a5568'
-    }
-  };
-
-  // Garante que theme e suas propriedades existam
-  const theme = styles?.theme?.[isDarkTheme ? 'dark' : 'light'] ?? defaultTheme;
-  const headingProps = theme?.headingProps ?? defaultTheme.headingProps;
-  const subtitleProps = theme?.subtitleProps ?? defaultTheme.subtitleProps;
-
-  const newsfeedClasses = {
-    container: [
-      "w-full max-w-[1238px] mx-auto",
-      "mb-[40px] mt-[40px]",
-      "bg-white dark:bg-[#1b1b1b]",
-      "p-6 rounded-sm",
-    ].join(" "),
-    grid: "flex flex-col space-y-4",
-    column: "w-full",
-    article: [
-      "w-full",
-      "border-b border-gray-200 dark:border-gray-800",
-      "pb-4 last:border-b-0",
-      "hover:opacity-90 transition-opacity",
-    ].join(" "),
-    content: "flex flex-col gap-2",
-    title: [
-      "text-xl font-semibold",
-      "text-gray-900 dark:text-white",
-      "leading-tight",
-    ].join(" "),
-    subtitle: [
-      "text-base",
-      "text-gray-600 dark:text-gray-300",
-      "line-clamp-2",
-    ].join(" "),
-    readTime: [
-      "text-sm",
-      "text-gray-500 dark:text-gray-400",
-      "font-medium",
-      "mt-2",
-    ].join(" "),
-  };
+const NewsFeedGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
+  const classes = defaultClasses.newsfeed;
+  const { articles } = variant.config;
+  const styles = variant.config.styles || {};
 
   // Garante que articles existe e é um objeto
   if (!articles || typeof articles !== 'object') {
-    return (
-      <div className={newsfeedClasses.container}>
-        <div className={newsfeedClasses.grid}>
-          <p className="text-gray-500 dark:text-gray-400">No articles available</p>
-        </div>
-      </div>
-    );
+    return null;
   }
 
+  const mainColumnArticles = articles['col-0'] || [];
+  const rightColumnArticles = articles['col-1'] || [];
+  const firstArticle = mainColumnArticles[0];
+
   return (
-    <div className={newsfeedClasses.container}>
-      <div className={newsfeedClasses.grid}>
-        {Object.entries(articles).map(([columnId, columnArticles]) => (
-          <div key={columnId} className={newsfeedClasses.column}>
-            {Array.isArray(columnArticles) && columnArticles.map((article) => (
-              article && (
-                <article 
-                  key={article.id ?? columnId} 
-                  className={newsfeedClasses.article}
-                >
-                  <div className={newsfeedClasses.content}>
-                    <h3 
-                      className={newsfeedClasses.title}
-                      style={headingProps}
-                    >
-                      {article.title ?? 'Untitled Article'}
-                    </h3>
-                    {article.subtitle && (
-                      <p 
-                        className={newsfeedClasses.subtitle}
-                        style={subtitleProps}
-                      >
-                        {article.subtitle}
-                      </p>
-                    )}
-                    <span className={newsfeedClasses.readTime}>
-                      {article.readTime ? `${article.readTime} MIN READ` : '3 MIN READ'}
-                    </span>
-                  </div>
-                </article>
-              )
-            ))}
-          </div>
-        ))}
+    <div className={`${classes.container} ${customStyles?.container || ''}`}>
+      <div className={customStyles?.grid || classes.grid}>
+        {/* Left Column - Articles */}
+        <div className={classes.column.main}>
+          {mainColumnArticles.map((article: Article) => (
+            <article key={article.id} className={classes.article.main}>
+              <div className={classes.content}>
+                <h3 className={classes.title}>
+                  {article.title}
+                </h3>
+                {article.subtitle && (
+                  <p className={classes.subtitle}>
+                    {article.subtitle}
+                  </p>
+                )}
+                {/* <span className={classes.readTime}>
+                  {article.readTime ? `${article.readTime} MIN READ` : '3 MIN READ'}
+                </span> */}
+              </div>
+            </article>
+          ))}
+        </div>
+
+        {/* Middle Column - Featured Image */}
+        <div className={classes.column.image}>
+          {firstArticle?.content?.image?.desktop_image_path && (
+            <div className={classes.article.image}>
+              <img
+                src={firstArticle.content.image.desktop_image_path}
+                alt={firstArticle.title}
+                className={classes.article.imageContent}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Right Column */}
+        <div className={customStyles?.rightColumn || classes.column.right}>
+          {rightColumnArticles.map((article: Article) => (
+            <article key={article.id} className={classes.article.main}>
+              <div className={classes.content}>
+                <h3 className={classes.title}>
+                  {article.title}
+                </h3>
+                {/* <span className={classes.readTime}>
+                  {article.readTime ? `${article.readTime} MIN READ` : '3 MIN READ'}
+                </span> */}
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-// src/components/PageblockV2/blocks/GridBlock/variants/NewsFeedGrid.stories.tsx
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import NewsFeedGrid from './NewsFeedGrid';
@@ -22,7 +21,16 @@ const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean }> = (args)
 
 // Criar artigos mock para grid
 const gridArticles = {
-  'col-0': createArticles(6), // Uma única coluna com 6 artigos
+  'col-0': createArticles(3).map(article => ({
+    ...article,
+    content: {
+      ...article.content,
+      image: {
+        desktop_image_path: 'https://barzuputru.local.api.umbrielcms.com.br:3001/uploads/6370ab4d976b0a5a95ea-24putin-anniversary-hvgm-superJumbo.webp?width=2048&height=1365'
+      }
+    }
+  })), // Coluna principal com 3 artigos (incluindo imagem do primeiro)
+  'col-1': createArticles(4) // Coluna lateral com 3 artigos
 };
 
 // Mock base para NewsFeedGrid variant
@@ -31,13 +39,24 @@ const baseGridVariant: BlockVariant = {
   variantPosition: 1,
   config: {
     layout: {
-      columns: 1,
-      gap: '16px',
-      padding: '24px',
+      gap: '24px',
+      styles: {
+        grid: {
+          autoRows: 'auto',
+          templateColumns: 'repeat(4, 1fr)'
+        },
+        width: '100%',
+        columnStyles: {},
+        backgroundColor: 'transparent'
+      },
+      imageSize: 'large',
+      aspectRatio: '16/9',
+      columns: 4,
+      padding: '0',
       responsive: {
         mobile: 1,
-        tablet: 1,
-        desktop: 1
+        tablet: 2,
+        desktop: 4
       }
     },
     articles: gridArticles,
@@ -45,11 +64,11 @@ const baseGridVariant: BlockVariant = {
       theme: {
         light: {
           columnStyle: {
-            background: "#ffffff",
+            background: 'transparent'
           },
           headingProps: {
             fontSize: "xl",
-            fontWeight: "semibold",
+            fontWeight: 600,
             color: "#1a1a1a"
           },
           subtitleProps: {
@@ -59,11 +78,11 @@ const baseGridVariant: BlockVariant = {
         },
         dark: {
           columnStyle: {
-            background: "#1a1a1a",
+            background: 'transparent'
           },
           headingProps: {
             fontSize: "xl",
-            fontWeight: "semibold",
+            fontWeight: 600,
             color: "#ffffff"
           },
           subtitleProps: {
@@ -72,6 +91,11 @@ const baseGridVariant: BlockVariant = {
           }
         }
       },
+      titleSize: 'xl',
+      columnStyle: {
+        background: 'transparent'
+      },
+      imageHeight: '400px',
       showExcerpt: true,
       showMetadata: true
     }
@@ -92,31 +116,20 @@ DarkTheme.args = {
   isDarkTheme: true
 };
 
-// Compact version
-export const Compact = Template.bind({});
-Compact.args = {
+// Mobile version
+export const Mobile = Template.bind({});
+Mobile.args = {
   variant: {
     ...baseGridVariant,
     config: {
       ...baseGridVariant.config,
-      styles: {
-        ...baseGridVariant.config.styles,
-        theme: {
-          light: {
-            ...baseGridVariant.config.styles.theme.light,
-            headingProps: {
-              fontSize: "lg",
-              fontWeight: "medium",
-              color: "#1a1a1a"
-            }
-          },
-          dark: {
-            ...baseGridVariant.config.styles.theme.dark,
-            headingProps: {
-              fontSize: "lg",
-              fontWeight: "medium",
-              color: "#ffffff"
-            }
+      layout: {
+        ...baseGridVariant.config.layout,
+        styles: {
+          ...baseGridVariant.config.layout.styles,
+          grid: {
+            ...baseGridVariant.config.layout.styles.grid,
+            templateColumns: 'repeat(1, 1fr)'
           }
         }
       }
@@ -124,3 +137,25 @@ Compact.args = {
   },
   isDarkTheme: false
 };
+
+// Tablet version
+export const Tablet = Template.bind({});
+Tablet.args = {
+  variant: {
+    ...baseGridVariant,
+    config: {
+      ...baseGridVariant.config,
+      layout: {
+        ...baseGridVariant.config.layout,
+        styles: {
+          ...baseGridVariant.config.layout.styles,
+          grid: {
+            ...baseGridVariant.config.layout.styles.grid,
+            templateColumns: 'repeat(2, 1fr)'
+          }
+        }
+      }
+    }
+  },
+  isDarkTheme: false
+}; 

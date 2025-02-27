@@ -310,35 +310,62 @@ export const defaultClasses = {
   },
   newsfeed: {
     container: [
-      "w-full max-w-[1238px] mx-auto mt-12 mb-12",
-      "bg-white dark:bg-[#1b1b1b]",
-      "p-6 rounded-sm",
+      "w-full max-w-[1238px] mx-auto",
+      "mb-[40px] mt-[40px]",
+      "bg-transparent",
     ].join(" "),
-    grid: "flex flex-col space-y-4",
-    column: "w-full",
-    article: [
-      "w-full",
-      "border-b border-gray-200 dark:border-gray-800",
-      "pb-4 last:border-b-0",
-      "hover:opacity-90 transition-opacity",
-    ].join(" "),
+    grid: "grid grid-cols-1 lg:grid-cols-4 gap-6",
+    column: {
+      main: [
+        "col-span-1",
+        "flex flex-col space-y-4"
+      ].join(" "),
+      image: [
+        "col-span-2",
+        "flex items-start justify-start"
+      ].join(" "),
+      right: [
+        "col-span-1",
+        "flex flex-col space-y-4",
+        "border-t lg:border-t-0",
+        "border-l-0 lg:border-l border-gray-200 dark:border-gray-700",
+        "pt-6 lg:pt-0",
+        "lg:pl-6"
+      ].join(" ")
+    },
+    article: {
+      main: [
+        "w-full",
+        "border-b border-gray-200 dark:border-gray-700",
+        "pb-4 mb-4",
+        "last:border-b-0 last:pb-0 last:mb-0"
+      ].join(" "),
+      image: [
+        "w-full aspect-video",
+        "overflow-hidden"
+      ].join(" "),
+      imageContent: [
+        "w-full h-full",
+        "object-cover"
+      ].join(" ")
+    },
     content: "flex flex-col gap-2",
     title: [
-      "text-xl font-semibold",
+      "text-[1.5rem] font-bold sm:text-[1rem]",
       "text-gray-900 dark:text-white",
-      "leading-tight",
+      "leading-tight"
     ].join(" "),
     subtitle: [
       "text-base",
       "text-gray-600 dark:text-gray-300",
-      "line-clamp-2",
+      "line-clamp-2"
     ].join(" "),
     readTime: [
       "text-sm",
       "text-gray-500 dark:text-gray-400",
       "font-medium",
-      "mt-2",
-    ].join(" "),
+      "mt-2"
+    ].join(" ")
   },
   newsgrid: {
     container: [
