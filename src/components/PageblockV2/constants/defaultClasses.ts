@@ -2,8 +2,7 @@ export const defaultClasses = {
   grid: {
     standard: {
       container: [
-        'w-full max-w-[1238px] mx-auto',
-        'mb-[40px] mt-[40px]',
+        'w-full max-w-[1238px] mx-auto mt-12 mb-12',
         'bg-white dark:bg-gray-900',
         'p-8 rounded-lg'
       ].join(' '),
@@ -31,7 +30,7 @@ export const defaultClasses = {
       }
     },
     masonry: {
-      container: 'w-full',
+      container: 'w-full mt-12 mb-12',
       grid: [
         'columns-1 md:columns-2 lg:columns-3',
         'gap-6'
@@ -53,7 +52,7 @@ export const defaultClasses = {
       }
     },
     featured: {
-      container: 'w-full',
+      container: 'w-full mt-12 mb-12',
       grid: [
         'grid grid-cols-1',
         'md:grid-cols-2',
@@ -78,7 +77,7 @@ export const defaultClasses = {
       }
     },
     sidebar: {
-      container: 'w-full',
+      container: 'w-full mt-12 mb-12',
       wrapper: 'flex flex-col lg:flex-row w-full gap-6',
       mainContent: 'flex-1 grid gap-6',
       sidebar: [
@@ -95,8 +94,7 @@ export const defaultClasses = {
   featured: {
     hero: {
       container: [
-        'w-full max-w-[1238px] mx-auto',
-        'mb-[40px] mt-[40px]'
+        'w-full max-w-[1238px] mx-auto mt-12 mb-12',
       ].join(' '),
       grid: 'relative aspect-[21/9]',
       article: [
@@ -130,16 +128,16 @@ export const defaultClasses = {
   },
   list: {
     compact: {
-      container: 'w-full',
+      container: 'w-full mt-12 mb-12',
       list: 'space-y-4'
     },
     thumbnail: {
-      container: 'w-full',
+      container: 'w-full mt-12 mb-12',
       list: 'space-y-4',
       article: 'relative'
     },
     chronological: {
-      container: 'w-full',
+      container: 'w-full mt-12 mb-12 mx-auto',
       list: 'relative',
       timeline: [
         'absolute left-4 top-0 bottom-0',
@@ -182,7 +180,7 @@ export const defaultClasses = {
   },
   mixed: {
     sidebar: {
-      container: 'w-full bg-transparent',
+      container: 'w-full bg-transparent mt-12 mb-12',
       grid: 'grid grid-cols-1 md:grid-cols-3 gap-6',
       mainColumn: 'md:col-span-2',
       sidebarColumn: [
@@ -216,22 +214,103 @@ export const defaultClasses = {
       ].join(' ')
     },
     magazine: {
-      container: 'w-full'
+      container: 'w-full mt-12 mb-12'
     },
     showcase: {
-      container: 'w-full'
+      container: 'w-full bg-transparent mt-12 mb-12',
+      grid: 'grid grid-cols-12 gap-6',
+      featuredColumn: [
+        'col-span-12 lg:col-span-6',
+        'border-y',
+        'border-gray-200',
+        'dark:border-gray-700'
+      ].join(' '),
+      gridColumn: [
+        'col-span-12 lg:col-span-3',
+        'border-l',
+        'border-gray-200',
+        'dark:border-gray-700',
+        'lg:pl-6'
+      ].join(' '),
+      listColumn: [
+        'col-span-12 lg:col-span-3',
+        'border-l',
+        'border-gray-200',
+        'dark:border-gray-700',
+        'lg:pl-6'
+      ].join(' '),
+      article: {
+        featured: [
+          'relative w-full h-full',
+        ].join(' '),
+        grid: [
+          'flex flex-col',
+          'border-b border-gray-200 dark:border-gray-700',
+          'pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0'
+        ].join(' '),
+        list: [
+          'flex flex-col',
+          'p-4',
+          'border-b border-gray-200 dark:border-gray-700',
+          'pb-4 mb-4 last:border-b-0 last:pb-0 last:mb-0'
+        ].join(' ')
+      },
+      imageWrapper: 'relative aspect-video overflow-hidden',
+      image: 'w-full h-full object-cover',
+      content: {
+        featured: 'p-4',
+        grid: 'flex-1 p-2',
+        list: ''
+      },
+      heading: {
+        featured: [
+          'text-[1.5rem] font-bold mb-0 sm:text-[1rem]',
+          'text-gray-900',
+          'dark:text-white'
+        ].join(' '),
+        grid: [
+          'mb-2 line-clamp-2',
+          'text-[1.5rem] sm:text-[1rem] font-bold',
+          'text-gray-900',
+          'dark:text-white'
+        ].join(' '),
+        list: [
+          'mb-2 line-clamp-2',
+          'text-[1.5rem] sm:text-[1rem] font-bold',
+          'text-gray-900',
+          'dark:text-white'
+        ].join(' ')
+      },
+      subtitle: {
+        featured: [
+          'text-[1.5rem] sm:text-[1rem] mb-4',
+          'text-gray-600',
+          'dark:text-gray-400'
+        ].join(' '),
+        grid: [
+          'line-clamp-2',
+          'text-base',
+          'text-gray-600',
+          'dark:text-gray-400'
+        ].join(' '),
+        list: [
+          'line-clamp-2',
+          'text-sm',
+          'text-gray-600',
+          'dark:text-gray-400'
+        ].join(' ')
+      }
     },
     newspaper: {
-      container: 'w-full'
+      container: 'w-full mt-12 mb-12'
     },
     masonry: {
-      container: 'w-full'
+      container: 'w-full mt-12 mb-12'
     }
   },
   newsfeed: {
     container: [
-      "w-full max-w-[1238px] mx-auto",
-      "mb-[40px] mt-[40px]",
+      "w-full max-w-[1238px] mx-auto mt-12 mb-12",
       "bg-white dark:bg-[#1b1b1b]",
       "p-6 rounded-sm",
     ].join(" "),
@@ -263,8 +342,7 @@ export const defaultClasses = {
   },
   newsgrid: {
     container: [
-      "w-full max-w-[1238px] mx-auto",
-      "mb-[40px] mt-[40px]",
+      "w-full max-w-[1238px] mx-auto mt-12 mb-12",
       "bg-white dark:bg-[#1b1b1b]",
       "p-6 rounded-sm",
       "space-y-12",
