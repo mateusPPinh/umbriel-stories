@@ -8,7 +8,9 @@ export const mockArticle = {
       desktop_image_path: "https://barzuputru.local.api.umbrielcms.com.br:3001/uploads/6370ab4d976b0a5a95ea-24putin-anniversary-hvgm-superJumbo.webp?width=2048&height=1365",
       image_mobile_path: "https://barzuputru.local.api.umbrielcms.com.br:3001/uploads/6370ab4d976b0a5a95ea-24putin-anniversary-hvgm-superJumbo.webp?width=2048&height=1365"
     }
-  }
+  },
+  created_at: "2024-02-27T12:00:00Z",
+  updated_at: "2024-02-27T12:00:00Z"
 };
 
 // Base block configuration

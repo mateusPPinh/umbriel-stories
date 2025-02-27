@@ -61,6 +61,14 @@ const SidebarGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
         title: 'text-base font-medium mb-1',
         subtitle: 'text-sm text-gray-600 dark:text-gray-400'
       }
+    },
+    heading: {
+      main: 'text-2xl font-bold mb-2',
+      sidebar: 'text-base font-medium mb-1'
+    },
+    subtitle: {
+      main: 'text-base text-gray-600 dark:text-gray-400',
+      sidebar: 'text-sm text-gray-600 dark:text-gray-400'
     }
   };
 
@@ -82,15 +90,15 @@ const SidebarGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
                 />
               )}
               <div>
-                <h3 className={sidebarClasses.content.main.title}>
+                <h3 className={sidebarClasses.heading.main}>
                   {article.title}
                 </h3>
                 {styles.showExcerpt ? (
-                  <p className={sidebarClasses.content.main.subtitle}>
+                  <p className={sidebarClasses.subtitle.main}>
                     {article.subtitle}
                   </p>
                 ) : (
-                  <p className={sidebarClasses.content.main.subtitle}>
+                  <p className={sidebarClasses.subtitle.main}>
                     {article.subtitle}
                   </p>
                 )}
@@ -117,15 +125,15 @@ const SidebarGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
                 />
               )}
               <div>
-                <h3 className={sidebarClasses.content.sidebar.title}>
+                <h3 className={sidebarClasses.heading.sidebar}>
                   {article.title}
                 </h3>
                 {styles.showExcerpt ? (
-                  <p className={sidebarClasses.content.sidebar.subtitle}>
+                  <p className={sidebarClasses.subtitle.sidebar}>
                     {article.subtitle}
                   </p>
                 ) : (
-                  <p className={sidebarClasses.content.sidebar.subtitle}>
+                  <p className={sidebarClasses.subtitle.sidebar}>
                     {article.subtitle}
                   </p>
                 )}

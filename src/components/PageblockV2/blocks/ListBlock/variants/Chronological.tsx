@@ -2,6 +2,8 @@ import React from 'react';
 import { useBlockStyles } from '../../../hooks/useBlockStyles';
 import { BlockVariant, Article, TimelineStyles } from '../../../types';
 import { defaultClasses } from '../../../constants/defaultClasses';
+import { formatDistanceToNow } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 interface BaseVariantProps {
   variant: BlockVariant & {
@@ -17,6 +19,14 @@ const Chronological: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custo
   const classes = defaultClasses.list.chronological;
   const { articles } = variant.config;
   const styles = variant.config.styles || {};
+
+  const formatRelativeTime = (date: string | Date) => {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return formatDistanceToNow(dateObj, { 
+      addSuffix: true,
+      locale: ptBR 
+    });
+  };
 
   return (
     <div className={`${classes.container} ${customStyles?.container || ''}`}>
@@ -41,13 +51,18 @@ const Chronological: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custo
                 ${classes.variants.marker[styles.markerStyle || 'circle']}
               `} />
 
-              {styles.showDate && article.publishedAt && (
+              {styles.showDate && article.created_at && (
                 <div className={classes.content.date}>
-                  {new Date(article.publishedAt).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                  })}
+                  <span>
+                    {new Date(article.created_at).toLocaleDateString('pt-BR', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric'
+                    })}
+                  </span>
+                  <span className={classes.content.relativeTime}>
+                    {formatRelativeTime(article.created_at)}
+                  </span>
                 </div>
               )}
 

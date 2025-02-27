@@ -316,7 +316,11 @@ export const defaultClasses = {
         'bg-blue-600 dark:bg-blue-400'
       ].join(' '),
       content: {
-        date: 'text-sm text-gray-500 dark:text-gray-400 mb-2',
+        date: [
+          'text-sm text-gray-500 dark:text-gray-400 mb-2',
+          'flex items-center gap-2'
+        ].join(' '),
+        relativeTime: 'text-sm text-gray-400 dark:text-gray-500',
         title: 'text-lg font-medium text-gray-900 dark:text-white mb-2',
         subtitle: 'text-sm text-gray-600 dark:text-gray-300',
         metadata: 'text-sm text-gray-500 dark:text-gray-400 mt-2'

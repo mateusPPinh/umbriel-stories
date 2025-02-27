@@ -17,15 +17,18 @@ export default {
   ],
 } as Meta;
 
-const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean }> = (args) => <Chronological {...args} />;
+const Template: Story = (args) => <Chronological {...args} />;
 
 // Criar artigos mock para lista
 const listArticles = {
-  'col-0': createArticles(5)
+  'col-0': createArticles(5).map((article, index) => ({
+    ...article,
+    created_at: new Date(Date.now() - (index * 24 * 60 * 60 * 1000)).toISOString() // Cada artigo é 1 dia mais antigo
+  }))
 };
 
 // Mock base para Chronological variant
-const baseChronologicalVariant: BlockVariant = {
+const baseChronologicalVariant = {
   variantType: 'chronological',
   variantPosition: 1,
   config: {
@@ -178,6 +181,19 @@ Minimal.args = {
         markerStyle: 'square',
         theme: {
           light: {
+            columnStyle: {
+              background: "transparent",
+              padding: "16px"
+            },
+            headingProps: {
+              fontSize: "lg",
+              fontWeight: "medium",
+              color: "#1a1a1a"
+            },
+            subtitleProps: {
+              fontSize: "sm",
+              color: "#4a5568"
+            },
             timelineProps: {
               color: "#cbd5e0",
               width: "1px",
@@ -186,6 +202,19 @@ Minimal.args = {
             }
           },
           dark: {
+            columnStyle: {
+              background: "transparent",
+              padding: "16px"
+            },
+            headingProps: {
+              fontSize: "lg",
+              fontWeight: "medium",
+              color: "#f7fafc"
+            },
+            subtitleProps: {
+              fontSize: "sm",
+              color: "#e2e8f0"
+            },
             timelineProps: {
               color: "#4a5568",
               width: "1px",

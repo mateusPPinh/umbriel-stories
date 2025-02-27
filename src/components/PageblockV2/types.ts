@@ -52,7 +52,8 @@ export interface Article {
       desktop_image_path?: string;
     };
   };
-  publishedAt?: string;
+  created_at?: Date;
+  updated_at?: Date;
   readTime?: string;
 }
 
@@ -186,14 +187,66 @@ export interface PageBlock {
 } 
 
 export interface TimelineStyles {
+  showExcerpt?: boolean;
+  showMetadata?: boolean;
+  showDate?: boolean;
   timelineStyle?: 'solid' | 'dashed' | 'dotted';
   markerStyle?: 'circle' | 'square' | 'diamond';
   hoverEffect?: 'highlight' | 'scale' | 'none';
-  showDate?: boolean;
-  theme?: BlockConfig['styles']['theme'];
-  showExcerpt?: boolean;
-  showMetadata?: boolean;
+  theme?: {
+    light: {
+      columnStyle: {
+        background: string;
+        padding: string;
+      };
+      headingProps: {
+        fontSize: string;
+        fontWeight: string;
+        color: string;
+      };
+      subtitleProps: {
+        fontSize: string;
+        color: string;
+      };
+      timelineProps: {
+        color: string;
+        width: string;
+        markerSize: string;
+        markerColor: string;
+      };
+    };
+    dark: {
+      columnStyle: {
+        background: string;
+        padding: string;
+      };
+      headingProps: {
+        fontSize: string;
+        fontWeight: string;
+        color: string;
+      };
+      subtitleProps: {
+        fontSize: string;
+        color: string;
+      };
+      timelineProps: {
+        color: string;
+        width: string;
+        markerSize: string;
+        markerColor: string;
+      };
+    };
+  };
 }
+
+export interface TimelineContent {
+  date: string;
+  relativeTime: string;
+  title: string;
+  subtitle: string;
+  metadata: string;
+}
+
 export interface MasonryStyles {
   masonryStyle?: 'masonry' | 'grid';
   columnCount?: number;
