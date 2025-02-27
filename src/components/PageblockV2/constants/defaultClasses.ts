@@ -81,7 +81,15 @@ export const defaultClasses = {
       container: 'w-full',
       wrapper: 'flex flex-col lg:flex-row w-full gap-6',
       mainContent: 'flex-1 grid gap-6',
-      sidebar: 'w-full lg:w-[360px] shrink-0 border-l border-gray-200 dark:border-gray-700'
+      sidebar: [
+        'w-full lg:w-[360px]' ,
+        'shrink-0 ',
+        'border-l ',
+        'border-gray-200 ',
+        'dark:border-gray-700',
+        'space-y-6',
+        'pl-6'
+      ].join(' '),
     }
   },
   featured: {
@@ -174,7 +182,38 @@ export const defaultClasses = {
   },
   mixed: {
     sidebar: {
-      container: 'w-full'
+      container: 'w-full bg-transparent',
+      grid: 'grid grid-cols-1 md:grid-cols-3 gap-6',
+      mainColumn: 'md:col-span-2',
+      sidebarColumn: [
+        'md:col-span-1',
+        'border-l',
+        'border-gray-200',
+        'dark:border-gray-700',
+        'md:pl-6'
+      ].join(' '),
+      article: {
+        main: [
+          'break-inside-avoid mb-6',
+        ].join(' '),
+        sidebar: [
+          'break-inside-avoid mb-6',
+        ].join(' ')
+      },
+      imageWrapper: 'relative w-full overflow-hidden mb-4',
+      image: 'w-full h-full object-cover',
+      content: 'p-2',
+      heading: [
+        'mb-0',
+        'text-[1.5rem] font-bold sm:text-[1rem]',
+        'text-gray-900',
+        'dark:text-white'
+      ].join(' '),
+      subtitle: [
+        'text-lg sm:text-xl',
+        'text-gray-600',
+        'dark:text-gray-400'
+      ].join(' ')
     },
     magazine: {
       container: 'w-full'
