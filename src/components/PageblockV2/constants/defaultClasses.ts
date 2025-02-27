@@ -76,6 +76,12 @@ export const defaultClasses = {
         title: 'text-2xl font-bold text-white mb-2',
         subtitle: 'text-lg text-white/80'
       }
+    },
+    sidebar: {
+      container: 'w-full',
+      wrapper: 'flex flex-col lg:flex-row w-full gap-6',
+      mainContent: 'flex-1 grid gap-6',
+      sidebar: 'w-full lg:w-[360px] shrink-0 border-l border-gray-200 dark:border-gray-700'
     }
   },
   featured: {
@@ -182,5 +188,75 @@ export const defaultClasses = {
     masonry: {
       container: 'w-full'
     }
+  },
+  newsfeed: {
+    container: [
+      "w-full max-w-[1238px] mx-auto",
+      "mb-[40px] mt-[40px]",
+      "bg-white dark:bg-[#1b1b1b]",
+      "p-6 rounded-sm",
+    ].join(" "),
+    grid: "flex flex-col space-y-4",
+    column: "w-full",
+    article: [
+      "w-full",
+      "border-b border-gray-200 dark:border-gray-800",
+      "pb-4 last:border-b-0",
+      "hover:opacity-90 transition-opacity",
+    ].join(" "),
+    content: "flex flex-col gap-2",
+    title: [
+      "text-xl font-semibold",
+      "text-gray-900 dark:text-white",
+      "leading-tight",
+    ].join(" "),
+    subtitle: [
+      "text-base",
+      "text-gray-600 dark:text-gray-300",
+      "line-clamp-2",
+    ].join(" "),
+    readTime: [
+      "text-sm",
+      "text-gray-500 dark:text-gray-400",
+      "font-medium",
+      "mt-2",
+    ].join(" "),
+  },
+  newsgrid: {
+    container: [
+      "w-full max-w-[1238px] mx-auto",
+      "mb-[40px] mt-[40px]",
+      "bg-white dark:bg-[#1b1b1b]",
+      "p-6 rounded-sm",
+      "space-y-12",
+    ].join(" "),
+    grid: [
+      "grid grid-cols-1",
+      "md:grid-cols-3",
+      "lg:grid-cols-5",
+      "gap-6",
+    ].join(" "),
+    column: "flex flex-col space-y-4",
+    mainArticle: [
+      "flex flex-col gap-4",
+      "hover:opacity-90 transition-opacity",
+    ].join(" "),
+    secondaryArticle: [
+      "border-t border-gray-200 dark:border-gray-800",
+      "pt-4",
+      "hover:opacity-90 transition-opacity",
+    ].join(" "),
+    imageWrapper: "relative aspect-[16/10] overflow-hidden mb-3",
+    image: "w-full h-full object-cover",
+    mainTitle: [
+      "text-lg font-semibold",
+      "text-gray-900 dark:text-white",
+      "leading-tight",
+    ].join(" "),
+    secondaryTitle: [
+      "text-base font-medium",
+      "text-gray-800 dark:text-gray-200",
+      "leading-snug",
+    ].join(" "),
   }
 }; 
