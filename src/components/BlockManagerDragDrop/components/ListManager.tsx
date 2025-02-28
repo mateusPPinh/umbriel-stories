@@ -134,6 +134,7 @@ const ListManager: React.FC<ListManagerProps> = ({ articles, isDarkTheme, onSave
           {/* Coluna da Lista */}
           <DroppableColumn
             id="col-0"
+            droppableId="col-0"
             title="Lista"
             articles={columns['col-0']}
             maxItems={currentVariant.maxItems}

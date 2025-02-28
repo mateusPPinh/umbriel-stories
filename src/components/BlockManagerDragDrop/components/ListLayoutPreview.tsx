@@ -33,14 +33,14 @@ const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({ variantType, isDa
                 <div className="flex-1 min-w-0">
                   {article ? (
                     <>
-                      <div className="text-[8px] text-gray-500 dark:text-gray-400 mb-1">
+                      <div className="text-[12px] text-gray-500 dark:text-gray-400 mb-1">
                         {new Date(article.created_at || '').toLocaleDateString('pt-BR')}
                       </div>
-                      <div className="text-[10px] font-medium text-gray-900 dark:text-white truncate">
+                      <div className="text-[17px] font-medium text-gray-900 dark:text-white truncate">
                         {article.title}
                       </div>
                       {article.subtitle && (
-                        <div className="text-[8px] text-gray-500 dark:text-gray-400 truncate mt-0.5">
+                        <div className="text-[12px] text-gray-500 dark:text-gray-400 truncate mt-0.5">
                           {article.subtitle}
                         </div>
                       )}
@@ -77,7 +77,7 @@ const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({ variantType, isDa
 
               {/* Content */}
               {article ? (
-                <div className="text-[10px] font-medium text-gray-900 dark:text-white truncate flex-1">
+                <div className="text-[17px] font-medium text-gray-900 dark:text-white truncate flex-1">
                   {article.title}
                 </div>
               ) : (
@@ -113,11 +113,11 @@ const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({ variantType, isDa
                       />
                     </div>
                   )}
-                  <div className="text-[10px] font-medium text-gray-900 dark:text-white truncate">
+                  <div className="text-[17px] font-medium text-gray-900 dark:text-white truncate">
                     {article.title}
                   </div>
                   {article.subtitle && (
-                    <div className="text-[8px] text-gray-500 dark:text-gray-400 truncate mt-0.5">
+                    <div className="text-[12px] text-gray-500 dark:text-gray-400 truncate mt-0.5">
                       {article.subtitle}
                     </div>
                   )}
@@ -155,7 +155,7 @@ const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({ variantType, isDa
         Preview do Layout
       </div>
       <div className={`
-        w-full aspect-[21/9] p-4 rounded-lg
+        w-full aspect-[21/9] p-4 rounded-lg max-h-[600px] h-full overflow-y-auto
         ${isDarkTheme ? 'bg-gray-800' : 'bg-gray-100'}
         border-2 border-transparent hover:border-blue-500/50
         transition-colors duration-200

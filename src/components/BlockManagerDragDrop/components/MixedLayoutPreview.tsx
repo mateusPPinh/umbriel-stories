@@ -148,7 +148,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
                   )}
                 </div>
                 {article ? (
-                  <div className="text-[8px] font-medium text-gray-900 dark:text-white">
+                  <div className="text-[12px] font-medium text-gray-900 dark:text-white">
                     {article.title}
                   </div>
                 ) : (
@@ -253,7 +253,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
         {/* Hero Article */}
         <div className="grid grid-cols-[1.5fr,1fr] gap-4">
           <div className={`
-            aspect-[4/3] rounded overflow-hidden max-h-[300px]
+            aspect-[4/3] rounded overflow-hidden max-h-[200px]
             ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
           `}>
             {mainArticle?.content?.image?.desktop_image_path && (
@@ -293,7 +293,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
             return (
               <div key={i} className="space-y-2">
                 <div className={`
-                  aspect-video rounded overflow-hidden
+                  aspect-video rounded overflow-hidden max-h-[300px]
                   ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
                 `}>
                   {article?.content?.image?.desktop_image_path && (
@@ -324,7 +324,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
             return (
               <div key={i}>
                 {article ? (
-                  <div className="text-[8px] font-medium text-gray-900 dark:text-white">
+                  <div className="text-[12px] font-medium text-gray-900 dark:text-white">
                     {article.title}
                   </div>
                 ) : (
@@ -475,7 +475,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
         Preview do Layout
       </div>
       <div className={`
-        w-full aspect-[21/9] p-4 rounded-lg max-h-[700px]
+        w-full aspect-[21/9] p-4 rounded-lg max-h-[700px] h-full overflow-y-auto
         ${isDarkTheme ? 'bg-gray-800' : 'bg-gray-100'}
         border-2 border-transparent hover:border-blue-500/50
         transition-colors duration-200
