@@ -13,7 +13,7 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme,
     if (!article) {
       return (
         <>
-          <div className={`aspect-[16/10] rounded max-h-[300px] ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
+          <div className={`aspect-[16/10] rounded h-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
           <div className="space-y-1">
             <div className={`h-2 rounded ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
             <div className={`h-2 rounded w-2/3 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
@@ -24,7 +24,7 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme,
 
     return (
       <>
-        <div className="aspect-[16/10] max-h-[300px] rounded overflow-hidden relative">
+        <div className="aspect-[16/10] h-full rounded overflow-hidden relative">
           {article.content?.image?.desktop_image_path ? (
             <img
               src={article.content.image.desktop_image_path}
@@ -77,7 +77,7 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme,
                 <div key={i} className="flex gap-2">
                   {columns['col-1']?.[i] ? (
                     <>
-                      <div className="w-16 h-12 rounded overflow-hidden shrink-0">
+                      <div className="w-16 h-12 rounded overflow-hidden shrink-0 max-h-[300px]">
                         {columns['col-1'][i].content?.image?.desktop_image_path ? (
                           <img
                             src={columns['col-1'][i].content.image.desktop_image_path}

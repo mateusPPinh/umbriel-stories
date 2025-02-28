@@ -96,7 +96,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
     return (
       <div className="space-y-3">
         {/* Hero Article */}
-        <div className="relative aspect-[21/9] rounded overflow-hidden">
+        <div className="relative aspect-[21/9] rounded overflow-hidden max-h-[300px]">
           <div className={`absolute inset-0 ${isDarkTheme ? 'bg-gray-800' : 'bg-gray-200'}`}>
             {mainArticle?.content?.image?.desktop_image_path && (
               <img
@@ -110,11 +110,11 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
           <div className="absolute bottom-0 left-0 right-0 p-3">
             {mainArticle ? (
               <>
-                <div className="text-[10px] font-medium text-white mb-1">
+                <div className="text-[20px] font-medium text-white mb-1">
                   {mainArticle.title}
                 </div>
                 {mainArticle.subtitle && (
-                  <div className="text-[8px] text-white/80">
+                  <div className="text-[12px] text-white/80">
                     {mainArticle.subtitle}
                   </div>
                 )}
@@ -253,7 +253,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
         {/* Hero Article */}
         <div className="grid grid-cols-[1.5fr,1fr] gap-4">
           <div className={`
-            aspect-[4/3] rounded overflow-hidden
+            aspect-[4/3] rounded overflow-hidden max-h-[300px]
             ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
           `}>
             {mainArticle?.content?.image?.desktop_image_path && (
@@ -267,11 +267,11 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
           <div>
             {mainArticle ? (
               <>
-                <div className="text-[10px] font-medium text-gray-900 dark:text-white mb-1">
+                <div className="text-[20px] font-medium text-gray-900 dark:text-white mb-1">
                   {mainArticle.title}
                 </div>
                 {mainArticle.subtitle && (
-                  <div className="text-[8px] text-gray-500 dark:text-gray-400">
+                  <div className="text-[12px] text-gray-500 dark:text-gray-400">
                     {mainArticle.subtitle}
                   </div>
                 )}
@@ -305,7 +305,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
                   )}
                 </div>
                 {article ? (
-                  <div className="text-[8px] font-medium text-gray-900 dark:text-white">
+                  <div className="text-[18px] font-medium text-gray-900 dark:text-white">
                     {article.title}
                   </div>
                 ) : (
@@ -347,7 +347,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
         {/* Main Video */}
         <div className="space-y-2">
           <div className={`
-            aspect-video rounded overflow-hidden relative
+            aspect-video rounded overflow-hidden relative max-h-[300px]
             ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
           `}>
             {mainVideo?.content?.image?.desktop_image_path && (
@@ -378,11 +378,11 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
           </div>
           {mainVideo ? (
             <>
-              <div className="text-[10px] font-medium text-gray-900 dark:text-white">
+              <div className="text-[20px] font-medium text-gray-900 dark:text-white">
                 {mainVideo.title}
               </div>
               {mainVideo.subtitle && (
-                <div className="text-[8px] text-gray-500 dark:text-gray-400">
+                <div className="text-[12px] text-gray-500 dark:text-gray-400">
                   {mainVideo.subtitle}
                 </div>
               )}
@@ -434,7 +434,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
                 </div>
                 <div className="min-w-0">
                   {video ? (
-                    <div className="text-[8px] font-medium text-gray-900 dark:text-white line-clamp-2">
+                    <div className="text-[12px] font-medium text-gray-900 dark:text-white line-clamp-2">
                       {video.title}
                     </div>
                   ) : (
