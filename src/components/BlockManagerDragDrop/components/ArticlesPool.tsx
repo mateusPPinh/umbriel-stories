@@ -84,7 +84,7 @@ const ArticlesPool: React.FC<ArticlesPoolProps> = ({ articles, isDarkTheme }) =>
       </div>
 
       {/* Articles Grid */}
-      <Droppable droppableId="articles-pool" direction="horizontal">
+      <Droppable droppableId="pool" direction="horizontal">
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
@@ -102,6 +102,8 @@ const ArticlesPool: React.FC<ArticlesPoolProps> = ({ articles, isDarkTheme }) =>
                 article={article}
                 index={index}
                 isDarkTheme={isDarkTheme}
+                isInColumn={false}
+                columnIsFull={false}
               />
             ))}
             {provided.placeholder}
