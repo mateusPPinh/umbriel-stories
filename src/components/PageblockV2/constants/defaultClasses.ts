@@ -517,11 +517,41 @@ export const defaultClasses = {
         'text-gray-600 dark:text-gray-300',
         'line-clamp-2'
       ].join(' ')
+    },
+    video: {
+      container: [
+        "w-full mx-auto",
+        "mb-[40px] mt-[40px]",
+        "bg-transparent",
+        "p-6",
+      ].join(" "),
+      grid: [
+        "grid grid-cols-1",
+        "md:grid-cols-3",
+        "lg:grid-cols-5",
+        "gap-6",
+      ].join(" "),
+      mainColumn: "lg:col-span-6",
+      secondaryColumn: "lg:col-span-3",
+      secondaryGrid: "space-y-6 lg:pl-6",
+      tertiaryColumn: "lg:col-span-3",
+      tertiaryGrid: "space-y-6 lg:pl-6",
+      article: {
+        main: "flex flex-col",
+        secondary: "flex flex-col",
+        tertiary: "flex flex-col"
+      },
+      imageWrapper: "relative w-full overflow-hidden mb-4",
+      image: "w-full h-full object-cover",
+      content: "p-4",
+      heading: "text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white",
+      subtitle: "text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300",
+      customVideoHeight: "h-[300px] sm:h-[200px] md:h-[300px] lg:h-auto"
     }
   },
   newsfeed: {
     container: [
-      "w-full max-w-[1238px] mx-auto",
+      "w-full mx-auto",
       "mb-[40px] mt-[40px]",
       "bg-transparent",
     ].join(" "),
@@ -580,7 +610,7 @@ export const defaultClasses = {
   },
   newsgrid: {
     container: [
-      "w-full max-w-[1238px] mx-auto mt-12 mb-12",
+      "w-full mx-auto mt-12 mb-12",
       "bg-transparent",
       "p-6",
       "space-y-12",

@@ -4,7 +4,7 @@ import Sidebar from './variants/Sidebar';
 import Magazine from './variants/Magazine';
 import Newspaper from './variants/Newspaper';
 import Showcase from './variants/Showcase';
-
+import VideoGrid from './variants/VideoGrid';
 interface MixedBlockProps {
   block: PageBlock;
   isDarkTheme?: boolean;
@@ -23,6 +23,8 @@ const MixedBlock: React.FC<MixedBlockProps> = ({ block, isDarkTheme }) => {
         return <Newspaper  variant={variant as any} isDarkTheme={isDarkTheme} customStyles={{}} />;
       case 'showcase':
         return <Showcase  variant={variant as any} isDarkTheme={isDarkTheme} customStyles={{}} />;
+      case 'videogrid':
+        return <VideoGrid  variant={variant as any} isDarkTheme={isDarkTheme} customStyles={{}} />;
       default:
         return null;
     }
