@@ -25,7 +25,7 @@ export default {
   },
   decorators: [
     (Story) => (
-      <div className="h-[calc(100vh-300px)] p-4 w-full">
+      <div className="h-screen p-4 w-full">
         <Story />
       </div>
     )
