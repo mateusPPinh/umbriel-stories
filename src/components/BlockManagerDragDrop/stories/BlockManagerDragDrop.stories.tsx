@@ -5,7 +5,7 @@ import { createArticles } from '../../PageblockV2/stories/mockData';
 
 interface BlockManagerDragDropProps {
   articles: any[];
-  blockType: 'grid' | 'list';
+  blockType: 'grid' | 'list' | 'featured';
   isDarkTheme?: boolean;
   onSave: (columns: { [key: string]: any[] }) => void;
 }
@@ -98,6 +98,27 @@ CardList.args = {
   blockType: 'list',
 };
 
+// Featured Variants
+export const HeroFeatured = Template.bind({});
+HeroFeatured.args = {
+  blockType: 'featured',
+  articles: mockArticles,
+  isDarkTheme: false,
+  onSave: (columns) => console.log('Updated columns:', columns),
+};
+
+export const SplitFeatured = Template.bind({});
+SplitFeatured.args = {
+  ...HeroFeatured.args,
+  blockType: 'featured',
+};
+
+export const TripleFeatured = Template.bind({});
+TripleFeatured.args = {
+  ...HeroFeatured.args,
+  blockType: 'featured',
+};
+
 // Dark Theme Examples
 export const DarkThemeGrid = Template.bind({});
 DarkThemeGrid.args = {
@@ -108,5 +129,11 @@ DarkThemeGrid.args = {
 export const DarkThemeList = Template.bind({});
 DarkThemeList.args = {
   ...ChronologicalList.args,
+  isDarkTheme: true,
+};
+
+export const DarkThemeFeatured = Template.bind({});
+DarkThemeFeatured.args = {
+  ...HeroFeatured.args,
   isDarkTheme: true,
 }; 
