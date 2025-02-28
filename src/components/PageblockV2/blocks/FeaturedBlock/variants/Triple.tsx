@@ -46,7 +46,7 @@ const Triple: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles
               key={article.id}
               className={defaultStyles.article}
             >
-              {article.content.image?.desktop_image_path && (
+              {article.content?.image?.desktop_image_path ? (
                 <div className={defaultStyles.image}>
                   <img
                     src={article.content.image.desktop_image_path}
@@ -54,6 +54,8 @@ const Triple: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles
                     className="w-full h-full object-cover"
                   />
                 </div>
+              ) : (
+                null
               )}
               
               <div className={defaultStyles.content}>

@@ -7,8 +7,10 @@ export const mockArticle = {
     image: {
       desktop_image_path: "https://barzuputru.local.api.umbrielcms.com.br:3001/uploads/6370ab4d976b0a5a95ea-24putin-anniversary-hvgm-superJumbo.webp?width=2048&height=1365",
       image_mobile_path: "https://barzuputru.local.api.umbrielcms.com.br:3001/uploads/6370ab4d976b0a5a95ea-24putin-anniversary-hvgm-superJumbo.webp?width=2048&height=1365"
-    }
+    },
+    body: "As the war in Ukraine enters its third year, a significant shift in global politics emerges with potential changes in Washington..."
   },
+  articleBody: `<p class="p__hero p__hero"></p><p>President Vladimir V. Putin of Russia took the stage in Sochi, Russia, last fall, two days after Donald J. Trump won the U.S. presidential election, and spoke of the dawn of a new world order.</p><p>"In a sense," Mr. Putin said, "the moment of truth is coming."</p><p>It may have already arrived.</p><p>After three years of grinding warfare and isolation by the West, a world of new possibilities has opened up for Mr. Putin with a change of power in Washington.</p><p>Gone are the statements from the East Room of the White House about the United States standing up to bullies, supporting democracy over autocracy and ensuring freedom will prevail.</p><p>Gone, too, is Washington's united front against Russia with its European allies, many of whom have begun to wonder if the new American administration will protect them against a revanchist Moscow, or even keep troops in Europe at all.</p><p></p><p>Mr. Trump, having voiced desires to take Greenland, has pursued a rapid rapprochement with the Kremlin, while sidelining shocked European allies and publicly assailing President Volodymyr Zelensky of Ukraine.</p><p></p>`,
   created_at: "2024-02-27T12:00:00Z",
   updated_at: "2024-02-27T12:00:00Z"
 };

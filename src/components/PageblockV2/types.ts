@@ -47,14 +47,14 @@ export interface Article {
   id: string;
   title: string;
   subtitle?: string;
-  content: {
+  created_at?: string | Date;
+  content?: {
     image?: {
       desktop_image_path?: string;
     };
+    body?: string;
   };
-  created_at?: Date;
-  updated_at?: Date;
-  readTime?: string;
+  articleBody?: string;
 }
 
 export type FontSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
@@ -245,6 +245,15 @@ export interface TimelineContent {
   title: string;
   subtitle: string;
   metadata: string;
+}
+
+export interface TimelineContentClasses {
+  date: string;
+  relativeTime: string;
+  title: string;
+  subtitle: string;
+  metadata: string;
+  preview: string;
 }
 
 export interface MasonryStyles {

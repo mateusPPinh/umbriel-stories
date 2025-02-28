@@ -1,5 +1,4 @@
 import React from 'react';
-import { useBlockStyles } from '../../../hooks/useBlockStyles';
 import { BlockVariant, Article, TimelineStyles } from '../../../types';
 import { defaultClasses } from '../../../constants/defaultClasses';
 import { formatDistanceToNow } from 'date-fns';
@@ -28,6 +27,13 @@ const Chronological: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custo
     });
   };
 
+  const truncateText = (text: string, maxLength: number = 150) => {
+    if (!text) return '';
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength) + '...';
+  };
+  
+
   return (
     <div className={`${classes.container} ${customStyles?.container || ''}`}>
       <div className={classes.list}>
@@ -44,6 +50,7 @@ const Chronological: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custo
               className={`
                 ${classes.item}
                 ${classes.variants.hover[styles.hoverEffect || 'highlight']}
+                group
               `}
             >
               <div className={`
@@ -51,7 +58,7 @@ const Chronological: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custo
                 ${classes.variants.marker[styles.markerStyle || 'circle']}
               `} />
 
-              {styles.showDate && article.created_at && (
+              {article.created_at ? (
                 <div className={classes.content.date}>
                   <span>
                     {new Date(article.created_at).toLocaleDateString('pt-BR', {
@@ -64,31 +71,68 @@ const Chronological: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custo
                     {formatRelativeTime(article.created_at)}
                   </span>
                 </div>
-              )}
+              ) : null}
 
               <h3 className={classes.content.title}>
                 {article.title}
               </h3>
               
-              {styles.showExcerpt ? (
+              {article.subtitle ? (
                 <p className={classes.content.subtitle}>
                   {article.subtitle}
                 </p>
-              ) : (
-                <p className={classes.content.subtitle}>
-                  {article.subtitle}
-                </p>
-              )}
+              ) : null}
+
+              {/* Preview do texto no hover */}
+              <div className={`
+                ${classes.content.preview}
+                opacity-0 max-h-0 overflow-hidden transition-all duration-200
+                group-hover:opacity-100 group-hover:max-h-96
+                prose prose-sm dark:prose-invert
+              `}>
+                {article.articleBody ? (
+                  <>
+                    <div 
+                      dangerouslySetInnerHTML={{ __html: article.articleBody }}
+                      className="text-sm text-gray-600 dark:text-gray-400 mt-2"
+                    />
+                    <button className="
+                      mt-4 text-sm font-medium
+                      text-blue-600 hover:text-blue-700
+                      dark:text-blue-400 dark:hover:text-blue-300
+                      transition-colors duration-200
+                      flex items-center gap-2
+                    ">
+                      Continue lendo
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        width="16" 
+                        height="16" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        strokeWidth="2" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        className="inline-block"
+                      >
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                      </svg>
+                    </button>
+                  </>
+                ) : article.content?.body ? (
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                    {truncateText(article.content.body, 150)}
+                  </p>
+                ) : null}
+              </div>
 
               {styles.showMetadata ? (
                 <div className={classes.content.metadata}>
                   {/* Metadata aqui */}
                 </div>
-              ) : (
-                <div className={classes.content.metadata}>
-                  {/* Metadata aqui */}
-                </div>
-              )}
+              ) : null}
             </div>
           ))
         ))}

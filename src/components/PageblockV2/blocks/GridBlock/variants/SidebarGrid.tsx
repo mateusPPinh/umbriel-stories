@@ -14,91 +14,40 @@ interface BaseVariantProps {
 }
 
 const SidebarGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
-  const classes = defaultClasses.grid.sidebar;
+  const classes = defaultClasses.grid.sidebargrid;
   const { articles } = variant.config;
   const styles = variant.config.styles || {};
 
-  const sidebarClasses = {
-    container: 'w-full bg-transparent',
-    wrapper: [
-      'flex flex-col',
-      'lg:flex-row',
-      'w-full',
-      'gap-6'
-    ].join(' '),
-    mainContent: [
-      'flex-1',
-      'grid',
-      'gap-6'
-    ].join(' '),
-    sidebar: [
-     'w-full lg:w-[360px]' ,
-        'shrink-0 ',
-        'border-l ',
-        'border-gray-200 ',
-        'dark:border-gray-700',
-        'space-y-6',
-        'pl-6'
-    ].join(' '),
-    article: {
-      main: [
-        'flex flex-col',
-      ].join(' '),
-      sidebar: [
-        'flex gap-4',
-      ].join(' ')
-    },
-    image: {
-      main: 'w-full aspect-[16/9] object-cover mb-4',
-      sidebar: 'w-24 h-24 object-cover shrink-0 rounded-lg'
-    },
-    content: {
-      main: {
-        title: 'text-xl font-semibold mb-2',
-        subtitle: 'text-base text-gray-600 dark:text-gray-400'
-      },
-      sidebar: {
-        title: 'text-base font-medium mb-1',
-        subtitle: 'text-sm text-gray-600 dark:text-gray-400'
-      }
-    },
-    heading: {
-      main: 'text-2xl font-bold mb-2',
-      sidebar: 'text-base font-medium mb-1'
-    },
-    subtitle: {
-      main: 'text-base text-gray-600 dark:text-gray-400',
-      sidebar: 'text-sm text-gray-600 dark:text-gray-400'
-    }
-  };
 
   return (
-    <div className={`${sidebarClasses.container} ${customStyles?.container || ''}`}>
-      <div className={`${sidebarClasses.wrapper} ${customStyles?.wrapper || ''}`}>
+    <div className={`${ classes.container} ${customStyles?.container || ''}`}>
+      <div className={`${classes.wrapper} ${customStyles?.wrapper || ''}`}>
         {/* Main Content */}
-        <div className={sidebarClasses.mainContent}>
+        <div className={classes.mainContent}>
           {articles['col-0']?.map((article: Article) => (
             <div 
               key={article.id}
-              className={sidebarClasses.article.main}
+              className={classes.article.main}
             >
-              {article.content.image?.desktop_image_path && (
+              {article.content?.image?.desktop_image_path ? (
                 <img
                   src={article.content.image.desktop_image_path}
                   alt={article.title}
-                  className={sidebarClasses.image.main}
+                  className={classes.image.main}
                 />
+              ) : (
+                null
               )}
               <div>
-                <h3 className={sidebarClasses.heading.main}>
+                <h3 className={classes.content.main.title}>
                   {article.title}
                 </h3>
                 {styles.showExcerpt ? (
-                  <p className={sidebarClasses.subtitle.main}>
+                  <p className={classes.content.main.subtitle}>
                     {article.subtitle}
                   </p>
                 ) : (
-                  <p className={sidebarClasses.subtitle.main}>
+                  <p className={classes.content.main.subtitle}>
                     {article.subtitle}
                   </p>
                 )}
@@ -108,32 +57,34 @@ const SidebarGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
         </div>
 
         {/* Sidebar */}
-        <div className={sidebarClasses.sidebar}>
+        <div className={classes.sidebar}>
           {articles['col-1']?.map((article: Article, index: number) => (
             <div 
               key={article.id}
               className={[
-                sidebarClasses.article.sidebar,
+                classes.article.sidebar,
                 index !== (articles['col-1'].length - 1) ? 'border-b border-gray-200 dark:border-gray-700 pb-4 mb-4' : ''
               ].filter(Boolean).join(' ')}
             >
-              {article.content.image?.desktop_image_path && (
+              {article.content?.image?.desktop_image_path ? (
                 <img
                   src={article.content.image.desktop_image_path}
                   alt={article.title}
-                  className={sidebarClasses.image.sidebar}
+                  className={classes.image.sidebar}
                 />
+              ) : (
+                null
               )}
               <div>
-                <h3 className={sidebarClasses.heading.sidebar}>
+                <h3 className={classes.content.sidebar.title}>
                   {article.title}
                 </h3>
                 {styles.showExcerpt ? (
-                  <p className={sidebarClasses.subtitle.sidebar}>
+                  <p className={classes.content.sidebar.subtitle}>
                     {article.subtitle}
                   </p>
                 ) : (
-                  <p className={sidebarClasses.subtitle.sidebar}>
+                  <p className={classes.content.sidebar.subtitle}>
                     {article.subtitle}
                   </p>
                 )}

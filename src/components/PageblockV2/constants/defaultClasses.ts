@@ -153,11 +153,11 @@ export const defaultClasses = {
       },
       content: {
         main: {
-          title: 'text-xl font-semibold mb-2',
+          title: 'text-xl text-gray-900 dark:text-white font-semibold mb-2',
           subtitle: 'text-base text-gray-600 dark:text-gray-400'
         },
         sidebar: {
-          title: 'text-base font-medium mb-1',
+          title: 'text-base text-gray-900 dark:text-white font-medium mb-1',
           subtitle: 'text-sm text-gray-600 dark:text-gray-400'
         }
       }
@@ -316,14 +316,12 @@ export const defaultClasses = {
         'bg-blue-600 dark:bg-blue-400'
       ].join(' '),
       content: {
-        date: [
-          'text-sm text-gray-500 dark:text-gray-400 mb-2',
-          'flex items-center gap-2'
-        ].join(' '),
-        relativeTime: 'text-sm text-gray-400 dark:text-gray-500',
-        title: 'text-lg font-medium text-gray-900 dark:text-white mb-2',
-        subtitle: 'text-sm text-gray-600 dark:text-gray-300',
-        metadata: 'text-sm text-gray-500 dark:text-gray-400 mt-2'
+        date: 'text-sm text-gray-500 dark:text-gray-400',
+        relativeTime: 'text-xs text-gray-400 dark:text-gray-500 ml-2',
+        title: 'text-lg font-medium text-gray-900 dark:text-gray-100',
+        subtitle: 'text-sm text-gray-500 dark:text-gray-400',
+        metadata: 'text-xs text-gray-400 dark:text-gray-500',
+        preview: 'bg-blue-50 dark:bg-gray-800 p-3 rounded-md shadow-sm'
       },
       variants: {
         line: {

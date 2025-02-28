@@ -81,7 +81,7 @@ const FeaturedGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
               key={article.id}
               className={featuredClasses.article}
             >
-              {article.content.image?.desktop_image_path && (
+              {article.content?.image?.desktop_image_path ? (
                 <div className={featuredClasses.image.wrapper}>
                   <img
                     src={article.content.image.desktop_image_path}
@@ -106,6 +106,8 @@ const FeaturedGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
                     )}
                   </div>
                 </div>
+              ) : (
+                null
               )}
             </div>
           ))
