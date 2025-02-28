@@ -157,7 +157,11 @@ const BlockManagerDragDrop: React.FC<BlockManagerDragDropProps> = ({
         <div className="flex flex-wrap -mx-2">
           {/* Layout Preview */}
           <div className="w-full p-2 mb-4">
-            <LayoutPreview variantType={variantType} isDarkTheme={isDarkTheme} />
+            <LayoutPreview 
+              variantType={variantType} 
+              isDarkTheme={isDarkTheme}
+              columns={columns}
+            />
           </div>
 
           {/* Available Articles Pool */}
