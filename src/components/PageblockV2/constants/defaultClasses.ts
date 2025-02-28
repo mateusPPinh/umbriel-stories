@@ -23,8 +23,8 @@ export const defaultClasses = {
       },
       content: {
         wrapper: 'p-4',
-        title: 'text-xl font-bold text-gray-900 dark:text-white mb-2',
-        subtitle: 'text-lg text-gray-600 dark:text-gray-300'
+        title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white mb-2',
+        subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300'
       }
     },
     masonry: {
@@ -45,8 +45,8 @@ export const defaultClasses = {
         img: 'w-full h-full object-cover'
       },
       content: {
-        title: 'text-xl font-semibold text-gray-900 dark:text-white mb-2',
-        subtitle: 'text-md text-gray-600 dark:text-gray-300',
+        title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white mb-2',
+        subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300',
         wrapper: 'p-4',
       },
     },
@@ -109,12 +109,12 @@ export const defaultClasses = {
       },
       content: {
         main: {
-          title: 'text-xl font-semibold mb-2',
-          subtitle: 'text-base text-gray-600 dark:text-gray-400'
+          title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white mb-2',
+          subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300'
         },
         sidebar: {
-          title: 'text-base font-medium mb-1',
-          subtitle: 'text-sm text-gray-600 dark:text-gray-400'
+          title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white mb-1',
+          subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300'
         }
       }
     },
@@ -154,12 +154,12 @@ export const defaultClasses = {
       },
       content: {
         main: {
-          title: 'text-xl text-gray-900 dark:text-white font-semibold mb-2',
-          subtitle: 'text-base text-gray-600 dark:text-gray-400'
+          title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white mb-2',
+          subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300'
         },
         sidebar: {
-          title: 'text-base text-gray-900 dark:text-white font-medium mb-1',
-          subtitle: 'text-sm text-gray-600 dark:text-gray-400'
+          title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white mb-1',
+          subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300'
         }
       }
     },
@@ -185,8 +185,8 @@ export const defaultClasses = {
       },
       content: {
         wrapper: 'p-4',
-        title: 'text-xl font-bold text-gray-900 dark:text-white mb-2',
-        subtitle: 'text-lg text-gray-600 dark:text-gray-300'
+        title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white mb-2',
+        subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300'
       }
     },
     newsgrid: {
@@ -319,8 +319,8 @@ export const defaultClasses = {
       content: {
         date: 'text-sm text-gray-500 dark:text-gray-400',
         relativeTime: 'text-xs text-gray-400 dark:text-gray-500 ml-2',
-        title: 'text-lg font-medium text-gray-900 dark:text-gray-100',
-        subtitle: 'text-sm text-gray-500 dark:text-gray-400',
+        title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white',
+        subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300',
         metadata: 'text-xs text-gray-400 dark:text-gray-500',
         preview: 'bg-blue-50 dark:bg-gray-800 p-3 rounded-md shadow-sm'
       },
@@ -523,7 +523,7 @@ export const defaultClasses = {
         "w-full mx-auto",
         "mb-[40px] mt-[40px]",
         "bg-transparent",
-        "p-6",
+        "p-0",
       ].join(" "),
       grid: [
         "grid grid-cols-1",
