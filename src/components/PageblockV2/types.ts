@@ -76,6 +76,7 @@ export interface Article {
       desktop_image_path?: string;
     };
     body?: string;
+    description?: string;
   };
   articleBody?: string;
   editorial?: Editorial;
@@ -83,6 +84,7 @@ export interface Article {
     title: string
     url: string
   }>
+  published_at: string;
 }
 
 export type FontSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
