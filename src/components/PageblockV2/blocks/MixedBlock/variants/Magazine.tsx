@@ -1,119 +1,27 @@
 import React from 'react';
-import { useBlockStyles } from '../../../hooks/useBlockStyles';
-import { 
-  BlockVariant, 
-  Article, 
-  ThemeProps, 
-  StyleProps,
-  BlockConfig
-} from '../../../types/index';
+import { BlockVariant, Article, GridStyles } from '../../../types';
+import { generateArticleUrl } from '../../../utils/generateArticleUrl';
+import Link from '../../../../Link';
 import { defaultClasses } from '../../../constants/defaultClasses';
 
+
+
 interface BaseVariantProps {
-  variant: BlockVariant;
+  variant: BlockVariant & {
+    config: {
+      styles: GridStyles;
+    };
+  };
   isDarkTheme?: boolean;
   customStyles?: any;
 }
 
-const defaultColumnStyle = {
-  background: 'transparent'
-};
-
-const defaultHeadingProps: StyleProps = {
-  fontSize: 'xl',
-  fontWeight: 'bold',
-  color: '#1a1a1a'
-};
-
-const defaultSubtitleProps: StyleProps = {
-  fontSize: 'lg',
-  color: '#4a5568'
-};
-
-const defaultTheme: ThemeProps = {
-  columnStyle: defaultColumnStyle,
-  headingProps: defaultHeadingProps,
-  subtitleProps: defaultSubtitleProps,
-  bodyProps: {},
-  linkProps: {
-    color: '#000',
-    hoverColor: '#000'
-  }
-};
-
-const darkTheme: ThemeProps = {
-  ...defaultTheme,
-  columnStyle: {
-    ...defaultColumnStyle,
-    background: '#1a1a1a'
-  },
-  headingProps: {
-    ...defaultHeadingProps,
-    color: '#ffffff'
-  },
-  subtitleProps: {
-    ...defaultSubtitleProps,
-    color: '#a0aec0'
-  },
-  linkProps: {
-    color: '#fff',
-    hoverColor: '#fff'
-  }
-};
-
-const defaultStyles: BlockConfig['styles'] = {
-  theme: {
-    light: {
-      columnStyle: {
-        background: '#ffffff'
-      },
-      headingProps: {
-        fontSize: 'xl',
-        fontWeight: 700,
-        color: '#1a1a1a'
-      },
-      subtitleProps: {
-        fontSize: 'lg',
-        color: '#4a5568'
-      }
-    },
-    dark: {
-      columnStyle: {
-        background: '#1a1a1a'
-      },
-      headingProps: {
-        fontSize: 'xl',
-        fontWeight: 700,
-        color: '#ffffff'
-      },
-      subtitleProps: {
-        fontSize: 'lg',
-        color: '#a0aec0'
-      }
-    }
-  },
-  showExcerpt: true
-};
 
 const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
   const classes = defaultClasses.mixed.magazine || { container: '' };
   const { articles } = variant.config;
-  const styles = variant.config.styles || defaultStyles;
-  const theme = styles.theme?.[isDarkTheme ? 'dark' : 'light'] || (isDarkTheme ? darkTheme : defaultTheme);
+  const styles = variant.config.styles || {};
 
-  const { containerStyle } = useBlockStyles({
-    config: {
-      ...variant.config,
-      styles: {
-        ...styles,
-        theme: {
-          light: defaultTheme,
-          dark: darkTheme
-        }
-      }
-    },
-    isDarkTheme
-  });
 
   // Get main article and secondary articles
   const mainArticle = articles['col-0']?.[0];
@@ -121,16 +29,15 @@ const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
   const tertiaryArticles = articles['col-2'] || [];
 
   return (
-    <div className={`${classes.container} ${customStyles?.container || ''}`} style={containerStyle}>
+    <div className={`${classes.container} ${customStyles?.container || ''}`}>
       <div className={customStyles?.grid || 'grid grid-cols-1 lg:grid-cols-12 gap-6'}>
         {/* Main Article */}
         {mainArticle && (
           <div className={customStyles?.mainColumn || 'lg:col-span-6'}>
             <article 
               className={customStyles?.mainArticle || 'flex flex-col'}
-              style={theme.columnStyle}
             >
-              {mainArticle.content.image?.desktop_image_path && (
+              {mainArticle.content?.image?.desktop_image_path && (
                 <div className={customStyles?.imageWrapper || 'relative w-full aspect-[16/9] overflow-hidden mb-4'}>
                   <img
                     src={mainArticle.content.image.desktop_image_path}
@@ -141,24 +48,23 @@ const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
               )}
               
               <div className={customStyles?.content || 'p-4'}>
-                <h2 
-                  className={customStyles?.heading || 'text-2xl font-bold mb-3'} 
-                  style={theme.headingProps}
-                >
-                  {mainArticle.title}
-                </h2>
+                <Link className="hover:underline transition-all duration-300" href={generateArticleUrl(mainArticle)}>
+                  <h2 
+                    className={customStyles?.heading || 'text-2xl font-bold mb-3'} 
+                  >
+                    {mainArticle.title}
+                  </h2>
+                </Link>
                 
                 {styles.showExcerpt ? (
                   <p 
                     className={customStyles?.subtitle || 'text-lg'} 
-                    style={theme.subtitleProps}
                   >
                     {mainArticle.subtitle}
                   </p>
                 ) : (
                   <p 
                     className={customStyles?.subtitle || 'text-lg'} 
-                    style={theme.subtitleProps}
                   >
                     {mainArticle.subtitle}
                   </p>
@@ -175,12 +81,11 @@ const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
               <article 
                 key={article.id} 
                 className={customStyles?.secondaryArticle || 'flex flex-col'}
-                style={theme.columnStyle}
               >
-                {article.content.image?.desktop_image_path && (
+                {article.content?.image?.desktop_image_path && (
                   <div className={customStyles?.imageWrapper || 'relative w-full aspect-[4/3] overflow-hidden mb-4'}>
                     <img
-                      src={article.content.image.desktop_image_path}
+                      src={article.content?.image?.desktop_image_path}
                       alt={article.title}
                       className={customStyles?.image || 'w-full h-full object-cover'}
                     />
@@ -188,24 +93,23 @@ const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
                 )}
                 
                 <div className={customStyles?.content || 'p-4'}>
-                  <h2 
-                    className={customStyles?.heading || 'text-xl font-semibold mb-2'} 
-                    style={theme.headingProps}
-                  >
-                    {article.title}
-                  </h2>
+                  <Link className="hover:underline transition-all duration-300" href={generateArticleUrl(article)}>
+                    <h2 
+                      className={customStyles?.heading || 'text-xl font-semibold mb-2'} 
+                    >
+                      {article.title}
+                    </h2>
+                  </Link>
                   
                   {styles.showExcerpt ? (
                     <p 
                       className={customStyles?.subtitle || 'text-base'} 
-                      style={theme.subtitleProps}
                     >
                       {article.subtitle}
                     </p>
                     ) : (
                     <p 
                       className={customStyles?.subtitle || 'text-base'} 
-                      style={theme.subtitleProps}
                     >
                       {article.subtitle}
                     </p>
@@ -223,12 +127,11 @@ const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
               <article 
                 key={article.id} 
                 className={customStyles?.tertiaryArticle || 'flex flex-col'}
-                style={theme.columnStyle}
               >
-                {article.content.image?.desktop_image_path && (
+                {article.content?.image?.desktop_image_path && (
                   <div className={customStyles?.imageWrapper || 'relative w-full aspect-[4/3] overflow-hidden mb-4'}>
                     <img
-                      src={article.content.image.desktop_image_path}
+                      src={article.content?.image?.desktop_image_path}
                       alt={article.title}
                       className={customStyles?.image || 'w-full h-full object-cover'}
                     />
@@ -236,24 +139,23 @@ const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
                 )}
                 
                 <div className={customStyles?.content || 'p-4'}>
-                  <h2 
-                    className={customStyles?.heading || 'text-xl font-semibold mb-2'} 
-                    style={theme.headingProps}
-                  >
-                    {article.title}
-                  </h2>
+                  <Link className="hover:underline transition-all duration-300" href={generateArticleUrl(article)}>
+                    <h2 
+                      className={customStyles?.heading || 'text-xl font-semibold mb-2'} 
+                    >
+                      {article.title}
+                    </h2>
+                  </Link>
                   
                   {styles.showExcerpt ? (
                     <p 
                       className={customStyles?.subtitle || 'text-base'} 
-                      style={theme.subtitleProps}
                     >
                       {article.subtitle}
                     </p>
                     ) : (
                     <p 
                       className={customStyles?.subtitle || 'text-base'} 
-                      style={theme.subtitleProps}
                     >
                       {article.subtitle}
                     </p>

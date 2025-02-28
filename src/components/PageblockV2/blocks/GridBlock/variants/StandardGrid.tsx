@@ -1,13 +1,11 @@
 import React from 'react';
-import { useBlockStyles } from '../../../hooks/useBlockStyles';
 import { 
   BlockVariant, 
   Article, 
-  ThemeProps, 
-  StyleProps,
-  BlockConfig
-} from '../../../types/index';
+} from '../../../types';
 import { defaultClasses } from '../../../constants/defaultClasses';
+import { generateArticleUrl } from '../../../utils/generateArticleUrl';
+import Link from '../../../../Link';
 
 interface BaseVariantProps {
   variant: BlockVariant;
@@ -15,108 +13,54 @@ interface BaseVariantProps {
   customStyles?: any;
 }
 
-// Helper function to merge styles
-const mergeStyles = (defaultStyles: any, customStyles: any) => {
-  if (!customStyles) return defaultStyles;
-  return {
-    ...defaultStyles,
-    ...customStyles,
-    columnStyles: {
-      ...defaultStyles.columnStyles,
-      ...customStyles.columnStyles
-    },
-    theme: {
-      light: {
-        ...defaultStyles.theme?.light,
-        ...customStyles.theme?.light,
-        columnStyle: {
-          ...defaultStyles.theme?.light?.columnStyle,
-          ...customStyles.theme?.light?.columnStyle
-        }
-      },
-      dark: {
-        ...defaultStyles.theme?.dark,
-        ...customStyles.theme?.dark,
-        columnStyle: {
-          ...defaultStyles.theme?.dark?.columnStyle,
-          ...customStyles.theme?.dark?.columnStyle
-        }
-      }
-    }
-  };
-};
-
 const StandardGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
   const classes = defaultClasses.grid.standard;
   const { articles } = variant.config;
   const styles = variant.config.styles || {};
   const layout = variant.config.layout || {};
 
-  const standardClasses = {
-    container: [
-      'w-full max-w-[1238px] mx-auto bg-transparent',
-      'mb-[40px] mt-[40px]',
-      'bg-transparent',
-      'p-8 rounded-lg'
-    ].join(' '),
-    grid: [
-      'grid grid-cols-1',
-      'md:grid-cols-2',
-      `lg:grid-cols-${layout.columns || 3}`,
-      `gap-[${layout.gap || '24px'}]`
-    ].join(' '),
-    article: [
-      'flex flex-col',
-      'bg-transparent',
-    ].join(' '),
-    image: {
-      wrapper: 'relative aspect-[16/10] overflow-hidden mb-4',
-      img: 'w-full h-full object-cover'
-    },
-    content: {
-      wrapper: 'p-4',
-      title: 'text-xl font-bold text-gray-900 dark:text-white mb-2',
-      subtitle: 'text-lg text-gray-600 dark:text-gray-300'
-    }
-  };
-
   const items = Object.values(articles).flat();
 
   return (
-    <div className={`${standardClasses.container} ${customStyles?.container || ''}`}>
-      <div className={`${standardClasses.grid} ${customStyles?.grid || ''}`}>
-        {items.map((article: Article) => (
-          <article 
+    <div className={`${classes.container} ${customStyles?.container || ''}`}>
+      <div className={`${classes.grid} ${customStyles?.grid || ''}`}>
+        {items.map((article: Article) => {
+          const articleUrl = generateArticleUrl(article);
+          return (
+            <article 
             key={article.id} 
-            className={standardClasses.article}
+            className={classes.article}
           >
-            {article.content.image?.desktop_image_path && (
-              <div className={standardClasses.image.wrapper}>
+            {article.content?.image?.desktop_image_path && (
+              <div className={classes.image.wrapper}>
                 <img
-                  src={article.content.image.desktop_image_path}
+                  src={article.content?.image?.desktop_image_path}
                   alt={article.title}
-                  className={standardClasses.image.img}
+                  className={classes.image.img}
                 />
               </div>
             )}
             
-            <div className={standardClasses.content.wrapper}>
-              <h2 className={standardClasses.content.title}>
+            <div className={classes.content.wrapper}>
+              <Link href={articleUrl} className="hover:underline transition-all duration-300">
+              <h2 className={classes.content.title}>
                 {article.title}
               </h2>
+              </Link>
               
               {styles.showExcerpt ? (
-                <p className={standardClasses.content.subtitle}>
+                <p className={classes.content.subtitle}>
                   {article.subtitle}
                 </p>
               ) : (
-                <p className={standardClasses.content.subtitle}>
+                <p className={classes.content.subtitle}>
                   {article.subtitle}
                 </p>
               )}
             </div>
           </article>
-        ))}
+          )
+        })}
       </div>
     </div>
   );

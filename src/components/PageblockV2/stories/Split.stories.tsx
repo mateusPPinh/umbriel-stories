@@ -1,12 +1,12 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
-import Split from './Split';
-import { BlockVariant } from '../../../types';
-import { createArticles } from '../../../stories/mockData';
-import { ResponsiveDeviceProvider } from '../../../contexts/ResponsiveDeviceContext';
+import Split from '../blocks/FeaturedBlock/variants/Split';
+import { BlockVariant } from '../types';
+import { createArticles } from './mockData';
+import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
 
 export default {
-  title: 'PageBlock/Featured/Split',
+  title: 'PageBlockV2/Featured/Split',
   component: Split,
   decorators: [
     (Story) => (

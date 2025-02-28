@@ -1,12 +1,12 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
-import SidebarGrid from './SidebarGrid';
-import { BlockVariant } from '../../../types';
-import { createArticles } from '../../../stories/mockData';
-import { ResponsiveDeviceProvider } from '../../../contexts/ResponsiveDeviceContext';
+import SidebarGrid from '../blocks/GridBlock/variants/SidebarGrid';
+import { BlockVariant } from '../types';
+import { createArticles } from './mockData';
+import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
 
 export default {
-  title: 'PageBlock/Grid/SidebarGrid',
+  title: 'PageBlockV2/Grid/SidebarGrid',
   component: SidebarGrid,
   decorators: [
     (Story) => (

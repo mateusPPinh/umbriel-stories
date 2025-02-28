@@ -1,12 +1,12 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
-import Sidebar from './Sidebar';
-import { BlockVariant } from '../../../types';
-import { createArticles } from '../../../stories/mockData';
-import { ResponsiveDeviceProvider } from '../../../contexts/ResponsiveDeviceContext';
+import Sidebar from '../blocks/MixedBlock/variants/Sidebar';
+import { BlockVariant } from '../types';
+import { createArticles } from './mockData';
+import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
 
 export default {
-  title: 'PageBlock/Mixed/Sidebar',
+  title: 'PageBlockV2/Mixed/Sidebar',
   component: Sidebar,
   decorators: [
     (Story) => (

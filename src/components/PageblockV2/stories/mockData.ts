@@ -3,6 +3,7 @@ export const mockArticle = {
   tenant_id: "eb223d91-3f8a-4820-8c1b-e6615478622c",
   title: "Three Years Into War in Ukraine, Trump Ushers in New World for Putin",
   subtitle: "Fresh possibilities have emerged for President Vladimir V. Putin of Russia with a change of power in Washington",
+  slug: "three-years-into-war-in-ukraine-trump-ushers-in-new-world-for-putin",
   content: {
     image: {
       desktop_image_path: "https://barzuputru.local.api.umbrielcms.com.br:3001/uploads/6370ab4d976b0a5a95ea-24putin-anniversary-hvgm-superJumbo.webp?width=2048&height=1365",
@@ -10,9 +11,62 @@ export const mockArticle = {
     },
     body: "As the war in Ukraine enters its third year, a significant shift in global politics emerges with potential changes in Washington..."
   },
+  editorial: {
+    id: "b5f835c1-3313-427e-9171-a0b90989f837",
+    name: "International",
+    description: "International",
+    slug: "word/international",
+    status: true,
+    created_at: "2025-02-16T17:05:47.612Z",
+    updated_at: "2025-02-16T17:05:47.612Z",
+    tenantId: "eb223d91-3f8a-4820-8c1b-e6615478622c",
+    numberOfArticles: null
+  },
   articleBody: `<p class="p__hero p__hero"></p><p>President Vladimir V. Putin of Russia took the stage in Sochi, Russia, last fall, two days after Donald J. Trump won the U.S. presidential election, and spoke of the dawn of a new world order.</p><p>"In a sense," Mr. Putin said, "the moment of truth is coming."</p><p>It may have already arrived.</p><p>After three years of grinding warfare and isolation by the West, a world of new possibilities has opened up for Mr. Putin with a change of power in Washington.</p><p>Gone are the statements from the East Room of the White House about the United States standing up to bullies, supporting democracy over autocracy and ensuring freedom will prevail.</p><p>Gone, too, is Washington's united front against Russia with its European allies, many of whom have begun to wonder if the new American administration will protect them against a revanchist Moscow, or even keep troops in Europe at all.</p><p></p><p>Mr. Trump, having voiced desires to take Greenland, has pursued a rapid rapprochement with the Kremlin, while sidelining shocked European allies and publicly assailing President Volodymyr Zelensky of Ukraine.</p><p></p>`,
   created_at: "2024-02-27T12:00:00Z",
-  updated_at: "2024-02-27T12:00:00Z"
+  updated_at: "2024-02-27T12:00:00Z",
+  links: [
+    {
+      title: "Read More news 1  ",
+      url: "https://www.google.com"
+    },
+    {
+      title: "Read More news 2",
+      url: "https://www.google.com"
+    },
+    {
+      title: "Read More news 3",
+      url: "https://www.google.com"
+    },
+    {
+      title: "Read More news 4",
+      url: "https://www.google.com"
+    },
+    {
+      title: "Read More news 5",
+      url: "https://www.google.com"
+    },
+    {
+      title: "Read More news 6",
+      url: "https://www.google.com"
+    },
+    {
+      title: "Read More news 7",
+      url: "https://www.google.com"
+    },
+    {
+      title: "Read More news 8",
+      url: "https://www.google.com"
+    },
+    {
+      title: "Read More news 9",
+      url: "https://www.google.com"
+    },
+    {
+      title: "Read More news 10",
+      url: "https://www.google.com"
+    }
+  ]
 };
 
 // Base block configuration
@@ -66,6 +120,7 @@ export const createArticles = (count: number) => {
     ...mockArticle,
     id: `${mockArticle.id}-${index}`,
     title: `${mockArticle.title} ${index + 1}`,
+    slug: `${mockArticle.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${index + 1}`,
   }));
 };
 

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
-import FeaturedGrid from './FeaturedGrid';
-import { BlockVariant } from '../../../types';
-import { createArticles } from '../../../stories/mockData';
-import { ResponsiveDeviceProvider } from '../../../contexts/ResponsiveDeviceContext';
+import FeaturedGrid from '../blocks/GridBlock/variants/FeaturedGrid';
+import { BlockVariant } from '../types';
+import { createArticles } from './mockData';
+import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
 
 export default {
-  title: 'PageBlock/Grid/FeaturedGrid',
+  title: 'PageBlockV2/Grid/FeaturedGrid',
   component: FeaturedGrid,
   decorators: [
     (Story) => (

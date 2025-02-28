@@ -1,13 +1,13 @@
 // src/components/PageblockV2/blocks/GridBlock/variants/NewsGrid.stories.tsx
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
-import NewsGrid from './NewsGrid';
-import { BlockVariant } from '../../../types';
-import { createArticles } from '../../../stories/mockData';
-import { ResponsiveDeviceProvider } from '../../../contexts/ResponsiveDeviceContext';
+import NewsGrid from '../blocks/GridBlock/variants/NewsGrid';
+import { BlockVariant } from '../types';
+import { createArticles } from './mockData';
+import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
 
 export default {
-  title: 'PageBlock/Grid/NewsGrid',
+  title: 'PageBlockV2/Grid/NewsGrid',
   component: NewsGrid,
   decorators: [
     (Story) => (

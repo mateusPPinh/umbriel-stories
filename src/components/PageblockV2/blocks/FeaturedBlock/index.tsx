@@ -15,11 +15,11 @@ const FeaturedBlock: React.FC<FeaturedBlockProps> = ({ block, isDarkTheme }) => 
   const renderVariant = () => {
     switch (variant.variantType) {
       case 'hero':
-        return <Hero variant={variant} isDarkTheme={isDarkTheme} />;
+        return <Hero  variant={variant} isDarkTheme={isDarkTheme} />;
       case 'split':
-        return <Split variant={variant} isDarkTheme={isDarkTheme} />;
+        return <Split  variant={variant} isDarkTheme={isDarkTheme} />;
       case 'triple':
-        return <Triple variant={variant} isDarkTheme={isDarkTheme} />;
+        return <Triple  variant={variant} isDarkTheme={isDarkTheme} />;
       default:
         return null;
     }

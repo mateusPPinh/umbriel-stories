@@ -1,12 +1,12 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
-import Triple from './Triple';
-import { BlockVariant } from '../../../types';
-import { mockBlocks, createArticles, baseBlockConfig, baseVariantConfig } from '../../../stories/mockData';
-import { ResponsiveDeviceProvider } from '../../../contexts/ResponsiveDeviceContext';
+import Triple from '../blocks/FeaturedBlock/variants/Triple';
+import { BlockVariant } from '../types';
+import { mockBlocks, createArticles, baseBlockConfig, baseVariantConfig } from './mockData';
+import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
 
 export default {
-  title: 'PageBlock/Featured/Triple',
+  title: 'PageBlockV2/Featured/Triple',
   component: Triple,
   decorators: [
     (Story) => (

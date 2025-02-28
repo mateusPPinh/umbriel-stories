@@ -1,12 +1,12 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
-import MasonryGrid from './MasonryGrid';
-import { BlockVariant } from '../../../types';
-import { createArticles } from '../../../stories/mockData';
-import { ResponsiveDeviceProvider } from '../../../contexts/ResponsiveDeviceContext';
+import MasonryGrid from '../blocks/GridBlock/variants/MasonryGrid';
+import { BlockVariant } from '../types';
+import { createArticles } from './mockData';
+import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
 
 export default {
-  title: 'PageBlock/Grid/MasonryGrid',
+  title: 'PageBlockV2/Grid/MasonryGrid',
   component: MasonryGrid,
   decorators: [
     (Story) => (

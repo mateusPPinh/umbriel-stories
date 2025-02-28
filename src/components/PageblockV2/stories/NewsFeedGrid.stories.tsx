@@ -1,12 +1,12 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
-import NewsFeedGrid from './NewsFeedGrid';
-import { BlockVariant } from '../../../types';
-import { createArticles } from '../../../stories/mockData';
-import { ResponsiveDeviceProvider } from '../../../contexts/ResponsiveDeviceContext';
+import NewsFeedGrid from '../blocks/GridBlock/variants/NewsFeedGrid';
+import { BlockVariant } from '../types';
+import { createArticles } from './mockData';
+import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
 
 export default {
-  title: 'PageBlock/Grid/NewsFeedGrid',
+  title: 'PageBlockV2/Grid/NewsFeedGrid',
   component: NewsFeedGrid,
   decorators: [
     (Story) => (

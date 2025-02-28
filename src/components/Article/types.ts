@@ -7,6 +7,17 @@ enum ArticleStatus {
   Draft = 'draft',
 }
 
+export type SubEditorialProps = {
+  id: string;
+  title: string;
+  slug: string;
+  pageBlockId: string | null;
+  numberOfArticles: number;
+  status: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
 interface Props {
   title: string
   subtitle?: string
@@ -44,6 +55,17 @@ interface Props {
     description: string
     slug: string
   }
+  editorial?: {
+    id: string;
+    title: string;
+    description: string;
+    slug: string;
+    children: SubEditorialProps[];
+    numberOfArticles: number;
+    status: boolean;
+    created_at: string;
+    updated_at: string;
+  };
   blocks?: Array<{
     html: string
     id: string

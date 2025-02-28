@@ -3,6 +3,7 @@ import { BlockVariant, Article, TimelineStyles } from '../../../types';
 import { defaultClasses } from '../../../constants/defaultClasses';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { generateArticleUrl } from '../../../utils/generateArticleUrl';
 
 interface BaseVariantProps {
   variant: BlockVariant & {
@@ -44,97 +45,111 @@ const Chronological: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custo
         `} />
 
         {Object.entries(articles).map(([colKey, colArticles]) => (
-          colArticles.map((article: Article) => (
-            <div 
-              key={article.id}
-              className={`
-                ${classes.item}
-                ${classes.variants.hover[styles.hoverEffect || 'highlight']}
-                group
-              `}
-            >
-              <div className={`
-                ${classes.marker}
-                ${classes.variants.marker[styles.markerStyle || 'circle']}
-              `} />
+          colArticles.map((article: Article) => {
+            const articleUrl = generateArticleUrl(article);
+            
+            return (
+              <div 
+                key={article.id}
+                className={`
+                  ${classes.item}
+                  ${classes.variants.hover[styles.hoverEffect || 'highlight']}
+                  group
+                `}
+              >
+                <div className={`
+                  ${classes.marker}
+                  ${classes.variants.marker[styles.markerStyle || 'circle']}
+                `} />
 
-              {article.created_at ? (
-                <div className={classes.content.date}>
-                  <span>
-                    {new Date(article.created_at).toLocaleDateString('pt-BR', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric'
-                    })}
-                  </span>
-                  <span className={classes.content.relativeTime}>
-                    {formatRelativeTime(article.created_at)}
-                  </span>
-                </div>
-              ) : null}
+                {article.created_at ? (
+                  <div className={classes.content.date}>
+                    <span>
+                      {new Date(article.created_at).toLocaleDateString('pt-BR', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
+                    </span>
+                    <span className={classes.content.relativeTime}>
+                      {formatRelativeTime(article.created_at)}
+                    </span>
+                  </div>
+                ) : null}
 
-              <h3 className={classes.content.title}>
-                {article.title}
-              </h3>
-              
-              {article.subtitle ? (
-                <p className={classes.content.subtitle}>
-                  {article.subtitle}
-                </p>
-              ) : null}
+                <a 
+                  href={articleUrl}
+                  className="block group"
+                >
+                  <h3 className={`
+                    ${classes.content.title}
+                    group-hover:text-blue-600 dark:group-hover:text-blue-400
+                    transition-colors duration-200
+                  `}>
+                    {article.title}
+                  </h3>
+                  
+                  {article.subtitle ? (
+                    <p className={classes.content.subtitle}>
+                      {article.subtitle}
+                    </p>
+                  ) : null}
 
-              {/* Preview do texto no hover */}
-              <div className={`
-                ${classes.content.preview}
-                opacity-0 max-h-0 overflow-hidden transition-all duration-200
-                group-hover:opacity-100 group-hover:max-h-96
-                prose prose-sm dark:prose-invert
-              `}>
-                {article.articleBody ? (
-                  <>
-                    <div 
-                      dangerouslySetInnerHTML={{ __html: article.articleBody }}
-                      className="text-sm text-gray-600 dark:text-gray-400 mt-2"
-                    />
-                    <button className="
-                      mt-4 text-sm font-medium
-                      text-blue-600 hover:text-blue-700
-                      dark:text-blue-400 dark:hover:text-blue-300
-                      transition-colors duration-200
-                      flex items-center gap-2
-                    ">
-                      Continue lendo
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        width="16" 
-                        height="16" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        strokeWidth="2" 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        className="inline-block"
-                      >
-                        <path d="M5 12h14" />
-                        <path d="m12 5 7 7-7 7" />
-                      </svg>
-                    </button>
-                  </>
-                ) : article.content?.body ? (
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                    {truncateText(article.content.body, 150)}
-                  </p>
+                  {/* Preview do texto no hover */}
+                  <div className={`
+                    ${classes.content.preview}
+                    opacity-0 max-h-0 overflow-hidden transition-all duration-200
+                    group-hover:opacity-100 group-hover:max-h-96
+                    prose prose-sm dark:prose-invert
+                  `}>
+                    {article.articleBody ? (
+                      <>
+                        <div 
+                          dangerouslySetInnerHTML={{ __html: article.articleBody }}
+                          className="text-sm text-gray-600 dark:text-gray-400 mt-2"
+                        />
+                        <span className="
+                          mt-4 text-sm font-medium
+                          text-blue-600 hover:text-blue-700
+                          dark:text-blue-400 dark:hover:text-blue-300
+                          transition-colors duration-200
+                          flex items-center gap-2
+                          cursor-pointer
+                        ">
+                          Continue lendo
+                          <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            width="16" 
+                            height="16" 
+                            viewBox="0 0 24 24" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            strokeWidth="2" 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round" 
+                            className="inline-block"
+                          >
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                          </svg>
+                        </span>
+                      </>
+                    ) : article.content?.body ? (
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                        {truncateText(article.content.body, 150)}
+                      </p>
+                    ) : null}
+                  </div>
+                </a>
+
+                {styles.showMetadata ? (
+                  <div className={classes.content.metadata}>
+                    {/* Metadata aqui */}
+                  </div>
                 ) : null}
               </div>
-
-              {styles.showMetadata ? (
-                <div className={classes.content.metadata}>
-                  {/* Metadata aqui */}
-                </div>
-              ) : null}
-            </div>
-          ))
+            );
+          })
         ))}
       </div>
     </div>

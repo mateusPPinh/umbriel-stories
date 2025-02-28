@@ -16,13 +16,13 @@ const MixedBlock: React.FC<MixedBlockProps> = ({ block, isDarkTheme }) => {
   const renderVariant = () => {
     switch (variant.variantType) {
       case 'sidebar':
-        return <Sidebar variant={variant as any} isDarkTheme={isDarkTheme} customStyles={{}} />;
+        return <Sidebar  variant={variant as any} isDarkTheme={isDarkTheme} customStyles={{}} />;
       case 'magazine':
-        return <Magazine variant={variant as any} isDarkTheme={isDarkTheme} customStyles={{}} />;
+        return <Magazine  variant={variant as any} isDarkTheme={isDarkTheme} customStyles={{}} />;
       case 'newspaper':
-        return <Newspaper variant={variant as any} isDarkTheme={isDarkTheme} customStyles={{}} />;
+        return <Newspaper  variant={variant as any} isDarkTheme={isDarkTheme} customStyles={{}} />;
       case 'showcase':
-        return <Showcase variant={variant as any} isDarkTheme={isDarkTheme} customStyles={{}} />;
+        return <Showcase  variant={variant as any} isDarkTheme={isDarkTheme} customStyles={{}} />;
       default:
         return null;
     }

@@ -2,6 +2,8 @@ import React from 'react';
 import { useBlockStyles } from '../../../hooks/useBlockStyles';
 import { BlockVariant, Article, MasonryStyles } from '../../../types';
 import { defaultClasses } from '../../../constants/defaultClasses';
+import { generateArticleUrl } from '../../../utils/generateArticleUrl';
+import Link from '../../../../Link'
 
 interface BaseVariantProps {
   variant: BlockVariant & {
@@ -18,29 +20,6 @@ const MasonryGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
   const { articles } = variant.config;
   const styles = variant.config.styles || {};
 
-  // Classes base do Tailwind para o masonry
-  const masonryClasses = {
-    container: 'w-full mt-12 mb-12 bg-transparent',
-      grid: [
-        'columns-1 md:columns-2 lg:columns-3',
-        'gap-6'
-      ].join(' '),
-      article: [
-        'break-inside-avoid',
-        'mb-6',
-        'bg-transparent',
-        'p-4',
-        'rounded-lg'
-      ].join(' '),
-      image: {
-        wrapper: 'relative overflow-hidden rounded-lg mb-4',
-        img: 'w-full h-full object-cover'
-      },
-      content: {
-        title: 'text-xl font-semibold text-gray-900 dark:text-white mb-2',
-        subtitle: 'text-md text-gray-600 dark:text-gray-300'
-      }
-  };
 
   // Classes para diferentes aspect ratios
   const aspectRatios = {
@@ -64,43 +43,48 @@ const MasonryGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
   };
 
   return (
-    <div className={`${masonryClasses.container} ${customStyles?.container || ''}`}>
+    <div className={`${classes.container} ${customStyles?.container || ''}`}>
       <div className={`
-        ${masonryClasses.grid}
+        ${classes.grid}
         ${hoverEffects[styles.hoverEffect as keyof typeof hoverEffects] || ''}
       `}>
         {Object.entries(articles).map(([colKey, colArticles]) => (
-          colArticles.map((article: Article) => (
-            <div 
+          colArticles.map((article: Article) => {
+            const articleUrl = generateArticleUrl(article);
+            return (
+              <div 
               key={article.id}
-              className={masonryClasses.article}
+              className={classes.article}
             >
-              {article.content.image?.desktop_image_path && (
-                <div className={`${masonryClasses.image.wrapper} ${getRandomAspectRatio()}`}>
+              {article.content?.image?.desktop_image_path && (
+                <div className={`${classes.image.wrapper} ${getRandomAspectRatio()}`}>
                   <img
-                    src={article.content.image.desktop_image_path}
+                    src={article.content?.image?.desktop_image_path}
                     alt={article.title}
-                    className={masonryClasses.image.img}
+                    className={classes.image.img}
                   />
                 </div>
               )}
               
               <div>
-                <h3 className={masonryClasses.content.title}>
+               <Link href={articleUrl} aria-label={article.title} className="hover:underline transition-all duration-300">
+               <h3 className={classes.content.title}>
                   {article.title}
                 </h3>
+               </Link>
                 {styles.showExcerpt ? (
-                  <p className={masonryClasses.content.subtitle}>
+                  <p className={classes.content.subtitle}>
                     {article.subtitle}
                   </p>
                 ) : (
-                  <p className={masonryClasses.content.subtitle}>
+                  <p className={classes.content.subtitle}>
                     {article.subtitle}
                   </p>
                 )}
               </div>
             </div>
-          ))
+            )
+          })
         ))}
       </div>
     </div>

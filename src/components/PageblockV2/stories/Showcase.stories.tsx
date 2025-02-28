@@ -1,12 +1,12 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
-import Showcase from './Showcase';
-import { BlockVariant } from '../../../types';
-import { createArticles, baseVariantConfig } from '../../../stories/mockData';
-import { ResponsiveDeviceProvider } from '../../../contexts/ResponsiveDeviceContext';
+import Showcase from '../blocks/MixedBlock/variants/Showcase';
+import { BlockVariant } from '../types';
+import { createArticles, baseVariantConfig } from './mockData';
+import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
 
 export default {
-  title: 'PageBlock/Mixed/Showcase',
+  title: 'PageBlockV2/Mixed/Showcase',
   component: Showcase,
   decorators: [
     (Story) => (

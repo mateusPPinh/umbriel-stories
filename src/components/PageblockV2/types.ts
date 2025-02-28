@@ -43,10 +43,33 @@ export interface MediaConfig {
   useArticleMedia: boolean;
 }
 
+export type SubEditorialProps = {
+  id: string;
+  title: string;
+  slug: string;
+  pageBlockId: string | null;
+  numberOfArticles: number;
+  status: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export interface Editorial {
+  id: string;
+  name: string;
+  slug: string;
+  parent?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+}
+
 export interface Article {
   id: string;
   title: string;
   subtitle?: string;
+  slug: string;
   created_at?: string | Date;
   content?: {
     image?: {
@@ -55,6 +78,11 @@ export interface Article {
     body?: string;
   };
   articleBody?: string;
+  editorial?: Editorial;
+  links?: Array<{
+    title: string
+    url: string
+  }>
 }
 
 export type FontSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';

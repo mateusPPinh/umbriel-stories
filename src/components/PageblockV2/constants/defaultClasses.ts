@@ -46,8 +46,9 @@ export const defaultClasses = {
       },
       content: {
         title: 'text-xl font-semibold text-gray-900 dark:text-white mb-2',
-        subtitle: 'text-md text-gray-600 dark:text-gray-300'
-      }
+        subtitle: 'text-md text-gray-600 dark:text-gray-300',
+        wrapper: 'p-4',
+      },
     },
     featured: {
       container: 'w-full mt-12 mb-12 bg-transparent',
@@ -261,10 +262,10 @@ export const defaultClasses = {
       content: 'p-2',
       heading: [
         'mb-0',
-        'text-[1.5rem] text-white font-bold sm:text-[1rem] dark:text-white',
+        'text-[1.5rem] text-gray-900 font-bold sm:text-[1rem] dark:text-white',
       ].join(' '),
       subtitle: [
-        'text-lg text-white/80 dark:text-white/80',
+        'text-lg text-gray-600 dark:text-gray-300',
       ].join(' ')
     },
     triple: {
@@ -281,10 +282,10 @@ export const defaultClasses = {
       content: 'p-2',
       heading: [
         'mb-0',
-        'text-[1.5rem] text-white font-bold sm:text-[1rem] dark:text-white',
+        'text-[1.5rem] text-gray-900 font-bold sm:text-[1rem] dark:text-white',
       ].join(' '),
       subtitle: [
-        'text-lg text-white/80 dark:text-white/80',
+        'text-lg text-gray-600 dark:text-gray-300',
       ].join(' ')
     }
   },
@@ -466,10 +467,56 @@ export const defaultClasses = {
       }
     },
     newspaper: {
-      container: 'w-full mt-12 mb-12'
+      container: 'w-full mt-12 mb-12 bg-transparent',
+      grid: 'grid grid-cols-1 lg:grid-cols-12 gap-6',
+      mainArticle: [
+        'lg:col-span-6',
+      ].join(' '),
+      secondaryArticles: [
+        'lg:col-span-3',
+      ].join(' '),
+      tertiaryArticles: [
+        'lg:col-span-3',
+      ].join(' '),
+      imageWrapper: 'relative w-full overflow-hidden mb-4',
+      image: 'w-full h-full object-cover',
+      content: 'p-2',
+      heading: [
+        'mb-3',
+        'text-[1.5rem] font-bold sm:text-[1rem]',
+        'text-gray-900 dark:text-white'
+      ].join(' '),  
+      subtitle: [
+        'text-base',
+        'text-gray-600 dark:text-gray-300',
+        'line-clamp-2'
+      ].join(' ') ,
+      secondaryArticle: [
+        'mb-6 last:mb-0',
+      ].join(' '),
+      tertiaryArticle: [
+        'mb-6 last:mb-0',
+      ].join(' '),
     },
     masonry: {
-      container: 'w-full mt-12 mb-12'
+      container: 'w-full mt-12 mb-12',
+      masonryGrid: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6',
+      article: [
+        'break-inside-avoid mb-6',
+      ].join(' '),
+      imageWrapper: 'relative w-full overflow-hidden mb-4',
+      image: 'w-full h-full object-cover',
+      content: 'p-2', 
+      heading: [
+        'mb-3',
+        'text-[1.5rem] font-bold sm:text-[1rem]',
+        'text-gray-900 dark:text-white'
+      ].join(' '),
+      subtitle: [
+        'text-base',
+        'text-gray-600 dark:text-gray-300',
+        'line-clamp-2'
+      ].join(' ')
     }
   },
   newsfeed: {

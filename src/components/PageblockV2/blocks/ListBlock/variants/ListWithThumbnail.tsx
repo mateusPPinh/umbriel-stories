@@ -141,7 +141,7 @@ const ListWithThumbnail: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, c
               `}
               style={columnStyle(colKey)}
             >
-              {article.content.image?.desktop_image_path && (
+              {article.content?.image?.desktop_image_path && (
                 <div 
                   className="flex-shrink-0"
                   style={{
@@ -151,7 +151,7 @@ const ListWithThumbnail: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, c
                 >
                   <div className={`relative w-full h-full overflow-hidden ${getThumbnailShapeClass()}`}>
                     <img
-                      src={article.content.image.desktop_image_path}
+                      src={article.content?.image?.desktop_image_path}
                       alt={article.title}
                       className="w-full h-full object-cover"
                     />

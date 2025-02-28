@@ -19,7 +19,8 @@ const ListBlock: React.FC<ListBlockProps> = ({ block, isDarkTheme }) => {
       case 'thumbnail':
         return <ListWithThumbnail variant={variant} isDarkTheme={isDarkTheme} />;
       case 'chronological':
-        return <Chronological variant={variant} isDarkTheme={isDarkTheme} />;
+        // @ts-ignore
+        return <Chronological  variant={variant} isDarkTheme={isDarkTheme} />;
       default:
         return null;
     }

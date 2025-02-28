@@ -1,12 +1,12 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
-import ListWithThumbnail from './ListWithThumbnail';
-import { BlockVariant } from '../../../types';
-import { createArticles } from '../../../stories/mockData';
-import { ResponsiveDeviceProvider } from '../../../contexts/ResponsiveDeviceContext';
+import ListWithThumbnail from '../blocks/ListBlock/variants/ListWithThumbnail';
+import { BlockVariant } from '../types';
+import { createArticles } from './mockData';
+import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
 
 export default {
-  title: 'PageBlock/List/ListWithThumbnail',
+  title: 'PageBlockV2/List/ListWithThumbnail',
   component: ListWithThumbnail,
   decorators: [
     (Story) => (

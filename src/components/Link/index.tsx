@@ -9,6 +9,7 @@ interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   children: ReactNode
   target?: string
   hover?: string
+  className?: string
   shouldDisableClick?: boolean
 }
 
@@ -18,13 +19,14 @@ const Link = ({
   target,
   hover,
   shouldDisableClick,
+  className,
   ...rest
 }: LinkProps): ReactElement => {
   return (
     <a
       href={href}
       target={target}
-      className={`transition duration-300 ${hover}`}
+      className={`transition duration-300 ${hover} ${className}`}
       style={{ pointerEvents: shouldDisableClick ? 'none' : 'auto' }}
       {...rest}
     >

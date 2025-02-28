@@ -1,12 +1,12 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
-import Newspaper from './Newspaper';
-import { BlockVariant } from '../../../types';
-import { createArticles } from '../../../stories/mockData';
-import { ResponsiveDeviceProvider } from '../../../contexts/ResponsiveDeviceContext';
+import Newspaper from '../blocks/MixedBlock/variants/Newspaper';
+import { BlockVariant } from '../types';
+import { createArticles } from './mockData';
+import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
 
 export default {
-  title: 'PageBlock/Mixed/Newspaper',
+  title: 'PageBlockV2/Mixed/Newspaper',
   component: Newspaper,
   decorators: [
     (Story) => (
