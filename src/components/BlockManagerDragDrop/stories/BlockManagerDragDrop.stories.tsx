@@ -25,7 +25,7 @@ export default {
   },
   decorators: [
     (Story) => (
-      <div className="h-[calc(100vh-400px)] p-4">
+      <div className="h-[calc(100vh-300px)] p-4 w-full">
         <Story />
       </div>
     )
@@ -35,7 +35,7 @@ export default {
 const mockArticles = createArticles(15);
 
 const Template: Story<BlockManagerDragDropProps> = (args) => (
-  <div className="w-full max-w-[1400px] mx-auto"><BlockManagerDragDrop {...args} /></div>
+  <div className="w-[calc(100vw-400px)] mx-auto"><BlockManagerDragDrop {...args} /></div>
 );
 
 // Grid Variants

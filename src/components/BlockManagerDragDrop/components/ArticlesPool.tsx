@@ -6,9 +6,10 @@ import DraggableArticle from './DraggableArticle';
 interface ArticlesPoolProps {
   articles: Article[];
   isDarkTheme?: boolean;
+  droppableId: string;
 }
 
-const ArticlesPool: React.FC<ArticlesPoolProps> = ({ articles, isDarkTheme }) => {
+const ArticlesPool: React.FC<ArticlesPoolProps> = ({ articles, isDarkTheme, droppableId }) => {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [currentPage, setCurrentPage] = React.useState(1);
   const [sortBy, setSortBy] = React.useState<'date' | 'title'>('date');
@@ -84,7 +85,7 @@ const ArticlesPool: React.FC<ArticlesPoolProps> = ({ articles, isDarkTheme }) =>
       </div>
 
       {/* Articles Grid */}
-      <Droppable droppableId="pool" direction="horizontal">
+      <Droppable droppableId={droppableId} direction="horizontal">
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}

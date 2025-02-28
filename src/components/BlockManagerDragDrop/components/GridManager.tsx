@@ -57,28 +57,28 @@ const GridManager: React.FC<GridManagerProps> = ({ articles, isDarkTheme, onSave
 
   const variants = [
     { id: 'standard', label: 'Padrão', columns: [
-      { id: 'col-0', title: 'Coluna 1', maxItems: 4, width: '1/3' },
-      { id: 'col-1', title: 'Coluna 2', maxItems: 4, width: '1/3' },
-      { id: 'col-2', title: 'Coluna 3', maxItems: 4, width: '1/3' }
+      { id: 'col-0', title: 'Coluna 1', maxItems: 4, width: 'w-1/3' },
+      { id: 'col-1', title: 'Coluna 2', maxItems: 4, width: 'w-1/3' },
+      { id: 'col-2', title: 'Coluna 3', maxItems: 4, width: 'w-1/3' }
     ]},
     { id: 'featured', label: 'Destaque', columns: [
-      { id: 'col-0', title: 'Destaque', maxItems: 1, width: '2/3' },
-      { id: 'col-1', title: 'Lateral', maxItems: 4, width: '1/3' }
+      { id: 'col-0', title: 'Destaque', maxItems: 1, width: 'w-2/3' },
+      { id: 'col-1', title: 'Lateral', maxItems: 4, width: 'w-1/3' }
     ]},
     { id: 'masonry', label: 'Masonry', columns: [
-      { id: 'col-0', title: 'Coluna 1', maxItems: 6, width: '1/3' },
-      { id: 'col-1', title: 'Coluna 2', maxItems: 6, width: '1/3' },
-      { id: 'col-2', title: 'Coluna 3', maxItems: 6, width: '1/3' }
+      { id: 'col-0', title: 'Coluna 1', maxItems: 6, width: 'w-1/3' },
+      { id: 'col-1', title: 'Coluna 2', maxItems: 6, width: 'w-1/3' },
+      { id: 'col-2', title: 'Coluna 3', maxItems: 6, width: 'w-1/3' }
     ]},
     { id: 'sidebargrid', label: 'Sidebar', columns: [
-      { id: 'col-0', title: 'Principal', maxItems: 6, width: '2/3' },
-      { id: 'col-1', title: 'Sidebar', maxItems: 4, width: '1/3' }
+      { id: 'col-0', title: 'Principal', maxItems: 4, width: 'w-2/3' },
+      { id: 'col-1', title: 'Sidebar', maxItems: 3, width: 'w-1/3' }
     ]},
     { id: 'newsfeed', label: 'Feed', columns: [
-      { id: 'col-0', title: 'Feed', maxItems: 10, width: 'full' }
+      { id: 'col-0', title: 'Feed', maxItems: 10, width: 'w-full' }
     ]},
     { id: 'newsgrid', label: 'Grid', columns: [
-      { id: 'col-0', title: 'Grid', maxItems: 12, width: 'full' }
+      { id: 'col-0', title: 'Grid', maxItems: 12, width: 'w-full' }
     ]}
   ];
 
@@ -126,14 +126,19 @@ const GridManager: React.FC<GridManagerProps> = ({ articles, isDarkTheme, onSave
           <ArticlesPool
             articles={columns.pool}
             isDarkTheme={isDarkTheme}
+            droppableId="pool"
           />
 
           {/* Colunas do Grid */}
-          <div className="grid grid-cols-1 gap-4">
+          <div className={`
+            grid gap-4
+            ${currentVariant.columns.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}
+          `}>
             {currentVariant.columns.map(column => (
               <DroppableColumn
                 key={column.id}
                 id={column.id}
+                droppableId={column.id}
                 title={column.title}
                 articles={columns[column.id] || []}
                 maxItems={column.maxItems}
