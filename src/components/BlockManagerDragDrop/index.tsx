@@ -2,11 +2,11 @@ import React from 'react';
 import { Article } from '../PageblockV2/types';
 import GridManager from './components/GridManager';
 import ListManager from './components/ListManager';
-import FeaturedManager from './components/FeaturedManager';
+import MixedManager from './components/MixedManager';
 
 interface BlockManagerDragDropProps {
   articles: Article[];
-  blockType: 'grid' | 'list' | 'featured';
+  blockType: 'grid' | 'list' | 'mixed';
   isDarkTheme?: boolean;
   onSave: (columns: { [key: string]: Article[] }) => void;
 }
@@ -35,9 +35,9 @@ const BlockManagerDragDrop: React.FC<BlockManagerDragDropProps> = ({
             onSave={onSave}
           />
         );
-      case 'featured':
+      case 'mixed':
         return (
-          <FeaturedManager
+          <MixedManager
             articles={articles}
             isDarkTheme={isDarkTheme}
             onSave={onSave}
@@ -49,7 +49,7 @@ const BlockManagerDragDrop: React.FC<BlockManagerDragDropProps> = ({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full">
       {renderManager()}
     </div>
   );

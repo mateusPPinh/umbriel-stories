@@ -5,6 +5,7 @@ import DraggableArticle from './DraggableArticle';
 
 interface DroppableColumnProps {
   id: string;
+  droppableId: string;
   title: string;
   articles: Article[];
   maxItems: number;
@@ -14,6 +15,7 @@ interface DroppableColumnProps {
 
 const DroppableColumn: React.FC<DroppableColumnProps> = ({
   id,
+  droppableId,
   title,
   articles,
   maxItems,
@@ -53,7 +55,7 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
         </span>
       </div>
 
-      <Droppable droppableId={id}>
+      <Droppable droppableId={droppableId}>
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}

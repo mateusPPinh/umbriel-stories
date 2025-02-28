@@ -5,7 +5,7 @@ import { createArticles } from '../../PageblockV2/stories/mockData';
 
 interface BlockManagerDragDropProps {
   articles: any[];
-  blockType: 'grid' | 'list' | 'featured';
+  blockType: 'grid' | 'list' | 'mixed';
   isDarkTheme?: boolean;
   onSave: (columns: { [key: string]: any[] }) => void;
 }
@@ -35,7 +35,7 @@ export default {
 const mockArticles = createArticles(15);
 
 const Template: Story<BlockManagerDragDropProps> = (args) => (
-  <BlockManagerDragDrop {...args} />
+  <div className="w-full max-w-[1400px] mx-auto"><BlockManagerDragDrop {...args} /></div>
 );
 
 // Grid Variants
@@ -107,29 +107,43 @@ List_Card.args = {
 };
 List_Card.storyName = 'List/Card';
 
-// Featured Variants
-export const Featured_Hero = Template.bind({});
-Featured_Hero.args = {
-  blockType: 'featured',
+// Mixed Variants
+export const Mixed_Sidebar = Template.bind({});
+Mixed_Sidebar.args = {
+  blockType: 'mixed',
   articles: mockArticles,
   isDarkTheme: false,
   onSave: (columns) => console.log('Updated columns:', columns),
 };
-Featured_Hero.storyName = 'Featured/Hero';
+Mixed_Sidebar.storyName = 'Mixed/Sidebar';
 
-export const Featured_Split = Template.bind({});
-Featured_Split.args = {
-  ...Featured_Hero.args,
-  blockType: 'featured',
+export const Mixed_Showcase = Template.bind({});
+Mixed_Showcase.args = {
+  ...Mixed_Sidebar.args,
+  blockType: 'mixed',
 };
-Featured_Split.storyName = 'Featured/Split';
+Mixed_Showcase.storyName = 'Mixed/Showcase';
 
-export const Featured_Triple = Template.bind({});
-Featured_Triple.args = {
-  ...Featured_Hero.args,
-  blockType: 'featured',
+export const Mixed_Newspaper = Template.bind({});
+Mixed_Newspaper.args = {
+  ...Mixed_Sidebar.args,
+  blockType: 'mixed',
 };
-Featured_Triple.storyName = 'Featured/Triple';
+Mixed_Newspaper.storyName = 'Mixed/Newspaper';
+
+export const Mixed_Magazine = Template.bind({});
+Mixed_Magazine.args = {
+  ...Mixed_Sidebar.args,
+  blockType: 'mixed',
+};
+Mixed_Magazine.storyName = 'Mixed/Magazine';
+
+export const Mixed_VideoGrid = Template.bind({});
+Mixed_VideoGrid.args = {
+  ...Mixed_Sidebar.args,
+  blockType: 'mixed',
+};
+Mixed_VideoGrid.storyName = 'Mixed/Video Grid';
 
 // Dark Theme Examples
 export const Theme_Dark_Grid = Template.bind({});
@@ -146,9 +160,9 @@ Theme_Dark_List.args = {
 };
 Theme_Dark_List.storyName = 'Theme/Dark/List';
 
-export const Theme_Dark_Featured = Template.bind({});
-Theme_Dark_Featured.args = {
-  ...Featured_Hero.args,
+export const Theme_Dark_Mixed = Template.bind({});
+Theme_Dark_Mixed.args = {
+  ...Mixed_Sidebar.args,
   isDarkTheme: true,
 };
-Theme_Dark_Featured.storyName = 'Theme/Dark/Featured'; 
+Theme_Dark_Mixed.storyName = 'Theme/Dark/Mixed'; 
