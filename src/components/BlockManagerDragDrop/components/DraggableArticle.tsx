@@ -46,7 +46,7 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
         ? 'bg-gray-700 hover:bg-gray-600' 
         : 'bg-white hover:bg-gray-50'
       }
-      ${columnIsFull && isInColumn ? 'opacity-80' : 'opacity-100'}
+      ${columnIsFull && isInColumn ? 'opacity-80 cursor-not-allowed' : 'opacity-100 cursor-grab'}
       transition-all duration-200
     `;
 
@@ -160,6 +160,7 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
           className={getArticleClass()}
           style={{
             ...provided.draggableProps.style,
+            ...(columnIsFull && isInColumn ? { pointerEvents: 'none' } : {})
           }}
         >
           {/* Imagem do artigo */}
@@ -167,12 +168,16 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
             <div className={`
               ${getImageClass()}
               overflow-hidden relative
+              ${columnIsFull && isInColumn ? 'filter grayscale-[30%]' : ''}
             `}>
               <img
                 src={article.content.image.desktop_image_path}
                 alt={article.title}
                 className="w-full h-full object-cover"
               />
+              {columnIsFull && isInColumn && (
+                <div className="absolute inset-0 bg-black bg-opacity-10"></div>
+              )}
             </div>
           )}
           

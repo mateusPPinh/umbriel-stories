@@ -88,13 +88,13 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
         >
           {title}
         </h3>
-        <span className="text-xs text-gray-500 dark:text-gray-400">
+        <span className={`text-xs ${isFull ? 'text-red-500 dark:text-red-400 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
           {articles.length}/{maxItems}
         </span>
       </div>
 
       {/* Área de drop */}
-      <Droppable droppableId={droppableId}>
+      <Droppable droppableId={droppableId} isDropDisabled={isFull}>
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
@@ -105,11 +105,17 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
                 ? isDarkTheme
                   ? 'border-blue-500 bg-gray-700'
                   : 'border-blue-500 bg-blue-50'
-                : isDarkTheme
-                ? 'border-gray-700 bg-gray-800'
-                : 'border-gray-200 bg-gray-50'
+                : isFull
+                  ? isDarkTheme
+                    ? 'border-red-500/30 bg-gray-800/90'
+                    : 'border-red-200 bg-gray-50/90'
+                  : isDarkTheme
+                    ? 'border-gray-700 bg-gray-800'
+                    : 'border-gray-200 bg-gray-50'
               }
               ${getDroppableAreaClass()}
+              ${isFull ? 'opacity-90' : 'opacity-100'}
+              transition-all duration-200
             `}
             style={{ minHeight: articles.length === 0 ? '220px' : 'auto' }}
           >
@@ -119,7 +125,7 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
                 ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}
                 ${isNewsGrid ? 'col-span-full' : ''}
               `}>
-                Arraste artigos para esta coluna
+                {isFull ? 'Limite máximo de artigos atingido' : 'Arraste artigos para esta coluna'}
               </div>
             )}
             
@@ -150,7 +156,7 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
                   ${isNewsGrid ? 'col-span-full' : ''}
                 `}
               >
-                Maximum of {maxItems} articles reached
+                Máximo de {maxItems} artigos atingido
               </div>
             )}
           </div>

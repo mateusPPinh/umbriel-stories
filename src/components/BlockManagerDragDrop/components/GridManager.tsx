@@ -45,6 +45,22 @@ const GridManager: React.FC<GridManagerProps> = ({
       source.index === destination.index
     ) return;
 
+    // Encontra a variante atual e o limite máximo da coluna de destino
+    const currentVariant = variants.find(v => v.id === variantType) || variants[0];
+    const destColumn = currentVariant.columns.find(col => col.id === destination.droppableId);
+    
+    // Verifica se a coluna de destino já atingiu o limite máximo de artigos
+    // Só aplicamos essa verificação se estiver movendo de uma coluna para outra
+    if (
+      source.droppableId !== destination.droppableId && 
+      destColumn && 
+      columns[destination.droppableId] && 
+      columns[destination.droppableId].length >= destColumn.maxItems
+    ) {
+      // A coluna de destino já está cheia, não permitir a adição
+      return;
+    }
+
     // Copia os arrays de origem e destino
     const sourceCol = Array.from(columns[source.droppableId]);
     const destCol = source.droppableId === destination.droppableId
