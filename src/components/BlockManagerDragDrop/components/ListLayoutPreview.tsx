@@ -3,8 +3,9 @@ import { Article, BlockConfig } from '../../../components/PageblockV2/types';
 import { defaultClasses } from '../../../components/PageblockV2/constants/defaultClasses';
 import { generateArticleUrl } from '../../../components/PageblockV2/utils/generateArticleUrl';
 import { formatDistanceToNow } from 'date-fns';
+import { DisplayConfig } from './StyleConfigModal/MediaConfig';
 
-interface ExtendedBlockConfig extends BlockConfig {
+interface ExtendedBlockConfig extends Omit<BlockConfig, 'mediaConfig'> {
   styles: {
     theme: {
       light: {
@@ -48,6 +49,11 @@ interface ExtendedBlockConfig extends BlockConfig {
     thumbnailShape?: ThumbnailShape
   }
   variant?: 'chronological' | 'compact' | 'card'
+  mediaConfig?: {
+    videoConfig?: any;
+    imageConfig?: any;
+    displayConfig?: DisplayConfig;
+  };
 }
 
 interface ListLayoutPreviewProps {
@@ -98,171 +104,311 @@ const renderSkeleton = (type: 'timeline' | 'compact' | 'card') => {
   ));
 };
 
-const renderTimelinePreview = (items: Article[], blockConfig: ExtendedBlockConfig) => {
-  const timelineStyle = blockConfig.styles?.timelineStyle || 'solid';
-  const markerStyle = (blockConfig.styles?.markerStyle || 'circle') as MarkerStyle;
-  const hoverEffect = (blockConfig.styles?.hoverEffect || 'none') as HoverEffect;
+// Funções auxiliares
+const getMarkerShape = (markerStyle?: MarkerStyle) => {
+  switch (markerStyle) {
+    case 'circle':
+      return 'rounded-full';
+    case 'square':
+      return 'rounded-none';
+    case 'diamond':
+      return 'rotate-45';
+    default:
+      return 'rounded-full';
+  }
+};
 
-  return (
-    <div className="w-full max-w-3xl mx-auto">
-      <div className="relative space-y-6 pl-6">
-        {/* Vertical line */}
-        <div className={`absolute left-[11px] top-0 bottom-0 w-[2px] ${
-          timelineStyle === 'solid' ? 'bg-gray-200 dark:bg-gray-700' :
-          timelineStyle === 'dashed' ? 'bg-gray-200 dark:bg-gray-700 border-dashed' :
-          'bg-gray-200 dark:bg-gray-700 border-dotted'
-        }`} />
-        
-        {items.length > 0 ? items.map((article, index) => {
-          const publishDate = article.created_at ? new Date(article.created_at) : new Date();
-          const relativeTime = formatDistanceToNow(publishDate, { addSuffix: true });
+const getTitleSizeClass = (titleSize?: string) => {
+  switch (titleSize) {
+    case 'sm':
+      return 'text-sm';
+    case 'md':
+      return 'text-base';
+    case 'lg':
+      return 'text-lg';
+    case 'xl':
+      return 'text-xl';
+    default:
+      return 'text-base';
+  }
+};
 
-          return (
-            <div key={index} className="relative">
-              <div className={`absolute left-[-24px] top-2 w-3 h-3 ${
-                markerStyle === 'circle' ? 'rounded-full' :
-                markerStyle === 'square' ? 'rounded-none' :
-                'rotate-45'
-              } bg-gray-900 dark:bg-white z-10`} />
+const getBorderStyle = (dividerStyle?: DividerStyle) => {
+  switch (dividerStyle) {
+    case 'solid':
+      return 'border-b border-gray-200 dark:border-gray-700';
+    case 'dashed':
+      return 'border-b border-dashed border-gray-200 dark:border-gray-700';
+    case 'dotted':
+      return 'border-b border-dotted border-gray-200 dark:border-gray-700';
+    default:
+      return 'border-b border-gray-200 dark:border-gray-700';
+  }
+};
+
+const getHoverEffectClass = (hoverEffect?: HoverEffect) => {
+  switch (hoverEffect) {
+    case 'highlight':
+      return 'hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors';
+    case 'scale':
+      return 'hover:scale-[1.02] transition-transform';
+    case 'background':
+      return 'hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors';
+    case 'translate':
+      return 'hover:translate-x-2 transition-transform';
+    default:
+      return '';
+  }
+};
+
+const getThumbnailShape = (thumbnailShape?: ThumbnailShape) => {
+  switch (thumbnailShape) {
+    case 'square':
+      return 'rounded-none';
+    case 'rounded':
+      return 'rounded-lg';
+    case 'circle':
+      return 'rounded-full';
+    default:
+      return 'rounded-lg';
+  }
+};
+
+const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({ blockConfig, columns }) => {
+  const isDarkMode = false;
+  const theme = blockConfig.styles.theme[isDarkMode ? 'dark' : 'light'];
+  
+  // Configurações globais de exibição
+  const globalDisplayConfig = blockConfig.mediaConfig?.displayConfig || {
+    showImage: true,
+    showSubtitle: true,
+    showPublishDate: true,
+    showAuthor: false,
+    showCategory: false
+  };
+
+  // Função para obter configurações específicas de uma coluna
+  const getColumnDisplayConfig = (columnId: string): DisplayConfig => {
+    const columnConfig = globalDisplayConfig.columnConfig?.[columnId];
+    
+    if (!columnConfig) {
+      return globalDisplayConfig;
+    }
+    
+    return {
+      showImage: columnConfig.showImage ?? globalDisplayConfig.showImage,
+      showSubtitle: columnConfig.showSubtitle ?? globalDisplayConfig.showSubtitle,
+      showPublishDate: columnConfig.showPublishDate ?? globalDisplayConfig.showPublishDate,
+      showAuthor: columnConfig.showAuthor ?? globalDisplayConfig.showAuthor,
+      showCategory: columnConfig.showCategory ?? globalDisplayConfig.showCategory
+    };
+  };
+
+  const renderChronologicalList = () => {
+    const articles = columns[0] || [];
+    const displayConfig = getColumnDisplayConfig('col-0');
+    
+    if (articles.length === 0) {
+      return renderSkeleton('timeline');
+    }
+
+    return (
+      <div className="space-y-2">
+        {articles.map((article, index) => (
+          <div key={index} className="flex items-start gap-4 py-4">
+            {/* Timeline marker */}
+            <div 
+              className={`
+                w-3 h-3 mt-2 shrink-0
+                ${getMarkerShape(blockConfig.styles.markerStyle)}
+                ${isDarkMode ? 'bg-gray-200' : 'bg-gray-700'}
+              `}
+            />
+            
+            <div className="flex-1">
+              {/* Date */}
+              {displayConfig.showPublishDate && blockConfig.styles.showMetadata && article.published_at && (
+                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                  {formatDistanceToNow(new Date(article.published_at), { addSuffix: true })}
+                </div>
+              )}
               
-              <a
-                href={generateArticleUrl(article)}
-                className={`block p-4 rounded-lg transition-all ${
-                  hoverEffect === 'highlight' ? 'hover:bg-gray-100 dark:hover:bg-gray-800' :
-                  hoverEffect === 'scale' ? 'hover:scale-[1.02]' :
-                  hoverEffect === 'background' ? 'hover:bg-gray-50 dark:hover:bg-gray-900' :
-                  hoverEffect === 'translate' ? 'hover:translate-x-2' : ''
-                }`}
+              {/* Title */}
+              <h3 
+                className={`font-semibold mb-1 ${getTitleSizeClass(blockConfig.styles.titleSize)}`}
+                style={{
+                  fontSize: theme.headingProps.fontSize,
+                  fontWeight: theme.headingProps.fontWeight,
+                  color: theme.headingProps.color
+                }}
               >
-                <div className="flex gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
-                  <span>{publishDate.toLocaleDateString('pt-BR', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                  })}</span>
-                  <span>•</span>
-                  <span>{relativeTime}</span>
-                </div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white">{article.title}</h3>
-                {article.subtitle && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{article.subtitle}</p>
-                )}
-              </a>
+                {article.title}
+              </h3>
+              
+              {/* Excerpt */}
+              {displayConfig.showSubtitle && blockConfig.styles.showExcerpt && article.subtitle && (
+                <p 
+                  className="text-sm line-clamp-2"
+                  style={{
+                    fontSize: theme.subtitleProps.fontSize,
+                    color: theme.subtitleProps.color
+                  }}
+                >
+                  {article.subtitle}
+                </p>
+              )}
             </div>
-          );
-        }) : (
-          <div className="space-y-6">
-            {Array(5).fill(0).map((_, index) => (
-              <div key={index} className="relative">
-                <div className="absolute left-[-24px] top-2 w-3 h-3 rounded-full bg-gray-700/50 dark:bg-gray-200/50 z-10" />
-                <div className="p-4">
-                  <div className="flex gap-2 mb-2">
-                    <div className="w-24 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
-                    <div className="w-16 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
-                  </div>
-                  <div className="w-3/4 h-6 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
-                  <div className="w-1/2 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse mt-2" />
-                </div>
-              </div>
-            ))}
           </div>
-        )}
+        ))}
       </div>
-    </div>
-  );
-};
+    );
+  };
 
-const renderCompactPreview = (items: Article[], blockConfig: ExtendedBlockConfig) => {
-  const dividerStyle = blockConfig.styles?.dividerStyle || 'solid';
-  const hoverEffect = (blockConfig.styles?.hoverEffect || 'none') as HoverEffect;
+  const renderCompactList = () => {
+    const articles = columns[0] || [];
+    const displayConfig = getColumnDisplayConfig('col-0');
+    
+    if (articles.length === 0) {
+      return renderSkeleton('compact');
+    }
 
-  return (
-    <div className="w-full max-w-3xl mx-auto">
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        {items && items.length > 0 ? items.map((article, index) => (
-          <a
-            key={index}
-            href={generateArticleUrl(article)}
-            className={`block py-3 transition-all ${
-              hoverEffect === 'highlight' ? 'hover:bg-gray-100 dark:hover:bg-gray-800' :
-              hoverEffect === 'scale' ? 'hover:scale-[1.02]' :
-              hoverEffect === 'background' ? 'hover:bg-gray-50 dark:hover:bg-gray-900' :
-              hoverEffect === 'translate' ? 'hover:translate-x-2' : ''
-            }`}
+    return (
+      <div className="space-y-0">
+        {articles.map((article, index) => (
+          <div 
+            key={index} 
+            className={`
+              py-3 
+              ${index !== articles.length - 1 ? getBorderStyle(blockConfig.styles.dividerStyle) : ''}
+              ${getHoverEffectClass(blockConfig.styles.hoverEffect)}
+            `}
           >
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white">{article.title}</h3>
-            {article.subtitle && (
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{article.subtitle}</p>
+            {/* Title */}
+            <h3 
+              className={`font-semibold mb-1 ${getTitleSizeClass(blockConfig.styles.titleSize)}`}
+              style={{
+                fontSize: theme.headingProps.fontSize,
+                fontWeight: theme.headingProps.fontWeight,
+                color: theme.headingProps.color
+              }}
+            >
+              {article.title}
+            </h3>
+            
+            {/* Excerpt */}
+            {displayConfig.showSubtitle && blockConfig.styles.showExcerpt && article.subtitle && (
+              <p 
+                className="text-sm line-clamp-2"
+                style={{
+                  fontSize: theme.subtitleProps.fontSize,
+                  color: theme.subtitleProps.color
+                }}
+              >
+                {article.subtitle}
+              </p>
             )}
-          </a>
-        )) : renderSkeleton('compact')}
+            
+            {/* Date */}
+            {displayConfig.showPublishDate && blockConfig.styles.showMetadata && article.published_at && (
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                {formatDistanceToNow(new Date(article.published_at), { addSuffix: true })}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
-    </div>
-  );
-};
+    );
+  };
 
-const renderCardPreview = (items: Article[], blockConfig: ExtendedBlockConfig) => {
-  const shape = blockConfig.styles?.thumbnailShape || 'rounded';
-  const hoverEffect = (blockConfig.styles?.hoverEffect || 'none') as HoverEffect;
+  const renderCardList = () => {
+    const articles = columns[0] || [];
+    const displayConfig = getColumnDisplayConfig('col-0');
+    
+    if (articles.length === 0) {
+      return renderSkeleton('card');
+    }
 
-  return (
-    <div className="w-full max-w-3xl mx-auto">
+    return (
       <div className="space-y-4">
-        {items && items.length > 0 ? items.map((article, index) => (
-          <a
-            key={index}
-            href={generateArticleUrl(article)}
-            className={`flex gap-4 p-4 transition-all ${
-              hoverEffect === 'highlight' ? 'hover:bg-gray-100 dark:hover:bg-gray-800' :
-              hoverEffect === 'scale' ? 'hover:scale-[1.02]' :
-              hoverEffect === 'background' ? 'hover:bg-gray-50 dark:hover:bg-gray-900' :
-              hoverEffect === 'translate' ? 'hover:translate-x-2' : ''
-            }`}
+        {articles.map((article, index) => (
+          <div 
+            key={index} 
+            className={`
+              flex gap-4 py-4
+              ${index !== articles.length - 1 ? getBorderStyle(blockConfig.styles.dividerStyle) : ''}
+              ${getHoverEffectClass(blockConfig.styles.hoverEffect)}
+            `}
           >
-            <div className={`w-24 h-24 shrink-0 overflow-hidden ${
-              shape === 'rounded' ? 'rounded-lg' :
-              shape === 'circle' ? 'rounded-full' :
-              'rounded-none'
-            }`}>
-              {article.content?.image?.desktop_image_path && (
-                <img
-                  src={article.content.image.desktop_image_path}
+            {/* Thumbnail */}
+            {displayConfig.showImage && article.content?.image?.desktop_image_path && (
+              <div 
+                className={`
+                  w-24 h-24 shrink-0 overflow-hidden
+                  ${getThumbnailShape(blockConfig.styles.thumbnailShape)}
+                `}
+              >
+                <img 
+                  src={article.content.image.desktop_image_path} 
                   alt={article.title}
                   className="w-full h-full object-cover"
                 />
+              </div>
+            )}
+            
+            <div className="flex-1 min-w-0">
+              {/* Title */}
+              <h3 
+                className={`font-semibold mb-1 ${getTitleSizeClass(blockConfig.styles.titleSize)}`}
+                style={{
+                  fontSize: theme.headingProps.fontSize,
+                  fontWeight: theme.headingProps.fontWeight,
+                  color: theme.headingProps.color
+                }}
+              >
+                {article.title}
+              </h3>
+              
+              {/* Excerpt */}
+              {displayConfig.showSubtitle && blockConfig.styles.showExcerpt && article.subtitle && (
+                <p 
+                  className="text-sm line-clamp-2"
+                  style={{
+                    fontSize: theme.subtitleProps.fontSize,
+                    color: theme.subtitleProps.color
+                  }}
+                >
+                  {article.subtitle}
+                </p>
+              )}
+              
+              {/* Date */}
+              {displayConfig.showPublishDate && blockConfig.styles.showMetadata && article.published_at && (
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  {formatDistanceToNow(new Date(article.published_at), { addSuffix: true })}
+                </div>
               )}
             </div>
-            <div className="flex-1">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">{article.title}</h3>
-              {article.subtitle && (
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{article.subtitle}</p>
-              )}
-            </div>
-          </a>
-        )) : renderSkeleton('card')}
+          </div>
+        ))}
       </div>
-    </div>
-  );
-};
+    );
+  };
 
-export function ListLayoutPreview({ blockConfig, columns }: ListLayoutPreviewProps) {
-  // Ensure we get the first column's articles or an empty array
-  const items = columns?.[0] ?? [];
   const variant = blockConfig?.variant || 'chronological';
 
   // Debug log to check what's being received
-  console.log('ListLayoutPreview:', { variant, itemsLength: items.length, columns });
+  console.log('ListLayoutPreview:', { variant, itemsLength: columns[0]?.length, columns });
 
   switch (variant) {
     case 'chronological':
-      return renderTimelinePreview(items, blockConfig);
+      return renderChronologicalList();
     case 'compact':
-      return renderCompactPreview(items, blockConfig);
+      return renderCompactList();
     case 'card':
-      return renderCardPreview(items, blockConfig);
+      return renderCardList();
     default:
       return null;
   }
-}
+};
 
 export default ListLayoutPreview; 

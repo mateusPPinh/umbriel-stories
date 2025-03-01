@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Tab } from '@headlessui/react';
 import LayoutConfig from './LayoutConfig';
 import ThemeConfig from './ThemeConfig';
-import MediaConfig, { VideoConfig, ImageConfig } from './MediaConfig';
+import MediaConfig, { VideoConfig, ImageConfig, DisplayConfig } from './MediaConfig';
 import VariantConfig from './VariantConfig';
 
 export interface BlockConfig {
@@ -45,6 +45,7 @@ export interface BlockConfig {
   mediaConfig?: {
     videoConfig?: VideoConfig;
     imageConfig?: ImageConfig;
+    displayConfig?: DisplayConfig;
   };
 }
 
@@ -82,6 +83,9 @@ const StyleConfigModal: React.FC<StyleConfigModalProps> = ({
   variantType
 }) => {
   const [config, setConfig] = useState<BlockConfig>(currentConfig);
+
+  // Adicionar log para diagnóstico
+  console.log('StyleConfigModal props:', { blockType, variantType });
 
   if (!isOpen) return null;
 
@@ -217,7 +221,9 @@ const StyleConfigModal: React.FC<StyleConfigModalProps> = ({
                     <MediaConfig
                       config={config.mediaConfig}
                       onChange={handleMediaChange}
-                      showVideo={variantType === 'video'}
+                      showVideo={variantType.toLowerCase().includes('video')}
+                      blockType={blockType}
+                      variant={variantType}
                     />
                   </Tab.Panel>
                 )}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Article } from '../../PageblockV2/types';
 import { BlockConfig } from './StyleConfigModal';
+import { DisplayConfig } from './StyleConfigModal/MediaConfig';
 
 type LayoutVariant = 'sidebar' | 'showcase' | 'newspaper' | 'magazine' | 'videogrid';
 
@@ -14,9 +15,39 @@ interface MixedLayoutPreviewProps {
 const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDarkTheme, columns, blockConfig }) => {
   const theme = blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'];
   
+  // Configurações globais de exibição
+  const globalDisplayConfig = blockConfig.mediaConfig?.displayConfig || {
+    showImage: true,
+    showSubtitle: true,
+    showPublishDate: true,
+    showAuthor: false,
+    showCategory: false
+  };
+
+  // Função para obter configurações específicas de uma coluna
+  const getColumnDisplayConfig = (columnId: string): DisplayConfig => {
+    const columnConfig = globalDisplayConfig.columnConfig?.[columnId];
+    
+    if (!columnConfig) {
+      return globalDisplayConfig;
+    }
+    
+    return {
+      showImage: columnConfig.showImage ?? globalDisplayConfig.showImage,
+      showSubtitle: columnConfig.showSubtitle ?? globalDisplayConfig.showSubtitle,
+      showPublishDate: columnConfig.showPublishDate ?? globalDisplayConfig.showPublishDate,
+      showAuthor: columnConfig.showAuthor ?? globalDisplayConfig.showAuthor,
+      showCategory: columnConfig.showCategory ?? globalDisplayConfig.showCategory
+    };
+  };
+  
   const renderSidebarPreview = () => {
     const mainArticle = columns['col-0']?.[0];
     const sidebarArticles = columns['col-1'] || [];
+    
+    // Configurações específicas para cada coluna
+    const mainDisplayConfig = getColumnDisplayConfig('col-0');
+    const sidebarDisplayConfig = getColumnDisplayConfig('col-1');
     
     return (
       <div className="grid grid-cols-[2fr,1fr] gap-6">
@@ -24,29 +55,31 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
         <div className="space-y-4">
           {/* Featured Article */}
           <article className="flex flex-col">
-          <div className={`
-              aspect-[16/9] rounded overflow-hidden
-            ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-          `}>
-            {mainArticle?.content?.image?.desktop_image_path && (
-                <div className="relative w-full h-full">
-              <img
-                src={mainArticle.content.image.desktop_image_path}
-                alt={mainArticle.title}
-                    className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
-                  />
-                  {blockConfig.mediaConfig?.imageConfig?.overlay?.enabled && (
-                    <div 
-                      className="absolute inset-0" 
-                      style={{
-                        backgroundColor: blockConfig.mediaConfig.imageConfig.overlay.color || 'rgba(0,0,0,0.5)',
-                        opacity: blockConfig.mediaConfig.imageConfig.overlay.opacity || 0.5
-                      }}
-              />
-            )}
-          </div>
+          {mainDisplayConfig.showImage && (
+            <div className={`
+                aspect-[16/9] rounded overflow-hidden
+              ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
+            `}>
+              {mainArticle?.content?.image?.desktop_image_path && (
+                  <div className="relative w-full h-full">
+                <img
+                  src={mainArticle.content.image.desktop_image_path}
+                  alt={mainArticle.title}
+                      className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                    />
+                    {blockConfig.mediaConfig?.imageConfig?.overlay?.enabled && (
+                      <div 
+                        className="absolute inset-0" 
+                        style={{
+                          backgroundColor: blockConfig.mediaConfig.imageConfig.overlay.color || 'rgba(0,0,0,0.5)',
+                          opacity: blockConfig.mediaConfig.imageConfig.overlay.opacity || 0.5
+                        }}
+                />
               )}
             </div>
+                )}
+              </div>
+            )}
             
             <div className="p-4">
               <div 
@@ -60,7 +93,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                 {mainArticle?.title || 'Título do artigo principal'}
               </div>
               
-              {blockConfig.styles.showExcerpt && (
+              {mainDisplayConfig.showSubtitle && blockConfig.styles.showExcerpt && (
                 <div 
                   className="line-clamp-2"
                   style={{
@@ -69,6 +102,12 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                   }}
                 >
                   {mainArticle?.subtitle || 'Descrição do artigo principal...'}
+                </div>
+              )}
+
+              {mainDisplayConfig.showPublishDate && mainArticle?.published_at && (
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                  {new Date(mainArticle.published_at).toLocaleDateString('pt-BR')}
                 </div>
               )}
             </div>
@@ -89,19 +128,21 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                 ].filter(Boolean).join(' ')}
               >
                 {/* Thumbnail */}
-                <div className="w-24 aspect-[4/3] rounded overflow-hidden shrink-0">
-                  {article?.content?.image?.desktop_image_path ? (
-                    <div className="relative w-full h-full">
-                    <img
-                      src={article.content.image.desktop_image_path}
-                      alt={article.title}
-                        className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
-                    />
-                    </div>
-                  ) : (
-                    <div className={`w-full h-full ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'}`} />
-                  )}
-                </div>
+                {sidebarDisplayConfig.showImage && (
+                  <div className="w-24 aspect-[4/3] rounded overflow-hidden shrink-0">
+                    {article?.content?.image?.desktop_image_path ? (
+                      <div className="relative w-full h-full">
+                      <img
+                        src={article.content.image.desktop_image_path}
+                        alt={article.title}
+                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                      />
+                      </div>
+                    ) : (
+                      <div className={`w-full h-full ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'}`} />
+                    )}
+                  </div>
+                )}
                 
                 <div className="flex-1 min-w-0">
                   <div 
@@ -115,7 +156,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                     {article?.title || 'Título do artigo relacionado'}
                   </div>
                   
-                  {blockConfig.styles.showExcerpt && article?.subtitle && (
+                  {sidebarDisplayConfig.showSubtitle && blockConfig.styles.showExcerpt && article?.subtitle && (
                     <div 
                       className="text-xs line-clamp-2"
                       style={{
@@ -124,6 +165,12 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       }}
                     >
                       {article.subtitle}
+                    </div>
+                  )}
+
+                  {sidebarDisplayConfig.showPublishDate && article?.published_at && (
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      {new Date(article.published_at).toLocaleDateString('pt-BR')}
                     </div>
                   )}
                 </div>
@@ -140,34 +187,41 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
     const gridArticles = columns['col-1'] || [];
     const listArticles = columns['col-2'] || [];
     
+    // Configurações específicas para cada coluna
+    const mainDisplayConfig = getColumnDisplayConfig('col-0');
+    const gridDisplayConfig = getColumnDisplayConfig('col-1');
+    const listDisplayConfig = getColumnDisplayConfig('col-2');
+    
     return (
       <div className="grid grid-cols-12 gap-6">
         {/* Featured Article */}
         <div className="col-span-7">
           <article className="flex flex-col">
-            <div className={`
-              aspect-[16/9] rounded overflow-hidden
-              ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-            `}>
-            {mainArticle?.content?.image?.desktop_image_path && (
-                <div className="relative w-full h-full">
-              <img
-                src={mainArticle.content.image.desktop_image_path}
-                alt={mainArticle.title}
-                    className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
-                  />
-                  {blockConfig.mediaConfig?.imageConfig?.overlay?.enabled && (
-                    <div 
-                      className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" 
-                      style={{
-                        backgroundColor: blockConfig.mediaConfig.imageConfig.overlay.color || 'rgba(0,0,0,0.5)',
-                        opacity: blockConfig.mediaConfig.imageConfig.overlay.opacity || 0.5
-                      }}
+            {mainDisplayConfig.showImage && (
+              <div className={`
+                aspect-[16/9] rounded overflow-hidden
+                ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
+              `}>
+                {mainArticle?.content?.image?.desktop_image_path && (
+                  <div className="relative w-full h-full">
+                    <img
+                      src={mainArticle.content.image.desktop_image_path}
+                      alt={mainArticle.title}
+                      className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
                     />
-                  )}
-                </div>
-              )}
-            </div>
+                    {blockConfig.mediaConfig?.imageConfig?.overlay?.enabled && (
+                      <div 
+                        className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" 
+                        style={{
+                          backgroundColor: blockConfig.mediaConfig.imageConfig.overlay.color || 'rgba(0,0,0,0.5)',
+                          opacity: blockConfig.mediaConfig.imageConfig.overlay.opacity || 0.5
+                        }}
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
             
             <div className="p-4">
               <div 
@@ -181,7 +235,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                 {mainArticle?.title || 'Título do artigo principal'}
               </div>
               
-              {blockConfig.styles.showExcerpt && (
+              {mainDisplayConfig.showSubtitle && blockConfig.styles.showExcerpt && (
                 <div 
                   className="line-clamp-3"
                   style={{
@@ -190,9 +244,15 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                   }}
                 >
                   {mainArticle?.subtitle || 'Descrição do artigo principal...'}
-                  </div>
-            )}
-          </div>
+                </div>
+              )}
+
+              {mainDisplayConfig.showPublishDate && mainArticle?.published_at && (
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                  {new Date(mainArticle.published_at).toLocaleDateString('pt-BR')}
+                </div>
+              )}
+            </div>
           </article>
         </div>
 
@@ -204,20 +264,22 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
             
             return (
                 <article key={i} className="flex flex-col">
-                <div className={`
-                    aspect-[4/3] rounded overflow-hidden mb-3
-                  ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-                `}>
-                  {article?.content?.image?.desktop_image_path && (
-                      <div className="relative w-full h-full">
-                    <img
-                      src={article.content.image.desktop_image_path}
-                      alt={article.title}
-                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
-                        />
-                      </div>
-                    )}
-                  </div>
+                {gridDisplayConfig.showImage && (
+                  <div className={`
+                      aspect-[4/3] rounded overflow-hidden mb-3
+                    ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
+                  `}>
+                    {article?.content?.image?.desktop_image_path && (
+                        <div className="relative w-full h-full">
+                          <img
+                            src={article.content.image.desktop_image_path}
+                            alt={article.title}
+                            className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                          />
+                        </div>
+                      )}
+                    </div>
+                )}
                   
                   <div className="flex-1">
                     <div 
@@ -231,7 +293,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       {article?.title || 'Título do artigo'}
                     </div>
                     
-                    {blockConfig.styles.showExcerpt && (
+                    {gridDisplayConfig.showSubtitle && blockConfig.styles.showExcerpt && (
                       <div 
                         className="text-xs line-clamp-2"
                         style={{
@@ -241,8 +303,14 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       >
                         {article?.subtitle || 'Descrição do artigo...'}
                       </div>
-                  )}
-                </div>
+                    )}
+
+                    {gridDisplayConfig.showPublishDate && article?.published_at && (
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        {new Date(article.published_at).toLocaleDateString('pt-BR')}
+                      </div>
+                    )}
+                  </div>
                 </article>
               );
             })}
@@ -274,7 +342,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                     {article?.title || 'Título do artigo'}
                   </div>
                   
-                  {blockConfig.styles.showExcerpt && (
+                  {listDisplayConfig.showSubtitle && blockConfig.styles.showExcerpt && (
                     <div 
                       className="text-xs line-clamp-2"
                       style={{
@@ -285,9 +353,15 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       {article?.subtitle || 'Descrição do artigo...'}
                     </div>
                   )}
+
+                  {listDisplayConfig.showPublishDate && article?.published_at && (
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      {new Date(article.published_at).toLocaleDateString('pt-BR')}
+                    </div>
+                  )}
                 </article>
-            );
-          })}
+              );
+            })}
           </div>
         </div>
       </div>
@@ -314,7 +388,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                   i === 0 ? 'mb-6' : ''
                 ].filter(Boolean).join(' ')}
               >
-                {article?.content?.image?.desktop_image_path && (
+                {getColumnDisplayConfig('col-0').showImage && article?.content?.image?.desktop_image_path && (
                 <div className={`
                     aspect-[16/9] rounded overflow-hidden mb-4
                   ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
@@ -350,7 +424,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                     {article?.title || 'Título do artigo principal'}
                   </div>
                   
-                  {blockConfig.styles.showExcerpt && (
+                  {getColumnDisplayConfig('col-0').showSubtitle && blockConfig.styles.showExcerpt && (
                     <div 
                       className="line-clamp-3"
                       style={{
@@ -359,6 +433,12 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       }}
                     >
                       {article?.subtitle || 'Descrição do artigo principal...'}
+                    </div>
+                  )}
+
+                  {getColumnDisplayConfig('col-0').showPublishDate && article?.published_at && (
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                      {new Date(article.published_at).toLocaleDateString('pt-BR')}
                     </div>
                   )}
                 </div>
@@ -381,7 +461,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                     i !== 3 ? 'border-b border-gray-200 dark:border-gray-700 pb-6' : ''
                   ].filter(Boolean).join(' ')}
                 >
-                  {article?.content?.image?.desktop_image_path && (
+                  {getColumnDisplayConfig('col-1').showImage && article?.content?.image?.desktop_image_path && (
                     <div className={`
                       aspect-[4/3] rounded overflow-hidden mb-4
                       ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
@@ -408,7 +488,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       {article?.title || 'Título do artigo'}
                     </div>
                     
-                    {blockConfig.styles.showExcerpt && (
+                    {getColumnDisplayConfig('col-1').showSubtitle && blockConfig.styles.showExcerpt && (
                       <div 
                         className="text-sm line-clamp-2"
                         style={{
@@ -417,6 +497,12 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                         }}
                       >
                         {article?.subtitle || 'Descrição do artigo...'}
+                      </div>
+                    )}
+
+                    {getColumnDisplayConfig('col-1').showPublishDate && article?.published_at && (
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        {new Date(article.published_at).toLocaleDateString('pt-BR')}
                       </div>
                     )}
                   </div>
@@ -440,7 +526,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                     i !== 3 ? 'border-b border-gray-200 dark:border-gray-700 pb-6' : ''
                   ].filter(Boolean).join(' ')}
                 >
-                  {article?.content?.image?.desktop_image_path && (
+                  {getColumnDisplayConfig('col-2').showImage && article?.content?.image?.desktop_image_path && (
                     <div className={`
                       aspect-[4/3] rounded overflow-hidden mb-4
                       ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
@@ -467,7 +553,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       {article?.title || 'Título do artigo'}
                     </div>
                     
-                    {blockConfig.styles.showExcerpt && (
+                    {getColumnDisplayConfig('col-2').showSubtitle && blockConfig.styles.showExcerpt && (
                       <div 
                         className="text-sm line-clamp-2"
                         style={{
@@ -477,11 +563,17 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       >
                         {article?.subtitle || 'Descrição do artigo...'}
                       </div>
-                )}
-              </div>
+                    )}
+
+                    {getColumnDisplayConfig('col-2').showPublishDate && article?.published_at && (
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        {new Date(article.published_at).toLocaleDateString('pt-BR')}
+                      </div>
+                    )}
+                  </div>
                 </article>
-            );
-          })}
+              );
+            })}
           </div>
         </div>
       </div>
@@ -498,20 +590,22 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
         {/* Main Article */}
         <div className="lg:col-span-6">
           <article className="flex flex-col">
-            <div className={`
-              aspect-[16/9] rounded overflow-hidden
-              ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-            `}>
-              {mainArticle?.content?.image?.desktop_image_path && (
-                <div className="relative w-full h-full">
-                  <img
-                    src={mainArticle.content.image.desktop_image_path}
-                    alt={mainArticle.title}
-                    className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
-                  />
-                </div>
-              )}
-            </div>
+            {getColumnDisplayConfig('col-0').showImage && (
+              <div className={`
+                aspect-[16/9] rounded overflow-hidden
+                ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
+              `}>
+                {mainArticle?.content?.image?.desktop_image_path && (
+                  <div className="relative w-full h-full">
+                    <img
+                      src={mainArticle.content.image.desktop_image_path}
+                      alt={mainArticle.title}
+                      className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
             
             <div className="p-4">
               <div 
@@ -525,7 +619,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                 {mainArticle?.title || 'Título do artigo principal'}
               </div>
               
-              {blockConfig.styles.showExcerpt && (
+              {getColumnDisplayConfig('col-0').showSubtitle && blockConfig.styles.showExcerpt && (
                 <div 
                   className="text-lg line-clamp-3"
                   style={{
@@ -534,6 +628,12 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                   }}
                 >
                   {mainArticle?.subtitle || 'Descrição do artigo principal...'}
+                </div>
+              )}
+
+              {getColumnDisplayConfig('col-0').showPublishDate && mainArticle?.published_at && (
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                  {new Date(mainArticle.published_at).toLocaleDateString('pt-BR')}
                 </div>
               )}
             </div>
@@ -548,20 +648,22 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
               
               return (
                 <article key={i} className="flex flex-col">
-                  <div className={`
-                    aspect-[4/3] rounded overflow-hidden mb-4
-                    ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-                  `}>
-                    {article?.content?.image?.desktop_image_path && (
-                      <div className="relative w-full h-full">
-                        <img
-                          src={article.content.image.desktop_image_path}
-                          alt={article.title}
-                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
-                        />
-                      </div>
-                    )}
-                  </div>
+                  {getColumnDisplayConfig('col-1').showImage && (
+                    <div className={`
+                      aspect-[4/3] rounded overflow-hidden mb-4
+                      ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
+                    `}>
+                      {article?.content?.image?.desktop_image_path && (
+                        <div className="relative w-full h-full">
+                          <img
+                            src={article.content.image.desktop_image_path}
+                            alt={article.title}
+                            className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
                   
                   <div className="p-4">
                     <div 
@@ -575,7 +677,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       {article?.title || 'Título do artigo secundário'}
                     </div>
                     
-                    {blockConfig.styles.showExcerpt && (
+                    {getColumnDisplayConfig('col-1').showSubtitle && blockConfig.styles.showExcerpt && (
                       <div 
                         className="text-base line-clamp-2"
                         style={{
@@ -584,6 +686,12 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                         }}
                       >
                         {article?.subtitle || 'Descrição do artigo secundário...'}
+                      </div>
+                    )}
+
+                    {getColumnDisplayConfig('col-1').showPublishDate && article?.published_at && (
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        {new Date(article.published_at).toLocaleDateString('pt-BR')}
                       </div>
                     )}
                   </div>
@@ -601,20 +709,22 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
               
               return (
                 <article key={i} className="flex flex-col">
-                  <div className={`
-                    aspect-[4/3] rounded overflow-hidden mb-4
-                    ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-                  `}>
-                    {article?.content?.image?.desktop_image_path && (
-                      <div className="relative w-full h-full">
-                        <img
-                          src={article.content.image.desktop_image_path}
-                          alt={article.title}
-                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
-                        />
-                      </div>
-                    )}
-                  </div>
+                  {getColumnDisplayConfig('col-2').showImage && (
+                    <div className={`
+                      aspect-[4/3] rounded overflow-hidden mb-4
+                      ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
+                    `}>
+                      {article?.content?.image?.desktop_image_path && (
+                        <div className="relative w-full h-full">
+                          <img
+                            src={article.content.image.desktop_image_path}
+                            alt={article.title}
+                            className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
                   
                   <div className="p-4">
                     <div 
@@ -628,7 +738,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       {article?.title || 'Título do artigo terciário'}
                     </div>
                     
-                    {blockConfig.styles.showExcerpt && (
+                    {getColumnDisplayConfig('col-2').showSubtitle && blockConfig.styles.showExcerpt && (
                       <div 
                         className="text-base line-clamp-2"
                         style={{
@@ -637,6 +747,12 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                         }}
                       >
                         {article?.subtitle || 'Descrição do artigo terciário...'}
+                      </div>
+                    )}
+
+                    {getColumnDisplayConfig('col-2').showPublishDate && article?.published_at && (
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        {new Date(article.published_at).toLocaleDateString('pt-BR')}
                       </div>
                     )}
                   </div>
@@ -659,38 +775,40 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
         {/* Main Video */}
         <div className="col-span-6">
           <article className="flex flex-col">
-          <div className={`
-              aspect-[16/9] rounded overflow-hidden relative
-            ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-          `}>
-              {mainArticle?.content?.image?.desktop_image_path && (
-                <div className="relative w-full h-full">
-                  <img
-                    src={mainArticle.content.image.desktop_image_path}
-                    alt={mainArticle.title}
-                    className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
-                />
-                <div className="absolute inset-0 bg-black/20" />
-                </div>
-            )}
-              
-            {/* Play Button */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className={`
-                  w-16 h-16 rounded-full flex items-center justify-center
-                  ${isDarkTheme ? 'bg-white/20' : 'bg-black/20'}
-                  hover:scale-110 transition-transform duration-200
-                `}>
+          {getColumnDisplayConfig('col-0').showImage && (
+            <div className={`
+                aspect-[16/9] rounded overflow-hidden relative
+              ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
+            `}>
+                {mainArticle?.content?.image?.desktop_image_path && (
+                  <div className="relative w-full h-full">
+                    <img
+                      src={mainArticle.content.image.desktop_image_path}
+                      alt={mainArticle.title}
+                      className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                  />
+                  <div className="absolute inset-0 bg-black/20" />
+                  </div>
+              )}
+                
+              {/* Play Button */}
+                <div className="absolute inset-0 flex items-center justify-center">
                   <div className={`
-                    w-0 h-0 border-t-[12px] border-t-transparent
-                    border-l-[20px] border-r-0
-                    border-b-[12px] border-b-transparent
-                    ${isDarkTheme ? 'border-l-white' : 'border-l-white'}
-                    ml-1
-                  `} />
+                    w-16 h-16 rounded-full flex items-center justify-center
+                    ${isDarkTheme ? 'bg-white/20' : 'bg-black/20'}
+                    hover:scale-110 transition-transform duration-200
+                  `}>
+                    <div className={`
+                      w-0 h-0 border-t-[12px] border-t-transparent
+                      border-l-[20px] border-r-0
+                      border-b-[12px] border-b-transparent
+                      ${isDarkTheme ? 'border-l-white' : 'border-l-black'}
+                      ml-1
+                    `} />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
             
             <div className="p-4">
               <div 
@@ -704,7 +822,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                 {mainArticle?.title || 'Título do vídeo principal'}
               </div>
               
-              {blockConfig.styles.showExcerpt && (
+              {getColumnDisplayConfig('col-0').showSubtitle && blockConfig.styles.showExcerpt && (
                 <div 
                   className="line-clamp-2"
                   style={{
@@ -715,80 +833,88 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                   {mainArticle?.subtitle || 'Descrição do vídeo principal...'}
                 </div>
               )}
+
+              {getColumnDisplayConfig('col-0').showPublishDate && mainArticle?.published_at && (
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                  {new Date(mainArticle.published_at).toLocaleDateString('pt-BR')}
+                </div>
+              )}
             </div>
           </article>
         </div>
 
         {/* Secondary Videos */}
-        <div className="col-span-3 border-l border-gray-200 dark:border-gray-700 pl-6">
-          <div className="space-y-6">
-            {[...Array(3)].map((_, i) => {
+        <div className="col-span-3">
+          <div className="grid grid-cols-1 gap-6">
+            {[...Array(2)].map((_, i) => {
               const article = secondaryArticles[i];
               
               return (
-                <article 
-                  key={i} 
-                  className={[
-                    'flex gap-4',
-                    i !== 2 ? 'border-b border-gray-200 dark:border-gray-700 pb-6' : ''
-                  ].filter(Boolean).join(' ')}
-                >
-                  <div className={`
-                    w-32 aspect-[16/9] rounded overflow-hidden relative shrink-0
-                    ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-                  `}>
-                    {article?.content?.image?.desktop_image_path && (
-                      <div className="relative w-full h-full">
-                        <img
-                          src={article.content.image.desktop_image_path}
-                          alt={article.title}
-                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
-                        />
-                        <div className="absolute inset-0 bg-black/20" />
+                <article key={i} className="flex flex-col">
+                  {getColumnDisplayConfig('col-1').showImage && (
+                    <div className={`
+                      aspect-[16/9] rounded overflow-hidden relative
+                      ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
+                    `}>
+                      {article?.content?.image?.desktop_image_path && (
+                        <div className="relative w-full h-full">
+                          <img
+                            src={article.content.image.desktop_image_path}
+                            alt={article.title}
+                            className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                          />
+                          <div className="absolute inset-0 bg-black/20" />
+                        </div>
+                      )}
+                      
+                      {/* Play Button */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className={`
+                          w-12 h-12 rounded-full flex items-center justify-center
+                          ${isDarkTheme ? 'bg-white/20' : 'bg-black/20'}
+                          hover:scale-110 transition-transform duration-200
+                        `}>
+                          <div className={`
+                            w-0 h-0 border-t-[8px] border-t-transparent
+                            border-l-[14px] border-r-0
+                            border-b-[8px] border-b-transparent
+                            ${isDarkTheme ? 'border-l-white' : 'border-l-black'}
+                            ml-1
+                          `} />
+                        </div>
                       </div>
-                    )}
-                    
-                    {/* Small Play Button */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className={`
-                w-8 h-8 rounded-full flex items-center justify-center
-                ${isDarkTheme ? 'bg-white/20' : 'bg-black/20'}
-                        hover:scale-110 transition-transform duration-200
-              `}>
-                <div className={`
-                  w-0 h-0 border-t-[6px] border-t-transparent
-                  border-l-[10px] border-r-0
-                  border-b-[6px] border-b-transparent
-                  ${isDarkTheme ? 'border-l-white' : 'border-l-white'}
-                  ml-0.5
-                `} />
-              </div>
-            </div>
-          </div>
+                    </div>
+                  )}
                   
-                  <div className="flex-1 min-w-0">
+                  <div className="p-4">
                     <div 
-                      className="text-sm font-medium line-clamp-2 mb-1"
+                      className="text-base font-medium line-clamp-2 mb-1"
                       style={{
                         fontSize: theme.headingProps.fontSize,
                         fontWeight: theme.headingProps.fontWeight,
                         color: theme.headingProps.color
                       }}
                     >
-                      {article?.title || 'Título do vídeo'}
-              </div>
+                      {article?.title || 'Título do vídeo secundário'}
+                    </div>
                     
-                    {blockConfig.styles.showExcerpt && (
+                    {getColumnDisplayConfig('col-1').showSubtitle && blockConfig.styles.showExcerpt && (
                       <div 
-                        className="text-xs line-clamp-2"
+                        className="text-sm line-clamp-2"
                         style={{
                           fontSize: theme.subtitleProps.fontSize,
                           color: theme.subtitleProps.color
                         }}
                       >
-                        {article?.subtitle || 'Descrição do vídeo...'}
-                </div>
-              )}
+                        {article?.subtitle || 'Descrição do vídeo secundário...'}
+                      </div>
+                    )}
+
+                    {getColumnDisplayConfig('col-1').showPublishDate && article?.published_at && (
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        {new Date(article.published_at).toLocaleDateString('pt-BR')}
+                      </div>
+                    )}
                   </div>
                 </article>
               );
@@ -797,79 +923,81 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
         </div>
 
         {/* Tertiary Videos */}
-        <div className="col-span-3 border-l border-gray-200 dark:border-gray-700 pl-6">
-          <div className="space-y-6">
-          {[...Array(3)].map((_, i) => {
+        <div className="col-span-3">
+          <div className="grid grid-cols-1 gap-6">
+            {[...Array(2)].map((_, i) => {
               const article = tertiaryArticles[i];
-            
-            return (
-                <article 
-                  key={i} 
-                  className={[
-                    'flex gap-4',
-                    i !== 2 ? 'border-b border-gray-200 dark:border-gray-700 pb-6' : ''
-                  ].filter(Boolean).join(' ')}
-                >
-                <div className={`
-                    w-32 aspect-[16/9] rounded overflow-hidden relative shrink-0
-                  ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-                `}>
-                    {article?.content?.image?.desktop_image_path && (
-                      <div className="relative w-full h-full">
-                        <img
-                          src={article.content.image.desktop_image_path}
-                          alt={article.title}
-                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
-                      />
-                      <div className="absolute inset-0 bg-black/20" />
-                      </div>
-                  )}
-                    
-                  {/* Small Play Button */}
-                  <div className="absolute inset-0 flex items-center justify-center">
+              
+              return (
+                <article key={i} className="flex flex-col">
+                  {getColumnDisplayConfig('col-2').showImage && (
                     <div className={`
-                        w-8 h-8 rounded-full flex items-center justify-center
-                      ${isDarkTheme ? 'bg-white/20' : 'bg-black/20'}
-                        hover:scale-110 transition-transform duration-200
+                      aspect-[16/9] rounded overflow-hidden relative
+                      ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
                     `}>
-                      <div className={`
-                          w-0 h-0 border-t-[6px] border-t-transparent
-                          border-l-[10px] border-r-0
-                          border-b-[6px] border-b-transparent
-                        ${isDarkTheme ? 'border-l-white' : 'border-l-white'}
-                        ml-0.5
-                      `} />
+                      {article?.content?.image?.desktop_image_path && (
+                        <div className="relative w-full h-full">
+                          <img
+                            src={article.content.image.desktop_image_path}
+                            alt={article.title}
+                            className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                          />
+                          <div className="absolute inset-0 bg-black/20" />
+                        </div>
+                      )}
+                      
+                      {/* Play Button */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className={`
+                          w-12 h-12 rounded-full flex items-center justify-center
+                          ${isDarkTheme ? 'bg-white/20' : 'bg-black/20'}
+                          hover:scale-110 transition-transform duration-200
+                        `}>
+                          <div className={`
+                            w-0 h-0 border-t-[8px] border-t-transparent
+                            border-l-[14px] border-r-0
+                            border-b-[8px] border-b-transparent
+                            ${isDarkTheme ? 'border-l-white' : 'border-l-black'}
+                            ml-1
+                          `} />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  )}
                   
-                  <div className="flex-1 min-w-0">
+                  <div className="p-4">
                     <div 
-                      className="text-sm font-medium line-clamp-2 mb-1"
+                      className="text-base font-medium line-clamp-2 mb-1"
                       style={{
                         fontSize: theme.headingProps.fontSize,
                         fontWeight: theme.headingProps.fontWeight,
                         color: theme.headingProps.color
                       }}
                     >
-                      {article?.title || 'Título do vídeo'}
+                      {article?.title || 'Título do vídeo terciário'}
                     </div>
                     
-                    {blockConfig.styles.showExcerpt && (
+                    {getColumnDisplayConfig('col-2').showSubtitle && blockConfig.styles.showExcerpt && (
                       <div 
-                        className="text-xs line-clamp-2"
+                        className="text-sm line-clamp-2"
                         style={{
                           fontSize: theme.subtitleProps.fontSize,
                           color: theme.subtitleProps.color
                         }}
                       >
-                        {article?.subtitle || 'Descrição do vídeo...'}
+                        {article?.subtitle || 'Descrição do vídeo terciário...'}
                       </div>
-                  )}
-                </div>
+                    )}
+
+                    {getColumnDisplayConfig('col-2').showPublishDate && article?.published_at && (
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        {new Date(article.published_at).toLocaleDateString('pt-BR')}
+                      </div>
+                    )}
+                  </div>
                 </article>
-            );
-          })}
+              );
+            })}
           </div>
         </div>
       </div>
