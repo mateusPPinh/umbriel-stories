@@ -5,11 +5,14 @@ import DroppableColumn from './DroppableColumn';
 import MixedLayoutPreview from './MixedLayoutPreview';
 import ArticlesPool from './ArticlesPool';
 import { BlockConfig } from './StyleConfigModal';
+import { useBlockState } from '../hooks/useBlockState';
+import { VariantType } from '../types';
 
 interface MixedManagerProps {
+  pageId: string;
   articles: Article[];
   isDarkTheme?: boolean;
-  onSave: (columns: { [key: string]: Article[] }) => void;
+  onSave: (data: any) => void;
   variant?: keyof typeof LAYOUT_VARIANTS;
   blockConfig: BlockConfig;
   onConfigClick: () => void;
@@ -108,7 +111,13 @@ const LAYOUT_VARIANTS: LayoutVariants = {
 
 type LayoutVariant = keyof typeof LAYOUT_VARIANTS;
 
+// Função auxiliar para verificar se uma coluna existe em um layout
+const columnExistsInVariant = (columnId: string, variant: LayoutVariant): boolean => {
+  return Object.keys(LAYOUT_VARIANTS[variant].maxItems).includes(columnId);
+};
+
 const MixedManager: React.FC<MixedManagerProps> = ({ 
+  pageId,
   articles, 
   isDarkTheme, 
   onSave, 
@@ -116,137 +125,111 @@ const MixedManager: React.FC<MixedManagerProps> = ({
   blockConfig,
   onConfigClick
 }) => {
-  const [variantType, setVariantType] = useState<LayoutVariant>(
-    LAYOUT_VARIANTS[variant as LayoutVariant] ? (variant as LayoutVariant) : 'sidebar'
-  );
-  
-  // Função auxiliar para criar o estado inicial das colunas
-  const createInitialColumns = (variant: LayoutVariant) => {
-    // Garante que a variante existe, senão usa 'sidebar' como fallback
-    const safeVariant = LAYOUT_VARIANTS[variant] ? variant : 'sidebar';
-    const availableColumns = Object.keys(LAYOUT_VARIANTS[safeVariant].maxItems) as ColumnId[];
-    const initialColumns: { [key: string]: Article[] } = {
-      pool: articles
-    };
-    
-    availableColumns.forEach(colId => {
-      initialColumns[colId] = [];
-    });
-    
-    return initialColumns;
-  };
-  
-  const [columns, setColumns] = useState<{ [key: string]: Article[] }>(() => 
-    createInitialColumns(variant as LayoutVariant)
-  );
-
-  // Limpa as colunas quando a variante muda
-  useEffect(() => {
-    // Garante que a variante existe, senão usa 'sidebar' como fallback
-    if (!LAYOUT_VARIANTS[variantType]) {
-      setVariantType('sidebar');
-      return;
-    }
-    
-    // Retorna todos os artigos das colunas para a pool
-    const allArticles = [...columns.pool];
-    Object.entries(columns).forEach(([key, articles]) => {
-      if (key !== 'pool') {
-        allArticles.push(...articles);
-      }
-    });
-    
-    // Cria um novo estado com as colunas da nova variante
-    const newColumns = createInitialColumns(variantType);
-    newColumns.pool = allArticles;
-    
-    setColumns(newColumns);
-    onSave(newColumns);
-  }, [variantType]);
+  const {
+    blockState,
+    updateArticlePositions,
+    updateVariant,
+    updateVariantPosition,
+    updateBlockPosition,
+    updateBlockConfig,
+    getApiFormat
+  } = useBlockState({
+    pageId,
+    template: 'mixed',
+    initialArticles: articles,
+    initialVariant: variant as any,
+    blockPosition: 1
+  });
 
   const handleDragEnd = (result: DropResult) => {
     const { source, destination } = result;
 
-    // Dropped outside a droppable area
     if (!destination) return;
 
-    // Same position
     if (
       source.droppableId === destination.droppableId &&
       source.index === destination.index
+    ) return;
+
+    const variantType = blockState.currentVariant.variantType as LayoutVariant;
+    // Verificar se a variante existe no LAYOUT_VARIANTS
+    if (!LAYOUT_VARIANTS[variantType]) {
+      console.error(`Variante "${variantType}" não encontrada em LAYOUT_VARIANTS`);
+      return;
+    }
+    
+    const currentVariant = LAYOUT_VARIANTS[variantType];
+    const destColumn = destination.droppableId as ColumnId;
+    
+    // Verificar se a coluna de destino existe na variante atual
+    if (!Object.keys(currentVariant.maxItems).includes(destColumn)) {
+      console.error(`Coluna "${destColumn}" não encontrada na variante "${variantType}"`);
+      return;
+    }
+    
+    if (
+      source.droppableId !== destination.droppableId && 
+      destColumn && 
+      blockState.articles[destColumn] && 
+      blockState.articles[destColumn].length >= (currentVariant.maxItems[destColumn as keyof typeof currentVariant.maxItems] || 0)
     ) {
       return;
     }
 
-    // Get layout configuration
-    const layoutConfig = LAYOUT_VARIANTS[variantType];
-    
-    // Ensure layoutConfig exists
-    if (!layoutConfig) return;
+    const sourceCol = Array.from(blockState.articles[source.droppableId]);
+    const destCol = source.droppableId === destination.droppableId
+      ? sourceCol
+      : Array.from(blockState.articles[destination.droppableId]);
 
-    // Check if destination column has reached its limit
-    if (
-      destination.droppableId !== 'pool' &&
-      destination.droppableId in layoutConfig.maxItems
-    ) {
-      const maxItems = layoutConfig.maxItems[destination.droppableId as keyof typeof layoutConfig.maxItems];
-      const currentItems = columns[destination.droppableId]?.length || 0;
+    const [removed] = sourceCol.splice(source.index, 1);
+    destCol.splice(destination.index, 0, removed);
 
-      // If moving within the same column, we need to account for the item being moved
-      const effectiveCurrentItems =
-        source.droppableId === destination.droppableId
-          ? currentItems - 1
-          : currentItems;
+    const newColumns = {
+      ...blockState.articles,
+      [source.droppableId]: sourceCol,
+      [destination.droppableId]: destCol
+    };
 
-      if (effectiveCurrentItems >= maxItems) {
-        return;
-      }
-    }
-
-    // Create copy of columns
-    const newColumns = { ...columns };
-
-    // Remove from source
-    const [removed] = newColumns[source.droppableId].splice(source.index, 1);
-
-    // Add to destination
-    newColumns[destination.droppableId].splice(destination.index, 0, removed);
-
-    setColumns(newColumns);
-    onSave(newColumns);
+    updateArticlePositions(newColumns);
   };
 
-  // Função para remover um artigo de uma coluna e devolvê-lo para a pool
   const handleRemoveArticle = (columnId: string, articleId: string | number) => {
-    // Encontra o artigo na coluna
-    const article = columns[columnId].find(a => a.id === articleId);
+    const article = blockState.articles[columnId].find(a => a.id === articleId);
     
     if (!article) return;
     
-    // Remove o artigo da coluna
-    const updatedColumn = columns[columnId].filter(a => a.id !== articleId);
+    const updatedColumn = blockState.articles[columnId].filter(a => a.id !== articleId);
+    const updatedPool = [...blockState.articles.pool, article];
     
-    // Adiciona o artigo de volta à pool
-    const updatedPool = [...columns.pool, article];
-    
-    // Atualiza o estado
     const newColumns = {
-      ...columns,
+      ...blockState.articles,
       [columnId]: updatedColumn,
       pool: updatedPool
     };
     
-    setColumns(newColumns);
-    onSave(newColumns);
+    updateArticlePositions(newColumns);
   };
 
-  const currentVariant = LAYOUT_VARIANTS[variantType];
-  
-  // Ensure we have a valid variant, fallback to sidebar if not
-  if (!currentVariant) {
-    // Reset to a valid variant type
-    setVariantType('sidebar');
-    return null;
+  const handleSave = () => {
+    const data = getApiFormat();
+    onSave(data);
+  };
+
+  const handleVariantChange = (newVariant: LayoutVariant) => {
+    updateVariant(newVariant);
+  };
+
+  // Garantir que estamos usando uma variante válida
+  const variantType = blockState.currentVariant.variantType as LayoutVariant;
+  const validVariantType = LAYOUT_VARIANTS[variantType] ? variantType : 'sidebar';
+  const currentVariant = LAYOUT_VARIANTS[validVariantType];
+  const availableColumns = Object.keys(currentVariant.maxItems) as ColumnId[];
+
+  // Se a variante atual não for válida, atualizá-la para uma variante válida
+  if (validVariantType !== variantType) {
+    console.warn(`Variante "${variantType}" não encontrada, usando "sidebar" como fallback`);
+    // Atualizar a variante para uma válida na próxima renderização
+    setTimeout(() => updateVariant('sidebar' as VariantType), 0);
   }
 
   return (
@@ -262,72 +245,76 @@ const MixedManager: React.FC<MixedManagerProps> = ({
             </label>
             <select
               id="variant-select"
-              value={variantType}
-              onChange={(e) => setVariantType(e.target.value as LayoutVariant)}
+              value={blockState.currentVariant.variantType}
+              onChange={(e) => handleVariantChange(e.target.value as LayoutVariant)}
               className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
             >
-              {Object.entries(LAYOUT_VARIANTS).map(([key, variant]) => (
+              {Object.entries(LAYOUT_VARIANTS).map(([key, value]) => (
                 <option key={key} value={key}>
-                  {variant.label}
+                  {value.label}
                 </option>
               ))}
             </select>
           </div>
         </div>
-        <button
-          onClick={onConfigClick}
-          className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          Configurar Estilos
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleSave}
+            className="px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          >
+            Salvar
+          </button>
+          <button
+            onClick={onConfigClick}
+            className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Configurar Estilos
+          </button>
+        </div>
       </div>
 
-      <div className={`grid grid-cols-1 ${Object.keys(currentVariant.maxItems).length > 2 ? 'lg:grid-cols-2' : 'lg:grid-cols-5'} gap-6`}>
-        <div className={Object.keys(currentVariant.maxItems).length > 2 ? 'lg:col-span-1' : 'lg:col-span-2'}>
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        <div className="lg:col-span-2">
           <DragDropContext onDragEnd={handleDragEnd}>
             <div className="flex flex-col gap-4">
               <ArticlesPool
                 droppableId="pool"
-                articles={columns.pool}
+                articles={blockState.articles.pool}
                 isDarkTheme={isDarkTheme}
               />
-              <div className={`grid ${Object.keys(currentVariant.maxItems).length > 2 ? 'grid-cols-3' : 'grid-cols-1'} gap-4`}>
-                {(Object.keys(currentVariant.maxItems) as BaseColumnId[]).map((colId) => {
-                  const columnId = colId as keyof typeof currentVariant.maxItems;
-                  return (
-                    <div key={columnId}>
-                      <DroppableColumn
-                        id={columnId}
-                        droppableId={columnId}
-                        title={currentVariant.columnLabels[columnId]}
-                        articles={columns[columnId] || []}
-                        maxItems={currentVariant.maxItems[columnId]}
-                        isDarkTheme={isDarkTheme}
-                        width="w-full"
-                        showExcerpt={blockConfig.styles.showExcerpt}
-                        headingProps={{
-                          fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
-                          fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
-                          color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
-                        }}
-                        subtitleProps={{
-                          fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
-                          color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
-                        }}
-                        onRemoveArticle={handleRemoveArticle}
-                      />
-                    </div>
-                  );
-                })}
+              <div className="space-y-4">
+                {availableColumns.map(colId => (
+                  <DroppableColumn
+                    key={colId}
+                    id={colId}
+                    droppableId={colId}
+                    title={currentVariant.columnLabels[colId as keyof typeof currentVariant.columnLabels]}
+                    articles={blockState.articles[colId] || []}
+                    maxItems={currentVariant.maxItems[colId as keyof typeof currentVariant.maxItems]}
+                    isDarkTheme={isDarkTheme}
+                    width="w-full"
+                    showExcerpt={blockConfig.styles.showExcerpt}
+                    headingProps={{
+                      fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
+                      fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
+                      color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
+                    }}
+                    subtitleProps={{
+                      fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
+                      color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
+                    }}
+                    onRemoveArticle={handleRemoveArticle}
+                  />
+                ))}
               </div>
             </div>
           </DragDropContext>
         </div>
-        <div className={Object.keys(currentVariant.maxItems).length > 2 ? 'lg:col-span-1' : 'lg:col-span-3'}>
+        <div className="lg:col-span-3">
           <MixedLayoutPreview
-            variantType={variantType}
+            variant={validVariantType}
+            columns={blockState.articles}
             isDarkTheme={isDarkTheme}
-            columns={columns}
             blockConfig={blockConfig}
           />
         </div>

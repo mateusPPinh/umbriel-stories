@@ -5,13 +5,13 @@ import { BlockConfig } from './StyleConfigModal';
 type LayoutVariant = 'sidebar' | 'showcase' | 'newspaper' | 'magazine' | 'videogrid';
 
 interface MixedLayoutPreviewProps {
-  variantType: LayoutVariant;
+  variant: LayoutVariant;
   isDarkTheme?: boolean;
   columns: { [key: string]: Article[] };
   blockConfig: BlockConfig;
 }
 
-const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, isDarkTheme, columns, blockConfig }) => {
+const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDarkTheme, columns, blockConfig }) => {
   const theme = blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'];
   
   const renderSidebarPreview = () => {
@@ -886,7 +886,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
   };
 
   const getLayoutPreview = () => {
-    switch (variantType) {
+    switch (variant) {
       case 'sidebar':
         return renderSidebarPreview();
       case 'showcase':
@@ -898,30 +898,22 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
       case 'videogrid':
         return renderVideoGridPreview();
       default:
-        return null;
+        return renderSidebarPreview();
     }
   };
 
   return (
-    <div className="relative">
-      <div className="text-sm font-medium mb-2 text-gray-600 dark:text-gray-400">
-        Preview do Layout
+    <div className={`
+      rounded-lg overflow-hidden border
+      ${isDarkTheme ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}
+    `}>
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+          Preview do Layout {variant}
+        </h3>
       </div>
-      <div 
-        className={`
-          w-full p-6 rounded-lg overflow-hidden
-          border border-gray-200 dark:border-gray-700
-          hover:border-blue-500/50 dark:hover:border-blue-500/50
-        transition-colors duration-200
-          min-h-[500px] flex flex-col
-        `}
-        style={{
-          backgroundColor: blockConfig.layout.styles.backgroundColor || (isDarkTheme ? 'rgba(31, 41, 55, 0.5)' : 'rgba(243, 244, 246, 0.5)')
-        }}
-      >
-        <div className="w-full h-full flex-1 flex items-center justify-center">
+      <div className="p-4">
         {getLayoutPreview()}
-        </div>
       </div>
     </div>
   );

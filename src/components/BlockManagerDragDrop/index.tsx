@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useMemo, lazy, Suspense } from 'react';
 import { Article } from '../PageblockV2/types';
 import type { BlockConfig } from './components/StyleConfigModal';
+import { GridVariantType, MixedVariantType, FeaturedVariantType, ListVariantType } from './types';
 
 // Lazy loading dos componentes pesados
 const GridManager = lazy(() => import('./components/GridManager'));
@@ -100,7 +101,9 @@ const BlockManagerDragDrop: React.FC<BlockManagerDragDropProps> = React.memo(({
       pageId
     };
 
-    const fallback = <div className="w-full h-64 flex items-center justify-center">Loading...</div>;
+    const fallback = <div className="w-full h-64 flex items-center justify-center">
+      <div className="animate-pulse text-gray-500 dark:text-gray-400">Carregando gerenciador...</div>
+    </div>;
 
     switch (blockType) {
       case 'grid':
@@ -108,7 +111,7 @@ const BlockManagerDragDrop: React.FC<BlockManagerDragDropProps> = React.memo(({
           <Suspense fallback={fallback}>
             <GridManager
               {...commonProps}
-              variant={currentVariant}
+              variant={currentVariant as GridVariantType}
             />
           </Suspense>
         );
@@ -117,7 +120,7 @@ const BlockManagerDragDrop: React.FC<BlockManagerDragDropProps> = React.memo(({
           <Suspense fallback={fallback}>
             <ListManager
               {...commonProps}
-              variant={currentVariant}
+              variant={currentVariant as ListVariantType}
             />
           </Suspense>
         );
@@ -126,7 +129,7 @@ const BlockManagerDragDrop: React.FC<BlockManagerDragDropProps> = React.memo(({
           <Suspense fallback={fallback}>
             <MixedManager
               {...commonProps}
-              variant={currentVariant as 'sidebar' | 'showcase' | 'newspaper' | 'magazine' | 'videogrid'}
+              variant={currentVariant as MixedVariantType}
             />
           </Suspense>
         );
@@ -135,7 +138,7 @@ const BlockManagerDragDrop: React.FC<BlockManagerDragDropProps> = React.memo(({
           <Suspense fallback={fallback}>
             <FeaturedManager
               {...commonProps}
-              variant={currentVariant as 'hero' | 'split' | 'triple'}
+              variant={currentVariant as FeaturedVariantType}
             />
           </Suspense>
         );

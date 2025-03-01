@@ -236,6 +236,98 @@ export const useBlockState = ({
             'col-0': []
           }
         }
+      },
+      // Mixed variants
+      sidebar: {
+        variantType: 'sidebar' as VariantType,
+        variantPosition: 1,
+        articles: {
+          'pool': initialArticles,
+          'col-0': [],
+          'col-1': []
+        },
+        config: {
+          ...defaultConfig,
+          articles: {
+            'pool': initialArticles.map(article => String(article.id)),
+            'col-0': [],
+            'col-1': []
+          }
+        }
+      },
+      showcase: {
+        variantType: 'showcase' as VariantType,
+        variantPosition: 1,
+        articles: {
+          'pool': initialArticles,
+          'col-0': [],
+          'col-1': [],
+          'col-2': []
+        },
+        config: {
+          ...defaultConfig,
+          articles: {
+            'pool': initialArticles.map(article => String(article.id)),
+            'col-0': [],
+            'col-1': [],
+            'col-2': []
+          }
+        }
+      },
+      newspaper: {
+        variantType: 'newspaper' as VariantType,
+        variantPosition: 1,
+        articles: {
+          'pool': initialArticles,
+          'col-0': [],
+          'col-1': [],
+          'col-2': []
+        },
+        config: {
+          ...defaultConfig,
+          articles: {
+            'pool': initialArticles.map(article => String(article.id)),
+            'col-0': [],
+            'col-1': [],
+            'col-2': []
+          }
+        }
+      },
+      magazine: {
+        variantType: 'magazine' as VariantType,
+        variantPosition: 1,
+        articles: {
+          'pool': initialArticles,
+          'col-0': [],
+          'col-1': [],
+          'col-2': []
+        },
+        config: {
+          ...defaultConfig,
+          articles: {
+            'pool': initialArticles.map(article => String(article.id)),
+            'col-0': [],
+            'col-1': [],
+            'col-2': []
+          }
+        }
+      },
+      videogrid: {
+        variantType: 'videogrid' as VariantType,
+        variantPosition: 1,
+        articles: {
+          'pool': initialArticles,
+          'col-0': [],
+          'col-1': []
+        },
+        config: {
+          ...defaultConfig,
+          articles: {
+            'pool': initialArticles.map(article => String(article.id)),
+            'col-0': [],
+            'col-1': []
+          }
+        }
       }
     };
 
@@ -365,6 +457,17 @@ export const useBlockState = ({
         case 'newsfeed':
           return 2;
         case 'newsgrid':
+          return 2;
+        // Mixed variants
+        case 'sidebar':
+          return 2;
+        case 'showcase':
+          return 3;
+        case 'newspaper':
+          return 3;
+        case 'magazine':
+          return 3;
+        case 'videogrid':
           return 2;
         default:
           return 1;
