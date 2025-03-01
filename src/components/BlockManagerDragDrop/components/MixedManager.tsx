@@ -213,6 +213,30 @@ const MixedManager: React.FC<MixedManagerProps> = ({
     onSave(newColumns);
   };
 
+  // Função para remover um artigo de uma coluna e devolvê-lo para a pool
+  const handleRemoveArticle = (columnId: string, articleId: string | number) => {
+    // Encontra o artigo na coluna
+    const article = columns[columnId].find(a => a.id === articleId);
+    
+    if (!article) return;
+    
+    // Remove o artigo da coluna
+    const updatedColumn = columns[columnId].filter(a => a.id !== articleId);
+    
+    // Adiciona o artigo de volta à pool
+    const updatedPool = [...columns.pool, article];
+    
+    // Atualiza o estado
+    const newColumns = {
+      ...columns,
+      [columnId]: updatedColumn,
+      pool: updatedPool
+    };
+    
+    setColumns(newColumns);
+    onSave(newColumns);
+  };
+
   const currentVariant = LAYOUT_VARIANTS[variantType];
   
   // Ensure we have a valid variant, fallback to sidebar if not
@@ -295,6 +319,7 @@ const MixedManager: React.FC<MixedManagerProps> = ({
                           fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
                           color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
                         }}
+                        onRemoveArticle={handleRemoveArticle}
                       />
                     </div>
                   );

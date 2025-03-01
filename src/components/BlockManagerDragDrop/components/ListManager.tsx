@@ -6,6 +6,87 @@ import ListLayoutPreview from './ListLayoutPreview';
 import ArticlesPool from './ArticlesPool';
 import { BlockConfig } from './StyleConfigModal';
 
+interface ListBlockConfig {
+  articles: Record<string, Article[]>;
+  variant?: 'chronological' | 'compact' | 'thumbnail';
+  layout: {
+    columns: number;
+    gap: string;
+    styles: {
+      grid: {
+        autoRows: string;
+        templateColumns: string;
+      };
+      width: string;
+      columnStyles: Record<string, any>;
+      backgroundColor: string;
+      gridFlow?: string;
+      minColumnWidth?: string;
+    };
+    padding: string;
+    imageSize: string;
+    responsive: {
+      mobile: number;
+      tablet: number;
+      desktop: number;
+    };
+    aspectRatio: string;
+  };
+  mediaConfig: {
+    type: string;
+    customUrl: string;
+    videoConfig?: {
+      loop: boolean;
+      muted: boolean;
+      autoplay: boolean;
+      controls: boolean;
+    };
+    useArticleMedia: boolean;
+  };
+  styles: {
+    theme: {
+      light: {
+        columnStyle: {
+          background: string;
+        };
+        headingProps: {
+          fontSize: string;
+          fontWeight?: number;
+          color: string;
+        };
+        subtitleProps: {
+          fontSize: string;
+          color: string;
+        };
+      };
+      dark: {
+        columnStyle: {
+          background: string;
+        };
+        headingProps: {
+          fontSize: string;
+          fontWeight?: number;
+          color: string;
+        };
+        subtitleProps: {
+          fontSize: string;
+          color: string;
+        };
+      };
+    };
+    showExcerpt: boolean;
+    showMetadata: boolean;
+    titleSize: string;
+    columnStyle: Record<string, any>;
+    imageHeight: string;
+    timelineStyle?: 'solid' | 'dashed' | 'dotted';
+    markerStyle?: 'circle' | 'square' | 'diamond';
+    hoverEffect?: 'highlight' | 'scale' | 'background' | 'translate' | 'none';
+    dividerStyle?: 'solid' | 'dashed' | 'dotted';
+    thumbnailShape?: 'square' | 'rounded' | 'circle';
+  };
+}
+
 interface ListManagerProps {
   articles: Article[];
   isDarkTheme?: boolean;
@@ -28,15 +109,93 @@ const ListManager: React.FC<ListManagerProps> = ({
     'pool': articles,
     'col-0': []
   });
-  const [blockConfig, setBlockConfig] = useState(initialBlockConfig);
+  const [blockConfig, setBlockConfig] = useState<ListBlockConfig>({
+    articles: { 'col-0': columns['col-0'] },
+    variant: variantType as 'chronological' | 'compact' | 'thumbnail',
+    layout: {
+      columns: 1,
+      gap: '1rem',
+      styles: {
+        grid: {
+          autoRows: 'auto',
+          templateColumns: '1fr'
+        },
+        width: '100%',
+        columnStyles: {},
+        backgroundColor: 'transparent'
+      },
+      padding: '1rem',
+      imageSize: '100%',
+      responsive: {
+        mobile: 1,
+        tablet: 1,
+        desktop: 1
+      },
+      aspectRatio: '16/9'
+    },
+    mediaConfig: {
+      type: 'image',
+      customUrl: '',
+      videoConfig: {
+        loop: false,
+        muted: true,
+        autoplay: false,
+        controls: true
+      },
+      useArticleMedia: true
+    },
+    styles: {
+      theme: {
+        light: {
+          columnStyle: {
+            background: '#ffffff'
+          },
+          headingProps: {
+            fontSize: '1.125rem',
+            fontWeight: 500,
+            color: '#111827'
+          },
+          subtitleProps: {
+            fontSize: '0.875rem',
+            color: '#6B7280'
+          }
+        },
+        dark: {
+          columnStyle: {
+            background: '#1F2937'
+          },
+          headingProps: {
+            fontSize: '1.125rem',
+            fontWeight: 500,
+            color: '#F9FAFB'
+          },
+          subtitleProps: {
+            fontSize: '0.875rem',
+            color: '#9CA3AF'
+          }
+        }
+      },
+      showExcerpt: true,
+      showMetadata: true,
+      titleSize: 'text-lg',
+      columnStyle: {},
+      imageHeight: 'h-48',
+      timelineStyle: 'solid',
+      markerStyle: 'circle',
+      hoverEffect: 'highlight',
+      dividerStyle: 'solid',
+      thumbnailShape: 'rounded'
+    }
+  });
 
   // Atualiza o blockConfig quando a variante muda
   useEffect(() => {
     setBlockConfig(prev => ({
       ...prev,
-      variant: variantType
+      variant: variantType as 'chronological' | 'compact' | 'thumbnail',
+      articles: { 'col-0': columns['col-0'] }
     }));
-  }, [variantType]);
+  }, [variantType, columns]);
 
   const handleDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -69,6 +228,30 @@ const ListManager: React.FC<ListManagerProps> = ({
       [destination.droppableId]: destCol
     };
 
+    setColumns(newColumns);
+    onSave(newColumns);
+  };
+
+  // Função para remover um artigo de uma coluna e devolvê-lo para a pool
+  const handleRemoveArticle = (columnId: string, articleId: string | number) => {
+    // Encontra o artigo na coluna
+    const article = columns[columnId].find(a => a.id === articleId);
+    
+    if (!article) return;
+    
+    // Remove o artigo da coluna
+    const updatedColumn = columns[columnId].filter(a => a.id !== articleId);
+    
+    // Adiciona o artigo de volta à pool
+    const updatedPool = [...columns.pool, article];
+    
+    // Atualiza o estado
+    const newColumns = {
+      ...columns,
+      [columnId]: updatedColumn,
+      pool: updatedPool
+    };
+    
     setColumns(newColumns);
     onSave(newColumns);
   };
@@ -108,9 +291,9 @@ const ListManager: React.FC<ListManagerProps> = ({
         </div>
         <button
           onClick={onConfigClick}
-          className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
         >
-          Configurar Estilos
+          Configurar
         </button>
       </div>
 
@@ -127,30 +310,22 @@ const ListManager: React.FC<ListManagerProps> = ({
                 <DroppableColumn
                   id="col-0"
                   droppableId="col-0"
-                  title={currentVariant.label}
+                  title="Lista de Artigos"
                   articles={columns['col-0']}
                   maxItems={currentVariant.maxItems}
                   isDarkTheme={isDarkTheme}
+                  onRemoveArticle={handleRemoveArticle}
                   width="w-full"
-                  showExcerpt={blockConfig.styles.showExcerpt}
-                  headingProps={{
-                    fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
-                    fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
-                    color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
-                  }}
-                  subtitleProps={{
-                    fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
-                    color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
-                  }}
                 />
               </div>
             </div>
           </DragDropContext>
         </div>
+
         <div className="lg:col-span-3">
           <ListLayoutPreview
-            columns={[columns['col-0']]}
             blockConfig={blockConfig}
+            columns={[columns['col-0']]}
           />
         </div>
       </div>
