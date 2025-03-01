@@ -343,6 +343,9 @@ const ListManager: React.FC<ListManagerProps> = ({
                   isDarkTheme={isDarkTheme}
                   onRemoveArticle={handleRemoveArticle}
                   width="w-full"
+                  isChronological={blockState.currentVariant.variantType === 'chronological'}
+                  isCompact={blockState.currentVariant.variantType === 'compact'}
+                  isCard={blockState.currentVariant.variantType === 'card'}
                 />
               </div>
             </div>

@@ -29,6 +29,9 @@ interface DroppableColumnProps {
   isSidebarSide?: boolean;
   isNewsFeedMain?: boolean;
   isNewsFeedSide?: boolean;
+  isChronological?: boolean;
+  isCompact?: boolean;
+  isCard?: boolean;
   onRemoveArticle?: (columnId: string, articleId: string | number) => void;
 }
 
@@ -51,6 +54,9 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   isSidebarSide = false,
   isNewsFeedMain = false,
   isNewsFeedSide = false,
+  isChronological = false,
+  isCompact = false,
+  isCard = false,
   onRemoveArticle
 }) => {
   const isFull = articles.length >= maxItems;
@@ -89,6 +95,57 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   };
 
   const renderSkeleton = () => {
+    // List variants
+    if (isChronological) {
+      return (
+        <div className="relative space-y-6 pl-6">
+          <div className="absolute left-[11px] top-0 bottom-0 w-[2px] bg-gray-200 dark:bg-gray-700" />
+          {Array(5).fill(0).map((_, index) => (
+            <div key={index} className="relative">
+              <div className="absolute left-[-24px] top-2 w-3 h-3 rounded-full bg-gray-700/50 dark:bg-gray-200/50 z-10" />
+              <div className="p-4">
+                <div className="flex gap-2 mb-2">
+                  <div className="w-24 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
+                  <div className="w-16 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
+                </div>
+                <div className="w-3/4 h-6 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
+                <div className="w-1/2 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse mt-2" />
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    if (isCompact) {
+      return (
+        <div className="divide-y divide-gray-200 dark:divide-gray-700">
+          {Array(5).fill(0).map((_, index) => (
+            <div key={index} className="py-3 border-b border-gray-700/50 dark:border-gray-200/50">
+              <div className="w-3/4 h-5 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
+              <div className="w-1/2 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse mt-2" />
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    if (isCard) {
+      return (
+        <div className="space-y-4">
+          {Array(5).fill(0).map((_, index) => (
+            <div key={index} className="flex gap-4 py-4">
+              <div className="w-24 h-24 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse shrink-0" />
+              <div className="flex-1">
+                <div className="w-3/4 h-5 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
+                <div className="w-1/2 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse mt-2" />
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
     // Mixed Layout - Sidebar
     if (isSidebarMain) {
       return (
