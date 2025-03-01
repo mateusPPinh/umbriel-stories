@@ -1,16 +1,34 @@
 import React from 'react';
 import { BlockConfig } from './index';
 
+export interface VideoConfig {
+  autoplay: boolean;
+  loop: boolean;
+  muted: boolean;
+  controls: boolean;
+  customUrl?: string;
+}
+
+export interface ImageConfig {
+  fit: 'cover' | 'contain';
+  position: 'center' | 'top' | 'bottom';
+  overlay: {
+    enabled: boolean;
+    color: string;
+    opacity: number;
+  };
+}
+
 interface MediaConfigProps {
   config?: {
-    videoConfig?: BlockConfig['mediaConfig']['videoConfig'];
-    imageConfig?: BlockConfig['mediaConfig']['imageConfig'];
+    videoConfig?: VideoConfig;
+    imageConfig?: ImageConfig;
   };
   onChange: (mediaConfig: BlockConfig['mediaConfig']) => void;
   showVideo?: boolean;
 }
 
-const defaultVideoConfig: BlockConfig['mediaConfig']['videoConfig'] = {
+const defaultVideoConfig: VideoConfig = {
   autoplay: false,
   loop: false,
   muted: false,
@@ -18,7 +36,7 @@ const defaultVideoConfig: BlockConfig['mediaConfig']['videoConfig'] = {
   customUrl: ''
 };
 
-const defaultImageConfig: BlockConfig['mediaConfig']['imageConfig'] = {
+const defaultImageConfig: ImageConfig = {
   fit: 'cover',
   position: 'center',
   overlay: {

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Tab } from '@headlessui/react';
 import LayoutConfig from './LayoutConfig';
 import ThemeConfig from './ThemeConfig';
-import MediaConfig from './MediaConfig';
+import MediaConfig, { VideoConfig, ImageConfig } from './MediaConfig';
 import VariantConfig from './VariantConfig';
 
 export interface BlockConfig {
@@ -52,30 +52,12 @@ interface ThemeConfig {
   };
 }
 
-interface VideoConfig {
-  autoplay: boolean;
-  loop: boolean;
-  muted: boolean;
-  controls: boolean;
-  customUrl?: string;
-}
-
-interface ImageConfig {
-  fit: 'cover' | 'contain';
-  position: 'center' | 'top' | 'bottom';
-  overlay?: {
-    enabled: boolean;
-    color: string;
-    opacity: number;
-  };
-}
-
 interface StyleConfigModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (config: BlockConfig) => void;
   currentConfig: BlockConfig;
-  blockType: 'grid' | 'list' | 'featured';
+  blockType: 'grid' | 'list' | 'featured' | 'mixed';
   variantType: string;
 }
 
@@ -135,7 +117,7 @@ const StyleConfigModal: React.FC<StyleConfigModalProps> = ({
     { key: 'layout', label: 'Layout' },
     { key: 'light', label: 'Tema Claro' },
     { key: 'dark', label: 'Tema Escuro' },
-    ...(blockType === 'featured' || variantType === 'video' 
+    ...(blockType === 'featured' || blockType === 'mixed' || variantType === 'video' 
       ? [{ key: 'media', label: 'Mídia' }] 
       : []
     ),
@@ -218,7 +200,7 @@ const StyleConfigModal: React.FC<StyleConfigModalProps> = ({
                 </Tab.Panel>
 
                 {/* Media Tab (conditional) */}
-                {(blockType === 'featured' || variantType === 'video') && (
+                {(blockType === 'featured' || blockType === 'mixed' || variantType === 'video') && (
                   <Tab.Panel>
                     <MediaConfig
                       config={config.mediaConfig}

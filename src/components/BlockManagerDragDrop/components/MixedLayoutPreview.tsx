@@ -1,5 +1,6 @@
 import React from 'react';
 import { Article } from '../../PageblockV2/types';
+import { BlockConfig } from './StyleConfigModal';
 
 type LayoutVariant = 'sidebar' | 'showcase' | 'newspaper' | 'magazine' | 'videogrid';
 
@@ -7,9 +8,12 @@ interface MixedLayoutPreviewProps {
   variantType: LayoutVariant;
   isDarkTheme?: boolean;
   columns: { [key: string]: Article[] };
+  blockConfig: BlockConfig;
 }
 
-const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, isDarkTheme, columns }) => {
+const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, isDarkTheme, columns, blockConfig }) => {
+  const theme = blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'];
+  
   const renderSidebarPreview = () => {
     const mainArticle = columns['col-0']?.[0];
     const sidebarArticles = columns['col-1'] || [];
@@ -24,66 +28,107 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
             ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
           `}>
             {mainArticle?.content?.image?.desktop_image_path && (
-              <img
-                src={mainArticle.content.image.desktop_image_path}
-                alt={mainArticle.title}
-                className="w-full h-full object-cover"
-              />
+              <div className="relative w-full h-full">
+                <img
+                  src={mainArticle.content.image.desktop_image_path}
+                  alt={mainArticle.title}
+                  className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                />
+                {blockConfig.mediaConfig?.imageConfig?.overlay?.enabled && (
+                  <div 
+                    className="absolute inset-0" 
+                    style={{
+                      backgroundColor: blockConfig.mediaConfig.imageConfig.overlay.color || 'rgba(0,0,0,0.5)',
+                      opacity: blockConfig.mediaConfig.imageConfig.overlay.opacity || 0.5
+                    }}
+                  />
+                )}
+              </div>
             )}
           </div>
-          {mainArticle ? (
-            <>
-              <div className="text-[20px] font-medium text-gray-900 dark:text-white">
-                {mainArticle.title}
-              </div>
-              {mainArticle.subtitle && (
-                <div className="text-[10px] text-gray-500 dark:text-gray-400">
-                  {mainArticle.subtitle}
-                </div>
-              )}
-            </>
-          ) : (
-            <>
-              <div className={`h-2 rounded w-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-              <div className={`h-1.5 rounded w-2/3 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-            </>
-          )}
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-2">
-          {[...Array(4)].map((_, i) => {
-            const article = sidebarArticles[i];
+          
+          {/* Article Title */}
+          <div className="space-y-1">
+            <div 
+              className="line-clamp-2"
+              style={{
+                fontSize: theme.headingProps.fontSize,
+                fontWeight: theme.headingProps.fontWeight,
+                color: theme.headingProps.color
+              }}
+            >
+              {mainArticle?.title || 'Título do artigo principal'}
+            </div>
             
-            return (
-              <div key={i} className="flex gap-2">
-                <div className={`
-                  w-16 aspect-square rounded overflow-hidden shrink-0
-                  ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-                `}>
-                  {article?.content?.image?.desktop_image_path && (
-                    <img
-                      src={article.content.image.desktop_image_path}
-                      alt={article.title}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-                </div>
-                <div className="min-w-0">
-                  {article ? (
-                    <div className="text-[18px] font-medium text-gray-900 dark:text-white line-clamp-2">
-                      {article.title}
-                    </div>
-                  ) : (
-                    <>
-                      <div className={`h-1.5 rounded w-full mb-1 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                      <div className={`h-1.5 rounded w-2/3 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                    </>
-                  )}
-                </div>
+            {blockConfig.styles.showExcerpt && (
+              <div 
+                className="line-clamp-2"
+                style={{
+                  fontSize: theme.subtitleProps.fontSize,
+                  color: theme.subtitleProps.color
+                }}
+              >
+                {mainArticle?.content?.description || 'Descrição do artigo principal...'}
               </div>
-            );
-          })}
+            )}
+          </div>
+        </div>
+        
+        {/* Sidebar */}
+        <div 
+          className="space-y-3 p-3 rounded"
+          style={{
+            backgroundColor: theme.columnStyle.background,
+            padding: theme.columnStyle.padding
+          }}
+        >
+          <div 
+            className="text-sm font-medium mb-2"
+            style={{
+              fontSize: theme.headingProps.fontSize,
+              fontWeight: theme.headingProps.fontWeight,
+              color: theme.headingProps.color
+            }}
+          >
+            Artigos Relacionados
+          </div>
+          
+          {/* Sidebar Articles */}
+          <div className="space-y-3">
+            {[...Array(3)].map((_, i) => {
+              const article = sidebarArticles[i];
+              
+              return (
+                <div key={i} className="flex gap-2">
+                  {/* Thumbnail */}
+                  <div className="w-16 h-16 rounded overflow-hidden shrink-0">
+                    {article?.content?.image?.desktop_image_path ? (
+                      <div className="relative w-full h-full">
+                        <img
+                          src={article.content.image.desktop_image_path}
+                          alt={article.title}
+                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                        />
+                      </div>
+                    ) : (
+                      <div className={`w-full h-full ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'}`} />
+                    )}
+                  </div>
+                  
+                  {/* Title */}
+                  <div 
+                    className="text-xs line-clamp-2"
+                    style={{
+                      fontSize: '0.75rem',
+                      color: theme.headingProps.color
+                    }}
+                  >
+                    {article?.title || 'Título do artigo relacionado'}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     );
@@ -474,13 +519,20 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
       <div className="text-sm font-medium mb-2 text-gray-600 dark:text-gray-400">
         Preview do Layout
       </div>
-      <div className={`
-        w-full aspect-[21/9] p-4 rounded-lg max-h-[700px] h-full overflow-y-auto
-        ${isDarkTheme ? 'bg-gray-800' : 'bg-gray-100'}
-        border-2 border-transparent hover:border-blue-500/50
-        transition-colors duration-200
-      `}>
-        {getLayoutPreview()}
+      <div 
+        className={`
+          w-full p-4 rounded-lg overflow-hidden
+          border border-gray-200 dark:border-gray-700
+          hover:border-blue-500/50 dark:hover:border-blue-500/50
+          transition-colors duration-200
+        `}
+        style={{
+          backgroundColor: blockConfig.layout.styles.backgroundColor || (isDarkTheme ? 'rgba(31, 41, 55, 0.5)' : 'rgba(243, 244, 246, 0.5)')
+        }}
+      >
+        <div className="w-full h-full">
+          {getLayoutPreview()}
+        </div>
       </div>
     </div>
   );

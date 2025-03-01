@@ -2,7 +2,7 @@ import React from 'react';
 import { BlockConfig } from './index';
 
 interface VariantConfigProps {
-  blockType: 'grid' | 'list' | 'featured';
+  blockType: 'grid' | 'list' | 'featured' | 'mixed';
   variantType: string;
   config: BlockConfig;
   onChange: (config: BlockConfig) => void;
@@ -211,6 +211,21 @@ const VariantConfig: React.FC<VariantConfigProps> = ({
                 </select>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Mixed Specific Settings */}
+      {blockType === 'mixed' && (
+        <div>
+          <h3 className="text-base font-medium text-gray-900 dark:text-white mb-4">
+            Configurações de Layout Misto
+          </h3>
+          <div className="space-y-4">
+            {/* Configurações específicas para layouts mistos podem ser adicionadas aqui */}
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              Configure as opções de mídia na aba "Mídia" para personalizar a aparência dos artigos.
+            </div>
           </div>
         </div>
       )}

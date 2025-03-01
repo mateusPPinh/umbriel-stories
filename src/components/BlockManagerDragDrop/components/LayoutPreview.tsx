@@ -1,16 +1,19 @@
 import React from 'react';
 import { Article } from '../../PageblockV2/types';
+import { BlockConfig } from './StyleConfigModal';
 
 interface LayoutPreviewProps {
   variantType: string;
   isDarkTheme?: boolean;
   columns: { [key: string]: Article[] };
+  blockConfig: BlockConfig;
 }
 
-const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme, columns }) => {
+const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme, columns, blockConfig }) => {
   // Helper function to render a preview item
   const renderPreviewItem = (article?: Article, size: 'small' | 'medium' | 'large' = 'medium', heightClass?: string) => {
     const aspectRatio = size === 'small' ? 'aspect-[4/3]' : size === 'large' ? 'aspect-[16/9]' : 'aspect-[16/10]';
+    const theme = blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'];
     
     if (!article) {
       return (
@@ -28,24 +31,48 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme,
       <div className={`flex flex-col gap-2 ${heightClass || ''}`}>
         <div className={`${heightClass ? '' : aspectRatio} rounded overflow-hidden`}>
           {article.content?.image?.desktop_image_path ? (
-            <img
-              src={article.content.image.desktop_image_path}
-              alt={article.title}
-              className="w-full h-full object-cover"
-            />
+            <div className="relative w-full h-full">
+              <img
+                src={article.content.image.desktop_image_path}
+                alt={article.title}
+                className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+              />
+              {blockConfig.mediaConfig?.imageConfig?.overlay?.enabled && (
+                <div 
+                  className="absolute inset-0" 
+                  style={{
+                    backgroundColor: blockConfig.mediaConfig.imageConfig.overlay.color || 'rgba(0,0,0,0.5)',
+                    opacity: blockConfig.mediaConfig.imageConfig.overlay.opacity || 0.5
+                  }}
+                />
+              )}
+            </div>
           ) : (
             <div className={`w-full h-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
           )}
         </div>
         <div className="space-y-1.5">
           <div className="h-10 overflow-hidden">
-            <div className={`text-xs font-medium line-clamp-1 ${isDarkTheme ? 'text-white' : 'text-gray-900'}`}>
+            <div 
+              className="line-clamp-1"
+              style={{
+                fontSize: theme.headingProps.fontSize,
+                fontWeight: theme.headingProps.fontWeight,
+                color: theme.headingProps.color
+              }}
+            >
               {article.title}
             </div>
           </div>
-          {article.content?.description && (
+          {blockConfig.styles.showExcerpt && article.content?.description && (
             <div className="h-2 overflow-hidden">
-              <div className={`text-[10px] line-clamp-1 ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`}>
+              <div 
+                className="line-clamp-1"
+                style={{
+                  fontSize: theme.subtitleProps.fontSize,
+                  color: theme.subtitleProps.color
+                }}
+              >
                 {article.content.description}
               </div>
             </div>
@@ -201,13 +228,17 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme,
       <div className="text-sm font-medium mb-2 text-gray-600 dark:text-gray-400">
         Preview do Layout
       </div>
-      <div className={`
-        w-full aspect-[16/9] p-4 rounded-lg overflow-hidden
-        ${isDarkTheme ? 'bg-gray-800/50' : 'bg-gray-100/50'}
-        border border-gray-200 dark:border-gray-700
-        hover:border-blue-500/50 dark:hover:border-blue-500/50
-        transition-colors duration-200
-      `}>
+      <div 
+        className={`
+          w-full aspect-[16/9] p-4 rounded-lg overflow-hidden
+          border border-gray-200 dark:border-gray-700
+          hover:border-blue-500/50 dark:hover:border-blue-500/50
+          transition-colors duration-200
+        `}
+        style={{
+          backgroundColor: blockConfig.layout.styles.backgroundColor || (isDarkTheme ? 'rgba(31, 41, 55, 0.5)' : 'rgba(243, 244, 246, 0.5)')
+        }}
+      >
         <div className="w-full h-full">
           {getLayoutPreview()}
         </div>
