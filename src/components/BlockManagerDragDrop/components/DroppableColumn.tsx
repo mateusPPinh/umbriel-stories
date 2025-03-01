@@ -10,18 +10,19 @@ interface DroppableColumnProps {
   articles: Article[];
   maxItems: number;
   isDarkTheme?: boolean;
-  width: string;
+  width?: string;
   style?: React.CSSProperties;
   headingProps?: {
-    fontSize?: string;
-    fontWeight?: string;
-    color?: string;
+    fontSize: string;
+    fontWeight: string;
+    color: string;
   };
   subtitleProps?: {
-    fontSize?: string;
-    color?: string;
+    fontSize: string;
+    color: string;
   };
   showExcerpt?: boolean;
+  isMasonry?: boolean;
   isNewsGrid?: boolean;
   isFeatured?: boolean;
   isSidebarMain?: boolean;
@@ -43,6 +44,7 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   headingProps,
   subtitleProps,
   showExcerpt,
+  isMasonry = false,
   isNewsGrid = false,
   isFeatured = false,
   isSidebarMain = false,
@@ -59,7 +61,9 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
       return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4';
     }
     if (isFeatured) {
-      return 'space-y-4';
+      // Não usamos mais 'space-y-4' para o Featured Grid
+      // Em vez disso, usamos um grid que corresponda ao layout do preview
+      return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4';
     }
     if (isSidebarMain) {
       return 'grid grid-cols-1 md:grid-cols-2 gap-4';
@@ -70,6 +74,12 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
     if (isNewsFeedMain || isNewsFeedSide) {
       return 'space-y-4';
     }
+    if (isMasonry) {
+      // Match the column count and gap from the real implementation
+      const columnCount = 3; // Default from the real implementation
+      const gap = '24px'; // Default from the real implementation
+      return `columns-1 md:columns-2 lg:columns-${columnCount} gap-x-[${gap}] space-y-0`;
+    }
     return 'space-y-4';
   };
 
@@ -77,6 +87,88 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
     if (onRemoveArticle) {
       onRemoveArticle(droppableId, articleId);
     }
+  };
+
+  const renderSkeleton = () => {
+    if (isFeatured) {
+      // Check if this is the main featured column (col-0) or the secondary column (col-1)
+      const isMainFeatured = droppableId === 'col-0';
+      
+      if (isMainFeatured) {
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="flex flex-col">
+                <div className="relative aspect-[16/10] overflow-hidden mb-2">
+                  <div className={`w-full h-full bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse`} />
+                </div>
+                <div className="p-4">
+                  <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2" />
+                  <div className="h-4 w-2/3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      } else {
+        // Secondary column (col-1)
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="flex flex-col">
+                <div className="relative aspect-[16/10] overflow-hidden mb-2">
+                  <div className={`w-full h-full bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse`} />
+                </div>
+                <div className="p-4">
+                  <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2" />
+                  <div className="h-4 w-2/3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      }
+    }
+
+    if (isSidebarMain || isNewsFeedMain) {
+      return (
+        <div className="flex flex-col gap-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+          <div className="w-full h-32 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+          <div className="w-3/4 h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+          <div className="w-1/2 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+        </div>
+      );
+    }
+
+    if (isMasonry) {
+      return (
+        <div className="columns-1 md:columns-2 lg:columns-3 gap-x-[24px]">
+          {[...Array(6)].map((_, index) => (
+            <article 
+              key={index} 
+              className="break-inside-avoid mb-6"
+            >
+              <div className="relative w-full overflow-hidden mb-4">
+                <div 
+                  className={`w-full ${['h-48', 'h-64', 'h-56'][index % 3]} bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse`}
+                />
+              </div>
+              <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
+                <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2" />
+                <div className="h-4 w-2/3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+              </div>
+            </article>
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex flex-col gap-3 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+        <div className="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+        <div className="w-2/3 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+      </div>
+    );
   };
 
   return (
@@ -96,9 +188,11 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
         >
           {title}
         </h3>
-        <span className={`text-xs ${isFull ? 'text-red-500 dark:text-red-400 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
-          {articles.length}/{maxItems}
-        </span>
+        {articles.length > 0 && (
+          <span className={`text-xs ${isFull ? 'text-red-500 dark:text-red-400 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
+            {articles.length}/{maxItems}
+          </span>
+        )}
       </div>
 
       {/* Área de drop */}
@@ -127,35 +221,25 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
             `}
             style={{ minHeight: articles.length === 0 ? '220px' : 'auto' }}
           >
-            {articles.length === 0 && (
-              <div className={`
-                flex items-center justify-center h-full min-h-[180px] text-sm
-                ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}
-                ${isNewsGrid ? 'col-span-full' : ''}
-              `}>
-                {isFull ? 'Limite máximo de artigos atingido' : 'Arraste artigos para esta coluna'}
-              </div>
+            {articles.length === 0 ? (
+              renderSkeleton()
+            ) : (
+              articles.filter(article => article && article.id).map((article, index) => (
+                <DraggableArticle
+                  key={article.id}
+                  article={article}
+                  index={index}
+                  isDarkTheme={isDarkTheme}
+                  isMasonry={isMasonry}
+                  subtitleProps={{
+                    fontSize: subtitleProps?.fontSize || 'sm',
+                    color: subtitleProps?.color || (isDarkTheme ? 'gray-300' : 'gray-600')
+                  }}
+                  showExcerpt={showExcerpt}
+                  onRemove={handleRemoveArticle}
+                />
+              ))
             )}
-            
-            {articles.filter(article => article && article.id).map((article, index) => (
-              <DraggableArticle
-                key={article.id}
-                article={article}
-                index={index}
-                isDarkTheme={isDarkTheme}
-                isInColumn={true}
-                columnIsFull={isFull}
-                subtitleProps={subtitleProps}
-                showExcerpt={showExcerpt}
-                isNewsGrid={isNewsGrid}
-                isFeatured={isFeatured}
-                isSidebarMain={isSidebarMain}
-                isSidebarSide={isSidebarSide}
-                isNewsFeedMain={isNewsFeedMain}
-                isNewsFeedSide={isNewsFeedSide}
-                onRemove={handleRemoveArticle}
-              />
-            ))}
             {provided.placeholder}
             {isFull && articles.length > 0 && (
               <div

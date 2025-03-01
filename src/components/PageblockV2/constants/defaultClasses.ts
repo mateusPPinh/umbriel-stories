@@ -30,14 +30,13 @@ export const defaultClasses = {
     masonry: {
       container: 'w-full mt-12 mb-12 bg-transparent',
       grid: [
-        'columns-1 md:columns-2 lg:columns-3',
-        'gap-6'
+        'columns-1 sm:columns-2 md:columns-3',
+        'gap-4'
       ].join(' '),
       article: [
         'break-inside-avoid',
-        'mb-6',
+        'mb-4',
         'bg-transparent dark:bg-transparent',
-        'p-4',
         'rounded-lg'
       ].join(' '),
       image: {
@@ -45,9 +44,9 @@ export const defaultClasses = {
         img: 'w-full h-full object-cover'
       },
       content: {
-        title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white mb-2',
+        title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white',
         subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300',
-        wrapper: 'p-4',
+        wrapper: 'p-4 bg-white dark:bg-gray-800 rounded-lg',
       },
     },
     featured: {

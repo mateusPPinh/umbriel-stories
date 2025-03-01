@@ -66,24 +66,19 @@ export interface Editorial {
 }
 
 export interface Article {
-  id: string;
+  id: string | number;
   title: string;
   subtitle?: string;
-  slug: string;
-  created_at?: string | Date;
+  image?: string;
+  excerpt?: string;
   content?: {
+    description?: string;
     image?: {
       desktop_image_path?: string;
+      mobile_image_path?: string;
     };
-    body?: string;
-    description?: string;
   };
-  articleBody?: string;
-  editorial?: Editorial;
-  links?: Array<{
-    title: string
-    url: string
-  }>
+  created_at: string;
   published_at: string;
 }
 

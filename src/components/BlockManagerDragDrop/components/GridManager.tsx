@@ -4,7 +4,6 @@ import { Article } from '../../PageblockV2/types';
 import LayoutPreview from './LayoutPreview';
 import ArticlesPool from './ArticlesPool';
 import DroppableColumn from './DroppableColumn';
-import { MasonryColumn } from './MasonryColumn';
 import { BlockConfig } from './StyleConfigModal';
 import { useBlockState } from '../hooks/useBlockState';
 import { GridVariantType, GridVariant, Column } from '../types';
@@ -64,13 +63,11 @@ const GRID_VARIANTS: Record<GridVariantType, GridVariant> = {
     title: 'Masonry Grid',
     maxItems: 6,
     columns: [
-      { id: 'col-0', title: 'Column 1', width: 'w-full' },
-      { id: 'col-1', title: 'Column 2', width: 'w-full' },
-      { id: 'col-2', title: 'Column 3', width: 'w-full' }
+      { id: 'col-0', title: 'Column 1', width: 'w-full' }
     ],
     layout: {
       container: 'w-full',
-      grid: 'grid grid-cols-1 md:grid-cols-3 gap-6'
+      grid: 'columns-1 sm:columns-2 md:columns-3 gap-4 space-y-4'
     }
   },
   sidebargrid: {
@@ -91,11 +88,12 @@ const GRID_VARIANTS: Record<GridVariantType, GridVariant> = {
     title: 'News Feed',
     maxItems: 6,
     columns: [
-      { id: 'col-0', title: 'Feed', width: 'w-full' }
+      { id: 'col-0', title: 'Main Feed', width: 'w-full' },
+      { id: 'col-1', title: 'Side Feed', width: 'w-full' }
     ],
     layout: {
       container: 'w-full',
-      grid: 'grid grid-cols-1 gap-6'
+      grid: 'grid grid-cols-1 md:grid-cols-3 gap-6'
     }
   },
   newsgrid: {
@@ -215,61 +213,57 @@ const GridManager: React.FC<GridManagerProps> = ({
 
   const renderMasonryLayout = () => (
     <div className={currentVariant.layout.container}>
-      <div className={currentVariant.layout.grid || ''}>
-        {currentVariant.columns.map(column => (
-          <MasonryColumn
-            key={column.id}
-            id={column.id}
-            droppableId={column.id}
-            articles={blockState.articles[column.id] || []}
-            maxItems={currentVariant.maxItems}
-            isDarkTheme={isDarkTheme}
-            headingProps={getColumnHeadingProps(column)}
-            subtitleProps={getColumnSubtitleProps()}
-            showExcerpt={blockConfig.styles.showExcerpt}
-            onRemoveArticle={handleRemoveArticle}
-          />
-        ))}
-      </div>
+      <DroppableColumn
+        key={currentVariant.columns[0].id}
+        id={currentVariant.columns[0].id}
+        droppableId={currentVariant.columns[0].id}
+        title={currentVariant.columns[0].title}
+        articles={blockState.articles[currentVariant.columns[0].id] || []}
+        maxItems={currentVariant.maxItems}
+        isDarkTheme={isDarkTheme}
+        width="w-full"
+        showExcerpt={blockConfig.styles.showExcerpt}
+        isMasonry={true}
+        headingProps={getColumnHeadingProps(currentVariant.columns[0])}
+        subtitleProps={getColumnSubtitleProps()}
+        onRemoveArticle={handleRemoveArticle}
+      />
     </div>
   );
 
   const renderFeaturedLayout = () => (
     <div className={currentVariant.layout.container}>
-      <div className={currentVariant.layout.grid || ''}>
-        <div className="col-span-2">
-          <DroppableColumn
-            key={currentVariant.columns[0].id}
-            id={currentVariant.columns[0].id}
-            droppableId={currentVariant.columns[0].id}
-            title={currentVariant.columns[0].title}
-            articles={blockState.articles[currentVariant.columns[0].id] || []}
-            maxItems={currentVariant.maxItems}
-            isDarkTheme={isDarkTheme}
-            width={currentVariant.columns[0].width || 'w-full'}
-            showExcerpt={true}
-            isFeatured={true}
-            headingProps={getColumnHeadingProps(currentVariant.columns[0])}
-            subtitleProps={getColumnSubtitleProps()}
-            onRemoveArticle={handleRemoveArticle}
-          />
-        </div>
-        <div className="col-span-1">
-          <DroppableColumn
-            key={currentVariant.columns[1].id}
-            id={currentVariant.columns[1].id}
-            droppableId={currentVariant.columns[1].id}
-            title={currentVariant.columns[1].title}
-            articles={blockState.articles[currentVariant.columns[1].id] || []}
-            maxItems={currentVariant.maxItems}
-            isDarkTheme={isDarkTheme}
-            width={currentVariant.columns[1].width || 'w-full'}
-            showExcerpt={false}
-            headingProps={getColumnHeadingProps(currentVariant.columns[1])}
-            subtitleProps={getColumnSubtitleProps()}
-            onRemoveArticle={handleRemoveArticle}
-          />
-        </div>
+      <div className="space-y-4">
+        <DroppableColumn
+          key={currentVariant.columns[0].id}
+          id={currentVariant.columns[0].id}
+          droppableId={currentVariant.columns[0].id}
+          title={currentVariant.columns[0].title}
+          articles={blockState.articles[currentVariant.columns[0].id] || []}
+          maxItems={currentVariant.maxItems}
+          isDarkTheme={isDarkTheme}
+          width="w-full"
+          showExcerpt={true}
+          isFeatured={true}
+          headingProps={getColumnHeadingProps(currentVariant.columns[0])}
+          subtitleProps={getColumnSubtitleProps()}
+          onRemoveArticle={handleRemoveArticle}
+        />
+        <DroppableColumn
+          key={currentVariant.columns[1].id}
+          id={currentVariant.columns[1].id}
+          droppableId={currentVariant.columns[1].id}
+          title={currentVariant.columns[1].title}
+          articles={blockState.articles[currentVariant.columns[1].id] || []}
+          maxItems={currentVariant.maxItems}
+          isDarkTheme={isDarkTheme}
+          width="w-full"
+          showExcerpt={false}
+          isFeatured={true}
+          headingProps={getColumnHeadingProps(currentVariant.columns[1])}
+          subtitleProps={getColumnSubtitleProps()}
+          onRemoveArticle={handleRemoveArticle}
+        />
       </div>
     </div>
   );
@@ -315,6 +309,47 @@ const GridManager: React.FC<GridManagerProps> = ({
     </div>
   );
 
+  const renderNewsFeedLayout = () => (
+    <div className={currentVariant.layout.container}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="col-span-2">
+          <DroppableColumn
+            key={currentVariant.columns[0].id}
+            id={currentVariant.columns[0].id}
+            droppableId={currentVariant.columns[0].id}
+            title={currentVariant.columns[0].title}
+            articles={blockState.articles[currentVariant.columns[0].id] || []}
+            maxItems={currentVariant.maxItems}
+            isDarkTheme={isDarkTheme}
+            width="w-full"
+            showExcerpt={true}
+            isNewsFeedMain={true}
+            headingProps={getColumnHeadingProps(currentVariant.columns[0])}
+            subtitleProps={getColumnSubtitleProps()}
+            onRemoveArticle={handleRemoveArticle}
+          />
+        </div>
+        <div className="col-span-1">
+          <DroppableColumn
+            key={currentVariant.columns[1].id}
+            id={currentVariant.columns[1].id}
+            droppableId={currentVariant.columns[1].id}
+            title={currentVariant.columns[1].title}
+            articles={blockState.articles[currentVariant.columns[1].id] || []}
+            maxItems={currentVariant.maxItems}
+            isDarkTheme={isDarkTheme}
+            width="w-full"
+            showExcerpt={false}
+            isNewsFeedSide={true}
+            headingProps={getColumnHeadingProps(currentVariant.columns[1])}
+            subtitleProps={getColumnSubtitleProps()}
+            onRemoveArticle={handleRemoveArticle}
+          />
+        </div>
+      </div>
+    </div>
+  );
+
   const renderStandardLayout = () => (
     <div className="space-y-4">
       {currentVariant.columns.map(column => (
@@ -344,6 +379,8 @@ const GridManager: React.FC<GridManagerProps> = ({
         return renderFeaturedLayout();
       case 'sidebargrid':
         return renderSidebarLayout();
+      case 'newsfeed':
+        return renderNewsFeedLayout();
       default:
         return renderStandardLayout();
     }

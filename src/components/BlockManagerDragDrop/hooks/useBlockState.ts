@@ -44,7 +44,7 @@ export const useBlockState = ({
         }
       },
       articles: {
-        'pool': initialArticles.map(article => article.id),
+        'pool': initialArticles.map(article => String(article.id)),
         'col-0': [],
         'col-1': [],
         'col-2': []
@@ -101,7 +101,7 @@ export const useBlockState = ({
         config: {
           ...defaultConfig,
           articles: {
-            'pool': initialArticles.map(article => article.id),
+            'pool': initialArticles.map(article => String(article.id)),
             'col-0': [],
             'col-1': [],
             'col-2': []
@@ -119,7 +119,7 @@ export const useBlockState = ({
         config: {
           ...defaultConfig,
           articles: {
-            'pool': initialArticles.map(article => article.id),
+            'pool': initialArticles.map(article => String(article.id)),
             'col-0': [],
             'col-1': []
           }
@@ -130,17 +130,13 @@ export const useBlockState = ({
         variantPosition: 1,
         articles: {
           'pool': initialArticles,
-          'col-0': [],
-          'col-1': [],
-          'col-2': []
+          'col-0': []
         },
         config: {
           ...defaultConfig,
           articles: {
-            'pool': initialArticles.map(article => article.id),
-            'col-0': [],
-            'col-1': [],
-            'col-2': []
+            'pool': initialArticles.map(article => String(article.id)),
+            'col-0': []
           }
         }
       },
@@ -155,7 +151,7 @@ export const useBlockState = ({
         config: {
           ...defaultConfig,
           articles: {
-            'pool': initialArticles.map(article => article.id),
+            'pool': initialArticles.map(article => String(article.id)),
             'col-0': [],
             'col-1': []
           }
@@ -166,13 +162,15 @@ export const useBlockState = ({
         variantPosition: 1,
         articles: {
           'pool': initialArticles,
-          'col-0': []
+          'col-0': [],
+          'col-1': []
         },
         config: {
           ...defaultConfig,
           articles: {
-            'pool': initialArticles.map(article => article.id),
-            'col-0': []
+            'pool': initialArticles.map(article => String(article.id)),
+            'col-0': [],
+            'col-1': []
           }
         }
       },
@@ -187,7 +185,7 @@ export const useBlockState = ({
         config: {
           ...defaultConfig,
           articles: {
-            'pool': initialArticles.map(article => article.id),
+            'pool': initialArticles.map(article => String(article.id)),
             'col-0': [],
             'col-1': []
           }
@@ -199,17 +197,13 @@ export const useBlockState = ({
         variantPosition: 1,
         articles: {
           'pool': initialArticles,
-          'col-0': [],
-          'col-1': [],
-          'col-2': []
+          'col-0': []
         },
         config: {
           ...defaultConfig,
           articles: {
-            'pool': initialArticles.map(article => article.id),
-            'col-0': [],
-            'col-1': [],
-            'col-2': []
+            'pool': initialArticles.map(article => String(article.id)),
+            'col-0': []
           }
         }
       },
@@ -218,17 +212,13 @@ export const useBlockState = ({
         variantPosition: 1,
         articles: {
           'pool': initialArticles,
-          'col-0': [],
-          'col-1': [],
-          'col-2': []
+          'col-0': []
         },
         config: {
           ...defaultConfig,
           articles: {
-            'pool': initialArticles.map(article => article.id),
-            'col-0': [],
-            'col-1': [],
-            'col-2': []
+            'pool': initialArticles.map(article => String(article.id)),
+            'col-0': []
           }
         }
       },
@@ -237,17 +227,13 @@ export const useBlockState = ({
         variantPosition: 1,
         articles: {
           'pool': initialArticles,
-          'col-0': [],
-          'col-1': [],
-          'col-2': []
+          'col-0': []
         },
         config: {
           ...defaultConfig,
           articles: {
-            'pool': initialArticles.map(article => article.id),
-            'col-0': [],
-            'col-1': [],
-            'col-2': []
+            'pool': initialArticles.map(article => String(article.id)),
+            'col-0': []
           }
         }
       }
@@ -289,7 +275,7 @@ export const useBlockState = ({
               ...prev.variantStates[currentVariantType].config,
               articles: Object.entries(newColumns).reduce((acc, [key, articles]) => ({
                 ...acc,
-                [key]: articles.map(article => article.id)
+                [key]: articles.map(article => String(article.id))
               }), {})
             }
           }
@@ -373,11 +359,11 @@ export const useBlockState = ({
         case 'featured':
           return 2;
         case 'masonry':
-          return 3;
+          return 1;
         case 'sidebargrid':
           return 2;
         case 'newsfeed':
-          return 1;
+          return 2;
         case 'newsgrid':
           return 2;
         default:

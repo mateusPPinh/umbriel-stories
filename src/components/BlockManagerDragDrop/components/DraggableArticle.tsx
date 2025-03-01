@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { Article } from '../../PageblockV2/types';
 
@@ -6,245 +6,157 @@ interface DraggableArticleProps {
   article: Article;
   index: number;
   isDarkTheme?: boolean;
-  isInColumn?: boolean;
-  columnIsFull?: boolean;
   isMasonry?: boolean;
-  isNewsGrid?: boolean;
-  isFeatured?: boolean;
-  isSidebarMain?: boolean;
-  isSidebarSide?: boolean;
-  isNewsFeedMain?: boolean;
-  isNewsFeedSide?: boolean;
+  showExcerpt?: boolean;
+  showRemoveButton?: boolean;
   subtitleProps?: {
     fontSize?: string;
     color?: string;
   };
-  showExcerpt?: boolean;
-  onRemove?: (articleId: string | number) => void;
+  onRemove: (articleId: string | number) => void;
 }
+
+const XMarkIcon = () => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width="16" 
+    height="16" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+  >
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
 
 const DraggableArticle: React.FC<DraggableArticleProps> = ({
   article,
   index,
-  isDarkTheme,
-  isInColumn,
-  columnIsFull,
-  isMasonry,
-  isNewsGrid,
-  isFeatured,
-  isSidebarMain,
-  isSidebarSide,
-  isNewsFeedMain,
-  isNewsFeedSide,
-  subtitleProps,
-  showExcerpt,
+  isDarkTheme = false,
+  isMasonry = false,
+  showExcerpt = false,
+  showRemoveButton = true,
+  subtitleProps = { fontSize: '1rem', color: 'inherit' },
   onRemove
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  // Helper function to determine the appropriate class for the article
-  const getArticleClass = () => {
-    let classes = `
-      rounded-md overflow-hidden relative
-      ${isDarkTheme 
-        ? 'bg-gray-700 hover:bg-gray-600' 
-        : 'bg-white hover:bg-gray-50'
-      }
-      ${columnIsFull && isInColumn ? 'opacity-80' : 'opacity-100'}
-      ${columnIsFull && isInColumn ? 'cursor-default' : 'cursor-grab'}
-      transition-all duration-200
-    `;
-
-    if (isMasonry) {
-      classes += ' h-full';
-    }
-    
-    if (isNewsGrid) {
-      classes += ' flex flex-col h-full';
-    }
-    
-    if (isFeatured && index === 0) {
-      classes += ' aspect-[16/9]';
-    }
-    
-    if (isSidebarMain) {
-      classes += ' flex flex-col';
-    }
-    
-    if (isSidebarSide) {
-      classes += ' flex items-center gap-3';
-    }
-    
-    if (isNewsFeedMain || isNewsFeedSide) {
-      classes += ' flex items-center gap-3';
-    }
-
-    return classes;
+  // Helper para gerar alturas aleatórias mas consistentes baseadas no índice
+  const getRandomHeight = (index: number) => {
+    const heights = ['h-48', 'h-64', 'h-56'];
+    return heights[index % heights.length];
   };
 
-  // Helper function to determine the appropriate image class
-  const getImageClass = () => {
-    if (isMasonry) {
-      return 'h-40 md:h-48';
-    }
-    
-    if (isNewsGrid) {
-      return 'h-32 md:h-40';
-    }
-    
-    if (isFeatured && index === 0) {
-      return 'h-48 md:h-64';
-    } else if (isFeatured) {
-      return 'h-20 w-20 flex-shrink-0';
-    }
-    
-    if (isSidebarMain) {
-      return 'h-40';
-    }
-    
-    if (isSidebarSide) {
-      return 'h-16 w-16 flex-shrink-0';
-    }
-    
-    if (isNewsFeedMain || isNewsFeedSide) {
-      return 'h-16 w-16 flex-shrink-0';
-    }
-    
-    return 'h-24';
-  };
-
-  // Helper function to determine the appropriate content class
-  const getContentClass = () => {
-    let classes = 'p-3';
-    
-    if (isNewsGrid) {
-      classes += ' flex-grow flex flex-col';
-    }
-    
-    if (isSidebarSide || isNewsFeedSide) {
-      classes += ' flex-1 min-w-0';
-    }
-    
-    return classes;
-  };
-
-  // Helper function to determine the appropriate title class
-  const getTitleClass = () => {
-    let classes = 'font-medium line-clamp-2 mb-1';
-    
-    if (isDarkTheme) {
-      classes += ' text-white';
-    } else {
-      classes += ' text-gray-900';
-    }
-    
-    if (isNewsGrid || isFeatured && index === 0) {
-      classes += ' text-base';
-    } else {
-      classes += ' text-sm';
-    }
-    
-    if (isSidebarSide || isNewsFeedSide) {
-      classes += ' text-xs line-clamp-1';
-    }
-    
-    return classes;
-  };
-
-  const handleRemove = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-    if (onRemove) {
-      onRemove(article.id);
-    }
+  // Helper para gerar aspect ratios aleatórios mas consistentes
+  const getRandomAspectRatio = (index: number) => {
+    const ratios = ['aspect-square', 'aspect-[3/4]', 'aspect-[4/3]'];
+    return ratios[index % ratios.length];
   };
 
   return (
-    <Draggable 
-      draggableId={article.id.toString()} 
-      index={index}
-      isDragDisabled={isInColumn && columnIsFull}
-    >
+    <Draggable draggableId={article.id.toString()} index={index}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={getArticleClass()}
-          style={{
-            ...provided.draggableProps.style,
-            ...(columnIsFull && isInColumn && !isHovered ? { pointerEvents: 'none' } : {})
-          }}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+          className={`
+            ${isMasonry ? 'break-inside-avoid mb-6' : 'w-full'}
+            relative
+            group
+            ${snapshot.isDragging ? 'opacity-50' : 'opacity-100'}
+          `}
         >
-          {/* Botão de remoção - mostrar quando hover OU quando a coluna está cheia */}
-          {isInColumn && onRemove && (isHovered || columnIsFull) && (
-            <button
-              onClick={handleRemove}
-              className={`
-                absolute top-1 right-1 z-10 rounded-full p-1
-                ${isDarkTheme 
-                  ? 'bg-gray-800 text-gray-300 hover:bg-gray-900 hover:text-white' 
-                  : 'bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700'}
-                shadow-md transition-all duration-200
-                ${columnIsFull ? 'bg-red-100 text-red-500 hover:bg-red-200 hover:text-red-600' : ''}
-              `}
-              aria-label="Remover artigo"
-              style={{ pointerEvents: 'auto' }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          )}
-          
-          {/* Imagem do artigo */}
-          {article.content?.image?.desktop_image_path && (
+          {/* Article content */}
+          {isMasonry ? (
+            <article className="relative">
+              {article.content?.image?.desktop_image_path && (
+                <div className="relative w-full overflow-hidden mb-4">
+                  <img
+                    src={article.content.image.desktop_image_path}
+                    alt={article.title}
+                    className={`w-full ${getRandomHeight(index)} object-cover`}
+                  />
+                </div>
+              )}
+              
+              <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
+                <h2 className="text-[1.2rem] font-semibold mb-3 text-gray-900 dark:text-white">
+                  {article.title}
+                </h2>
+                {showExcerpt && article.subtitle && (
+                  <p className="text-[0.9rem] text-gray-700 dark:text-gray-300">
+                    {article.subtitle}
+                  </p>
+                )}
+              </div>
+              
+              {/* Remove button */}
+              {showRemoveButton && (
+                <button
+                  onClick={() => onRemove(article.id)}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              )}
+            </article>
+          ) : (
             <div className={`
-              ${getImageClass()}
-              overflow-hidden relative
-              ${columnIsFull && isInColumn ? 'filter grayscale-[30%]' : ''}
+              relative
+              bg-white dark:bg-gray-800
+              border border-gray-200 dark:border-gray-700
+              hover:border-blue-500/50 dark:hover:border-blue-500/50
+              transition-all duration-200
             `}>
-              <img
-                src={article.content.image.desktop_image_path}
-                alt={article.title}
-                className="w-full h-full object-cover"
-              />
-              {columnIsFull && isInColumn && !isHovered && (
-                <div className="absolute inset-0 bg-black bg-opacity-10"></div>
+              {/* Image */}
+              {article.content?.image?.desktop_image_path && (
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  <img
+                    src={article.content.image.desktop_image_path}
+                    alt={article.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+
+              {/* Content */}
+              <div className="p-4">
+                <h4 className={`
+                  text-gray-900 dark:text-white
+                  font-semibold
+                  mb-2
+                  ${subtitleProps?.fontSize || 'text-[1rem]'}
+                `}>
+                  {article.title}
+                </h4>
+                {showExcerpt && article.subtitle && (
+                  <p className={`
+                    text-gray-600 dark:text-gray-300
+                    ${subtitleProps?.fontSize || 'text-[0.8rem]'}
+                  `}>
+                    {article.subtitle}
+                  </p>
+                )}
+              </div>
+
+              {/* Remove button */}
+              {showRemoveButton && (
+                <button
+                  onClick={() => onRemove(article.id)}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
               )}
             </div>
           )}
-          
-          {/* Conteúdo do artigo */}
-          <div className={getContentClass()}>
-            <h3 className={getTitleClass()}>
-              {article.title}
-            </h3>
-            
-            {article.subtitle && (
-              <p 
-                className="line-clamp-1 mb-2"
-                style={{
-                  fontSize: subtitleProps?.fontSize || '0.75rem',
-                  color: subtitleProps?.color || (isDarkTheme ? '#9CA3AF' : '#6B7280')
-                }}
-              >
-                {article.subtitle}
-              </p>
-            )}
-            
-            {showExcerpt && article.content?.description && (
-              <p className={`
-                line-clamp-2 text-xs
-                ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'}
-                ${isNewsGrid ? 'mt-auto pt-2' : ''}
-              `}>
-                {article.content.description}
-              </p>
-            )}
-          </div>
         </div>
       )}
     </Draggable>

@@ -344,46 +344,66 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme,
 
   const renderMasonryGrid = () => {
     const classes = defaultClasses.grid.masonry;
-    const articles = Object.values(columns).flat();
+    const articles = columns['col-0'] || [];
+
+    // Helper to generate consistent random heights based on article id
+    const getRandomHeight = (id: string | number) => {
+      const heights = ['h-48', 'h-64', 'h-56'];
+      // Use the last digit of the id to determine the height
+      const lastDigit = Number(id.toString().slice(-1));
+      return heights[lastDigit % heights.length];
+    };
 
     return (
       <div className={classes.container}>
-        <div className={classes.grid}>
+        <div className="columns-1 md:columns-2 lg:columns-3 gap-x-[24px] space-y-0">
           {articles.length > 0 ? (
             articles.map((article: Article) => {
               const articleUrl = generateArticleUrl(article);
+              
               return (
-                <div key={article.id} className={classes.article}>
-                  {article.content?.image?.desktop_image_path && (
-                    <div className={classes.image.wrapper}>
-                      <img
-                        src={article.content.image.desktop_image_path}
-                        alt={article.title}
-                        className={classes.image.img}
-                      />
-                    </div>
-                  )}
-                  
-                  <div>
-                    <Link href={articleUrl} aria-label={article.title} className="hover:underline transition-all duration-300">
-                      <h3 className={classes.content.title}>
-                        {article.title}
-                      </h3>
-                    </Link>
-                    {blockConfig.styles.showExcerpt && (
-                      <p className={classes.content.subtitle}>
-                        {article.subtitle}
-                      </p>
+                <div
+                  key={article.id}
+                  className="break-inside-avoid mb-6 relative group"
+                >
+                  <article className="relative">
+                    {article.content?.image?.desktop_image_path && (
+                      <div className="relative w-full overflow-hidden mb-4">
+                        <img
+                          src={article.content.image.desktop_image_path}
+                          alt={article.title}
+                          className={`w-full ${getRandomHeight(article.id)} object-cover`}
+                        />
+                      </div>
                     )}
-                  </div>
+                    
+                    <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
+                      <h2 className="text-[1.2rem] font-semibold mb-3 text-gray-900 dark:text-white">
+                        {article.title}
+                      </h2>
+                      {blockConfig.styles.showExcerpt && article.subtitle && (
+                        <p className="text-[0.9rem] text-gray-700 dark:text-gray-300">
+                          {article.subtitle}
+                        </p>
+                      )}
+                    </div>
+                  </article>
                 </div>
               );
             })
           ) : (
-            // Masonry skeleton com alturas variadas
+            // Masonry skeleton with varying heights
             [...Array(6)].map((_, i) => (
-              <div key={i} className={classes.article}>
-                {renderArticleSkeleton(['small', 'medium', 'large'][i % 3] as 'small' | 'medium' | 'large')}
+              <div key={i} className="break-inside-avoid mb-6 relative group">
+                <article className="relative">
+                  <div className="relative w-full overflow-hidden mb-4">
+                    <div className={`w-full ${['h-48', 'h-64', 'h-56'][i % 3]} bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse`} />
+                  </div>
+                  <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
+                    <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2" />
+                    <div className="h-4 w-2/3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+                  </div>
+                </article>
               </div>
             ))
           )}
@@ -394,7 +414,8 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme,
 
   const renderFeaturedGrid = () => {
     const classes = defaultClasses.grid.featured;
-    const articles = Object.values(columns).flat();
+    // Only include articles from the grid columns, not from the pool
+    const articles = [...(columns['col-0'] || []), ...(columns['col-1'] || [])];
 
     return (
       <div className={classes.container}>

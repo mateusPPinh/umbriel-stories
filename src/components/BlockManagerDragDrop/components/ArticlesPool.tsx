@@ -121,8 +121,8 @@ const ArticlesPool: React.FC<ArticlesPoolProps> = ({ articles, isDarkTheme, drop
                   article={article}
                   index={index}
                   isDarkTheme={isDarkTheme}
-                  isInColumn={false}
-                  columnIsFull={false}
+                  showRemoveButton={false}
+                  onRemove={() => {}}
                 />
               ))
             ) : (
