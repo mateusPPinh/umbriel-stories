@@ -255,16 +255,16 @@ const MixedManager: React.FC<MixedManagerProps> = ({
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         <div className="lg:col-span-2">
           <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
               <ArticlesPool
                 droppableId="pool"
                 articles={columns.pool}
                 isDarkTheme={isDarkTheme}
               />
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="space-y-4">
                 {Object.keys(currentVariant.maxItems || {}).map((colId) => {
                   const columnId = colId as ColumnId;
                   
@@ -275,14 +275,8 @@ const MixedManager: React.FC<MixedManagerProps> = ({
                     return null;
                   }
                   
-                  // Determinar a classe CSS com base no tipo de coluna
-                  let columnClass = '';
-                  if (columnId === 'col-2' && variantType === 'magazine') {
-                    columnClass = 'md:col-span-2 lg:col-span-1';
-                  }
-                  
                   return (
-                    <div key={columnId} className={columnClass}>
+                    <div key={columnId}>
                       <DroppableColumn
                         id={columnId}
                         droppableId={columnId}
@@ -309,7 +303,7 @@ const MixedManager: React.FC<MixedManagerProps> = ({
             </div>
           </DragDropContext>
         </div>
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-3">
           <MixedLayoutPreview
             variantType={variantType}
             isDarkTheme={isDarkTheme}

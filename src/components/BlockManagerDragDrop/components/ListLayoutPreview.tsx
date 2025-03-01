@@ -1,218 +1,268 @@
 import React from 'react';
-import { Article } from '../../PageblockV2/types';
-import { BlockConfig } from './StyleConfigModal';
+import { Article, BlockConfig } from '../../../components/PageblockV2/types';
+import { defaultClasses } from '../../../components/PageblockV2/constants/defaultClasses';
+import { generateArticleUrl } from '../../../components/PageblockV2/utils/generateArticleUrl';
+import { formatDistanceToNow } from 'date-fns';
 
-interface ListLayoutPreviewProps {
-  variantType: string;
-  isDarkTheme?: boolean;
-  columns: { [key: string]: Article[] };
-  blockConfig: BlockConfig;
+interface ExtendedBlockConfig extends BlockConfig {
+  styles: {
+    theme: {
+      light: {
+        columnStyle: {
+          background: string
+        }
+        headingProps: {
+          fontSize: string
+          fontWeight?: number
+          color: string
+        }
+        subtitleProps: {
+          fontSize: string
+          color: string
+        }
+      }
+      dark: {
+        columnStyle: {
+          background: string
+        }
+        headingProps: {
+          fontSize: string
+          fontWeight?: number
+          color: string
+        }
+        subtitleProps: {
+          fontSize: string
+          color: string
+        }
+      }
+    }
+    showExcerpt: boolean
+    showMetadata: boolean
+    titleSize: string
+    columnStyle: Record<string, any>
+    imageHeight: string
+    timelineStyle?: 'solid' | 'dashed' | 'dotted'
+    markerStyle?: MarkerStyle
+    hoverEffect?: HoverEffect
+    dividerStyle?: DividerStyle
+    thumbnailShape?: ThumbnailShape
+  }
+  variant?: 'chronological' | 'compact' | 'thumbnail'
 }
 
-const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({ variantType, isDarkTheme, columns, blockConfig }) => {
-  const theme = blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'];
-  
-  const renderTimelinePreview = () => {
-    return (
-      <div className="relative">
-        {/* Timeline line */}
-        <div className="absolute left-4 top-0 bottom-0 w-px bg-gray-300 dark:bg-gray-700" />
-        
-        {/* Articles */}
-        <div className="space-y-3">
-          {[...Array(5)].map((_, i) => {
-            const article = columns['col-0']?.[i];
-            
-            return (
-              <div key={i} className="flex items-start gap-6 pl-4">
-                {/* Marker */}
-                <div className={`
-                  w-2 h-2 rounded-full mt-2 shrink-0
-                  ${article 
-                    ? 'bg-blue-500 ring-4 ring-blue-100 dark:ring-blue-900/30' 
-                    : 'bg-gray-300 dark:bg-gray-700'}
-                `} />
+interface ListLayoutPreviewProps {
+  blockConfig: ExtendedBlockConfig;
+  columns: Article[][];
+}
 
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  {article ? (
-                    <>
-                      <div className="text-[12px] text-gray-500 dark:text-gray-400 mb-1">
-                        {new Date(article.created_at || '').toLocaleDateString('pt-BR')}
-                      </div>
-                      <div className="text-[17px] font-medium text-gray-900 dark:text-white truncate">
-                        {article.title}
-                      </div>
-                      {article.subtitle && (
-                        <div className="text-[12px] text-gray-500 dark:text-gray-400 truncate mt-0.5">
-                          {article.subtitle}
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <div className={`h-1 rounded mb-1 w-12 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                      <div className={`h-2 rounded w-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                      <div className={`h-1 rounded mt-1 w-2/3 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                    </>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+type HoverEffect = 'highlight' | 'scale' | 'background' | 'translate' | 'none';
+type MarkerStyle = 'circle' | 'square' | 'diamond';
+type DividerStyle = 'solid' | 'dashed' | 'dotted';
+type ThumbnailShape = 'square' | 'rounded' | 'circle';
+
+const renderSkeleton = (type: 'timeline' | 'compact' | 'thumbnail') => {
+  if (type === 'timeline') {
+    return Array(5).fill(0).map((_, index) => (
+      <div key={index} className="flex items-start gap-4 py-4">
+        <div className="w-3 h-3 rounded-full bg-gray-700/50 dark:bg-gray-200/50 mt-2" />
+        <div className="flex-1">
+          <div className="flex gap-2 mb-2">
+            <div className="w-24 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
+            <div className="w-16 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
+          </div>
+          <div className="w-3/4 h-6 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
+          <div className="w-1/2 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse mt-2" />
         </div>
       </div>
-    );
-  };
+    ));
+  }
 
-  const renderCompactPreview = () => {
-    return (
-      <div className="space-y-2">
-        {[...Array(8)].map((_, i) => {
-          const article = columns['col-0']?.[i];
-          
-          return (
-            <div key={i} className="flex items-center gap-3">
-              {/* Bullet */}
-              <div className={`
-                w-1 h-1 rounded-full
-                ${article ? 'bg-blue-500' : `${isDarkTheme ? 'bg-gray-700' : 'bg-gray-300'}`}
-              `} />
-
-              {/* Content */}
-              {article ? (
-                <div className="text-[17px] font-medium text-gray-900 dark:text-white truncate flex-1">
-                  {article.title}
-                </div>
-              ) : (
-                <div className={`h-2 rounded w-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-              )}
-            </div>
-          );
-        })}
+  if (type === 'compact') {
+    return Array(5).fill(0).map((_, index) => (
+      <div key={index} className="py-3 border-b border-gray-700/50 dark:border-gray-200/50">
+        <div className="w-3/4 h-5 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
+        <div className="w-1/2 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse mt-2" />
       </div>
-    );
-  };
+    ));
+  }
 
-  const renderCardPreview = () => {
-    const itemSpacing = blockConfig.styles.itemSpacing || '1rem';
-    const cardSize = blockConfig.styles.cardSize || 'medium';
-    
-    const cardSizeClasses = {
-      small: 'h-24',
-      medium: 'h-32',
-      large: 'h-40'
-    };
-    
-    return (
-      <div className="space-y-4" style={{ gap: itemSpacing }}>
-        {[...Array(4)].map((_, i) => {
-          const article = columns['col-0']?.[i];
-          
-          return (
-            <div 
-              key={i} 
-              className={`
-                flex gap-4 p-4 rounded-lg border
-                ${isDarkTheme ? 'border-gray-700 bg-gray-800/50' : 'border-gray-200 bg-white'}
-                ${cardSizeClasses[cardSize as keyof typeof cardSizeClasses]}
-              `}
-              style={{
-                backgroundColor: theme.columnStyle.background,
-                padding: theme.columnStyle.padding
-              }}
-            >
-              {/* Image */}
-              <div className="w-1/3 rounded overflow-hidden">
-                {article?.content?.image?.desktop_image_path ? (
-                  <div className="relative w-full h-full">
-                    <img
-                      src={article.content.image.desktop_image_path}
-                      alt={article.title}
-                      className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
-                    />
-                    {blockConfig.mediaConfig?.imageConfig?.overlay?.enabled && (
-                      <div 
-                        className="absolute inset-0" 
-                        style={{
-                          backgroundColor: blockConfig.mediaConfig.imageConfig.overlay.color || 'rgba(0,0,0,0.5)',
-                          opacity: blockConfig.mediaConfig.imageConfig.overlay.opacity || 0.5
-                        }}
-                      />
-                    )}
-                  </div>
-                ) : (
-                  <div className={`w-full h-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                )}
-              </div>
-              
-              {/* Content */}
-              <div className="w-2/3 flex flex-col">
-                <div 
-                  className="line-clamp-2"
-                  style={{
-                    fontSize: theme.headingProps.fontSize,
-                    fontWeight: theme.headingProps.fontWeight,
-                    color: theme.headingProps.color
-                  }}
-                >
-                  {article?.title || 'Título do artigo'}
-                </div>
-                
-                {blockConfig.styles.showExcerpt && (
-                  <div 
-                    className="mt-1 line-clamp-2"
-                    style={{
-                      fontSize: theme.subtitleProps.fontSize,
-                      color: theme.subtitleProps.color
-                    }}
-                  >
-                    {article?.content?.description || 'Descrição do artigo...'}
-                  </div>
-                )}
-              </div>
-            </div>
-          );
-        })}
+  // thumbnail type
+  return Array(5).fill(0).map((_, index) => (
+    <div key={index} className="flex gap-4 py-4">
+      <div className="w-24 h-24 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse shrink-0" />
+      <div className="flex-1">
+        <div className="w-3/4 h-5 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
+        <div className="w-1/2 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse mt-2" />
       </div>
-    );
-  };
+    </div>
+  ));
+};
 
-  const getLayoutPreview = () => {
-    switch (variantType) {
-      case 'chronological':
-        return renderTimelinePreview();
-      case 'compact':
-        return renderCompactPreview();
-      case 'card':
-        return renderCardPreview();
-      default:
-        return null;
-    }
-  };
+const renderTimelinePreview = (items: Article[], blockConfig: ExtendedBlockConfig) => {
+  const timelineStyle = blockConfig.styles?.timelineStyle || 'solid';
+  const markerStyle = (blockConfig.styles?.markerStyle || 'circle') as MarkerStyle;
+  const hoverEffect = (blockConfig.styles?.hoverEffect || 'none') as HoverEffect;
 
   return (
-    <div className="relative">
-      <div className="text-sm font-medium mb-2 text-gray-600 dark:text-gray-400">
-        Preview do Layout
-      </div>
-      <div 
-        className={`
-          w-full aspect-[16/9] p-4 rounded-lg overflow-y-auto h-full
-          border border-gray-200 dark:border-gray-700
-          hover:border-blue-500/50 dark:hover:border-blue-500/50
-          transition-colors duration-200
-        `}
-        style={{
-          backgroundColor: blockConfig.layout.styles.backgroundColor || (isDarkTheme ? 'rgba(31, 41, 55, 0.5)' : 'rgba(243, 244, 246, 0.5)')
-        }}
-      >
-        <div className="w-full h-full">
-          {getLayoutPreview()}
-        </div>
+    <div className="w-full max-w-3xl mx-auto">
+      <div className="relative space-y-6 pl-6">
+        {/* Vertical line */}
+        <div className={`absolute left-[11px] top-0 bottom-0 w-[2px] ${
+          timelineStyle === 'solid' ? 'bg-gray-200 dark:bg-gray-700' :
+          timelineStyle === 'dashed' ? 'bg-gray-200 dark:bg-gray-700 border-dashed' :
+          'bg-gray-200 dark:bg-gray-700 border-dotted'
+        }`} />
+        
+        {items.length > 0 ? items.map((article, index) => {
+          const publishDate = article.created_at ? new Date(article.created_at) : new Date();
+          const relativeTime = formatDistanceToNow(publishDate, { addSuffix: true });
+
+          return (
+            <div key={index} className="relative">
+              <div className={`absolute left-[-24px] top-2 w-3 h-3 ${
+                markerStyle === 'circle' ? 'rounded-full' :
+                markerStyle === 'square' ? 'rounded-none' :
+                'rotate-45'
+              } bg-gray-900 dark:bg-white z-10`} />
+              
+              <a
+                href={generateArticleUrl(article)}
+                className={`block p-4 rounded-lg transition-all ${
+                  hoverEffect === 'highlight' ? 'hover:bg-gray-100 dark:hover:bg-gray-800' :
+                  hoverEffect === 'scale' ? 'hover:scale-[1.02]' :
+                  hoverEffect === 'background' ? 'hover:bg-gray-50 dark:hover:bg-gray-900' :
+                  hoverEffect === 'translate' ? 'hover:translate-x-2' : ''
+                }`}
+              >
+                <div className="flex gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
+                  <span>{publishDate.toLocaleDateString('pt-BR', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}</span>
+                  <span>•</span>
+                  <span>{relativeTime}</span>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white">{article.title}</h3>
+                {article.subtitle && (
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{article.subtitle}</p>
+                )}
+              </a>
+            </div>
+          );
+        }) : (
+          <div className="space-y-6">
+            {Array(5).fill(0).map((_, index) => (
+              <div key={index} className="relative">
+                <div className="absolute left-[-24px] top-2 w-3 h-3 rounded-full bg-gray-700/50 dark:bg-gray-200/50 z-10" />
+                <div className="p-4">
+                  <div className="flex gap-2 mb-2">
+                    <div className="w-24 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
+                    <div className="w-16 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
+                  </div>
+                  <div className="w-3/4 h-6 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
+                  <div className="w-1/2 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse mt-2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 };
+
+const renderCompactPreview = (items: Article[], blockConfig: ExtendedBlockConfig) => {
+  const dividerStyle = blockConfig.styles?.dividerStyle || 'solid';
+  const hoverEffect = (blockConfig.styles?.hoverEffect || 'none') as HoverEffect;
+
+  return (
+    <div className="w-full max-w-3xl mx-auto">
+      <div className="divide-y divide-gray-200 dark:divide-gray-700">
+        {items && items.length > 0 ? items.map((article, index) => (
+          <a
+            key={index}
+            href={generateArticleUrl(article)}
+            className={`block py-3 transition-all ${
+              hoverEffect === 'highlight' ? 'hover:bg-gray-100 dark:hover:bg-gray-800' :
+              hoverEffect === 'scale' ? 'hover:scale-[1.02]' :
+              hoverEffect === 'background' ? 'hover:bg-gray-50 dark:hover:bg-gray-900' :
+              hoverEffect === 'translate' ? 'hover:translate-x-2' : ''
+            }`}
+          >
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white">{article.title}</h3>
+            {article.subtitle && (
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{article.subtitle}</p>
+            )}
+          </a>
+        )) : renderSkeleton('compact')}
+      </div>
+    </div>
+  );
+};
+
+const renderThumbnailPreview = (items: Article[], blockConfig: ExtendedBlockConfig) => {
+  const shape = blockConfig.styles?.thumbnailShape || 'rounded';
+  const hoverEffect = (blockConfig.styles?.hoverEffect || 'none') as HoverEffect;
+
+  return (
+    <div className="w-full max-w-3xl mx-auto">
+      <div className="space-y-4">
+        {items && items.length > 0 ? items.map((article, index) => (
+          <a
+            key={index}
+            href={generateArticleUrl(article)}
+            className={`flex gap-4 p-4 transition-all ${
+              hoverEffect === 'highlight' ? 'hover:bg-gray-100 dark:hover:bg-gray-800' :
+              hoverEffect === 'scale' ? 'hover:scale-[1.02]' :
+              hoverEffect === 'background' ? 'hover:bg-gray-50 dark:hover:bg-gray-900' :
+              hoverEffect === 'translate' ? 'hover:translate-x-2' : ''
+            }`}
+          >
+            <div className={`w-24 h-24 shrink-0 overflow-hidden ${
+              shape === 'rounded' ? 'rounded-lg' :
+              shape === 'circle' ? 'rounded-full' :
+              'rounded-none'
+            }`}>
+              {article.content?.image?.desktop_image_path && (
+                <img
+                  src={article.content.image.desktop_image_path}
+                  alt={article.title}
+                  className="w-full h-full object-cover"
+                />
+              )}
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">{article.title}</h3>
+              {article.subtitle && (
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{article.subtitle}</p>
+              )}
+            </div>
+          </a>
+        )) : renderSkeleton('thumbnail')}
+      </div>
+    </div>
+  );
+};
+
+export function ListLayoutPreview({ blockConfig, columns }: ListLayoutPreviewProps) {
+  // Ensure we get the first column's articles or an empty array
+  const items = columns?.[0] ?? [];
+  const variant = blockConfig?.variant || 'chronological';
+
+  // Debug log to check what's being received
+  console.log('ListLayoutPreview:', { variant, itemsLength: items.length, columns });
+
+  switch (variant) {
+    case 'chronological':
+      return renderTimelinePreview(items, blockConfig);
+    case 'compact':
+      return renderCompactPreview(items, blockConfig);
+    case 'thumbnail':
+      return renderThumbnailPreview(items, blockConfig);
+    default:
+      return null;
+  }
+}
 
 export default ListLayoutPreview; 

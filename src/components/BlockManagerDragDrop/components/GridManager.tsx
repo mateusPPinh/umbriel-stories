@@ -377,30 +377,29 @@ const GridManager: React.FC<GridManagerProps> = ({
 
     // Layout padrão para Standard
     return (
-      <div className={currentVariant.layout.container}>
-        <div className={currentVariant.layout.grid}>
-          {currentVariant.columns.map(column => (
-            <DroppableColumn
-              key={column.id}
-              id={column.id}
-              droppableId={column.id}
-              title={column.title}
-              articles={columns[column.id] || []}
-              maxItems={column.maxItems}
-              isDarkTheme={isDarkTheme}
-              width={column.width}
-              showExcerpt={false}
-              headingProps={{
-                fontSize: '1rem',
-                fontWeight: '500'
-              }}
-              subtitleProps={{
-                fontSize: '0.75rem',
-                color: isDarkTheme ? '#9CA3AF' : '#6B7280'
-              }}
-            />
-          ))}
-        </div>
+      <div className="space-y-4">
+        {currentVariant.columns.map(column => (
+          <DroppableColumn
+            key={column.id}
+            id={column.id}
+            droppableId={column.id}
+            title={column.title}
+            articles={columns[column.id] || []}
+            maxItems={column.maxItems}
+            isDarkTheme={isDarkTheme}
+            width="w-full"
+            showExcerpt={blockConfig.styles.showExcerpt}
+            headingProps={{
+              fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
+              fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
+              color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
+            }}
+            subtitleProps={{
+              fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
+              color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
+            }}
+          />
+        ))}
       </div>
     );
   };
@@ -438,22 +437,20 @@ const GridManager: React.FC<GridManagerProps> = ({
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         <div className="lg:col-span-2">
           <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
               <ArticlesPool
                 droppableId="pool"
                 articles={columns.pool}
                 isDarkTheme={isDarkTheme}
               />
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {renderColumns()}
-              </div>
+              {renderColumns()}
             </div>
           </DragDropContext>
         </div>
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-3">
           <LayoutPreview
             variantType={variantType}
             isDarkTheme={isDarkTheme}

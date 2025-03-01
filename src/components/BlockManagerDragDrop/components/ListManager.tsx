@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { Article } from '../../PageblockV2/types';
 import DroppableColumn from './DroppableColumn';
@@ -20,7 +20,7 @@ const ListManager: React.FC<ListManagerProps> = ({
   isDarkTheme, 
   onSave, 
   variant = 'chronological',
-  blockConfig,
+  blockConfig: initialBlockConfig,
   onConfigClick
 }) => {
   const [variantType, setVariantType] = useState<string>(variant);
@@ -28,6 +28,15 @@ const ListManager: React.FC<ListManagerProps> = ({
     'pool': articles,
     'col-0': []
   });
+  const [blockConfig, setBlockConfig] = useState(initialBlockConfig);
+
+  // Atualiza o blockConfig quando a variante muda
+  useEffect(() => {
+    setBlockConfig(prev => ({
+      ...prev,
+      variant: variantType
+    }));
+  }, [variantType]);
 
   const handleDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -67,7 +76,7 @@ const ListManager: React.FC<ListManagerProps> = ({
   const variants = [
     { id: 'chronological', label: 'Timeline', maxItems: 10 },
     { id: 'compact', label: 'Lista Compacta', maxItems: 15 },
-    { id: 'card', label: 'Cards', maxItems: 8 }
+    { id: 'thumbnail', label: 'Cards', maxItems: 8 }
   ];
 
   const currentVariant = variants.find(v => v.id === variantType) || variants[0];
@@ -105,10 +114,10 @@ const ListManager: React.FC<ListManagerProps> = ({
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         <div className="lg:col-span-2">
           <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
               <ArticlesPool
                 droppableId="pool"
                 articles={columns.pool}
@@ -138,11 +147,9 @@ const ListManager: React.FC<ListManagerProps> = ({
             </div>
           </DragDropContext>
         </div>
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-3">
           <ListLayoutPreview
-            variantType={variantType}
-            isDarkTheme={isDarkTheme}
-            columns={columns}
+            columns={[columns['col-0']]}
             blockConfig={blockConfig}
           />
         </div>

@@ -29,6 +29,18 @@ export interface BlockConfig {
     // Featured specific
     heroHeight?: string;
     splitRatio?: '1:1' | '2:1' | '1:2';
+    featuredImageOverlay?: boolean;
+    // List specific styles
+    timelineStyle?: 'solid' | 'dashed' | 'dotted';
+    markerStyle?: 'circle' | 'square' | 'diamond';
+    hoverEffect?: 'highlight' | 'scale' | 'background' | 'translate' | 'none';
+    dividerStyle?: 'solid' | 'dashed' | 'dotted';
+    thumbnailSize?: {
+      width: string;
+      height: string;
+    };
+    thumbnailShape?: 'square' | 'rounded' | 'circle';
+    imagePosition?: 'left' | 'right';
   };
   mediaConfig?: {
     videoConfig?: VideoConfig;

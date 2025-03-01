@@ -1,6 +1,9 @@
 import React from 'react';
 import { Article } from '../../PageblockV2/types';
 import { BlockConfig } from './StyleConfigModal';
+import { defaultClasses } from '../../PageblockV2/constants/defaultClasses';
+import Link from '../../Link';
+import { generateArticleUrl } from '../../PageblockV2/utils/generateArticleUrl';
 
 interface LayoutPreviewProps {
   variantType: string;
@@ -10,72 +13,470 @@ interface LayoutPreviewProps {
 }
 
 const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme, columns, blockConfig }) => {
-  // Helper function to render a preview item
-  const renderPreviewItem = (article?: Article, size: 'small' | 'medium' | 'large' = 'medium', heightClass?: string) => {
+  // Helper para renderizar skeleton de artigo
+  const renderArticleSkeleton = (size: 'small' | 'medium' | 'large' = 'medium') => {
     const aspectRatio = size === 'small' ? 'aspect-[4/3]' : size === 'large' ? 'aspect-[16/9]' : 'aspect-[16/10]';
-    const theme = blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'];
     
-    if (!article) {
-      return (
-        <div className={`flex flex-col gap-2 ${heightClass || ''}`}>
-          <div className={`${heightClass ? '' : aspectRatio} rounded ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'} w-full h-full`} />
-          <div className="space-y-1.5">
-            <div className={`h-2.5 rounded ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-            <div className={`h-2 rounded w-2/3 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
+    return (
+      <div className="flex flex-col gap-2">
+        <div className={`${aspectRatio} rounded ${isDarkTheme ? 'bg-gray-700/50' : 'bg-gray-200/50'} w-full`} />
+        <div className="space-y-1.5">
+          <div className={`h-2.5 rounded ${isDarkTheme ? 'bg-gray-700/50' : 'bg-gray-200/50'}`} />
+          <div className={`h-2 rounded w-2/3 ${isDarkTheme ? 'bg-gray-700/50' : 'bg-gray-200/50'}`} />
+        </div>
+      </div>
+    );
+  };
+
+  const renderStandardGrid = () => {
+    const classes = defaultClasses.grid.standard;
+    const items = columns['col-0'] || [];
+
+    return (
+      <div className={classes.container}>
+        <div className={classes.grid}>
+          {items.length > 0 ? (
+            items.map((article: Article) => {
+              const articleUrl = generateArticleUrl(article);
+              return (
+                <article key={article.id} className={classes.article}>
+                  {article.content?.image?.desktop_image_path && (
+                    <div className={classes.image.wrapper}>
+                      <img
+                        src={article.content.image.desktop_image_path}
+                        alt={article.title}
+                        className={classes.image.img}
+                      />
+                    </div>
+                  )}
+                  
+                  <div className={classes.content.wrapper}>
+                    <Link href={articleUrl} className="hover:underline transition-all duration-300">
+                      <h2 className={classes.content.title}>
+                        {article.title}
+                      </h2>
+                    </Link>
+                    
+                    {blockConfig.styles.showExcerpt && (
+                      <p className={classes.content.subtitle}>
+                        {article.subtitle}
+                      </p>
+                    )}
+                  </div>
+                </article>
+              );
+            })
+          ) : (
+            // Skeleton grid
+            [...Array(6)].map((_, i) => (
+              <div key={i} className={classes.article}>
+                {renderArticleSkeleton('medium')}
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const renderSidebarGrid = () => {
+    const classes = defaultClasses.grid.sidebargrid;
+    const mainArticles = columns['col-0'] || [];
+    const sidebarArticles = columns['col-1'] || [];
+
+    return (
+      <div className={classes.container}>
+        <div className={classes.wrapper}>
+          {/* Main Content */}
+          <div className={classes.mainContent}>
+            {mainArticles.length > 0 ? (
+              mainArticles.map((article: Article) => {
+                const articleUrl = generateArticleUrl(article);
+                return (
+                  <div key={article.id} className={classes.article.main}>
+                    {article.content?.image?.desktop_image_path && (
+                      <img
+                        src={article.content.image.desktop_image_path}
+                        alt={article.title}
+                        className={classes.image.main}
+                      />
+                    )}
+                    <div>
+                      <Link
+                        href={articleUrl}
+                        aria-label={article.title}
+                        className="hover:underline transition-all duration-300"
+                      >
+                        <h3 className={classes.content.main.title}>
+                          {article.title}
+                        </h3>
+                      </Link>
+                      {blockConfig.styles.showExcerpt && (
+                        <p className={classes.content.main.subtitle}>
+                          {article.subtitle}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              // Main content skeleton
+              [...Array(4)].map((_, i) => (
+                <div key={i} className={classes.article.main}>
+                  {renderArticleSkeleton('large')}
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <div className={classes.sidebar}>
+            {sidebarArticles.length > 0 ? (
+              sidebarArticles.map((article: Article, index: number) => {
+                const articleUrl = generateArticleUrl(article);
+                return (
+                  <div
+                    key={article.id}
+                    className={[
+                      classes.article.sidebar,
+                      index !== sidebarArticles.length - 1
+                        ? 'border-b border-gray-200 dark:border-gray-700 pb-4 mb-4'
+                        : '',
+                    ]
+                      .filter(Boolean)
+                      .join(' ')}
+                  >
+                    {article.content?.image?.desktop_image_path && (
+                      <img
+                        src={article.content.image.desktop_image_path}
+                        alt={article.title}
+                        className={classes.image.sidebar}
+                      />
+                    )}
+                    <div>
+                      <Link
+                        href={articleUrl}
+                        aria-label={article.title}
+                        className="hover:underline transition-all duration-300"
+                      >
+                        <h3 className={classes.content.sidebar.title}>
+                          {article.title}
+                        </h3>
+                      </Link>
+                      {blockConfig.styles.showExcerpt && (
+                        <p className={classes.content.sidebar.subtitle}>
+                          {article.subtitle}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              // Sidebar skeleton
+              [...Array(3)].map((_, i) => (
+                <div
+                  key={i}
+                  className={[
+                    classes.article.sidebar,
+                    i !== 2 ? 'border-b border-gray-200 dark:border-gray-700 pb-4 mb-4' : '',
+                  ].join(' ')}
+                >
+                  {renderArticleSkeleton('small')}
+                </div>
+              ))
+            )}
           </div>
         </div>
-      );
+      </div>
+    );
+  };
+
+  const renderNewsFeedGrid = () => {
+    const classes = defaultClasses.newsfeed;
+    const mainColumnArticles = columns['col-0'] || [];
+    const rightColumnArticles = columns['col-1'] || [];
+    const firstArticle = mainColumnArticles[0];
+
+    return (
+      <div className={classes.container}>
+        <div className={classes.grid}>
+          {/* Left Column - Articles */}
+          <div className={classes.column.main}>
+            {mainColumnArticles.length > 0 ? (
+              mainColumnArticles.map((article: Article) => {
+                const articleUrl = generateArticleUrl(article);
+                return (
+                  <article key={article.id} className={classes.article.main}>
+                    <div className={classes.content}>
+                      <Link
+                        href={articleUrl}
+                        aria-label={article.title}
+                        className="hover:underline transition-all duration-300"
+                      >
+                        <h3 className={classes.title}>{article.title}</h3>
+                      </Link>
+                      {article.subtitle && (
+                        <p className={classes.subtitle}>{article.subtitle}</p>
+                      )}
+                    </div>
+                  </article>
+                );
+              })
+            ) : (
+              // Left column skeleton
+              [...Array(5)].map((_, i) => (
+                <article key={i} className={classes.article.main}>
+                  {renderArticleSkeleton('small')}
+                </article>
+              ))
+            )}
+          </div>
+
+          {/* Middle Column - Featured Image */}
+          <div className={classes.column.image}>
+            {firstArticle?.content?.image?.desktop_image_path ? (
+              <div className={classes.article.image}>
+                <img
+                  src={firstArticle.content.image.desktop_image_path}
+                  alt={firstArticle.title}
+                  className={classes.article.imageContent}
+                />
+              </div>
+            ) : (
+              // Middle column skeleton
+              <div className={classes.article.image}>
+                <div className={`w-full aspect-[4/3] rounded ${isDarkTheme ? 'bg-gray-700/50' : 'bg-gray-200/50'}`} />
+              </div>
+            )}
+          </div>
+
+          {/* Right Column */}
+          <div className={classes.column.right}>
+            {rightColumnArticles.length > 0 ? (
+              rightColumnArticles.map((article: Article) => {
+                const articleUrl = generateArticleUrl(article);
+                return (
+                  <article key={article.id} className={classes.article.main}>
+                    <div className={classes.content}>
+                      <Link href={articleUrl} aria-label={article.title} className="hover:underline transition-all duration-300">
+                        <h3 className={classes.title}>{article.title}</h3>
+                      </Link>
+                    </div>
+                  </article>
+                );
+              })
+            ) : (
+              // Right column skeleton
+              [...Array(5)].map((_, i) => (
+                <article key={i} className={classes.article.main}>
+                  {renderArticleSkeleton('small')}
+                </article>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderNewsGrid = () => {
+    const classes = defaultClasses.newsgrid;
+    const articles = columns['col-0'] || [];
+
+    // Agrupa os artigos por row
+    const rows: { [key: string]: Article[] } = {};
+    if (articles.length > 0) {
+      articles.forEach((article, index) => {
+        const row = Math.floor(index / 5);
+        if (!rows[row]) rows[row] = [];
+        rows[row].push(article);
+      });
+    } else {
+      // Cria uma row de skeleton
+      rows[0] = [];
     }
 
     return (
-      <div className={`flex flex-col gap-2 ${heightClass || ''}`}>
-        <div className={`${heightClass ? '' : aspectRatio} rounded overflow-hidden`}>
-          {article.content?.image?.desktop_image_path ? (
-            <div className="relative w-full h-full">
-              <img
-                src={article.content.image.desktop_image_path}
-                alt={article.title}
-                className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
-              />
-              {blockConfig.mediaConfig?.imageConfig?.overlay?.enabled && (
-                <div 
-                  className="absolute inset-0" 
-                  style={{
-                    backgroundColor: blockConfig.mediaConfig.imageConfig.overlay.color || 'rgba(0,0,0,0.5)',
-                    opacity: blockConfig.mediaConfig.imageConfig.overlay.opacity || 0.5
-                  }}
-                />
-              )}
-            </div>
+      <div className={classes.container}>
+        {Object.entries(rows).map(([rowId, rowArticles]) => (
+          <div key={rowId} className={classes.grid}>
+            {rowArticles.length > 0 ? (
+              rowArticles.map((article: Article, index: number) => {
+                const articleUrl = generateArticleUrl(article);
+                return (
+                  <div key={article.id} className={classes.column}>
+                    <article className={index === 0 ? classes.mainArticle : classes.secondaryArticle}>
+                      {index === 0 && article.content?.image?.desktop_image_path && (
+                        <div className={classes.imageWrapper}>
+                          <img 
+                            src={article.content.image.desktop_image_path} 
+                            alt={article.title}
+                            className={classes.image}
+                          />
+                        </div>
+                      )}
+                      <Link href={articleUrl}>
+                        <h3 className={index === 0 ? classes.mainTitle : classes.secondaryTitle}>
+                          {article.title}
+                        </h3>
+                      </Link>
+                    </article>
+                  </div>
+                );
+              })
+            ) : (
+              // Row skeleton
+              [...Array(5)].map((_, i) => (
+                <div key={i} className={classes.column}>
+                  <article className={i === 0 ? classes.mainArticle : classes.secondaryArticle}>
+                    {renderArticleSkeleton(i === 0 ? 'large' : 'small')}
+                  </article>
+                </div>
+              ))
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderMasonryGrid = () => {
+    const classes = defaultClasses.grid.masonry;
+    const articles = Object.values(columns).flat();
+
+    return (
+      <div className={classes.container}>
+        <div className={classes.grid}>
+          {articles.length > 0 ? (
+            articles.map((article: Article) => {
+              const articleUrl = generateArticleUrl(article);
+              return (
+                <div key={article.id} className={classes.article}>
+                  {article.content?.image?.desktop_image_path && (
+                    <div className={classes.image.wrapper}>
+                      <img
+                        src={article.content.image.desktop_image_path}
+                        alt={article.title}
+                        className={classes.image.img}
+                      />
+                    </div>
+                  )}
+                  
+                  <div>
+                    <Link href={articleUrl} aria-label={article.title} className="hover:underline transition-all duration-300">
+                      <h3 className={classes.content.title}>
+                        {article.title}
+                      </h3>
+                    </Link>
+                    {blockConfig.styles.showExcerpt && (
+                      <p className={classes.content.subtitle}>
+                        {article.subtitle}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              );
+            })
           ) : (
-            <div className={`w-full h-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
+            // Masonry skeleton com alturas variadas
+            [...Array(6)].map((_, i) => (
+              <div key={i} className={classes.article}>
+                {renderArticleSkeleton(['small', 'medium', 'large'][i % 3] as 'small' | 'medium' | 'large')}
+              </div>
+            ))
           )}
         </div>
-        <div className="space-y-1.5">
-          <div className="h-10 overflow-hidden">
-            <div 
-              className="line-clamp-1"
-              style={{
-                fontSize: theme.headingProps.fontSize,
-                fontWeight: theme.headingProps.fontWeight,
-                color: theme.headingProps.color
-              }}
-            >
-              {article.title}
-            </div>
-          </div>
-          {blockConfig.styles.showExcerpt && article.content?.description && (
-            <div className="h-2 overflow-hidden">
-              <div 
-                className="line-clamp-1"
-                style={{
-                  fontSize: theme.subtitleProps.fontSize,
-                  color: theme.subtitleProps.color
-                }}
-              >
-                {article.content.description}
+      </div>
+    );
+  };
+
+  const renderFeaturedGrid = () => {
+    const classes = defaultClasses.grid.featured;
+    const articles = Object.values(columns).flat();
+
+    return (
+      <div className={classes.container}>
+        <div className={classes.grid}>
+          {articles.length > 0 ? (
+            articles.map((article: Article) => {
+              const articleUrl = generateArticleUrl(article);
+              
+              return (
+                <div key={article.id} className={`${classes.article} group`}>
+                  {article.content?.image?.desktop_image_path ? (
+                    <Link
+                      href={articleUrl}
+                      className={`
+                        ${classes.image.wrapper}
+                        block relative overflow-hidden
+                        transition-transform duration-300
+                        group-hover:scale-[1.02]
+                      `}
+                    >
+                      <img
+                        src={article.content.image.desktop_image_path}
+                        alt={article.title}
+                        className={`
+                          ${classes.image.img}
+                          transition-transform duration-300
+                          group-hover:scale-105
+                        `}
+                      />
+                      {blockConfig.styles.featuredImageOverlay && (
+                        <div className={`
+                          ${classes.image.overlay}
+                          transition-opacity duration-300
+                          group-hover:opacity-75
+                        `} />
+                      )}
+                      <div className={classes.content.wrapper}>
+                        <h3 className={`
+                          ${classes.content.title}
+                          transition-colors duration-200
+                          group-hover:text-blue-400
+                        `}>
+                          {article.title}
+                        </h3>
+                        {article.subtitle && (
+                          <p className={classes.content.subtitle}>
+                            {article.subtitle}
+                          </p>
+                        )}
+                      </div>
+                    </Link>
+                  ) : (
+                    <Link href={articleUrl} className="block group">
+                      <h3 className={`
+                        ${classes.content.title}
+                        transition-colors duration-200
+                        group-hover:text-blue-600 dark:group-hover:text-blue-400
+                      `}>
+                        {article.title}
+                      </h3>
+                      {article.subtitle && (
+                        <p className={classes.content.subtitle}>
+                          {article.subtitle}
+                        </p>
+                      )}
+                    </Link>
+                  )}
+                </div>
+              );
+            })
+          ) : (
+            // Featured grid skeleton
+            [...Array(4)].map((_, i) => (
+              <div key={i} className={`${classes.article} group`}>
+                <div className={`
+                  ${classes.image.wrapper}
+                  block relative overflow-hidden
+                `}>
+                  {renderArticleSkeleton(i === 0 ? 'large' : 'medium')}
+                </div>
               </div>
-            </div>
+            ))
           )}
         </div>
       </div>
@@ -84,140 +485,18 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme,
 
   const getLayoutPreview = () => {
     switch (variantType) {
-      case 'newsgrid':
-        return (
-          <div className="grid grid-cols-4 gap-4 h-full">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="flex flex-col">
-                {renderPreviewItem(columns[`col-0`]?.[i], 'medium')}
-              </div>
-            ))}
-          </div>
-        );
-
-      case 'newsfeed':
-        return (
-          <div className="grid grid-cols-2 gap-6 h-full">
-            <div>
-              {renderPreviewItem(columns['col-0']?.[0], 'large')}
-            </div>
-            <div className="space-y-4">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="flex gap-4 items-start">
-                  <div className="w-24 shrink-0">
-                    {renderPreviewItem(columns['col-0']?.[i + 1], 'small')}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="space-y-1.5">
-                      <div className="h-2.5">
-                        <div className={`text-xs font-medium line-clamp-2 ${isDarkTheme ? 'text-white' : 'text-gray-900'}`}>
-                          {columns['col-0']?.[i + 1]?.title || ''}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-
       case 'standard':
-        return (
-          <div className="grid grid-cols-3 gap-4 h-full">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="space-y-4">
-                {[...Array(2)].map((_, j) => (
-                  <div key={j}>
-                    {renderPreviewItem(columns[`col-${i}`]?.[j], 'medium')}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        );
-
+        return renderStandardGrid();
       case 'featured':
-        return (
-          <div className="grid grid-cols-3 gap-4 h-full">
-            <div className="col-span-2">
-              {renderPreviewItem(columns['col-0']?.[0], 'large')}
-            </div>
-            <div className="space-y-4">
-              {[...Array(2)].map((_, i) => (
-                <div key={i}>
-                  {renderPreviewItem(columns['col-1']?.[i], 'small')}
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-
+        return renderFeaturedGrid();
       case 'masonry':
-        // Masonry layout com alturas variáveis
-        const heightClasses = [
-          'h-48', // Altura média
-          'h-64', // Altura grande
-          'h-40', // Altura pequena
-          'h-96', // Altura média-grande
-          'h-36', // Altura pequena
-          'h-52', // Altura média
-        ];
-        
-        return (
-          <div className="grid grid-cols-3 gap-4 h-full max-h-[500px]">
-            {/* Coluna 1 */}
-            <div className="flex flex-col gap-4">
-              <div className="w-full h-full min-h-[330px]">
-                {renderPreviewItem(columns['col-0']?.[0], 'medium', heightClasses[0])}
-              </div>
-              <div className="w-full h-full min-h-[330px]">
-                {renderPreviewItem(columns['col-0']?.[1], 'medium', heightClasses[3])}
-              </div>
-            </div>
-            
-            {/* Coluna 2 */}
-            <div className="flex flex-col gap-4">
-              <div className="w-full h-full">
-                {renderPreviewItem(columns['col-1']?.[0], 'medium', heightClasses[1])}
-              </div>
-              <div className="w-full h-full">
-                {renderPreviewItem(columns['col-1']?.[1], 'medium', heightClasses[4])}
-              </div>
-            </div>
-            
-            {/* Coluna 3 */}
-            <div className="flex flex-col gap-4">
-              <div className="w-full h-full">
-                {renderPreviewItem(columns['col-2']?.[0], 'medium', heightClasses[2])}
-              </div>
-              <div className="w-full h-full">
-                {renderPreviewItem(columns['col-2']?.[1], 'medium', heightClasses[5])}
-              </div>
-            </div>
-          </div>
-        );
-
+        return renderMasonryGrid();
       case 'sidebargrid':
-        return (
-          <div className="grid grid-cols-3 gap-4 h-full">
-            <div className="col-span-2 grid grid-cols-2 gap-4">
-              {[...Array(4)].map((_, i) => (
-                <div key={i}>
-                  {renderPreviewItem(columns['col-0']?.[i], 'medium')}
-                </div>
-              ))}
-            </div>
-            <div className="space-y-4">
-              {[...Array(3)].map((_, i) => (
-                <div key={i}>
-                  {renderPreviewItem(columns['col-1']?.[i], 'small')}
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-
+        return renderSidebarGrid();
+      case 'newsfeed':
+        return renderNewsFeedGrid();
+      case 'newsgrid':
+        return renderNewsGrid();
       default:
         return null;
     }
@@ -230,16 +509,17 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme,
       </div>
       <div 
         className={`
-          w-full aspect-[16/9] p-4 rounded-lg overflow-hidden
+          w-full p-6 rounded-lg overflow-hidden
           border border-gray-200 dark:border-gray-700
           hover:border-blue-500/50 dark:hover:border-blue-500/50
           transition-colors duration-200
+          min-h-[500px] flex flex-col
         `}
         style={{
           backgroundColor: blockConfig.layout.styles.backgroundColor || (isDarkTheme ? 'rgba(31, 41, 55, 0.5)' : 'rgba(243, 244, 246, 0.5)')
         }}
       >
-        <div className="w-full h-full">
+        <div className="w-full h-full flex-1 flex items-start justify-center overflow-auto">
           {getLayoutPreview()}
         </div>
       </div>

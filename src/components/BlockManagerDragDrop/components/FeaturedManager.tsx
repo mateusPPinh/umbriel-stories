@@ -103,10 +103,10 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         <div className="lg:col-span-2">
           <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
               <ArticlesPool
                 droppableId="pool"
                 articles={columns.pool}
@@ -137,7 +137,7 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
             </div>
           </DragDropContext>
         </div>
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-3">
           <FeaturedLayoutPreview
             variantType={variantType}
             isDarkTheme={isDarkTheme}

@@ -290,45 +290,24 @@ export const defaultClasses = {
     }
   },
   list: {
-    compact: {
-      container: 'w-full mt-12 mb-12',
-      list: 'space-y-4'
-    },
-    thumbnail: {
-      container: 'w-full mt-12 mb-12',
-      list: 'space-y-4',
-      article: 'relative'
-    },
     chronological: {
-      container: 'w-full mt-12 mb-12 mx-auto',
-      list: 'relative',
-      timeline: [
-        'absolute left-4 top-0 bottom-0',
-        'w-px border-l-2',
-        'border-blue-600 dark:border-blue-400'
-      ].join(' '),
-      item: [
-        'relative pl-12 py-6',
-        'transition-all duration-200'
-      ].join(' '),
-      marker: [
-        'absolute left-3 top-8',
-        '-translate-x-1/2 w-3 h-3',
-        'bg-blue-600 dark:bg-blue-400'
-      ].join(' '),
+      container: 'relative w-full max-w-3xl mx-auto',
+      list: 'relative space-y-6',
+      timeline: 'absolute left-4 top-0 bottom-0 w-px bg-gray-300 dark:bg-gray-700',
+      item: 'flex flex-col gap-2 pl-8 relative',
+      marker: 'absolute left-3 top-2 -translate-x-1/2 w-2 h-2 rounded-full bg-blue-500 ring-4 ring-blue-100 dark:ring-blue-900/30',
       content: {
-        date: 'text-sm text-gray-500 dark:text-gray-400',
-        relativeTime: 'text-xs text-gray-400 dark:text-gray-500 ml-2',
-        title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white',
-        subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300',
-        metadata: 'text-xs text-gray-400 dark:text-gray-500',
-        preview: 'bg-blue-50 dark:bg-gray-800 p-3 rounded-md shadow-sm'
+        date: 'text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2',
+        relativeTime: 'text-gray-400 dark:text-gray-500',
+        title: 'text-lg font-medium text-gray-900 dark:text-white',
+        subtitle: 'text-sm text-gray-500 dark:text-gray-400 mt-1',
+        preview: 'mt-2'
       },
       variants: {
         line: {
-          solid: 'border-solid',
-          dashed: 'border-dashed',
-          dotted: 'border-dotted'
+          solid: 'bg-gray-300 dark:bg-gray-700',
+          dashed: 'border-l border-dashed border-gray-300 dark:border-gray-700',
+          dotted: 'border-l border-dotted border-gray-300 dark:border-gray-700'
         },
         marker: {
           circle: 'rounded-full',
@@ -336,9 +315,47 @@ export const defaultClasses = {
           diamond: 'rotate-45'
         },
         hover: {
-          highlight: 'hover:bg-blue-50 dark:hover:bg-blue-900/20',
-          scale: 'hover:scale-[1.02]',
+          highlight: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg -mx-4 px-4',
+          scale: 'hover:scale-[1.02] origin-left',
+          background: 'hover:bg-gray-50 dark:hover:bg-gray-800/50',
+          translate: 'hover:translate-x-2',
           none: ''
+        }
+      }
+    },
+    compact: {
+      container: 'relative w-full max-w-3xl mx-auto',
+      list: 'space-y-2',
+      variants: {
+        hover: {
+          highlight: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg -mx-4 px-4',
+          scale: 'hover:scale-[1.02] origin-left',
+          background: 'hover:bg-gray-50 dark:hover:bg-gray-800/50',
+          translate: 'hover:translate-x-2',
+          none: ''
+        },
+        divider: {
+          solid: 'border-b border-gray-200 dark:border-gray-700',
+          dashed: 'border-b border-dashed border-gray-200 dark:border-gray-700',
+          dotted: 'border-b border-dotted border-gray-200 dark:border-gray-700'
+        }
+      }
+    },
+    thumbnail: {
+      container: 'relative w-full max-w-3xl mx-auto',
+      list: 'space-y-4',
+      variants: {
+        hover: {
+          highlight: 'hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg -mx-4 px-4',
+          scale: 'hover:scale-[1.02] transition-transform duration-300',
+          background: 'hover:bg-gray-50 dark:hover:bg-gray-800/50',
+          translate: 'hover:translate-x-2',
+          none: ''
+        },
+        shape: {
+          square: 'rounded-none',
+          rounded: 'rounded-lg',
+          circle: 'rounded-full'
         }
       }
     }
