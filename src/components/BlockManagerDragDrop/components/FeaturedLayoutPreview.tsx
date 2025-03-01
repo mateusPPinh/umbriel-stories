@@ -240,6 +240,16 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
   };
 
   const getLayoutPreview = () => {
+    // Primeiro encontra a variante atual
+    const variant = variants.find(v => v.id === variantType);
+    if (!variant) return variants[0].skeleton;
+
+    // Se não houver artigos na coluna, mostra o skeleton da variante
+    if (!columns['col-0'] || columns['col-0'].length === 0) {
+      return variant.skeleton;
+    }
+
+    // Se tiver artigos, renderiza o preview apropriado
     switch (variantType) {
       case 'hero':
         return renderHeroPreview();
@@ -248,7 +258,7 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
       case 'triple':
         return renderTriplePreview();
       default:
-        return currentVariant.skeleton;
+        return variant.skeleton;
     }
   };
 
