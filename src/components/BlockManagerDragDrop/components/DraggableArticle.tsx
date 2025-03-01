@@ -50,7 +50,8 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
         ? 'bg-gray-700 hover:bg-gray-600' 
         : 'bg-white hover:bg-gray-50'
       }
-      ${columnIsFull && isInColumn ? 'opacity-80 cursor-not-allowed' : 'opacity-100 cursor-grab'}
+      ${columnIsFull && isInColumn ? 'opacity-80' : 'opacity-100'}
+      ${columnIsFull && isInColumn ? 'cursor-default' : 'cursor-grab'}
       transition-all duration-200
     `;
 
@@ -172,13 +173,13 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
           className={getArticleClass()}
           style={{
             ...provided.draggableProps.style,
-            ...(columnIsFull && isInColumn ? { pointerEvents: 'none' } : {})
+            ...(columnIsFull && isInColumn && !isHovered ? { pointerEvents: 'none' } : {})
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {/* Botão de remoção */}
-          {isInColumn && isHovered && onRemove && (
+          {/* Botão de remoção - mostrar quando hover OU quando a coluna está cheia */}
+          {isInColumn && onRemove && (isHovered || columnIsFull) && (
             <button
               onClick={handleRemove}
               className={`
@@ -187,8 +188,10 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
                   ? 'bg-gray-800 text-gray-300 hover:bg-gray-900 hover:text-white' 
                   : 'bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700'}
                 shadow-md transition-all duration-200
+                ${columnIsFull ? 'bg-red-100 text-red-500 hover:bg-red-200 hover:text-red-600' : ''}
               `}
               aria-label="Remover artigo"
+              style={{ pointerEvents: 'auto' }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -208,7 +211,7 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
                 alt={article.title}
                 className="w-full h-full object-cover"
               />
-              {columnIsFull && isInColumn && (
+              {columnIsFull && isInColumn && !isHovered && (
                 <div className="absolute inset-0 bg-black bg-opacity-10"></div>
               )}
             </div>

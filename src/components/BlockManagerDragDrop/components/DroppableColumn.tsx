@@ -108,7 +108,7 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
             ref={provided.innerRef}
             {...provided.droppableProps}
             className={`
-              min-h-[220px] rounded-lg border-2 p-4
+              rounded-lg border-2 p-4 h-full max-h-[400px] overflow-y-auto
               ${snapshot.isDraggingOver
                 ? isDarkTheme
                   ? 'border-blue-500 bg-gray-700'
