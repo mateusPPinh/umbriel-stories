@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { Article } from '../../PageblockV2/types';
 
@@ -20,6 +20,7 @@ interface DraggableArticleProps {
     color?: string;
   };
   showExcerpt?: boolean;
+  onRemove?: (articleId: string | number) => void;
 }
 
 const DraggableArticle: React.FC<DraggableArticleProps> = ({
@@ -36,12 +37,15 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
   isNewsFeedMain,
   isNewsFeedSide,
   subtitleProps,
-  showExcerpt
+  showExcerpt,
+  onRemove
 }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   // Helper function to determine the appropriate class for the article
   const getArticleClass = () => {
     let classes = `
-      rounded-md overflow-hidden
+      rounded-md overflow-hidden relative
       ${isDarkTheme 
         ? 'bg-gray-700 hover:bg-gray-600' 
         : 'bg-white hover:bg-gray-50'
@@ -146,6 +150,14 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
     return classes;
   };
 
+  const handleRemove = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (onRemove) {
+      onRemove(article.id);
+    }
+  };
+
   return (
     <Draggable 
       draggableId={article.id.toString()} 
@@ -162,7 +174,28 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
             ...provided.draggableProps.style,
             ...(columnIsFull && isInColumn ? { pointerEvents: 'none' } : {})
           }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
+          {/* Botão de remoção */}
+          {isInColumn && isHovered && onRemove && (
+            <button
+              onClick={handleRemove}
+              className={`
+                absolute top-1 right-1 z-10 rounded-full p-1
+                ${isDarkTheme 
+                  ? 'bg-gray-800 text-gray-300 hover:bg-gray-900 hover:text-white' 
+                  : 'bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-700'}
+                shadow-md transition-all duration-200
+              `}
+              aria-label="Remover artigo"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+          
           {/* Imagem do artigo */}
           {article.content?.image?.desktop_image_path && (
             <div className={`

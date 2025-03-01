@@ -28,6 +28,7 @@ interface DroppableColumnProps {
   isSidebarSide?: boolean;
   isNewsFeedMain?: boolean;
   isNewsFeedSide?: boolean;
+  onRemoveArticle?: (columnId: string, articleId: string | number) => void;
 }
 
 const DroppableColumn: React.FC<DroppableColumnProps> = ({
@@ -47,7 +48,8 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   isSidebarMain = false,
   isSidebarSide = false,
   isNewsFeedMain = false,
-  isNewsFeedSide = false
+  isNewsFeedSide = false,
+  onRemoveArticle
 }) => {
   const isFull = articles.length >= maxItems;
 
@@ -69,6 +71,12 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
       return 'space-y-4';
     }
     return 'space-y-4';
+  };
+
+  const handleRemoveArticle = (articleId: string | number) => {
+    if (onRemoveArticle) {
+      onRemoveArticle(droppableId, articleId);
+    }
   };
 
   return (
@@ -145,6 +153,7 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
                 isSidebarSide={isSidebarSide}
                 isNewsFeedMain={isNewsFeedMain}
                 isNewsFeedSide={isNewsFeedSide}
+                onRemove={handleRemoveArticle}
               />
             ))}
             {provided.placeholder}

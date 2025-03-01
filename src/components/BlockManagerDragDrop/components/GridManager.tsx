@@ -84,6 +84,30 @@ const GridManager: React.FC<GridManagerProps> = ({
     onSave(newColumns);
   };
 
+  // Função para remover um artigo de uma coluna e devolvê-lo para a pool
+  const handleRemoveArticle = (columnId: string, articleId: string | number) => {
+    // Encontra o artigo na coluna
+    const article = columns[columnId].find(a => a.id === articleId);
+    
+    if (!article) return;
+    
+    // Remove o artigo da coluna
+    const updatedColumn = columns[columnId].filter(a => a.id !== articleId);
+    
+    // Adiciona o artigo de volta à pool
+    const updatedPool = [...columns.pool, article];
+    
+    // Atualiza o estado
+    const newColumns = {
+      ...columns,
+      [columnId]: updatedColumn,
+      pool: updatedPool
+    };
+    
+    setColumns(newColumns);
+    onSave(newColumns);
+  };
+
   // Definição das variantes de grid com suas configurações específicas
   const variants = [
     { 
@@ -189,6 +213,7 @@ const GridManager: React.FC<GridManagerProps> = ({
                   color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
                 }}
                 showExcerpt={blockConfig.styles.showExcerpt}
+                onRemoveArticle={handleRemoveArticle}
               />
             ))}
           </div>
@@ -221,6 +246,7 @@ const GridManager: React.FC<GridManagerProps> = ({
                   fontSize: '0.875rem',
                   color: isDarkTheme ? '#9CA3AF' : '#6B7280'
                 }}
+                onRemoveArticle={handleRemoveArticle}
               />
             </div>
             <div className="col-span-1">
@@ -242,6 +268,7 @@ const GridManager: React.FC<GridManagerProps> = ({
                   fontSize: '0.75rem',
                   color: isDarkTheme ? '#9CA3AF' : '#6B7280'
                 }}
+                onRemoveArticle={handleRemoveArticle}
               />
             </div>
           </div>
@@ -274,6 +301,7 @@ const GridManager: React.FC<GridManagerProps> = ({
                   fontSize: '0.875rem',
                   color: isDarkTheme ? '#9CA3AF' : '#6B7280'
                 }}
+                onRemoveArticle={handleRemoveArticle}
               />
             </div>
             <div className="w-full md:w-1/3">
@@ -296,6 +324,7 @@ const GridManager: React.FC<GridManagerProps> = ({
                   fontSize: '0.75rem',
                   color: isDarkTheme ? '#9CA3AF' : '#6B7280'
                 }}
+                onRemoveArticle={handleRemoveArticle}
               />
             </div>
           </div>
@@ -328,6 +357,7 @@ const GridManager: React.FC<GridManagerProps> = ({
                   fontSize: '0.875rem',
                   color: isDarkTheme ? '#9CA3AF' : '#6B7280'
                 }}
+                onRemoveArticle={handleRemoveArticle}
               />
             </div>
             <div className="col-span-1">
@@ -356,6 +386,7 @@ const GridManager: React.FC<GridManagerProps> = ({
                   fontSize: '0.75rem',
                   color: isDarkTheme ? '#9CA3AF' : '#6B7280'
                 }}
+                onRemoveArticle={handleRemoveArticle}
               />
             </div>
           </div>
@@ -386,6 +417,7 @@ const GridManager: React.FC<GridManagerProps> = ({
               fontSize: '0.75rem',
               color: isDarkTheme ? '#9CA3AF' : '#6B7280'
             }}
+            onRemoveArticle={handleRemoveArticle}
           />
         </div>
       );
@@ -414,6 +446,7 @@ const GridManager: React.FC<GridManagerProps> = ({
               fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
               color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
             }}
+            onRemoveArticle={handleRemoveArticle}
           />
         ))}
       </div>

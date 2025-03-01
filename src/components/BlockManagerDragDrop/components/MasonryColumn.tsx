@@ -21,6 +21,7 @@ interface MasonryColumnProps {
     color?: string;
   };
   showExcerpt?: boolean;
+  onRemoveArticle?: (columnId: string, articleId: string | number) => void;
 }
 
 export function MasonryColumn({
@@ -32,7 +33,8 @@ export function MasonryColumn({
   style,
   headingProps,
   subtitleProps,
-  showExcerpt
+  showExcerpt,
+  onRemoveArticle
 }: MasonryColumnProps) {
   const columnIsFull = articles.length >= maxItems;
 
@@ -55,6 +57,12 @@ export function MasonryColumn({
     // Usa o índice para garantir que a altura seja consistente para o mesmo artigo
     const heights = ['h-48', 'h-64', 'h-40', 'h-56', 'h-36', 'h-52'];
     return heights[index % heights.length];
+  };
+
+  const handleRemoveArticle = (articleId: string | number) => {
+    if (onRemoveArticle) {
+      onRemoveArticle(droppableId, articleId);
+    }
   };
 
   return (
@@ -110,6 +118,7 @@ export function MasonryColumn({
                     isMasonry={true}
                     subtitleProps={subtitleProps}
                     showExcerpt={showExcerpt}
+                    onRemove={handleRemoveArticle}
                   />
                 </div>
               ))}
@@ -122,7 +131,7 @@ export function MasonryColumn({
                   isDarkTheme ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'
                 }`}
               >
-                Maximum of {maxItems} articles reached
+                Máximo de {maxItems} artigos atingido
               </div>
             )}
           </div>
