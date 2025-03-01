@@ -26,34 +26,37 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
   const [variantType, setVariantType] = useState<string>(variant);
   
   // Função auxiliar para criar o estado inicial das colunas
-  const createInitialColumns = (variant: string) => {
-    const initialColumns: { [key: string]: Article[] } = {
-      pool: articles,
+  const createInitialColumns = () => {
+    return {
+      pool: [...articles],
       'col-0': []
     };
-    return initialColumns;
   };
   
-  const [columns, setColumns] = useState<{ [key: string]: Article[] }>(() => 
-    createInitialColumns(variant)
-  );
+  const [columns, setColumns] = useState<{ [key: string]: Article[] }>(createInitialColumns);
 
-  // Limpa as colunas quando a variante muda
+  // Reseta as colunas quando a variante muda
   useEffect(() => {
-    // Retorna todos os artigos das colunas para a pool
-    const allArticles = [...columns.pool];
-    Object.entries(columns).forEach(([key, articles]) => {
-      if (key !== 'pool') {
-        allArticles.push(...articles);
+    setVariantType(variant);
+  }, [variant]);
+
+  // Efeito para lidar com a mudança de variante
+  useEffect(() => {
+    const resetColumns = () => {
+      // Coleta todos os artigos de todas as colunas
+      const allArticles = [...(columns.pool || [])];
+      if (columns['col-0']) {
+        allArticles.push(...columns['col-0']);
       }
-    });
-    
-    // Cria um novo estado com as colunas da nova variante
-    const newColumns = createInitialColumns(variantType);
-    newColumns.pool = allArticles;
-    
-    setColumns(newColumns);
-    onSave(newColumns);
+      
+      // Cria um novo estado com todos os artigos na pool
+      setColumns({
+        pool: allArticles,
+        'col-0': []
+      });
+    };
+
+    resetColumns();
   }, [variantType]);
 
   const handleDragEnd = (result: DropResult) => {
@@ -85,10 +88,10 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
     }
 
     // Copia os arrays de origem e destino
-    const sourceCol = Array.from(columns[source.droppableId]);
+    const sourceCol = Array.from(columns[source.droppableId] || []);
     const destCol = source.droppableId === destination.droppableId
       ? sourceCol
-      : Array.from(columns[destination.droppableId]);
+      : Array.from(columns[destination.droppableId] || []);
 
     // Remove o item da origem
     const [removed] = sourceCol.splice(source.index, 1);
@@ -111,61 +114,40 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
     { 
       id: 'hero', 
       label: 'Hero', 
-      maxItems: 1,
-      skeleton: (
-        <div className="w-full aspect-[21/9] rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse" />
-      )
+      maxItems: 1
     },
     { 
       id: 'split', 
       label: 'Split', 
-      maxItems: 2,
-      skeleton: (
-        <div className="grid grid-cols-2 gap-4">
-          {[...Array(2)].map((_, i) => (
-            <div key={i} className="flex gap-4">
-              <div className="w-1/2 aspect-video rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse" />
-              <div className="w-1/2 space-y-2">
-                <div className="h-4 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
-                <div className="h-4 w-2/3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
-              </div>
-            </div>
-          ))}
-        </div>
-      )
+      maxItems: 2
     },
     { 
       id: 'triple', 
       label: 'Triple', 
-      maxItems: 3,
-      skeleton: (
-        <div className="grid grid-cols-3 gap-4">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="space-y-2">
-              <div className="aspect-video rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse" />
-              <div className="h-4 w-full bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
-              <div className="h-4 w-2/3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
-            </div>
-          ))}
-        </div>
-      )
+      maxItems: 3
     }
   ];
 
   const currentVariant = variants.find(v => v.id === variantType) || variants[0];
 
+  const slotsCount = {
+    'hero': 1,
+    'split': 2,
+    'triple': 3
+  }[variantType] || 1;
+
   // Função para remover um artigo de uma coluna e devolvê-lo para a pool
   const handleRemoveArticle = (columnId: string, articleId: string | number) => {
     // Encontra o artigo na coluna
-    const article = columns[columnId].find(a => a.id === articleId);
+    const article = columns[columnId]?.find(a => a.id === articleId);
     
     if (!article) return;
     
     // Remove o artigo da coluna
-    const updatedColumn = columns[columnId].filter(a => a.id !== articleId);
+    const updatedColumn = columns[columnId]?.filter(a => a.id !== articleId) || [];
     
     // Adiciona o artigo de volta à pool
-    const updatedPool = [...columns.pool, article];
+    const updatedPool = [...(columns.pool || []), article];
     
     // Atualiza o estado
     const newColumns = {
@@ -217,7 +199,7 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
             <div className="flex flex-col gap-4">
               <ArticlesPool
                 droppableId="pool"
-                articles={columns.pool}
+                articles={columns.pool || []}
                 isDarkTheme={isDarkTheme}
               />
               <div className="w-full">
@@ -225,7 +207,7 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
                   id="col-0"
                   droppableId="col-0"
                   title={currentVariant.label}
-                  articles={columns['col-0']}
+                  articles={columns['col-0'] || []}
                   maxItems={currentVariant.maxItems}
                   isDarkTheme={isDarkTheme}
                   width="w-full"

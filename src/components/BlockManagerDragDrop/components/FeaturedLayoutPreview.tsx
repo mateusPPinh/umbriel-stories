@@ -11,73 +11,14 @@ interface FeaturedLayoutPreviewProps {
 
 const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantType, isDarkTheme, columns, blockConfig }) => {
   const theme = blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'];
-  const heroHeight = blockConfig.styles.heroHeight || '400px';
-  const splitRatio = blockConfig.styles.splitRatio || '1:1';
-  
-  const variants = [
-    { 
-      id: 'hero', 
-      skeleton: (
-        <div className="w-full aspect-[21/9] rounded-lg overflow-hidden">
-          <div className={`w-full h-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'} animate-pulse`} />
-          <div className="absolute bottom-0 left-0 right-0 p-4">
-            <div className="space-y-2">
-              <div className={`h-6 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-3/4 animate-pulse`} />
-              <div className={`h-4 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-1/2 animate-pulse`} />
-            </div>
-          </div>
-        </div>
-      )
-    },
-    { 
-      id: 'split',
-      skeleton: (
-        <div className="grid grid-cols-2 gap-4">
-          {[...Array(2)].map((_, i) => (
-            <div key={i} className="flex gap-4">
-              <div className="w-1/2">
-                <div className={`aspect-video rounded-lg ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'} animate-pulse`} />
-              </div>
-              <div className="w-1/2 space-y-2">
-                <div className={`h-4 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-full animate-pulse`} />
-                <div className={`h-4 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-2/3 animate-pulse`} />
-              </div>
-            </div>
-          ))}
-        </div>
-      )
-    },
-    { 
-      id: 'triple',
-      skeleton: (
-        <div className="grid grid-cols-3 gap-4">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="space-y-2">
-              <div className={`aspect-video rounded-lg ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'} animate-pulse`} />
-              <div className={`h-4 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-full animate-pulse`} />
-              <div className={`h-4 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-2/3 animate-pulse`} />
-            </div>
-          ))}
-        </div>
-      )
-    }
-  ];
-
-  const currentVariant = variants.find(v => v.id === variantType) || variants[0];
 
   const renderHeroPreview = () => {
-    console.log('Columns:', columns);
     const article = columns['col-0']?.[0];
-    console.log('Selected Article:', article);
-    
-    if (!article) {
-      return currentVariant.skeleton;
-    }
     
     return (
       <div className="w-full aspect-[21/9] rounded-lg overflow-hidden">
         <div className="relative w-full h-full">
-          {article.content?.image?.desktop_image_path && (
+          {article?.content?.image?.desktop_image_path ? (
             <>
               <img
                 src={article.content.image.desktop_image_path}
@@ -85,19 +26,28 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-8">
+                <h2 className="text-white text-2xl font-bold mb-2">
+                  {article.title}
+                </h2>
+                {article.subtitle && (
+                  <p className="text-white/80 text-base">
+                    {article.subtitle}
+                  </p>
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={`w-full h-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'} animate-pulse`} />
+              <div className="absolute bottom-0 left-0 right-0 p-4">
+                <div className="space-y-2">
+                  <div className={`h-6 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-3/4 animate-pulse`} />
+                  <div className={`h-4 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-1/2 animate-pulse`} />
+                </div>
+              </div>
             </>
           )}
-          
-          <div className="absolute bottom-0 left-0 right-0 p-8">
-            <h2 className="text-white text-2xl font-bold mb-2">
-              {article.title}
-            </h2>
-            {article.subtitle && (
-              <p className="text-white/80 text-base">
-                {article.subtitle}
-              </p>
-            )}
-          </div>
         </div>
       </div>
     );
@@ -106,34 +56,29 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
   const renderSplitPreview = () => {
     const articles = columns['col-0'] || [];
     
-    if (articles.length === 0) {
-      return currentVariant.skeleton;
-    }
-    
     return (
       <div className="grid grid-cols-2 gap-4">
         {[...Array(2)].map((_, i) => {
-          const article = columns['col-0']?.[i];
+          const article = articles[i];
           
           return (
             <div key={i} className="flex gap-4">
-              {/* Image */}
               <div className="w-1/2">
                 <div className={`
                   aspect-video rounded-lg overflow-hidden
                   ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
                 `}>
-                  {article?.content?.image?.desktop_image_path && (
+                  {article?.content?.image?.desktop_image_path ? (
                     <img
                       src={article.content.image.desktop_image_path}
                       alt={article.title}
                       className="w-full h-full object-cover"
                     />
+                  ) : (
+                    <div className={`w-full h-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'} animate-pulse`} />
                   )}
                 </div>
               </div>
-
-              {/* Content */}
               <div className="w-1/2">
                 {article ? (
                   <>
@@ -160,10 +105,10 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
                     )}
                   </>
                 ) : (
-                  <>
-                    <div className={`h-4 w-full rounded mb-2 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                    <div className={`h-3 w-2/3 rounded ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                  </>
+                  <div className="space-y-2">
+                    <div className={`h-4 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-full animate-pulse`} />
+                    <div className={`h-4 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-2/3 animate-pulse`} />
+                  </div>
                 )}
               </div>
             </div>
@@ -176,32 +121,28 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
   const renderTriplePreview = () => {
     const articles = columns['col-0'] || [];
     
-    if (articles.length === 0) {
-      return currentVariant.skeleton;
-    }
-    
     return (
       <div className="grid grid-cols-3 gap-4">
         {[...Array(3)].map((_, i) => {
-          const article = columns['col-0']?.[i];
+          const article = articles[i];
           
           return (
             <div key={i} className="flex flex-col">
-              {/* Image */}
               <div className={`
                 aspect-video rounded-lg overflow-hidden mb-3
                 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
               `}>
-                {article?.content?.image?.desktop_image_path && (
+                {article?.content?.image?.desktop_image_path ? (
                   <img
                     src={article.content.image.desktop_image_path}
                     alt={article.title}
                     className="w-full h-full object-cover"
                   />
+                ) : (
+                  <div className={`w-full h-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'} animate-pulse`} />
                 )}
               </div>
 
-              {/* Content */}
               {article ? (
                 <>
                   <div 
@@ -227,10 +168,10 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
                   )}
                 </>
               ) : (
-                <>
-                  <div className={`h-4 w-full rounded mb-2 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                  <div className={`h-3 w-2/3 rounded ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                </>
+                <div className="space-y-2">
+                  <div className={`h-4 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-full animate-pulse`} />
+                  <div className={`h-4 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-2/3 animate-pulse`} />
+                </div>
               )}
             </div>
           );
@@ -240,16 +181,6 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
   };
 
   const getLayoutPreview = () => {
-    // Primeiro encontra a variante atual
-    const variant = variants.find(v => v.id === variantType);
-    if (!variant) return variants[0].skeleton;
-
-    // Se não houver artigos na coluna, mostra o skeleton da variante
-    if (!columns['col-0'] || columns['col-0'].length === 0) {
-      return variant.skeleton;
-    }
-
-    // Se tiver artigos, renderiza o preview apropriado
     switch (variantType) {
       case 'hero':
         return renderHeroPreview();
@@ -258,7 +189,7 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
       case 'triple':
         return renderTriplePreview();
       default:
-        return variant.skeleton;
+        return renderHeroPreview();
     }
   };
 
