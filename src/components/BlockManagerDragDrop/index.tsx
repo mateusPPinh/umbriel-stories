@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo, lazy, Suspense } from 'react';
 import { Article } from '../PageblockV2/types';
-import GridManager from './components/GridManager';
-import ListManager from './components/ListManager';
-import MixedManager from './components/MixedManager';
-import FeaturedManager from './components/FeaturedManager';
-import StyleConfigModal, { BlockConfig } from './components/StyleConfigModal';
+import type { BlockConfig } from './components/StyleConfigModal';
 
-// Configuração padrão para os blocos
+// Lazy loading dos componentes pesados
+const GridManager = lazy(() => import('./components/GridManager'));
+const ListManager = lazy(() => import('./components/ListManager'));
+const MixedManager = lazy(() => import('./components/MixedManager'));
+const FeaturedManager = lazy(() => import('./components/FeaturedManager'));
+const StyleConfigModal = lazy(() => import('./components/StyleConfigModal'));
+
+// Configuração padrão memoizada
 const defaultBlockConfig: BlockConfig = {
   layout: {
     columns: '3',
@@ -59,97 +62,106 @@ interface BlockManagerDragDropProps {
   isDarkTheme?: boolean;
   onSave: (columns: { [key: string]: Article[] }) => void;
   variant?: string;
+  pageId: string;
 }
 
-const BlockManagerDragDrop: React.FC<BlockManagerDragDropProps> = ({
+const BlockManagerDragDrop: React.FC<BlockManagerDragDropProps> = React.memo(({
   articles,
   blockType,
   isDarkTheme,
   onSave,
-  variant
+  variant,
+  pageId
 }) => {
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [blockConfig, setBlockConfig] = useState<BlockConfig>(defaultBlockConfig);
   const [currentVariant, setCurrentVariant] = useState<string>(variant || 'standard');
 
-  const handleOpenConfigModal = () => {
+  const handleOpenConfigModal = useCallback(() => {
     setIsConfigModalOpen(true);
-  };
+  }, []);
 
-  const handleCloseConfigModal = () => {
+  const handleCloseConfigModal = useCallback(() => {
     setIsConfigModalOpen(false);
-  };
+  }, []);
 
-  const handleSaveConfig = (config: BlockConfig) => {
+  const handleSaveConfig = useCallback((config: BlockConfig) => {
     setBlockConfig(config);
     setIsConfigModalOpen(false);
-  };
+  }, []);
 
-  const renderManager = () => {
+  const renderManager = useMemo(() => {
+    const commonProps = {
+      articles,
+      isDarkTheme,
+      onSave,
+      blockConfig,
+      onConfigClick: handleOpenConfigModal,
+      pageId
+    };
+
+    const fallback = <div className="w-full h-64 flex items-center justify-center">Loading...</div>;
+
     switch (blockType) {
       case 'grid':
         return (
-          <GridManager
-            articles={articles}
-            isDarkTheme={isDarkTheme}
-            onSave={onSave}
-            variant={currentVariant}
-            blockConfig={blockConfig}
-            onConfigClick={handleOpenConfigModal}
-          />
+          <Suspense fallback={fallback}>
+            <GridManager
+              {...commonProps}
+              variant={currentVariant}
+            />
+          </Suspense>
         );
       case 'list':
         return (
-          <ListManager
-            articles={articles}
-            isDarkTheme={isDarkTheme}
-            onSave={onSave}
-            variant={currentVariant}
-            blockConfig={blockConfig}
-            onConfigClick={handleOpenConfigModal}
-          />
+          <Suspense fallback={fallback}>
+            <ListManager
+              {...commonProps}
+              variant={currentVariant}
+            />
+          </Suspense>
         );
       case 'mixed':
         return (
-          <MixedManager
-            articles={articles}
-            isDarkTheme={isDarkTheme}
-            onSave={onSave}
-            variant={currentVariant as 'sidebar' | 'showcase' | 'newspaper' | 'magazine' | 'videogrid'}
-            blockConfig={blockConfig}
-            onConfigClick={handleOpenConfigModal}
-          />
+          <Suspense fallback={fallback}>
+            <MixedManager
+              {...commonProps}
+              variant={currentVariant as 'sidebar' | 'showcase' | 'newspaper' | 'magazine' | 'videogrid'}
+            />
+          </Suspense>
         );
       case 'featured':
         return (
-          <FeaturedManager
-            articles={articles}
-            isDarkTheme={isDarkTheme}
-            onSave={onSave}
-            blockConfig={blockConfig}
-            onConfigClick={handleOpenConfigModal}
-            variant={currentVariant as 'hero' | 'split' | 'triple'}
-          />
+          <Suspense fallback={fallback}>
+            <FeaturedManager
+              {...commonProps}
+              variant={currentVariant as 'hero' | 'split' | 'triple'}
+            />
+          </Suspense>
         );
       default:
         return null;
     }
-  };
+  }, [articles, blockType, isDarkTheme, onSave, currentVariant, blockConfig, handleOpenConfigModal, pageId]);
 
   return (
     <div className="w-full h-full">
-      {renderManager()}
+      {renderManager}
       
-      <StyleConfigModal
-        isOpen={isConfigModalOpen}
-        onClose={handleCloseConfigModal}
-        onSave={handleSaveConfig}
-        currentConfig={blockConfig}
-        blockType={blockType}
-        variantType={currentVariant}
-      />
+      <Suspense fallback={null}>
+        <StyleConfigModal
+          isOpen={isConfigModalOpen}
+          onClose={handleCloseConfigModal}
+          onSave={handleSaveConfig}
+          currentConfig={blockConfig}
+          blockType={blockType}
+          variantType={currentVariant}
+        />
+      </Suspense>
     </div>
   );
-};
+});
+
+BlockManagerDragDrop.displayName = 'BlockManagerDragDrop';
 
 export default BlockManagerDragDrop;
