@@ -14,6 +14,9 @@ global.__filename = __filename;
 export default [
   {
     input: 'src/components/index.ts',
+    server: {
+      open: false
+    },
     output: [
       {
         file: packageJson.main,

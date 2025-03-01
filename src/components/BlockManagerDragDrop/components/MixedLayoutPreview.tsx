@@ -19,116 +19,117 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
     const sidebarArticles = columns['col-1'] || [];
     
     return (
-      <div className="grid grid-cols-[2fr,1fr] gap-3">
+      <div className="grid grid-cols-[2fr,1fr] gap-6">
         {/* Main Content */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           {/* Featured Article */}
+          <article className="flex flex-col">
           <div className={`
-            aspect-video rounded overflow-hidden max-h-[300px]
+              aspect-[16/9] rounded overflow-hidden
             ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
           `}>
             {mainArticle?.content?.image?.desktop_image_path && (
-              <div className="relative w-full h-full">
-                <img
-                  src={mainArticle.content.image.desktop_image_path}
-                  alt={mainArticle.title}
-                  className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
-                />
-                {blockConfig.mediaConfig?.imageConfig?.overlay?.enabled && (
-                  <div 
-                    className="absolute inset-0" 
-                    style={{
-                      backgroundColor: blockConfig.mediaConfig.imageConfig.overlay.color || 'rgba(0,0,0,0.5)',
-                      opacity: blockConfig.mediaConfig.imageConfig.overlay.opacity || 0.5
-                    }}
+                <div className="relative w-full h-full">
+              <img
+                src={mainArticle.content.image.desktop_image_path}
+                alt={mainArticle.title}
+                    className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
                   />
-                )}
-              </div>
+                  {blockConfig.mediaConfig?.imageConfig?.overlay?.enabled && (
+                    <div 
+                      className="absolute inset-0" 
+                      style={{
+                        backgroundColor: blockConfig.mediaConfig.imageConfig.overlay.color || 'rgba(0,0,0,0.5)',
+                        opacity: blockConfig.mediaConfig.imageConfig.overlay.opacity || 0.5
+                      }}
+              />
             )}
           </div>
-          
-          {/* Article Title */}
-          <div className="space-y-1">
-            <div 
-              className="line-clamp-2"
-              style={{
-                fontSize: theme.headingProps.fontSize,
-                fontWeight: theme.headingProps.fontWeight,
-                color: theme.headingProps.color
-              }}
-            >
-              {mainArticle?.title || 'Título do artigo principal'}
+              )}
             </div>
             
-            {blockConfig.styles.showExcerpt && (
+            <div className="p-4">
               <div 
-                className="line-clamp-2"
+                className="text-xl font-semibold mb-2 line-clamp-2"
                 style={{
-                  fontSize: theme.subtitleProps.fontSize,
-                  color: theme.subtitleProps.color
+                  fontSize: theme.headingProps.fontSize,
+                  fontWeight: theme.headingProps.fontWeight,
+                  color: theme.headingProps.color
                 }}
               >
-                {mainArticle?.content?.description || 'Descrição do artigo principal...'}
+                {mainArticle?.title || 'Título do artigo principal'}
               </div>
-            )}
-          </div>
-        </div>
-        
-        {/* Sidebar */}
-        <div 
-          className="space-y-3 p-3 rounded"
-          style={{
-            backgroundColor: theme.columnStyle.background,
-            padding: theme.columnStyle.padding
-          }}
-        >
-          <div 
-            className="text-sm font-medium mb-2"
-            style={{
-              fontSize: theme.headingProps.fontSize,
-              fontWeight: theme.headingProps.fontWeight,
-              color: theme.headingProps.color
-            }}
-          >
-            Artigos Relacionados
-          </div>
-          
-          {/* Sidebar Articles */}
-          <div className="space-y-3">
-            {[...Array(3)].map((_, i) => {
-              const article = sidebarArticles[i];
               
-              return (
-                <div key={i} className="flex gap-2">
-                  {/* Thumbnail */}
-                  <div className="w-16 h-16 rounded overflow-hidden shrink-0">
-                    {article?.content?.image?.desktop_image_path ? (
-                      <div className="relative w-full h-full">
-                        <img
-                          src={article.content.image.desktop_image_path}
-                          alt={article.title}
-                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
-                        />
-                      </div>
-                    ) : (
-                      <div className={`w-full h-full ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'}`} />
-                    )}
-                  </div>
-                  
-                  {/* Title */}
+              {blockConfig.styles.showExcerpt && (
+                <div 
+                  className="line-clamp-2"
+                  style={{
+                    fontSize: theme.subtitleProps.fontSize,
+                    color: theme.subtitleProps.color
+                  }}
+                >
+                  {mainArticle?.subtitle || 'Descrição do artigo principal...'}
+                </div>
+              )}
+            </div>
+          </article>
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-4 border-l border-gray-200 dark:border-gray-700 pl-6">
+          {[...Array(4)].map((_, i) => {
+            const article = sidebarArticles[i];
+            
+            return (
+              <article 
+                key={i} 
+                className={[
+                  'flex gap-4',
+                  i !== 3 ? 'border-b border-gray-200 dark:border-gray-700 pb-4' : ''
+                ].filter(Boolean).join(' ')}
+              >
+                {/* Thumbnail */}
+                <div className="w-24 aspect-[4/3] rounded overflow-hidden shrink-0">
+                  {article?.content?.image?.desktop_image_path ? (
+                    <div className="relative w-full h-full">
+                    <img
+                      src={article.content.image.desktop_image_path}
+                      alt={article.title}
+                        className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                    />
+                    </div>
+                  ) : (
+                    <div className={`w-full h-full ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'}`} />
+                  )}
+                </div>
+                
+                <div className="flex-1 min-w-0">
                   <div 
-                    className="text-xs line-clamp-2"
+                    className="text-sm font-medium line-clamp-2 mb-1"
                     style={{
-                      fontSize: '0.75rem',
+                      fontSize: theme.headingProps.fontSize,
+                      fontWeight: theme.headingProps.fontWeight,
                       color: theme.headingProps.color
                     }}
                   >
                     {article?.title || 'Título do artigo relacionado'}
                   </div>
+                  
+                  {blockConfig.styles.showExcerpt && article?.subtitle && (
+                    <div 
+                      className="text-xs line-clamp-2"
+                      style={{
+                        fontSize: theme.subtitleProps.fontSize,
+                        color: theme.subtitleProps.color
+                      }}
+                    >
+                      {article.subtitle}
+                    </div>
+                  )}
                 </div>
-              );
-            })}
-          </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     );
@@ -136,72 +137,158 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
 
   const renderShowcasePreview = () => {
     const mainArticle = columns['col-0']?.[0];
-    const secondaryArticles = columns['col-1'] || [];
+    const gridArticles = columns['col-1'] || [];
+    const listArticles = columns['col-2'] || [];
     
     return (
-      <div className="space-y-3">
-        {/* Hero Article */}
-        <div className="relative aspect-[21/9] rounded overflow-hidden max-h-[300px]">
-          <div className={`absolute inset-0 ${isDarkTheme ? 'bg-gray-800' : 'bg-gray-200'}`}>
+      <div className="grid grid-cols-12 gap-6">
+        {/* Featured Article */}
+        <div className="col-span-7">
+          <article className="flex flex-col">
+            <div className={`
+              aspect-[16/9] rounded overflow-hidden
+              ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
+            `}>
             {mainArticle?.content?.image?.desktop_image_path && (
+                <div className="relative w-full h-full">
               <img
                 src={mainArticle.content.image.desktop_image_path}
                 alt={mainArticle.title}
-                className="w-full h-full object-cover"
-              />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-          </div>
-          <div className="absolute bottom-0 left-0 right-0 p-3">
-            {mainArticle ? (
-              <>
-                <div className="text-[20px] font-medium text-white mb-1">
-                  {mainArticle.title}
-                </div>
-                {mainArticle.subtitle && (
-                  <div className="text-[12px] text-white/80">
-                    {mainArticle.subtitle}
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                <div className="h-2 w-2/3 bg-white/20 rounded mb-1" />
-                <div className="h-1.5 w-1/2 bg-white/20 rounded" />
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Secondary Articles */}
-        <div className="grid grid-cols-3 gap-2">
-          {[...Array(3)].map((_, i) => {
-            const article = secondaryArticles[i];
-            
-            return (
-              <div key={i} className="space-y-1">
-                <div className={`
-                  aspect-video rounded overflow-hidden
-                  ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-                `}>
-                  {article?.content?.image?.desktop_image_path && (
-                    <img
-                      src={article.content.image.desktop_image_path}
-                      alt={article.title}
-                      className="w-full h-full object-cover"
+                    className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                  />
+                  {blockConfig.mediaConfig?.imageConfig?.overlay?.enabled && (
+                    <div 
+                      className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" 
+                      style={{
+                        backgroundColor: blockConfig.mediaConfig.imageConfig.overlay.color || 'rgba(0,0,0,0.5)',
+                        opacity: blockConfig.mediaConfig.imageConfig.overlay.opacity || 0.5
+                      }}
                     />
                   )}
                 </div>
-                {article ? (
-                  <div className="text-[12px] font-medium text-gray-900 dark:text-white">
-                    {article.title}
-                  </div>
-                ) : (
-                  <div className={`h-1.5 rounded w-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                )}
+              )}
+            </div>
+            
+            <div className="p-4">
+              <div 
+                className="text-2xl font-bold mb-2 line-clamp-2"
+                style={{
+                  fontSize: theme.headingProps.fontSize,
+                  fontWeight: theme.headingProps.fontWeight,
+                  color: theme.headingProps.color
+                }}
+              >
+                {mainArticle?.title || 'Título do artigo principal'}
               </div>
+              
+              {blockConfig.styles.showExcerpt && (
+                <div 
+                  className="line-clamp-3"
+                  style={{
+                    fontSize: theme.subtitleProps.fontSize,
+                    color: theme.subtitleProps.color
+                  }}
+                >
+                  {mainArticle?.subtitle || 'Descrição do artigo principal...'}
+                  </div>
+            )}
+          </div>
+          </article>
+        </div>
+
+        {/* Grid Articles */}
+        <div className="col-span-3">
+          <div className="grid grid-cols-1 gap-6">
+          {[...Array(3)].map((_, i) => {
+              const article = gridArticles[i];
+            
+            return (
+                <article key={i} className="flex flex-col">
+                <div className={`
+                    aspect-[4/3] rounded overflow-hidden mb-3
+                  ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
+                `}>
+                  {article?.content?.image?.desktop_image_path && (
+                      <div className="relative w-full h-full">
+                    <img
+                      src={article.content.image.desktop_image_path}
+                      alt={article.title}
+                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                        />
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="flex-1">
+                    <div 
+                      className="text-sm font-medium line-clamp-2 mb-1"
+                      style={{
+                        fontSize: theme.headingProps.fontSize,
+                        fontWeight: theme.headingProps.fontWeight,
+                        color: theme.headingProps.color
+                      }}
+                    >
+                      {article?.title || 'Título do artigo'}
+                    </div>
+                    
+                    {blockConfig.styles.showExcerpt && (
+                      <div 
+                        className="text-xs line-clamp-2"
+                        style={{
+                          fontSize: theme.subtitleProps.fontSize,
+                          color: theme.subtitleProps.color
+                        }}
+                      >
+                        {article?.subtitle || 'Descrição do artigo...'}
+                      </div>
+                  )}
+                </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* List Articles */}
+        <div className="col-span-2 border-l border-gray-200 dark:border-gray-700 pl-6">
+          <div className="space-y-4">
+            {[...Array(4)].map((_, i) => {
+              const article = listArticles[i];
+              
+              return (
+                <article 
+                  key={i} 
+                  className={[
+                    'flex flex-col',
+                    i !== 3 ? 'border-b border-gray-200 dark:border-gray-700 pb-4' : ''
+                  ].filter(Boolean).join(' ')}
+                >
+                  <div 
+                    className="text-sm font-medium line-clamp-2 mb-1"
+                    style={{
+                      fontSize: theme.headingProps.fontSize,
+                      fontWeight: theme.headingProps.fontWeight,
+                      color: theme.headingProps.color
+                    }}
+                  >
+                    {article?.title || 'Título do artigo'}
+                  </div>
+                  
+                  {blockConfig.styles.showExcerpt && (
+                    <div 
+                      className="text-xs line-clamp-2"
+                      style={{
+                        fontSize: theme.subtitleProps.fontSize,
+                        color: theme.subtitleProps.color
+                      }}
+                    >
+                      {article?.subtitle || 'Descrição do artigo...'}
+                    </div>
+                  )}
+                </article>
             );
           })}
+          </div>
         </div>
       </div>
     );
@@ -210,79 +297,192 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
   const renderNewspaperPreview = () => {
     const mainArticles = columns['col-0'] || [];
     const secondaryArticles = columns['col-1'] || [];
+    const tertiaryArticles = columns['col-2'] || [];
     
     return (
-      <div className="grid grid-cols-[2fr,1fr] gap-4">
-        {/* Main Column */}
-        <div className="space-y-4">
+      <div className="grid grid-cols-12 gap-6">
+        {/* Main Articles */}
+        <div className="col-span-6">
           {[...Array(2)].map((_, i) => {
             const article = mainArticles[i];
             
             return (
-              <div key={i} className="flex gap-3">
+              <article 
+                key={i} 
+                className={[
+                  'flex flex-col',
+                  i === 0 ? 'mb-6' : ''
+                ].filter(Boolean).join(' ')}
+              >
+                {article?.content?.image?.desktop_image_path && (
                 <div className={`
-                  w-1/3 aspect-[4/3] rounded overflow-hidden max-h-[300px]
+                    aspect-[16/9] rounded overflow-hidden mb-4
                   ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
                 `}>
-                  {article?.content?.image?.desktop_image_path && (
+                    <div className="relative w-full h-full">
                     <img
                       src={article.content.image.desktop_image_path}
                       alt={article.title}
-                      className="w-full h-full object-cover"
+                        className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                      />
+                      {blockConfig.mediaConfig?.imageConfig?.overlay?.enabled && (
+                        <div 
+                          className="absolute inset-0" 
+                          style={{
+                            backgroundColor: blockConfig.mediaConfig.imageConfig.overlay.color || 'rgba(0,0,0,0.5)',
+                            opacity: blockConfig.mediaConfig.imageConfig.overlay.opacity || 0.5
+                          }}
                     />
                   )}
                 </div>
-                <div className="flex-1">
-                  {article ? (
-                    <>
-                      <div className="text-[20px] font-medium text-gray-900 dark:text-white mb-1">
-                        {article.title}
-                      </div>
-                      {article.subtitle && (
-                        <div className="text-[12px] text-gray-500 dark:text-gray-400">
-                          {article.subtitle}
                         </div>
                       )}
-                    </>
-                  ) : (
-                    <>
-                      <div className={`h-2 rounded w-full mb-1 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                      <div className={`h-1.5 rounded w-2/3 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                    </>
+                
+                <div className="p-4">
+                  <div 
+                    className="text-xl font-semibold mb-2 line-clamp-2"
+                    style={{
+                      fontSize: theme.headingProps.fontSize,
+                      fontWeight: theme.headingProps.fontWeight,
+                      color: theme.headingProps.color
+                    }}
+                  >
+                    {article?.title || 'Título do artigo principal'}
+                  </div>
+                  
+                  {blockConfig.styles.showExcerpt && (
+                    <div 
+                      className="line-clamp-3"
+                      style={{
+                        fontSize: theme.subtitleProps.fontSize,
+                        color: theme.subtitleProps.color
+                      }}
+                    >
+                      {article?.subtitle || 'Descrição do artigo principal...'}
+                    </div>
                   )}
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>
 
-        {/* Secondary Column */}
-        <div className="space-y-2 border-l border-gray-200 dark:border-gray-700 pl-4">
+        {/* Secondary Articles */}
+        <div className="col-span-3 border-l border-gray-200 dark:border-gray-700 pl-6">
+          <div className="space-y-6">
           {[...Array(4)].map((_, i) => {
             const article = secondaryArticles[i];
             
             return (
-              <div key={i}>
-                {article ? (
-                  <>
-                    <div className="text-[20px] font-medium text-gray-900 dark:text-white mb-0.5">
-                      {article.title}
+                <article 
+                  key={i} 
+                  className={[
+                    'flex flex-col',
+                    i !== 3 ? 'border-b border-gray-200 dark:border-gray-700 pb-6' : ''
+                  ].filter(Boolean).join(' ')}
+                >
+                  {article?.content?.image?.desktop_image_path && (
+                    <div className={`
+                      aspect-[4/3] rounded overflow-hidden mb-4
+                      ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
+                    `}>
+                      <div className="relative w-full h-full">
+                        <img
+                          src={article.content.image.desktop_image_path}
+                          alt={article.title}
+                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                        />
+                      </div>
                     </div>
-                    {article.subtitle && (
-                      <div className="text-[12px] text-gray-500 dark:text-gray-400">
-                        {article.subtitle}
+                  )}
+                  
+                  <div className="flex-1">
+                    <div 
+                      className="text-base font-medium line-clamp-2 mb-1"
+                      style={{
+                        fontSize: theme.headingProps.fontSize,
+                        fontWeight: theme.headingProps.fontWeight,
+                        color: theme.headingProps.color
+                      }}
+                    >
+                      {article?.title || 'Título do artigo'}
+                    </div>
+                    
+                    {blockConfig.styles.showExcerpt && (
+                      <div 
+                        className="text-sm line-clamp-2"
+                        style={{
+                          fontSize: theme.subtitleProps.fontSize,
+                          color: theme.subtitleProps.color
+                        }}
+                      >
+                        {article?.subtitle || 'Descrição do artigo...'}
                       </div>
                     )}
-                  </>
-                ) : (
-                  <>
-                    <div className={`h-1.5 rounded w-full mb-1 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                    <div className={`h-1 rounded w-2/3 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                  </>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Tertiary Articles */}
+        <div className="col-span-3 border-l border-gray-200 dark:border-gray-700 pl-6">
+          <div className="space-y-6">
+            {[...Array(4)].map((_, i) => {
+              const article = tertiaryArticles[i];
+              
+              return (
+                <article 
+                  key={i} 
+                  className={[
+                    'flex flex-col',
+                    i !== 3 ? 'border-b border-gray-200 dark:border-gray-700 pb-6' : ''
+                  ].filter(Boolean).join(' ')}
+                >
+                  {article?.content?.image?.desktop_image_path && (
+                    <div className={`
+                      aspect-[4/3] rounded overflow-hidden mb-4
+                      ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
+                    `}>
+                      <div className="relative w-full h-full">
+                        <img
+                          src={article.content.image.desktop_image_path}
+                          alt={article.title}
+                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="flex-1">
+                    <div 
+                      className="text-base font-medium line-clamp-2 mb-1"
+                      style={{
+                        fontSize: theme.headingProps.fontSize,
+                        fontWeight: theme.headingProps.fontWeight,
+                        color: theme.headingProps.color
+                      }}
+                    >
+                      {article?.title || 'Título do artigo'}
+                    </div>
+                    
+                    {blockConfig.styles.showExcerpt && (
+                      <div 
+                        className="text-sm line-clamp-2"
+                        style={{
+                          fontSize: theme.subtitleProps.fontSize,
+                          color: theme.subtitleProps.color
+                        }}
+                      >
+                        {article?.subtitle || 'Descrição do artigo...'}
+                      </div>
                 )}
               </div>
+                </article>
             );
           })}
+          </div>
         </div>
       </div>
     );
@@ -294,122 +494,275 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
     const tertiaryArticles = columns['col-2'] || [];
     
     return (
-      <div className="space-y-4">
-        {/* Hero Article */}
-        <div className="grid grid-cols-[1.5fr,1fr] gap-4">
+      <div className="grid grid-cols-12 gap-6">
+        {/* Main Article */}
+        <div className="col-span-6">
+          <article className="flex flex-col">
           <div className={`
-            aspect-[4/3] rounded overflow-hidden max-h-[200px]
+              aspect-[16/9] rounded overflow-hidden mb-4
             ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
           `}>
             {mainArticle?.content?.image?.desktop_image_path && (
+                <div className="relative w-full h-full">
               <img
                 src={mainArticle.content.image.desktop_image_path}
                 alt={mainArticle.title}
-                className="w-full h-full object-cover"
+                    className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                  />
+                  {blockConfig.mediaConfig?.imageConfig?.overlay?.enabled && (
+                    <div 
+                      className="absolute inset-0" 
+                      style={{
+                        backgroundColor: blockConfig.mediaConfig.imageConfig.overlay.color || 'rgba(0,0,0,0.5)',
+                        opacity: blockConfig.mediaConfig.imageConfig.overlay.opacity || 0.5
+                      }}
               />
             )}
           </div>
-          <div>
-            {mainArticle ? (
-              <>
-                <div className="text-[20px] font-medium text-gray-900 dark:text-white mb-1">
-                  {mainArticle.title}
+              )}
+            </div>
+            
+            <div className="p-4">
+              <div 
+                className="text-2xl font-bold mb-2 line-clamp-2"
+                style={{
+                  fontSize: theme.headingProps.fontSize,
+                  fontWeight: theme.headingProps.fontWeight,
+                  color: theme.headingProps.color
+                }}
+              >
+                {mainArticle?.title || 'Título do artigo principal'}
+              </div>
+              
+              {blockConfig.styles.showExcerpt && (
+                <div 
+                  className="text-lg line-clamp-3"
+                  style={{
+                    fontSize: theme.subtitleProps.fontSize,
+                    color: theme.subtitleProps.color
+                  }}
+                >
+                  {mainArticle?.subtitle || 'Descrição do artigo principal...'}
                 </div>
-                {mainArticle.subtitle && (
-                  <div className="text-[12px] text-gray-500 dark:text-gray-400">
-                    {mainArticle.subtitle}
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                <div className={`h-2 rounded w-full mb-1 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                <div className={`h-1.5 rounded w-2/3 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-              </>
             )}
           </div>
+          </article>
         </div>
 
-        {/* Secondary Grid */}
-        <div className="grid grid-cols-3 gap-3">
+        {/* Secondary Articles */}
+        <div className="col-span-3">
+          <div className="space-y-6">
           {[...Array(3)].map((_, i) => {
             const article = secondaryArticles[i];
             
             return (
-              <div key={i} className="space-y-2">
+                <article key={i} className="flex flex-col">
                 <div className={`
-                  aspect-video rounded overflow-hidden max-h-[300px]
+                    aspect-[4/3] rounded overflow-hidden mb-4
                   ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
                 `}>
                   {article?.content?.image?.desktop_image_path && (
+                      <div className="relative w-full h-full">
                     <img
                       src={article.content.image.desktop_image_path}
                       alt={article.title}
-                      className="w-full h-full object-cover"
+                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
                     />
+                      </div>
                   )}
-                </div>
-                {article ? (
-                  <div className="text-[18px] font-medium text-gray-900 dark:text-white">
-                    {article.title}
                   </div>
-                ) : (
-                  <div className={`h-1.5 rounded w-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
+                  
+                  <div className="p-4">
+                    <div 
+                      className="text-xl font-semibold mb-2 line-clamp-2"
+                      style={{
+                        fontSize: theme.headingProps.fontSize,
+                        fontWeight: theme.headingProps.fontWeight,
+                        color: theme.headingProps.color
+                      }}
+                    >
+                      {article?.title || 'Título do artigo'}
+                    </div>
+                    
+                    {blockConfig.styles.showExcerpt && (
+                      <div 
+                        className="text-base line-clamp-2"
+                        style={{
+                          fontSize: theme.subtitleProps.fontSize,
+                          color: theme.subtitleProps.color
+                        }}
+                      >
+                        {article?.subtitle || 'Descrição do artigo...'}
+                      </div>
                 )}
               </div>
+                </article>
             );
           })}
+          </div>
         </div>
 
         {/* Tertiary Articles */}
-        <div className="grid grid-cols-4 gap-2">
+        <div className="col-span-3">
+          <div className="space-y-6">
           {[...Array(4)].map((_, i) => {
             const article = tertiaryArticles[i];
             
             return (
-              <div key={i}>
-                {article ? (
-                  <div className="text-[12px] font-medium text-gray-900 dark:text-white">
-                    {article.title}
+                <article key={i} className="flex flex-col">
+                  <div className={`
+                    aspect-[4/3] rounded overflow-hidden mb-4
+                    ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
+                  `}>
+                    {article?.content?.image?.desktop_image_path && (
+                      <div className="relative w-full h-full">
+                        <img
+                          src={article.content.image.desktop_image_path}
+                          alt={article.title}
+                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                        />
+                      </div>
+                    )}
                   </div>
-                ) : (
-                  <div className={`h-1.5 rounded w-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
+                  
+                  <div className="p-4">
+                    <div 
+                      className="text-xl font-semibold mb-2 line-clamp-2"
+                      style={{
+                        fontSize: theme.headingProps.fontSize,
+                        fontWeight: theme.headingProps.fontWeight,
+                        color: theme.headingProps.color
+                      }}
+                    >
+                      {article?.title || 'Título do artigo'}
+                    </div>
+                    
+                    {blockConfig.styles.showExcerpt && (
+                      <div 
+                        className="text-base line-clamp-2"
+                        style={{
+                          fontSize: theme.subtitleProps.fontSize,
+                          color: theme.subtitleProps.color
+                        }}
+                      >
+                        {article?.subtitle || 'Descrição do artigo...'}
+                      </div>
                 )}
               </div>
+                </article>
             );
           })}
+          </div>
         </div>
       </div>
     );
   };
 
   const renderVideoGridPreview = () => {
-    const mainVideo = columns['col-0']?.[0];
-    const secondaryVideos = columns['col-1'] || [];
+    const mainArticle = columns['col-0']?.[0];
+    const secondaryArticles = columns['col-1'] || [];
+    const tertiaryArticles = columns['col-2'] || [];
     
     return (
-      <div className="grid grid-cols-[2fr,1fr] gap-3">
+      <div className="grid grid-cols-12 gap-6">
         {/* Main Video */}
-        <div className="space-y-2">
+        <div className="col-span-6">
+          <article className="flex flex-col">
           <div className={`
-            aspect-video rounded overflow-hidden relative max-h-[300px]
+              aspect-[16/9] rounded overflow-hidden relative
             ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
           `}>
-            {mainVideo?.content?.image?.desktop_image_path && (
-              <>
-                <img
-                  src={mainVideo.content.image.desktop_image_path}
-                  alt={mainVideo.title}
-                  className="w-full h-full object-cover"
+              {mainArticle?.content?.image?.desktop_image_path && (
+                <div className="relative w-full h-full">
+                  <img
+                    src={mainArticle.content.image.desktop_image_path}
+                    alt={mainArticle.title}
+                    className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
                 />
                 <div className="absolute inset-0 bg-black/20" />
-              </>
+                </div>
             )}
+              
             {/* Play Button */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className={`
+                  w-16 h-16 rounded-full flex items-center justify-center
+                  ${isDarkTheme ? 'bg-white/20' : 'bg-black/20'}
+                  hover:scale-110 transition-transform duration-200
+                `}>
+                  <div className={`
+                    w-0 h-0 border-t-[12px] border-t-transparent
+                    border-l-[20px] border-r-0
+                    border-b-[12px] border-b-transparent
+                    ${isDarkTheme ? 'border-l-white' : 'border-l-white'}
+                    ml-1
+                  `} />
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-4">
+              <div 
+                className="text-xl font-semibold mb-2 line-clamp-2"
+                style={{
+                  fontSize: theme.headingProps.fontSize,
+                  fontWeight: theme.headingProps.fontWeight,
+                  color: theme.headingProps.color
+                }}
+              >
+                {mainArticle?.title || 'Título do vídeo principal'}
+              </div>
+              
+              {blockConfig.styles.showExcerpt && (
+                <div 
+                  className="line-clamp-2"
+                  style={{
+                    fontSize: theme.subtitleProps.fontSize,
+                    color: theme.subtitleProps.color
+                  }}
+                >
+                  {mainArticle?.subtitle || 'Descrição do vídeo principal...'}
+                </div>
+              )}
+            </div>
+          </article>
+        </div>
+
+        {/* Secondary Videos */}
+        <div className="col-span-3 border-l border-gray-200 dark:border-gray-700 pl-6">
+          <div className="space-y-6">
+            {[...Array(3)].map((_, i) => {
+              const article = secondaryArticles[i];
+              
+              return (
+                <article 
+                  key={i} 
+                  className={[
+                    'flex gap-4',
+                    i !== 2 ? 'border-b border-gray-200 dark:border-gray-700 pb-6' : ''
+                  ].filter(Boolean).join(' ')}
+                >
+                  <div className={`
+                    w-32 aspect-[16/9] rounded overflow-hidden relative shrink-0
+                    ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
+                  `}>
+                    {article?.content?.image?.desktop_image_path && (
+                      <div className="relative w-full h-full">
+                        <img
+                          src={article.content.image.desktop_image_path}
+                          alt={article.title}
+                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                        />
+                        <div className="absolute inset-0 bg-black/20" />
+                      </div>
+                    )}
+                    
+                    {/* Small Play Button */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className={`
                 w-8 h-8 rounded-full flex items-center justify-center
                 ${isDarkTheme ? 'bg-white/20' : 'bg-black/20'}
+                        hover:scale-110 transition-transform duration-200
               `}>
                 <div className={`
                   w-0 h-0 border-t-[6px] border-t-transparent
@@ -421,77 +774,112 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
               </div>
             </div>
           </div>
-          {mainVideo ? (
-            <>
-              <div className="text-[20px] font-medium text-gray-900 dark:text-white">
-                {mainVideo.title}
+                  
+                  <div className="flex-1 min-w-0">
+                    <div 
+                      className="text-sm font-medium line-clamp-2 mb-1"
+                      style={{
+                        fontSize: theme.headingProps.fontSize,
+                        fontWeight: theme.headingProps.fontWeight,
+                        color: theme.headingProps.color
+                      }}
+                    >
+                      {article?.title || 'Título do vídeo'}
               </div>
-              {mainVideo.subtitle && (
-                <div className="text-[12px] text-gray-500 dark:text-gray-400">
-                  {mainVideo.subtitle}
+                    
+                    {blockConfig.styles.showExcerpt && (
+                      <div 
+                        className="text-xs line-clamp-2"
+                        style={{
+                          fontSize: theme.subtitleProps.fontSize,
+                          color: theme.subtitleProps.color
+                        }}
+                      >
+                        {article?.subtitle || 'Descrição do vídeo...'}
                 </div>
               )}
-            </>
-          ) : (
-            <>
-              <div className={`h-2 rounded w-full mb-1 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-              <div className={`h-1.5 rounded w-2/3 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-            </>
-          )}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Secondary Videos */}
-        <div className="space-y-2">
+        {/* Tertiary Videos */}
+        <div className="col-span-3 border-l border-gray-200 dark:border-gray-700 pl-6">
+          <div className="space-y-6">
           {[...Array(3)].map((_, i) => {
-            const video = secondaryVideos[i];
+              const article = tertiaryArticles[i];
             
             return (
-              <div key={i} className="flex gap-2">
+                <article 
+                  key={i} 
+                  className={[
+                    'flex gap-4',
+                    i !== 2 ? 'border-b border-gray-200 dark:border-gray-700 pb-6' : ''
+                  ].filter(Boolean).join(' ')}
+                >
                 <div className={`
-                  w-20 aspect-video rounded overflow-hidden relative shrink-0
+                    w-32 aspect-[16/9] rounded overflow-hidden relative shrink-0
                   ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
                 `}>
-                  {video?.content?.image?.desktop_image_path && (
-                    <>
-                      <img
-                        src={video.content.image.desktop_image_path}
-                        alt={video.title}
-                        className="w-full h-full object-cover"
+                    {article?.content?.image?.desktop_image_path && (
+                      <div className="relative w-full h-full">
+                        <img
+                          src={article.content.image.desktop_image_path}
+                          alt={article.title}
+                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
                       />
                       <div className="absolute inset-0 bg-black/20" />
-                    </>
+                      </div>
                   )}
+                    
                   {/* Small Play Button */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className={`
-                      w-4 h-4 rounded-full flex items-center justify-center
+                        w-8 h-8 rounded-full flex items-center justify-center
                       ${isDarkTheme ? 'bg-white/20' : 'bg-black/20'}
+                        hover:scale-110 transition-transform duration-200
                     `}>
                       <div className={`
-                        w-0 h-0 border-t-[3px] border-t-transparent
-                        border-l-[5px] border-r-0
-                        border-b-[3px] border-b-transparent
+                          w-0 h-0 border-t-[6px] border-t-transparent
+                          border-l-[10px] border-r-0
+                          border-b-[6px] border-b-transparent
                         ${isDarkTheme ? 'border-l-white' : 'border-l-white'}
                         ml-0.5
                       `} />
                     </div>
                   </div>
                 </div>
-                <div className="min-w-0">
-                  {video ? (
-                    <div className="text-[12px] font-medium text-gray-900 dark:text-white line-clamp-2">
-                      {video.title}
+                  
+                  <div className="flex-1 min-w-0">
+                    <div 
+                      className="text-sm font-medium line-clamp-2 mb-1"
+                      style={{
+                        fontSize: theme.headingProps.fontSize,
+                        fontWeight: theme.headingProps.fontWeight,
+                        color: theme.headingProps.color
+                      }}
+                    >
+                      {article?.title || 'Título do vídeo'}
                     </div>
-                  ) : (
-                    <>
-                      <div className={`h-1.5 rounded w-full mb-1 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                      <div className={`h-1.5 rounded w-2/3 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                    </>
+                    
+                    {blockConfig.styles.showExcerpt && (
+                      <div 
+                        className="text-xs line-clamp-2"
+                        style={{
+                          fontSize: theme.subtitleProps.fontSize,
+                          color: theme.subtitleProps.color
+                        }}
+                      >
+                        {article?.subtitle || 'Descrição do vídeo...'}
+                      </div>
                   )}
                 </div>
-              </div>
+                </article>
             );
           })}
+          </div>
         </div>
       </div>
     );
@@ -524,7 +912,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
           w-full p-6 rounded-lg overflow-hidden
           border border-gray-200 dark:border-gray-700
           hover:border-blue-500/50 dark:hover:border-blue-500/50
-          transition-colors duration-200
+        transition-colors duration-200
           min-h-[500px] flex flex-col
         `}
         style={{
@@ -532,7 +920,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variantType, is
         }}
       >
         <div className="w-full h-full flex-1 flex items-center justify-center">
-          {getLayoutPreview()}
+        {getLayoutPreview()}
         </div>
       </div>
     </div>
