@@ -5,10 +5,12 @@ import DroppableColumn from './DroppableColumn';
 import ListLayoutPreview from './ListLayoutPreview';
 import ArticlesPool from './ArticlesPool';
 import { BlockConfig } from './StyleConfigModal';
+import { useBlockState } from '../hooks/useBlockState';
+import { ListVariantType } from '../types';
 
 interface ListBlockConfig {
   articles: Record<string, Article[]>;
-  variant?: 'chronological' | 'compact' | 'thumbnail';
+  variant?: 'chronological' | 'compact' | 'card';
   layout: {
     columns: number;
     gap: string;
@@ -88,15 +90,17 @@ interface ListBlockConfig {
 }
 
 interface ListManagerProps {
+  pageId: string;
   articles: Article[];
   isDarkTheme?: boolean;
-  onSave: (columns: { [key: string]: Article[] }) => void;
-  variant?: string;
+  onSave: (data: any) => void;
+  variant?: ListVariantType;
   blockConfig: BlockConfig;
   onConfigClick: () => void;
 }
 
 const ListManager: React.FC<ListManagerProps> = ({ 
+  pageId,
   articles, 
   isDarkTheme, 
   onSave, 
@@ -104,14 +108,22 @@ const ListManager: React.FC<ListManagerProps> = ({
   blockConfig: initialBlockConfig,
   onConfigClick
 }) => {
-  const [variantType, setVariantType] = useState<string>(variant);
-  const [columns, setColumns] = useState<{ [key: string]: Article[] }>({
-    'pool': articles,
-    'col-0': []
+  const {
+    blockState,
+    updateArticlePositions,
+    updateVariant,
+    updateBlockConfig,
+    getApiFormat
+  } = useBlockState({
+    pageId,
+    template: 'list',
+    initialVariant: variant as ListVariantType,
+    initialArticles: articles
   });
+
   const [blockConfig, setBlockConfig] = useState<ListBlockConfig>({
-    articles: { 'col-0': columns['col-0'] },
-    variant: variantType as 'chronological' | 'compact' | 'thumbnail',
+    articles: { 'col-0': blockState.articles['col-0'] || [] },
+    variant: blockState.currentVariant.variantType as 'chronological' | 'compact' | 'card',
     layout: {
       columns: 1,
       gap: '1rem',
@@ -192,10 +204,10 @@ const ListManager: React.FC<ListManagerProps> = ({
   useEffect(() => {
     setBlockConfig(prev => ({
       ...prev,
-      variant: variantType as 'chronological' | 'compact' | 'thumbnail',
-      articles: { 'col-0': columns['col-0'] }
+      variant: blockState.currentVariant.variantType as 'chronological' | 'compact' | 'card',
+      articles: { 'col-0': blockState.articles['col-0'] || [] }
     }));
-  }, [variantType, columns]);
+  }, [blockState.currentVariant.variantType, blockState.articles]);
 
   const handleDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -210,10 +222,10 @@ const ListManager: React.FC<ListManagerProps> = ({
     ) return;
 
     // Copia os arrays de origem e destino
-    const sourceCol = Array.from(columns[source.droppableId]);
+    const sourceCol = Array.from(blockState.articles[source.droppableId] || []);
     const destCol = source.droppableId === destination.droppableId
       ? sourceCol
-      : Array.from(columns[destination.droppableId]);
+      : Array.from(blockState.articles[destination.droppableId] || []);
 
     // Remove o item da origem
     const [removed] = sourceCol.splice(source.index, 1);
@@ -223,46 +235,53 @@ const ListManager: React.FC<ListManagerProps> = ({
 
     // Atualiza o estado
     const newColumns = {
-      ...columns,
+      ...blockState.articles,
       [source.droppableId]: sourceCol,
       [destination.droppableId]: destCol
     };
 
-    setColumns(newColumns);
-    onSave(newColumns);
+    updateArticlePositions(newColumns);
   };
 
   // Função para remover um artigo de uma coluna e devolvê-lo para a pool
   const handleRemoveArticle = (columnId: string, articleId: string | number) => {
     // Encontra o artigo na coluna
-    const article = columns[columnId].find(a => a.id === articleId);
+    const article = blockState.articles[columnId]?.find(a => a.id === articleId);
     
     if (!article) return;
     
     // Remove o artigo da coluna
-    const updatedColumn = columns[columnId].filter(a => a.id !== articleId);
+    const updatedColumn = blockState.articles[columnId]?.filter(a => a.id !== articleId) || [];
     
     // Adiciona o artigo de volta à pool
-    const updatedPool = [...columns.pool, article];
+    const updatedPool = [...(blockState.articles.pool || []), article];
     
     // Atualiza o estado
     const newColumns = {
-      ...columns,
+      ...blockState.articles,
       [columnId]: updatedColumn,
       pool: updatedPool
     };
     
-    setColumns(newColumns);
-    onSave(newColumns);
+    updateArticlePositions(newColumns);
+  };
+
+  const handleVariantChange = (newVariant: string) => {
+    updateVariant(newVariant as ListVariantType);
+  };
+
+  const handleSave = () => {
+    const blockData = getApiFormat();
+    onSave(blockData);
   };
 
   const variants = [
     { id: 'chronological', label: 'Timeline', maxItems: 10 },
     { id: 'compact', label: 'Lista Compacta', maxItems: 15 },
-    { id: 'thumbnail', label: 'Cards', maxItems: 8 }
+    { id: 'card', label: 'Cards', maxItems: 8 }
   ];
 
-  const currentVariant = variants.find(v => v.id === variantType) || variants[0];
+  const currentVariant = variants.find(v => v.id === blockState.currentVariant.variantType) || variants[0];
 
   return (
     <div className="flex flex-col gap-6">
@@ -277,8 +296,8 @@ const ListManager: React.FC<ListManagerProps> = ({
             </label>
             <select
               id="variant-select"
-              value={variantType}
-              onChange={(e) => setVariantType(e.target.value)}
+              value={blockState.currentVariant.variantType}
+              onChange={(e) => handleVariantChange(e.target.value)}
               className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
             >
               {variants.map(variant => (
@@ -289,12 +308,20 @@ const ListManager: React.FC<ListManagerProps> = ({
             </select>
           </div>
         </div>
-        <button
-          onClick={onConfigClick}
-          className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
-        >
-          Configurar
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={onConfigClick}
+            className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+          >
+            Configurar
+          </button>
+          <button
+            onClick={handleSave}
+            className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+          >
+            Salvar
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
@@ -303,7 +330,7 @@ const ListManager: React.FC<ListManagerProps> = ({
             <div className="flex flex-col gap-4">
               <ArticlesPool
                 droppableId="pool"
-                articles={columns.pool}
+                articles={blockState.articles.pool || []}
                 isDarkTheme={isDarkTheme}
               />
               <div className="w-full">
@@ -311,7 +338,7 @@ const ListManager: React.FC<ListManagerProps> = ({
                   id="col-0"
                   droppableId="col-0"
                   title="Lista de Artigos"
-                  articles={columns['col-0']}
+                  articles={blockState.articles['col-0'] || []}
                   maxItems={currentVariant.maxItems}
                   isDarkTheme={isDarkTheme}
                   onRemoveArticle={handleRemoveArticle}
@@ -324,8 +351,11 @@ const ListManager: React.FC<ListManagerProps> = ({
 
         <div className="lg:col-span-3">
           <ListLayoutPreview
-            blockConfig={blockConfig}
-            columns={[columns['col-0']]}
+            blockConfig={{
+              ...blockConfig,
+              variant: blockState.currentVariant.variantType as 'chronological' | 'compact' | 'card'
+            }}
+            columns={[blockState.articles['col-0'] || []]}
           />
         </div>
       </div>

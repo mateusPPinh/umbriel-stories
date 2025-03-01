@@ -47,7 +47,7 @@ interface ExtendedBlockConfig extends BlockConfig {
     dividerStyle?: DividerStyle
     thumbnailShape?: ThumbnailShape
   }
-  variant?: 'chronological' | 'compact' | 'thumbnail'
+  variant?: 'chronological' | 'compact' | 'card'
 }
 
 interface ListLayoutPreviewProps {
@@ -60,7 +60,7 @@ type MarkerStyle = 'circle' | 'square' | 'diamond';
 type DividerStyle = 'solid' | 'dashed' | 'dotted';
 type ThumbnailShape = 'square' | 'rounded' | 'circle';
 
-const renderSkeleton = (type: 'timeline' | 'compact' | 'thumbnail') => {
+const renderSkeleton = (type: 'timeline' | 'compact' | 'card') => {
   if (type === 'timeline') {
     return Array(5).fill(0).map((_, index) => (
       <div key={index} className="flex items-start gap-4 py-4">
@@ -86,7 +86,7 @@ const renderSkeleton = (type: 'timeline' | 'compact' | 'thumbnail') => {
     ));
   }
 
-  // thumbnail type
+  // card type (previously thumbnail)
   return Array(5).fill(0).map((_, index) => (
     <div key={index} className="flex gap-4 py-4">
       <div className="w-24 h-24 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse shrink-0" />
@@ -201,7 +201,7 @@ const renderCompactPreview = (items: Article[], blockConfig: ExtendedBlockConfig
   );
 };
 
-const renderThumbnailPreview = (items: Article[], blockConfig: ExtendedBlockConfig) => {
+const renderCardPreview = (items: Article[], blockConfig: ExtendedBlockConfig) => {
   const shape = blockConfig.styles?.thumbnailShape || 'rounded';
   const hoverEffect = (blockConfig.styles?.hoverEffect || 'none') as HoverEffect;
 
@@ -239,7 +239,7 @@ const renderThumbnailPreview = (items: Article[], blockConfig: ExtendedBlockConf
               )}
             </div>
           </a>
-        )) : renderSkeleton('thumbnail')}
+        )) : renderSkeleton('card')}
       </div>
     </div>
   );
@@ -258,8 +258,8 @@ export function ListLayoutPreview({ blockConfig, columns }: ListLayoutPreviewPro
       return renderTimelinePreview(items, blockConfig);
     case 'compact':
       return renderCompactPreview(items, blockConfig);
-    case 'thumbnail':
-      return renderThumbnailPreview(items, blockConfig);
+    case 'card':
+      return renderCardPreview(items, blockConfig);
     default:
       return null;
   }

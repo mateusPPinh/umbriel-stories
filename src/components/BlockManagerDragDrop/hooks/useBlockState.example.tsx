@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useBlockState } from './useBlockState';
 import { Article } from '../../PageblockV2/types';
+import { TemplateType, VariantType } from '../types';
 
 const mockArticles: Article[] = [
   {
@@ -30,6 +31,9 @@ const mockArticles: Article[] = [
 ];
 
 export const BlockManagerExample: React.FC = () => {
+  const [template, setTemplate] = useState<TemplateType>('featured');
+  const [variant, setVariant] = useState<VariantType>('split');
+
   const {
     blockState,
     updateArticlePositions,
@@ -40,8 +44,8 @@ export const BlockManagerExample: React.FC = () => {
     getApiFormat
   } = useBlockState({
     pageId: 'example-page',
-    template: 'featured',
-    initialVariant: 'split',
+    template,
+    initialVariant: variant,
     initialArticles: mockArticles
   });
 
@@ -61,8 +65,29 @@ export const BlockManagerExample: React.FC = () => {
     updateArticlePositions(newColumns);
   };
 
-  const handleVariantChange = (variant: 'split' | 'triple' | 'hero') => {
-    updateVariant(variant);
+  const handleTemplateChange = (newTemplate: TemplateType) => {
+    setTemplate(newTemplate);
+    
+    // Set a default variant based on the selected template
+    switch (newTemplate) {
+      case 'featured':
+        setVariant('split');
+        break;
+      case 'grid':
+        setVariant('standard');
+        break;
+      case 'list':
+        setVariant('chronological');
+        break;
+      case 'mixed':
+        setVariant('sidebar');
+        break;
+    }
+  };
+
+  const handleVariantChange = (newVariant: VariantType) => {
+    setVariant(newVariant);
+    updateVariant(newVariant);
   };
 
   const handleSave = () => {
@@ -71,15 +96,65 @@ export const BlockManagerExample: React.FC = () => {
     // Aqui você pode enviar os dados para a API
   };
 
+  // Render variant options based on the selected template
+  const renderVariantOptions = () => {
+    switch (template) {
+      case 'featured':
+        return (
+          <>
+            <button onClick={() => handleVariantChange('split')}>Split Layout</button>
+            <button onClick={() => handleVariantChange('triple')}>Triple Layout</button>
+            <button onClick={() => handleVariantChange('hero')}>Hero Layout</button>
+          </>
+        );
+      case 'grid':
+        return (
+          <>
+            <button onClick={() => handleVariantChange('standard')}>Standard Grid</button>
+            <button onClick={() => handleVariantChange('featured')}>Featured Grid</button>
+            <button onClick={() => handleVariantChange('masonry')}>Masonry Grid</button>
+          </>
+        );
+      case 'list':
+        return (
+          <>
+            <button onClick={() => handleVariantChange('chronological')}>Timeline</button>
+            <button onClick={() => handleVariantChange('compact')}>Compact List</button>
+            <button onClick={() => handleVariantChange('card')}>Card List</button>
+          </>
+        );
+      case 'mixed':
+        return (
+          <>
+            <button onClick={() => handleVariantChange('sidebar')}>Sidebar</button>
+            <button onClick={() => handleVariantChange('showcase')}>Showcase</button>
+            <button onClick={() => handleVariantChange('newspaper')}>Newspaper</button>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div>
       <h2>Block Manager Example</h2>
       
       <div>
+        <h3>Template Type</h3>
+        <div className="flex gap-2">
+          <button onClick={() => handleTemplateChange('featured')}>Featured</button>
+          <button onClick={() => handleTemplateChange('grid')}>Grid</button>
+          <button onClick={() => handleTemplateChange('list')}>List</button>
+          <button onClick={() => handleTemplateChange('mixed')}>Mixed</button>
+        </div>
+      </div>
+      
+      <div>
         <h3>Current Variant: {blockState.currentVariant.variantType}</h3>
-        <button onClick={() => handleVariantChange('split')}>Split Layout</button>
-        <button onClick={() => handleVariantChange('triple')}>Triple Layout</button>
-        <button onClick={() => handleVariantChange('hero')}>Hero Layout</button>
+        <div className="flex gap-2">
+          {renderVariantOptions()}
+        </div>
       </div>
 
       <div>

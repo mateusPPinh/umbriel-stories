@@ -237,6 +237,52 @@ export const useBlockState = ({
           }
         }
       },
+      // List variants
+      chronological: {
+        variantType: 'chronological' as VariantType,
+        variantPosition: 1,
+        articles: {
+          'pool': initialArticles,
+          'col-0': []
+        },
+        config: {
+          ...defaultConfig,
+          articles: {
+            'pool': initialArticles.map(article => String(article.id)),
+            'col-0': []
+          }
+        }
+      },
+      compact: {
+        variantType: 'compact' as VariantType,
+        variantPosition: 1,
+        articles: {
+          'pool': initialArticles,
+          'col-0': []
+        },
+        config: {
+          ...defaultConfig,
+          articles: {
+            'pool': initialArticles.map(article => String(article.id)),
+            'col-0': []
+          }
+        }
+      },
+      card: {
+        variantType: 'card' as VariantType,
+        variantPosition: 1,
+        articles: {
+          'pool': initialArticles,
+          'col-0': []
+        },
+        config: {
+          ...defaultConfig,
+          articles: {
+            'pool': initialArticles.map(article => String(article.id)),
+            'col-0': []
+          }
+        }
+      },
       // Mixed variants
       sidebar: {
         variantType: 'sidebar' as VariantType,
@@ -458,6 +504,13 @@ export const useBlockState = ({
           return 2;
         case 'newsgrid':
           return 2;
+        // List variants
+        case 'chronological':
+          return 1;
+        case 'compact':
+          return 1;
+        case 'card':
+          return 1;
         // Mixed variants
         case 'sidebar':
           return 2;

@@ -180,4 +180,82 @@ describe('useBlockState', () => {
     const variant = apiFormat.variants[0];
     expect(variant.config.articles).not.toHaveProperty('pool');
   });
+
+  // Tests for List variants
+  describe('List variants', () => {
+    const listProps = {
+      pageId: 'page-1',
+      template: 'list' as const,
+      initialVariant: 'chronological' as const,
+      initialArticles: mockArticles,
+      blockPosition: 1
+    };
+
+    it('should initialize with correct list variant', () => {
+      const { result } = renderHook(() => useBlockState(listProps));
+
+      expect(result.current.blockState.currentVariant.variantType).toBe('chronological');
+      expect(result.current.blockState.template).toBe('list');
+    });
+
+    it('should update to different list variant correctly', () => {
+      const { result } = renderHook(() => useBlockState(listProps));
+
+      act(() => {
+        result.current.updateVariant('compact');
+      });
+
+      expect(result.current.blockState.currentVariant.variantType).toBe('compact');
+    });
+
+    it('should handle article positions for list variants correctly', () => {
+      const { result } = renderHook(() => useBlockState(listProps));
+
+      const newColumns = {
+        'pool': [mockArticles[1]],
+        'col-0': [mockArticles[0]]
+      };
+
+      act(() => {
+        result.current.updateArticlePositions(newColumns);
+      });
+
+      expect(result.current.blockState.articles).toEqual(newColumns);
+      expect(result.current.blockState.currentVariant.config.articles).toEqual({
+        'pool': [mockArticles[1].id],
+        'col-0': [mockArticles[0].id]
+      });
+    });
+
+    it('should generate correct API format for list variants', () => {
+      const { result } = renderHook(() => useBlockState(listProps));
+
+      act(() => {
+        result.current.updateArticlePositions({
+          'pool': [mockArticles[1]],
+          'col-0': [mockArticles[0]]
+        });
+      });
+
+      const apiFormat = result.current.getApiFormat();
+
+      expect(apiFormat).toEqual({
+        pageId: listProps.pageId,
+        blockType: 'articles',
+        blockPosition: listProps.blockPosition,
+        template: listProps.template,
+        variants: [
+          expect.objectContaining({
+            variantType: listProps.initialVariant,
+            variantPosition: 1,
+            config: expect.objectContaining({
+              articles: {
+                'col-0': [mockArticles[0].id]
+              }
+            })
+          })
+        ]
+      });
+    });
+  });
 }); 
