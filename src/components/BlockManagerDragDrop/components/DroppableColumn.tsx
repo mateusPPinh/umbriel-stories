@@ -32,6 +32,9 @@ interface DroppableColumnProps {
   isChronological?: boolean;
   isCompact?: boolean;
   isCard?: boolean;
+  isMagazineMain?: boolean;
+  isMagazineSecondary?: boolean;
+  isMagazineTertiary?: boolean;
   onRemoveArticle?: (columnId: string, articleId: string | number) => void;
 }
 
@@ -57,6 +60,9 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   isChronological = false,
   isCompact = false,
   isCard = false,
+  isMagazineMain = false,
+  isMagazineSecondary = false,
+  isMagazineTertiary = false,
   onRemoveArticle
 }) => {
   const isFull = articles.length >= maxItems;
@@ -95,6 +101,35 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   };
 
   const renderSkeleton = () => {
+    // Magazine Layout
+    if (isMagazineMain) {
+      return (
+        <article className="flex flex-col">
+          <div className="aspect-[16/9] bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse mb-4" />
+          <div className="p-4">
+            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-3" />
+            <div className="h-4 w-3/4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+          </div>
+        </article>
+      );
+    }
+
+    if (isMagazineSecondary || isMagazineTertiary) {
+      return (
+        <div className="space-y-6">
+          {[...Array(isMagazineSecondary ? 3 : 4)].map((_, i) => (
+            <article key={i} className="flex flex-col">
+              <div className="aspect-[4/3] bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse mb-4" />
+              <div className="p-4">
+                <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2" />
+                <div className="h-4 w-2/3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+              </div>
+            </article>
+          ))}
+        </div>
+      );
+    }
+
     // List variants
     if (isChronological) {
       return (

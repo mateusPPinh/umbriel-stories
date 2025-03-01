@@ -494,37 +494,28 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
     const tertiaryArticles = columns['col-2'] || [];
     
     return (
-      <div className="grid grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Main Article */}
-        <div className="col-span-6">
+        <div className="lg:col-span-6">
           <article className="flex flex-col">
-          <div className={`
-              aspect-[16/9] rounded overflow-hidden mb-4
-            ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-          `}>
-            {mainArticle?.content?.image?.desktop_image_path && (
+            <div className={`
+              aspect-[16/9] rounded overflow-hidden
+              ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
+            `}>
+              {mainArticle?.content?.image?.desktop_image_path && (
                 <div className="relative w-full h-full">
-              <img
-                src={mainArticle.content.image.desktop_image_path}
-                alt={mainArticle.title}
+                  <img
+                    src={mainArticle.content.image.desktop_image_path}
+                    alt={mainArticle.title}
                     className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
                   />
-                  {blockConfig.mediaConfig?.imageConfig?.overlay?.enabled && (
-                    <div 
-                      className="absolute inset-0" 
-                      style={{
-                        backgroundColor: blockConfig.mediaConfig.imageConfig.overlay.color || 'rgba(0,0,0,0.5)',
-                        opacity: blockConfig.mediaConfig.imageConfig.overlay.opacity || 0.5
-                      }}
-              />
-            )}
-          </div>
+                </div>
               )}
             </div>
             
             <div className="p-4">
               <div 
-                className="text-2xl font-bold mb-2 line-clamp-2"
+                className="text-2xl font-bold mb-3"
                 style={{
                   fontSize: theme.headingProps.fontSize,
                   fontWeight: theme.headingProps.fontWeight,
@@ -544,71 +535,18 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                 >
                   {mainArticle?.subtitle || 'Descrição do artigo principal...'}
                 </div>
-            )}
-          </div>
+              )}
+            </div>
           </article>
         </div>
 
         {/* Secondary Articles */}
-        <div className="col-span-3">
+        <div className="lg:col-span-3">
           <div className="space-y-6">
-          {[...Array(3)].map((_, i) => {
-            const article = secondaryArticles[i];
-            
-            return (
-                <article key={i} className="flex flex-col">
-                <div className={`
-                    aspect-[4/3] rounded overflow-hidden mb-4
-                  ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-                `}>
-                  {article?.content?.image?.desktop_image_path && (
-                      <div className="relative w-full h-full">
-                    <img
-                      src={article.content.image.desktop_image_path}
-                      alt={article.title}
-                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
-                    />
-                      </div>
-                  )}
-                  </div>
-                  
-                  <div className="p-4">
-                    <div 
-                      className="text-xl font-semibold mb-2 line-clamp-2"
-                      style={{
-                        fontSize: theme.headingProps.fontSize,
-                        fontWeight: theme.headingProps.fontWeight,
-                        color: theme.headingProps.color
-                      }}
-                    >
-                      {article?.title || 'Título do artigo'}
-                    </div>
-                    
-                    {blockConfig.styles.showExcerpt && (
-                      <div 
-                        className="text-base line-clamp-2"
-                        style={{
-                          fontSize: theme.subtitleProps.fontSize,
-                          color: theme.subtitleProps.color
-                        }}
-                      >
-                        {article?.subtitle || 'Descrição do artigo...'}
-                      </div>
-                )}
-              </div>
-                </article>
-            );
-          })}
-          </div>
-        </div>
-
-        {/* Tertiary Articles */}
-        <div className="col-span-3">
-          <div className="space-y-6">
-          {[...Array(4)].map((_, i) => {
-            const article = tertiaryArticles[i];
-            
-            return (
+            {[...Array(3)].map((_, i) => {
+              const article = secondaryArticles[i];
+              
+              return (
                 <article key={i} className="flex flex-col">
                   <div className={`
                     aspect-[4/3] rounded overflow-hidden mb-4
@@ -627,14 +565,14 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                   
                   <div className="p-4">
                     <div 
-                      className="text-xl font-semibold mb-2 line-clamp-2"
+                      className="text-xl font-semibold mb-2"
                       style={{
                         fontSize: theme.headingProps.fontSize,
                         fontWeight: theme.headingProps.fontWeight,
                         color: theme.headingProps.color
                       }}
                     >
-                      {article?.title || 'Título do artigo'}
+                      {article?.title || 'Título do artigo secundário'}
                     </div>
                     
                     {blockConfig.styles.showExcerpt && (
@@ -645,13 +583,66 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                           color: theme.subtitleProps.color
                         }}
                       >
-                        {article?.subtitle || 'Descrição do artigo...'}
+                        {article?.subtitle || 'Descrição do artigo secundário...'}
                       </div>
-                )}
-              </div>
+                    )}
+                  </div>
                 </article>
-            );
-          })}
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Tertiary Articles */}
+        <div className="lg:col-span-3">
+          <div className="space-y-6">
+            {[...Array(4)].map((_, i) => {
+              const article = tertiaryArticles[i];
+              
+              return (
+                <article key={i} className="flex flex-col">
+                  <div className={`
+                    aspect-[4/3] rounded overflow-hidden mb-4
+                    ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
+                  `}>
+                    {article?.content?.image?.desktop_image_path && (
+                      <div className="relative w-full h-full">
+                        <img
+                          src={article.content.image.desktop_image_path}
+                          alt={article.title}
+                          className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                        />
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="p-4">
+                    <div 
+                      className="text-xl font-semibold mb-2"
+                      style={{
+                        fontSize: theme.headingProps.fontSize,
+                        fontWeight: theme.headingProps.fontWeight,
+                        color: theme.headingProps.color
+                      }}
+                    >
+                      {article?.title || 'Título do artigo terciário'}
+                    </div>
+                    
+                    {blockConfig.styles.showExcerpt && (
+                      <div 
+                        className="text-base line-clamp-2"
+                        style={{
+                          fontSize: theme.subtitleProps.fontSize,
+                          color: theme.subtitleProps.color
+                        }}
+                      >
+                        {article?.subtitle || 'Descrição do artigo terciário...'}
+                      </div>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
       </div>

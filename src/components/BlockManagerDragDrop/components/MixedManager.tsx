@@ -243,32 +243,33 @@ const MixedManager: React.FC<MixedManagerProps> = ({
         };
       case 'showcase':
         return {
-          isFeatured: colId === 'col-0', // Artigo principal em destaque
-          isNewsGrid: colId === 'col-1' || colId === 'col-2', // Artigos secundários em grid
-          showExcerpt: colId === 'col-0' && blockConfig.styles.showExcerpt
+          isFeatured: colId === 'col-0', // Artigo principal em destaque (1)
+          isNewsFeedSide: colId === 'col-1', // Artigos em lista com imagem (2)
+          isCompact: colId === 'col-2', // Artigos em lista sem imagem, só título e subtítulo (3)
+          showExcerpt: blockConfig.styles.showExcerpt
         };
       case 'newspaper':
         return {
-          isNewsGrid: true, // Todos os artigos em grid de notícias
+          isNewsFeedMain: colId === 'col-0', // 2 artigos principais em lista vertical
+          isCompact: colId === 'col-1' || colId === 'col-2', // 4 artigos em lista vertical, só título e descrição
+          hasBorder: colId === 'col-1' || colId === 'col-2', // Borda à esquerda nas colunas 2 e 3
           showExcerpt: blockConfig.styles.showExcerpt
         };
       case 'magazine':
         return {
-          isFeatured: colId === 'col-0', // Artigo principal em destaque
-          isSidebarMain: colId === 'col-1', // Artigos secundários com imagem
-          isSidebarSide: colId === 'col-2', // Artigos de texto
-          showExcerpt: (colId === 'col-0' || colId === 'col-1') && blockConfig.styles.showExcerpt
+          isMagazineMain: colId === 'col-0', // Artigo principal
+          isMagazineSecondary: colId === 'col-1', // Artigos secundários com imagem
+          isMagazineTertiary: colId === 'col-2', // Artigos terciários com imagem
+          showExcerpt: blockConfig.styles.showExcerpt
         };
       case 'videogrid':
         return {
           isFeatured: colId === 'col-0', // Vídeo principal
           isNewsGrid: colId === 'col-1', // Vídeos secundários em grid
-          showExcerpt: colId === 'col-0' && blockConfig.styles.showExcerpt
-        };
-      default:
-        return {
           showExcerpt: blockConfig.styles.showExcerpt
         };
+      default:
+        return {};
     }
   };
 
