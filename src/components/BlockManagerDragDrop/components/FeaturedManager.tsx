@@ -1,21 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { Article } from '../../PageblockV2/types';
 import DroppableColumn from './DroppableColumn';
 import FeaturedLayoutPreview from './FeaturedLayoutPreview';
 import ArticlesPool from './ArticlesPool';
 import { BlockConfig } from './StyleConfigModal';
+import { useBlockState } from '../hooks/useBlockState';
 
 interface FeaturedManagerProps {
+  pageId: string;
   articles: Article[];
   isDarkTheme?: boolean;
-  onSave: (columns: { [key: string]: Article[] }) => void;
+  onSave?: (data: any) => void;
   blockConfig: BlockConfig;
   onConfigClick: () => void;
   variant?: 'hero' | 'split' | 'triple';
 }
 
 const FeaturedManager: React.FC<FeaturedManagerProps> = ({ 
+  pageId,
   articles, 
   isDarkTheme, 
   onSave,
@@ -23,75 +26,28 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
   onConfigClick,
   variant = 'hero'
 }) => {
-  const [variantType, setVariantType] = useState<string>(variant);
-  
-  // Função auxiliar para criar o estado inicial das colunas
-  const createInitialColumns = () => {
-    return {
-      pool: [...articles],
-      'col-0': []
-    };
-  };
-  
-  const [columns, setColumns] = useState<{ [key: string]: Article[] }>(createInitialColumns);
-
-  // Reseta as colunas quando a variante muda
-  useEffect(() => {
-    setVariantType(variant);
-  }, [variant]);
-
-  // Efeito para lidar com a mudança de variante
-  useEffect(() => {
-    const resetColumns = () => {
-      // Coleta todos os artigos de todas as colunas
-      const allArticles = [...(columns.pool || [])];
-      if (columns['col-0']) {
-        allArticles.push(...columns['col-0']);
-      }
-      
-      // Cria um novo estado com todos os artigos na pool
-      setColumns({
-        pool: allArticles,
-        'col-0': []
-      });
-    };
-
-    resetColumns();
-  }, [variantType]);
+  const {
+    blockState,
+    updateArticlePositions,
+    updateVariant,
+    updateBlockConfig,
+    getApiFormat
+  } = useBlockState({
+    pageId,
+    template: 'featured',
+    initialVariant: variant,
+    initialArticles: articles
+  });
 
   const handleDragEnd = (result: DropResult) => {
     const { source, destination } = result;
 
-    // Se não houver destino, não fazer nada
     if (!destination) return;
 
-    // Se a origem e destino forem iguais e o índice for o mesmo, não fazer nada
-    if (
-      source.droppableId === destination.droppableId &&
-      source.index === destination.index
-    ) return;
-
-    // Verifica se a coluna de destino já atingiu o limite máximo
-    if (destination.droppableId !== 'pool') {
-      const currentVariant = variants.find(v => v.id === variantType) || variants[0];
-      const currentItems = columns[destination.droppableId]?.length || 0;
-      
-      // Se estiver movendo dentro da mesma coluna, não conta o item sendo movido
-      const effectiveCurrentItems = 
-        source.droppableId === destination.droppableId
-          ? currentItems - 1
-          : currentItems;
-
-      if (effectiveCurrentItems >= currentVariant.maxItems) {
-        return;
-      }
-    }
-
-    // Copia os arrays de origem e destino
-    const sourceCol = Array.from(columns[source.droppableId] || []);
+    const sourceCol = Array.from(blockState.articles[source.droppableId] || []);
     const destCol = source.droppableId === destination.droppableId
       ? sourceCol
-      : Array.from(columns[destination.droppableId] || []);
+      : Array.from(blockState.articles[destination.droppableId] || []);
 
     // Remove o item da origem
     const [removed] = sourceCol.splice(source.index, 1);
@@ -101,64 +57,43 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
 
     // Atualiza o estado
     const newColumns = {
-      ...columns,
+      ...blockState.articles,
       [source.droppableId]: sourceCol,
       [destination.droppableId]: destCol
     };
 
-    setColumns(newColumns);
-    onSave(newColumns);
+    updateArticlePositions(newColumns);
   };
 
-  const variants = [
-    { 
-      id: 'hero', 
-      label: 'Hero', 
-      maxItems: 1
-    },
-    { 
-      id: 'split', 
-      label: 'Split', 
-      maxItems: 2
-    },
-    { 
-      id: 'triple', 
-      label: 'Triple', 
-      maxItems: 3
-    }
-  ];
-
-  const currentVariant = variants.find(v => v.id === variantType) || variants[0];
-
-  const slotsCount = {
-    'hero': 1,
-    'split': 2,
-    'triple': 3
-  }[variantType] || 1;
-
-  // Função para remover um artigo de uma coluna e devolvê-lo para a pool
   const handleRemoveArticle = (columnId: string, articleId: string | number) => {
-    // Encontra o artigo na coluna
-    const article = columns[columnId]?.find(a => a.id === articleId);
+    const article = blockState.articles[columnId]?.find(a => a.id === articleId);
     
     if (!article) return;
     
-    // Remove o artigo da coluna
-    const updatedColumn = columns[columnId]?.filter(a => a.id !== articleId) || [];
+    const updatedColumn = blockState.articles[columnId]?.filter(a => a.id !== articleId) || [];
+    const updatedPool = [...(blockState.articles.pool || []), article];
     
-    // Adiciona o artigo de volta à pool
-    const updatedPool = [...(columns.pool || []), article];
-    
-    // Atualiza o estado
     const newColumns = {
-      ...columns,
+      ...blockState.articles,
       [columnId]: updatedColumn,
       pool: updatedPool
     };
     
-    setColumns(newColumns);
-    onSave(newColumns);
+    updateArticlePositions(newColumns);
   };
+
+  const handleSave = () => {
+    const blockData = getApiFormat();
+    onSave?.(blockData);
+  };
+
+  const variants = [
+    { id: 'hero', label: 'Hero', maxItems: 1 },
+    { id: 'split', label: 'Split', maxItems: 2 },
+    { id: 'triple', label: 'Triple', maxItems: 3 }
+  ];
+
+  const currentVariant = variants.find(v => v.id === blockState.currentVariant.variantType) || variants[0];
 
   return (
     <div className="flex flex-col gap-6">
@@ -173,8 +108,8 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
             </label>
             <select
               id="variant-select"
-              value={variantType}
-              onChange={(e) => setVariantType(e.target.value)}
+              value={blockState.currentVariant.variantType}
+              onChange={(e) => updateVariant(e.target.value as 'hero' | 'split' | 'triple')}
               className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
             >
               {variants.map(variant => (
@@ -185,12 +120,20 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
             </select>
           </div>
         </div>
-        <button
-          onClick={onConfigClick}
-          className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          Configurar Estilos
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onConfigClick}
+            className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Configurar Estilos
+          </button>
+          <button
+            onClick={handleSave}
+            className="px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          >
+            Salvar
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
@@ -199,7 +142,7 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
             <div className="flex flex-col gap-4">
               <ArticlesPool
                 droppableId="pool"
-                articles={columns.pool || []}
+                articles={blockState.articles.pool || []}
                 isDarkTheme={isDarkTheme}
               />
               <div className="w-full">
@@ -207,7 +150,7 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
                   id="col-0"
                   droppableId="col-0"
                   title={currentVariant.label}
-                  articles={columns['col-0'] || []}
+                  articles={blockState.articles['col-0'] || []}
                   maxItems={currentVariant.maxItems}
                   isDarkTheme={isDarkTheme}
                   width="w-full"
@@ -230,9 +173,9 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
         </div>
         <div className="lg:col-span-3">
           <FeaturedLayoutPreview
-            variantType={variantType}
+            variantType={blockState.currentVariant.variantType}
             isDarkTheme={isDarkTheme}
-            columns={columns}
+            columns={blockState.articles}
             blockConfig={blockConfig}
           />
         </div>
