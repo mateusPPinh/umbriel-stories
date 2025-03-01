@@ -232,6 +232,63 @@ const MixedManager: React.FC<MixedManagerProps> = ({
     setTimeout(() => updateVariant('sidebar' as VariantType), 0);
   }
 
+  // Função para determinar as propriedades específicas de cada coluna com base na variante
+  const getColumnProps = (colId: string) => {
+    switch (validVariantType) {
+      case 'sidebar':
+        return {
+          isSidebarMain: colId === 'col-0', // Artigos principais com imagem grande
+          isSidebarSide: colId === 'col-1', // Artigos secundários com imagem pequena
+          showExcerpt: colId === 'col-0' && blockConfig.styles.showExcerpt
+        };
+      case 'showcase':
+        return {
+          isFeatured: colId === 'col-0', // Artigo principal em destaque
+          isNewsGrid: colId === 'col-1' || colId === 'col-2', // Artigos secundários em grid
+          showExcerpt: colId === 'col-0' && blockConfig.styles.showExcerpt
+        };
+      case 'newspaper':
+        return {
+          isNewsGrid: true, // Todos os artigos em grid de notícias
+          showExcerpt: blockConfig.styles.showExcerpt
+        };
+      case 'magazine':
+        return {
+          isFeatured: colId === 'col-0', // Artigo principal em destaque
+          isSidebarMain: colId === 'col-1', // Artigos secundários com imagem
+          isSidebarSide: colId === 'col-2', // Artigos de texto
+          showExcerpt: (colId === 'col-0' || colId === 'col-1') && blockConfig.styles.showExcerpt
+        };
+      case 'videogrid':
+        return {
+          isFeatured: colId === 'col-0', // Vídeo principal
+          isNewsGrid: colId === 'col-1', // Vídeos secundários em grid
+          showExcerpt: colId === 'col-0' && blockConfig.styles.showExcerpt
+        };
+      default:
+        return {
+          showExcerpt: blockConfig.styles.showExcerpt
+        };
+    }
+  };
+
+  // Função para determinar o layout das colunas com base na variante
+  const getColumnsLayout = () => {
+    switch (validVariantType) {
+      case 'sidebar':
+        return 'grid grid-cols-1 md:grid-cols-[2fr,1fr] gap-4';
+      case 'showcase':
+      case 'newspaper':
+        return 'grid grid-cols-1 md:grid-cols-3 gap-4';
+      case 'magazine':
+        return 'grid grid-cols-1 md:grid-cols-[2fr,1fr,1fr] gap-4';
+      case 'videogrid':
+        return 'grid grid-cols-1 md:grid-cols-[2fr,1fr] gap-4';
+      default:
+        return 'space-y-4';
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex justify-between items-center">
@@ -282,7 +339,7 @@ const MixedManager: React.FC<MixedManagerProps> = ({
                 articles={blockState.articles.pool}
                 isDarkTheme={isDarkTheme}
               />
-              <div className="space-y-4">
+              <div className={getColumnsLayout()}>
                 {availableColumns.map(colId => (
                   <DroppableColumn
                     key={colId}
@@ -293,7 +350,6 @@ const MixedManager: React.FC<MixedManagerProps> = ({
                     maxItems={currentVariant.maxItems[colId as keyof typeof currentVariant.maxItems]}
                     isDarkTheme={isDarkTheme}
                     width="w-full"
-                    showExcerpt={blockConfig.styles.showExcerpt}
                     headingProps={{
                       fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
                       fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
@@ -304,6 +360,7 @@ const MixedManager: React.FC<MixedManagerProps> = ({
                       color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
                     }}
                     onRemoveArticle={handleRemoveArticle}
+                    {...getColumnProps(colId)}
                   />
                 ))}
               </div>

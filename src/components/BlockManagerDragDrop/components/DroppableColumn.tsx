@@ -58,15 +58,14 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   // Helper function to determine the appropriate class for the droppable area
   const getDroppableAreaClass = () => {
     if (isNewsGrid) {
-      return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4';
+      return 'grid grid-cols-1 md:grid-cols-2 gap-4';
     }
     if (isFeatured) {
-      // Não usamos mais 'space-y-4' para o Featured Grid
-      // Em vez disso, usamos um grid que corresponda ao layout do preview
-      return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4';
+      // Para o artigo principal do Showcase, usamos um layout de coluna única
+      return 'flex flex-col';
     }
     if (isSidebarMain) {
-      return 'grid grid-cols-1 md:grid-cols-2 gap-4';
+      return 'grid grid-cols-1 gap-4';
     }
     if (isSidebarSide) {
       return 'space-y-4';
@@ -90,47 +89,77 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   };
 
   const renderSkeleton = () => {
+    // Mixed Layout - Sidebar
+    if (isSidebarMain) {
+      return (
+        <div className="grid grid-cols-1 gap-4">
+          {[...Array(2)].map((_, i) => (
+            <div key={i} className="flex flex-col">
+              <div className="relative aspect-[16/9] overflow-hidden mb-2">
+                <div className={`w-full h-full bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse`} />
+              </div>
+              <div className="p-4">
+                <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2" />
+                <div className="h-4 w-2/3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+    
+    if (isSidebarSide) {
+      return (
+        <div className="space-y-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="flex items-start gap-3">
+              <div className="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse flex-shrink-0" />
+              <div className="flex-1">
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2" />
+                <div className="h-3 w-2/3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+    
+    // Mixed Layout - Showcase, Newspaper, VideoGrid
+    if (isNewsGrid) {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="flex flex-col">
+              <div className="relative aspect-[16/10] overflow-hidden mb-2">
+                <div className={`w-full h-full bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse`} />
+              </div>
+              <div className="p-4">
+                <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2" />
+                <div className="h-4 w-2/3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+    
+    // Featured Grid (usado para o artigo principal do Showcase)
     if (isFeatured) {
-      // Check if this is the main featured column (col-0) or the secondary column (col-1)
-      const isMainFeatured = droppableId === 'col-0';
-      
-      if (isMainFeatured) {
-        return (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="flex flex-col">
-                <div className="relative aspect-[16/10] overflow-hidden mb-2">
-                  <div className={`w-full h-full bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse`} />
-                </div>
-                <div className="p-4">
-                  <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2" />
-                  <div className="h-4 w-2/3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
-                </div>
-              </div>
-            ))}
+      return (
+        <div className="flex flex-col">
+          <div className="relative aspect-[16/9] overflow-hidden mb-4">
+            <div className={`w-full h-full bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse`} />
           </div>
-        );
-      } else {
-        // Secondary column (col-1)
-        return (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...Array(2)].map((_, i) => (
-              <div key={i} className="flex flex-col">
-                <div className="relative aspect-[16/10] overflow-hidden mb-2">
-                  <div className={`w-full h-full bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse`} />
-                </div>
-                <div className="p-4">
-                  <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2" />
-                  <div className="h-4 w-2/3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
-                </div>
-              </div>
-            ))}
+          <div className="p-4">
+            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-3" />
+            <div className="h-4 w-3/4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2" />
+            <div className="h-4 w-2/3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
           </div>
-        );
-      }
+        </div>
+      );
     }
 
-    if (isSidebarMain || isNewsFeedMain) {
+    if (isNewsFeedMain || isNewsFeedSide) {
       return (
         <div className="flex flex-col gap-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
           <div className="w-full h-32 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
