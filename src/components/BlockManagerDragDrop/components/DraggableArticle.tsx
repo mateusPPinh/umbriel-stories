@@ -8,6 +8,18 @@ interface DraggableArticleProps {
   isDarkTheme?: boolean;
   isInColumn?: boolean;
   columnIsFull?: boolean;
+  isMasonry?: boolean;
+  isNewsGrid?: boolean;
+  isFeatured?: boolean;
+  isSidebarMain?: boolean;
+  isSidebarSide?: boolean;
+  isNewsFeedMain?: boolean;
+  isNewsFeedSide?: boolean;
+  subtitleProps?: {
+    fontSize?: string;
+    color?: string;
+  };
+  showExcerpt?: boolean;
 }
 
 const DraggableArticle: React.FC<DraggableArticleProps> = ({
@@ -15,83 +27,183 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
   index,
   isDarkTheme,
   isInColumn,
-  columnIsFull
+  columnIsFull,
+  isMasonry,
+  isNewsGrid,
+  isFeatured,
+  isSidebarMain,
+  isSidebarSide,
+  isNewsFeedMain,
+  isNewsFeedSide,
+  subtitleProps,
+  showExcerpt
 }) => {
-  const [showTooltip, setShowTooltip] = React.useState(false);
+  // Helper function to determine the appropriate class for the article
+  const getArticleClass = () => {
+    let classes = `
+      rounded-md overflow-hidden
+      ${isDarkTheme 
+        ? 'bg-gray-700 hover:bg-gray-600' 
+        : 'bg-white hover:bg-gray-50'
+      }
+      ${columnIsFull && isInColumn ? 'opacity-80' : 'opacity-100'}
+      transition-all duration-200
+    `;
+
+    if (isMasonry) {
+      classes += ' h-full';
+    }
+    
+    if (isNewsGrid) {
+      classes += ' flex flex-col h-full';
+    }
+    
+    if (isFeatured && index === 0) {
+      classes += ' aspect-[16/9]';
+    }
+    
+    if (isSidebarMain) {
+      classes += ' flex flex-col';
+    }
+    
+    if (isSidebarSide) {
+      classes += ' flex items-center gap-3';
+    }
+    
+    if (isNewsFeedMain || isNewsFeedSide) {
+      classes += ' flex items-center gap-3';
+    }
+
+    return classes;
+  };
+
+  // Helper function to determine the appropriate image class
+  const getImageClass = () => {
+    if (isMasonry) {
+      return 'h-40 md:h-48';
+    }
+    
+    if (isNewsGrid) {
+      return 'h-32 md:h-40';
+    }
+    
+    if (isFeatured && index === 0) {
+      return 'h-48 md:h-64';
+    } else if (isFeatured) {
+      return 'h-20 w-20 flex-shrink-0';
+    }
+    
+    if (isSidebarMain) {
+      return 'h-40';
+    }
+    
+    if (isSidebarSide) {
+      return 'h-16 w-16 flex-shrink-0';
+    }
+    
+    if (isNewsFeedMain || isNewsFeedSide) {
+      return 'h-16 w-16 flex-shrink-0';
+    }
+    
+    return 'h-24';
+  };
+
+  // Helper function to determine the appropriate content class
+  const getContentClass = () => {
+    let classes = 'p-3';
+    
+    if (isNewsGrid) {
+      classes += ' flex-grow flex flex-col';
+    }
+    
+    if (isSidebarSide || isNewsFeedSide) {
+      classes += ' flex-1 min-w-0';
+    }
+    
+    return classes;
+  };
+
+  // Helper function to determine the appropriate title class
+  const getTitleClass = () => {
+    let classes = 'font-medium line-clamp-2 mb-1';
+    
+    if (isDarkTheme) {
+      classes += ' text-white';
+    } else {
+      classes += ' text-gray-900';
+    }
+    
+    if (isNewsGrid || isFeatured && index === 0) {
+      classes += ' text-base';
+    } else {
+      classes += ' text-sm';
+    }
+    
+    if (isSidebarSide || isNewsFeedSide) {
+      classes += ' text-xs line-clamp-1';
+    }
+    
+    return classes;
+  };
 
   return (
     <Draggable 
-      key={article.id} 
-      draggableId={article.id} 
+      draggableId={article.id.toString()} 
       index={index}
-      isDragDisabled={columnIsFull}
+      isDragDisabled={isInColumn && columnIsFull}
     >
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={`
-            relative
-            p-2 rounded shadow-sm flex items-center gap-2
-            transition-all duration-200
-            ${isInColumn ? 'mb-2' : 'w-[200px]'}
-            ${snapshot.isDragging ? 'scale-105 rotate-1 ring-2 ring-blue-500 z-50' : ''}
-            ${isDarkTheme ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-gray-50'}
-            ${columnIsFull ? 'opacity-50 cursor-not-allowed' : 'cursor-grab active:cursor-grabbing'}
-            group
-          `}
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
+          className={getArticleClass()}
+          style={{
+            ...provided.draggableProps.style,
+          }}
         >
-          {/* Tooltip */}
-          {showTooltip && (
+          {/* Imagem do artigo */}
+          {article.content?.image?.desktop_image_path && (
             <div className={`
-              absolute -top-2 left-1/2 transform -translate-x-1/2 -translate-y-full
-              px-2 py-1 rounded text-xs font-medium
-              ${isDarkTheme ? 'bg-gray-800 text-white' : 'bg-gray-900 text-white'}
-              z-50
+              ${getImageClass()}
+              overflow-hidden relative
             `}>
-              {columnIsFull ? 'Coluna cheia' : 'Arraste para uma coluna'}
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 rotate-45 w-2 h-2 bg-inherit" />
-            </div>
-          )}
-
-          {/* Drag Handle Indicator */}
-          <div className={`
-            absolute inset-y-0 left-0 w-1 rounded-l
-            transition-colors duration-200
-            ${snapshot.isDragging ? 'bg-blue-500' : 'bg-transparent group-hover:bg-gray-200 dark:group-hover:bg-gray-600'}
-          `} />
-
-          {/* Article Content */}
-          <div className="flex items-center gap-2 w-full min-w-0">
-            {article.content?.image?.desktop_image_path && (
               <img
                 src={article.content.image.desktop_image_path}
                 alt={article.title}
-                className={`
-                  w-10 h-10 object-cover rounded
-                  transition-transform duration-200
-                  ${snapshot.isDragging ? 'scale-110' : ''}
-                `}
+                className="w-full h-full object-cover"
               />
-            )}
-            <span className={`
-              text-sm truncate flex-1
-              ${isDarkTheme ? 'text-white' : 'text-gray-900'}
-            `}>
-              {article.title}
-            </span>
-          </div>
-
-          {/* Status Indicator */}
-          {isInColumn && (
-            <div className={`
-              w-2 h-2 rounded-full shrink-0
-              ${columnIsFull ? 'bg-red-500' : 'bg-green-500'}
-            `} />
+            </div>
           )}
+          
+          {/* Conteúdo do artigo */}
+          <div className={getContentClass()}>
+            <h3 className={getTitleClass()}>
+              {article.title}
+            </h3>
+            
+            {article.subtitle && (
+              <p 
+                className="line-clamp-1 mb-2"
+                style={{
+                  fontSize: subtitleProps?.fontSize || '0.75rem',
+                  color: subtitleProps?.color || (isDarkTheme ? '#9CA3AF' : '#6B7280')
+                }}
+              >
+                {article.subtitle}
+              </p>
+            )}
+            
+            {showExcerpt && article.content?.description && (
+              <p className={`
+                line-clamp-2 text-xs
+                ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'}
+                ${isNewsGrid ? 'mt-auto pt-2' : ''}
+              `}>
+                {article.content.description}
+              </p>
+            )}
+          </div>
         </div>
       )}
     </Draggable>

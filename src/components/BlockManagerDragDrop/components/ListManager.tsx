@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { Article } from '../../PageblockV2/types';
-import DraggableArticle from './DraggableArticle';
 import DroppableColumn from './DroppableColumn';
 import ListLayoutPreview from './ListLayoutPreview';
+import ArticlesPool from './ArticlesPool';
 
 interface ListManagerProps {
   articles: Article[];
   isDarkTheme?: boolean;
   onSave: (columns: { [key: string]: Article[] }) => void;
+  variant?: string;
 }
 
-const ListManager: React.FC<ListManagerProps> = ({ articles, isDarkTheme, onSave }) => {
-  const [variantType, setVariantType] = useState<string>('chronological');
+const ListManager: React.FC<ListManagerProps> = ({ articles, isDarkTheme, onSave, variant = 'chronological' }) => {
+  const [variantType, setVariantType] = useState<string>(variant);
   const [columns, setColumns] = useState<{ [key: string]: Article[] }>({
     'pool': articles,
     'col-0': []
@@ -98,49 +99,32 @@ const ListManager: React.FC<ListManagerProps> = ({ articles, isDarkTheme, onSave
 
       {/* Área de Drag and Drop */}
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-[2fr,1fr] gap-6">
+        <div className="flex flex-col md:flex-row gap-6">
           {/* Pool de Artigos */}
-          <Droppable droppableId="pool">
-            {(provided, snapshot) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                className={`
-                  p-4 rounded-lg min-h-[200px]
-                  ${isDarkTheme ? 'bg-gray-800' : 'bg-gray-100'}
-                  ${snapshot.isDraggingOver ? 'ring-2 ring-blue-500/50' : ''}
-                `}
-              >
-                <div className="text-sm font-medium mb-4 text-gray-600 dark:text-gray-400">
-                  Pool de Artigos
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  {columns.pool.map((article, index) => (
-                    <DraggableArticle
-                      key={article.id}
-                      article={article}
-                      index={index}
-                      isDarkTheme={isDarkTheme}
-                      isInColumn={false}
-                      columnIsFull={false}
-                    />
-                  ))}
-                </div>
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
+          <div className="w-full md:w-1/3 md:order-2">
+            <ArticlesPool
+              articles={columns.pool}
+              isDarkTheme={isDarkTheme}
+              droppableId="pool"
+            />
+          </div>
 
           {/* Coluna da Lista */}
-          <DroppableColumn
-            id="col-0"
-            droppableId="col-0"
-            title="Lista"
-            articles={columns['col-0']}
-            maxItems={currentVariant.maxItems}
-            isDarkTheme={isDarkTheme}
-            width="full"
-          />
+          <div className="w-full md:w-2/3 md:order-1">
+            <DroppableColumn
+              id="col-0"
+              droppableId="col-0"
+              title="Lista"
+              articles={columns['col-0']}
+              maxItems={currentVariant.maxItems}
+              isDarkTheme={isDarkTheme}
+              width="w-full"
+              headingProps={{
+                fontSize: '1.125rem',
+                fontWeight: '500'
+              }}
+            />
+          </div>
         </div>
       </DragDropContext>
     </div>

@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { Article } from '../../PageblockV2/types';
-import DraggableArticle from './DraggableArticle';
 import DroppableColumn from './DroppableColumn';
 import MixedLayoutPreview from './MixedLayoutPreview';
+import ArticlesPool from './ArticlesPool';
 
 interface MixedManagerProps {
   articles: Article[];
   isDarkTheme?: boolean;
   onSave: (columns: { [key: string]: Article[] }) => void;
+  variant?: keyof typeof LAYOUT_VARIANTS;
 }
 
 type ColumnId = 'col-0' | 'col-1' | 'col-2';
@@ -141,8 +142,8 @@ const LAYOUT_VARIANTS: LayoutVariants = {
 
 type LayoutVariant = keyof typeof LAYOUT_VARIANTS;
 
-const MixedManager: React.FC<MixedManagerProps> = ({ articles, isDarkTheme, onSave }) => {
-  const [variantType, setVariantType] = useState<LayoutVariant>('sidebar');
+const MixedManager: React.FC<MixedManagerProps> = ({ articles, isDarkTheme, onSave, variant = 'sidebar' }) => {
+  const [variantType, setVariantType] = useState<LayoutVariant>(variant as LayoutVariant);
   const [columns, setColumns] = useState<{ [key: string]: Article[] }>({
     pool: articles,
     'col-0': [],
@@ -202,89 +203,140 @@ const MixedManager: React.FC<MixedManagerProps> = ({ articles, isDarkTheme, onSa
   const currentLayout = LAYOUT_VARIANTS[variantType];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Layout Selector */}
-      <div className="flex items-center gap-2">
-        <div className="text-sm font-medium text-gray-600 dark:text-gray-400">
-          Tipo de Layout:
-        </div>
-        <div className="flex gap-2">
-          {Object.entries(LAYOUT_VARIANTS).map(([key, config]) => (
-            <button
-              key={key}
-              onClick={() => setVariantType(key as LayoutVariant)}
-              className={`
-                px-3 py-1.5 text-xs font-medium rounded-full
-                transition-colors duration-200
-                ${
-                  variantType === key
-                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
-                    : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
-                }
-              `}
-            >
-              {config.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Layout Preview */}
-      <MixedLayoutPreview
-        variantType={variantType}
-        isDarkTheme={isDarkTheme}
-        columns={columns}
-      />
-
-      {/* Drag and Drop Area */}
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-[2fr,1fr,1fr] gap-4">
-          {/* Articles Pool */}
-          <Droppable droppableId="pool">
-            {(provided, snapshot) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-4">
+          <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            Tipo de Layout:
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {Object.entries(LAYOUT_VARIANTS).map(([key, config]) => (
+              <button
+                key={key}
+                onClick={() => setVariantType(key as LayoutVariant)}
                 className={`
-                  p-4 rounded-lg min-h-[200px]
+                  px-3 py-1.5 text-sm font-medium rounded-md
+                  transition-colors duration-200
                   ${
-                    snapshot.isDraggingOver
-                      ? 'bg-blue-50 dark:bg-blue-900/20'
-                      : 'bg-gray-50 dark:bg-gray-800/50'
+                    variantType === key
+                      ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-400'
+                      : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
                   }
                 `}
               >
-                <div className="text-sm font-medium mb-3 text-gray-600 dark:text-gray-400">
-                  Pool de Artigos ({columns.pool.length})
-                </div>
-                <div className="space-y-2">
-                  {columns.pool.map((article, index) => (
-                    <DraggableArticle
-                      key={article.id}
-                      article={article}
-                      index={index}
-                    />
-                  ))}
-                </div>
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
+                {config.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Layout Preview */}
+        <MixedLayoutPreview
+          variantType={variantType}
+          isDarkTheme={isDarkTheme}
+          columns={columns}
+        />
+      </div>
+
+      {/* Drag and Drop Area */}
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Articles Pool */}
+          <div className="w-full md:w-1/3 md:order-2">
+            <ArticlesPool
+              articles={columns.pool}
+              isDarkTheme={isDarkTheme}
+              droppableId="pool"
+            />
+          </div>
 
           {/* Layout Columns */}
-          <div className="col-span-2 grid grid-cols-2 gap-4">
-            {Object.entries(currentLayout.maxItems).map(([columnId, maxItems]) => (
-              <DroppableColumn
-                key={columnId}
-                id={columnId}
-                droppableId={columnId}
-                title={currentLayout.columnLabels[columnId as keyof typeof currentLayout.columnLabels]}
-                articles={columns[columnId] || []}
-                maxItems={maxItems}
-                isDarkTheme={isDarkTheme}
-                width="w-full"
-              />
-            ))}
+          <div className="w-full md:w-2/3 md:order-1">
+            <div className={`
+              ${variantType === 'magazine' 
+                ? 'grid grid-cols-1 gap-4' 
+                : 'grid grid-cols-1 md:grid-cols-2 gap-4'
+              }
+            `}>
+              {Object.entries(currentLayout.maxItems).map(([columnId, maxItems]) => {
+                // Para o layout magazine, ajustamos o layout para ter uma coluna principal e duas secundárias
+                if (variantType === 'magazine') {
+                  if (columnId === 'col-0') {
+                    return (
+                      <DroppableColumn
+                        key={columnId}
+                        id={columnId}
+                        droppableId={columnId}
+                        title={currentLayout.columnLabels[columnId as keyof typeof currentLayout.columnLabels]}
+                        articles={columns[columnId] || []}
+                        maxItems={maxItems}
+                        isDarkTheme={isDarkTheme}
+                        width="w-full"
+                        headingProps={{
+                          fontSize: '1.125rem',
+                          fontWeight: '500'
+                        }}
+                        showExcerpt={true}
+                      />
+                    );
+                  } else if (columnId === 'col-1' || columnId === 'col-2') {
+                    // Renderizamos as colunas secundárias lado a lado
+                    return columnId === 'col-1' ? (
+                      <div key={columnId} className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <DroppableColumn
+                          id={columnId}
+                          droppableId={columnId}
+                          title={currentLayout.columnLabels[columnId as keyof typeof currentLayout.columnLabels]}
+                          articles={columns[columnId] || []}
+                          maxItems={maxItems}
+                          isDarkTheme={isDarkTheme}
+                          width="w-full"
+                          headingProps={{
+                            fontSize: '1rem',
+                            fontWeight: '500'
+                          }}
+                          showExcerpt={false}
+                        />
+                        <DroppableColumn
+                          id="col-2"
+                          droppableId="col-2"
+                          title={currentLayout.columnLabels['col-2' as keyof typeof currentLayout.columnLabels]}
+                          articles={columns['col-2'] || []}
+                          maxItems={currentLayout.maxItems['col-2' as keyof typeof currentLayout.maxItems]}
+                          isDarkTheme={isDarkTheme}
+                          width="w-full"
+                          headingProps={{
+                            fontSize: '1rem',
+                            fontWeight: '500'
+                          }}
+                          showExcerpt={false}
+                        />
+                      </div>
+                    ) : null;
+                  }
+                }
+
+                // Para outros layouts, renderizamos normalmente
+                return (
+                  <DroppableColumn
+                    key={columnId}
+                    id={columnId}
+                    droppableId={columnId}
+                    title={currentLayout.columnLabels[columnId as keyof typeof currentLayout.columnLabels]}
+                    articles={columns[columnId] || []}
+                    maxItems={maxItems}
+                    isDarkTheme={isDarkTheme}
+                    width="w-full"
+                    headingProps={{
+                      fontSize: columnId === 'col-0' ? '1.125rem' : '1rem',
+                      fontWeight: '500'
+                    }}
+                    showExcerpt={columnId === 'col-0'}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
       </DragDropContext>

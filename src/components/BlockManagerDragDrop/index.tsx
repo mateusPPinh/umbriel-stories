@@ -3,19 +3,21 @@ import { Article } from '../PageblockV2/types';
 import GridManager from './components/GridManager';
 import ListManager from './components/ListManager';
 import MixedManager from './components/MixedManager';
-
+import FeaturedManager from './components/FeaturedManager';
 interface BlockManagerDragDropProps {
   articles: Article[];
-  blockType: 'grid' | 'list' | 'mixed';
+  blockType: 'grid' | 'list' | 'mixed' | 'featured';
   isDarkTheme?: boolean;
   onSave: (columns: { [key: string]: Article[] }) => void;
+  variant?: string;
 }
 
 const BlockManagerDragDrop: React.FC<BlockManagerDragDropProps> = ({
   articles,
   blockType,
   isDarkTheme,
-  onSave
+  onSave,
+  variant
 }) => {
   const renderManager = () => {
     switch (blockType) {
@@ -25,6 +27,7 @@ const BlockManagerDragDrop: React.FC<BlockManagerDragDropProps> = ({
             articles={articles}
             isDarkTheme={isDarkTheme}
             onSave={onSave}
+            variant={variant}
           />
         );
       case 'list':
@@ -33,11 +36,21 @@ const BlockManagerDragDrop: React.FC<BlockManagerDragDropProps> = ({
             articles={articles}
             isDarkTheme={isDarkTheme}
             onSave={onSave}
+            variant={variant}
           />
         );
       case 'mixed':
         return (
           <MixedManager
+            articles={articles}
+            isDarkTheme={isDarkTheme}
+            onSave={onSave}
+            variant={variant}
+          />
+        );
+      case 'featured':
+        return (
+          <FeaturedManager
             articles={articles}
             isDarkTheme={isDarkTheme}
             onSave={onSave}

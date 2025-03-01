@@ -9,13 +9,13 @@ interface LayoutPreviewProps {
 
 const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme, columns }) => {
   // Helper function to render a preview item
-  const renderPreviewItem = (article?: Article, size: 'small' | 'medium' | 'large' = 'medium') => {
+  const renderPreviewItem = (article?: Article, size: 'small' | 'medium' | 'large' = 'medium', heightClass?: string) => {
     const aspectRatio = size === 'small' ? 'aspect-[4/3]' : size === 'large' ? 'aspect-[16/9]' : 'aspect-[16/10]';
     
     if (!article) {
       return (
-        <div className="flex flex-col gap-2">
-          <div className={`${aspectRatio} rounded ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
+        <div className={`flex flex-col gap-2 ${heightClass || ''}`}>
+          <div className={`${heightClass ? '' : aspectRatio} rounded ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'} w-full h-full`} />
           <div className="space-y-1.5">
             <div className={`h-2.5 rounded ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
             <div className={`h-2 rounded w-2/3 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
@@ -25,8 +25,8 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme,
     }
 
     return (
-      <div className="flex flex-col gap-2">
-        <div className={`${aspectRatio} rounded overflow-hidden`}>
+      <div className={`flex flex-col gap-2 ${heightClass || ''}`}>
+        <div className={`${heightClass ? '' : aspectRatio} rounded overflow-hidden`}>
           {article.content?.image?.desktop_image_path ? (
             <img
               src={article.content.image.desktop_image_path}
@@ -38,7 +38,7 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme,
           )}
         </div>
         <div className="space-y-1.5">
-          <div className="h-2.5 overflow-hidden">
+          <div className="h-10 overflow-hidden">
             <div className={`text-xs font-medium line-clamp-1 ${isDarkTheme ? 'text-white' : 'text-gray-900'}`}>
               {article.title}
             </div>
@@ -127,13 +127,47 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme,
         );
 
       case 'masonry':
+        // Masonry layout com alturas variáveis
+        const heightClasses = [
+          'h-48', // Altura média
+          'h-64', // Altura grande
+          'h-40', // Altura pequena
+          'h-96', // Altura média-grande
+          'h-36', // Altura pequena
+          'h-52', // Altura média
+        ];
+        
         return (
-          <div className="grid grid-cols-3 gap-4 h-full">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className={`${i < 3 ? 'mb-4' : ''}`}>
-                {renderPreviewItem(columns[`col-${Math.floor(i/2)}`]?.[i % 2], 'medium')}
+          <div className="grid grid-cols-3 gap-4 h-full max-h-[500px]">
+            {/* Coluna 1 */}
+            <div className="flex flex-col gap-4">
+              <div className="w-full h-full min-h-[330px]">
+                {renderPreviewItem(columns['col-0']?.[0], 'medium', heightClasses[0])}
               </div>
-            ))}
+              <div className="w-full h-full min-h-[330px]">
+                {renderPreviewItem(columns['col-0']?.[1], 'medium', heightClasses[3])}
+              </div>
+            </div>
+            
+            {/* Coluna 2 */}
+            <div className="flex flex-col gap-4">
+              <div className="w-full h-full">
+                {renderPreviewItem(columns['col-1']?.[0], 'medium', heightClasses[1])}
+              </div>
+              <div className="w-full h-full">
+                {renderPreviewItem(columns['col-1']?.[1], 'medium', heightClasses[4])}
+              </div>
+            </div>
+            
+            {/* Coluna 3 */}
+            <div className="flex flex-col gap-4">
+              <div className="w-full h-full">
+                {renderPreviewItem(columns['col-2']?.[0], 'medium', heightClasses[2])}
+              </div>
+              <div className="w-full h-full">
+                {renderPreviewItem(columns['col-2']?.[1], 'medium', heightClasses[5])}
+              </div>
+            </div>
           </div>
         );
 

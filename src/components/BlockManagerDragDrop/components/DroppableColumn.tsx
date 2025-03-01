@@ -11,6 +11,23 @@ interface DroppableColumnProps {
   maxItems: number;
   isDarkTheme?: boolean;
   width: string;
+  style?: React.CSSProperties;
+  headingProps?: {
+    fontSize?: string;
+    fontWeight?: string;
+    color?: string;
+  };
+  subtitleProps?: {
+    fontSize?: string;
+    color?: string;
+  };
+  showExcerpt?: boolean;
+  isNewsGrid?: boolean;
+  isFeatured?: boolean;
+  isSidebarMain?: boolean;
+  isSidebarSide?: boolean;
+  isNewsFeedMain?: boolean;
+  isNewsFeedSide?: boolean;
 }
 
 const DroppableColumn: React.FC<DroppableColumnProps> = ({
@@ -20,122 +37,122 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   articles,
   maxItems,
   isDarkTheme,
-  width
+  width,
+  style,
+  headingProps,
+  subtitleProps,
+  showExcerpt,
+  isNewsGrid = false,
+  isFeatured = false,
+  isSidebarMain = false,
+  isSidebarSide = false,
+  isNewsFeedMain = false,
+  isNewsFeedSide = false
 }) => {
   const isFull = articles.length >= maxItems;
-  const [isHovered, setIsHovered] = React.useState(false);
+
+  // Helper function to determine the appropriate class for the droppable area
+  const getDroppableAreaClass = () => {
+    if (isNewsGrid) {
+      return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4';
+    }
+    if (isFeatured) {
+      return 'space-y-4';
+    }
+    if (isSidebarMain) {
+      return 'grid grid-cols-1 md:grid-cols-2 gap-4';
+    }
+    if (isSidebarSide) {
+      return 'space-y-4';
+    }
+    if (isNewsFeedMain || isNewsFeedSide) {
+      return 'space-y-4';
+    }
+    return 'space-y-4';
+  };
 
   return (
-    <div 
-      className={`${width} p-2`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <h3 className={`text-lg font-medium ${isDarkTheme ? 'text-white' : 'text-gray-900'}`}>
-            {title}
-          </h3>
-          {/* Tooltip com informações da coluna */}
-          {isHovered && (
-            <div className={`
-              px-2 py-1 rounded text-xs
-              ${isDarkTheme ? 'bg-gray-800 text-gray-300' : 'bg-gray-700 text-gray-100'}
-            `}>
-              Máximo: {maxItems} artigos
-            </div>
-          )}
-        </div>
-        <span className={`
-          text-sm font-medium transition-colors duration-200
-          ${isFull ? 'text-red-500 dark:text-red-400' : 'text-gray-500 dark:text-gray-400'}
-          ${articles.length === 0 ? 'animate-pulse' : ''}
-        `}>
+    <div className={`${width} mb-4`} style={style}>
+      {/* Cabeçalho da coluna */}
+      <div className={`
+        flex items-center justify-between mb-2
+        ${isDarkTheme ? 'text-white' : 'text-gray-900'}
+      `}>
+        <h3 
+          className="font-medium"
+          style={{
+            fontSize: headingProps?.fontSize || '1rem',
+            fontWeight: headingProps?.fontWeight || '500',
+            color: headingProps?.color || (isDarkTheme ? '#F9FAFB' : '#111827')
+          }}
+        >
+          {title}
+        </h3>
+        <span className="text-xs text-gray-500 dark:text-gray-400">
           {articles.length}/{maxItems}
         </span>
       </div>
 
+      {/* Área de drop */}
       <Droppable droppableId={droppableId}>
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
             className={`
-              relative p-4 rounded-lg min-h-[200px]
-              transition-all duration-300
-              ${isFull ? 'bg-red-50 dark:bg-red-900/10' : 'bg-gray-100 dark:bg-gray-800'}
-              ${snapshot.isDraggingOver && !isFull ? 'bg-blue-50 dark:bg-blue-900/10 scale-[1.02] ring-2 ring-blue-500' : ''}
-              ${isFull ? 'border-2 border-red-200 dark:border-red-800' : 'border-2 border-transparent'}
+              min-h-[220px] rounded-lg border-2 p-4
+              ${snapshot.isDraggingOver
+                ? isDarkTheme
+                  ? 'border-blue-500 bg-gray-700'
+                  : 'border-blue-500 bg-blue-50'
+                : isDarkTheme
+                ? 'border-gray-700 bg-gray-800'
+                : 'border-gray-200 bg-gray-50'
+              }
+              ${getDroppableAreaClass()}
             `}
+            style={{ minHeight: articles.length === 0 ? '220px' : 'auto' }}
           >
-            {/* Drop Indicator */}
-            {snapshot.isDraggingOver && !isFull && (
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className={`
-                  w-full h-full rounded-lg
-                  border-2 border-dashed
-                  ${isDarkTheme ? 'border-blue-400/50' : 'border-blue-500/50'}
-                  animate-pulse
-                `} />
-              </div>
-            )}
-
-            {/* Empty State */}
-            {articles.length === 0 && !snapshot.isDraggingOver && (
+            {articles.length === 0 && (
               <div className={`
-                absolute inset-0 flex items-center justify-center
-                text-sm ${isDarkTheme ? 'text-gray-500' : 'text-gray-400'}
-                pointer-events-none
+                flex items-center justify-center h-full min-h-[180px] text-sm
+                ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}
+                ${isNewsGrid ? 'col-span-full' : ''}
               `}>
-                <div className="flex flex-col items-center gap-2">
-                  <svg
-                    className="w-6 h-6 opacity-50"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
-                  <span>Arraste artigos para aqui</span>
-                </div>
+                Arraste artigos para esta coluna
               </div>
             )}
-
-            {/* Full Column Warning */}
-            {isFull && (
-              <div className={`
-                absolute -top-1 left-1/2 transform -translate-x-1/2 -translate-y-full
-                px-2 py-1 rounded-full text-xs font-medium bg-red-500 text-white
-                ${snapshot.isDraggingOver ? 'animate-bounce' : ''}
-              `}>
-                Limite atingido
-              </div>
-            )}
-
-            {/* Articles */}
-            <div className={`
-              space-y-2 relative z-10
-              ${snapshot.isDraggingOver ? 'opacity-75' : 'opacity-100'}
-              transition-opacity duration-200
-            `}>
-              {articles.map((article, index) => (
-                <DraggableArticle
-                  key={article.id}
-                  article={article}
-                  index={index}
-                  isDarkTheme={isDarkTheme}
-                  isInColumn
-                  columnIsFull={isFull}
-                />
-              ))}
-            </div>
-
+            
+            {articles.map((article, index) => (
+              <DraggableArticle
+                key={article.id}
+                article={article}
+                index={index}
+                isDarkTheme={isDarkTheme}
+                isInColumn={true}
+                columnIsFull={isFull}
+                subtitleProps={subtitleProps}
+                showExcerpt={showExcerpt}
+                isNewsGrid={isNewsGrid}
+                isFeatured={isFeatured}
+                isSidebarMain={isSidebarMain}
+                isSidebarSide={isSidebarSide}
+                isNewsFeedMain={isNewsFeedMain}
+                isNewsFeedSide={isNewsFeedSide}
+              />
+            ))}
             {provided.placeholder}
+            {isFull && articles.length > 0 && (
+              <div
+                className={`
+                  mt-2 rounded-md p-2 text-center text-sm
+                  ${isDarkTheme ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}
+                  ${isNewsGrid ? 'col-span-full' : ''}
+                `}
+              >
+                Maximum of {maxItems} articles reached
+              </div>
+            )}
           </div>
         )}
       </Droppable>

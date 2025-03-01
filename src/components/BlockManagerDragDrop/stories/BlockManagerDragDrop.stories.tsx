@@ -8,6 +8,7 @@ interface BlockManagerDragDropProps {
   blockType: 'grid' | 'list' | 'mixed';
   isDarkTheme?: boolean;
   onSave: (columns: { [key: string]: any[] }) => void;
+  variant?: string;
 }
 
 export default {
@@ -45,6 +46,7 @@ Grid_Standard.args = {
   articles: mockArticles,
   isDarkTheme: false,
   onSave: (columns) => console.log('Updated columns:', columns),
+  variant: 'standard'
 };
 Grid_Standard.storyName = 'Grid/Standard';
 
@@ -52,6 +54,7 @@ export const Grid_Featured = Template.bind({});
 Grid_Featured.args = {
   ...Grid_Standard.args,
   blockType: 'grid',
+  variant: 'featured'
 };
 Grid_Featured.storyName = 'Grid/Featured';
 
@@ -59,6 +62,7 @@ export const Grid_Masonry = Template.bind({});
 Grid_Masonry.args = {
   ...Grid_Standard.args,
   blockType: 'grid',
+  variant: 'masonry'
 };
 Grid_Masonry.storyName = 'Grid/Masonry';
 
@@ -66,6 +70,7 @@ export const Grid_Sidebar = Template.bind({});
 Grid_Sidebar.args = {
   ...Grid_Standard.args,
   blockType: 'grid',
+  variant: 'sidebargrid'
 };
 Grid_Sidebar.storyName = 'Grid/Sidebar';
 
@@ -73,6 +78,7 @@ export const Grid_News = Template.bind({});
 Grid_News.args = {
   ...Grid_Standard.args,
   blockType: 'grid',
+  variant: 'newsgrid'
 };
 Grid_News.storyName = 'Grid/News';
 
@@ -80,6 +86,7 @@ export const Grid_NewsFeed = Template.bind({});
 Grid_NewsFeed.args = {
   ...Grid_Standard.args,
   blockType: 'grid',
+  variant: 'newsfeed'
 };
 Grid_NewsFeed.storyName = 'Grid/News Feed';
 
