@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { Article } from '../../PageblockV2/types';
 import DroppableColumn from './DroppableColumn';
@@ -6,25 +6,28 @@ import FeaturedLayoutPreview from './FeaturedLayoutPreview';
 import ArticlesPool from './ArticlesPool';
 import { BlockConfig } from './StyleConfigModal';
 import { useBlockState } from '../hooks/useBlockState';
+import { FeaturedVariantType } from '../types';
 
 interface FeaturedManagerProps {
   pageId: string;
   articles: Article[];
   isDarkTheme?: boolean;
-  onSave?: (data: any) => void;
+  onSave: (data: any) => void;
+  variant?: FeaturedVariantType;
   blockConfig: BlockConfig;
   onConfigClick: () => void;
-  variant?: 'hero' | 'split' | 'triple';
+  isPreviewOnly?: boolean;
 }
 
 const FeaturedManager: React.FC<FeaturedManagerProps> = ({ 
   pageId,
   articles, 
   isDarkTheme, 
-  onSave,
+  onSave, 
+  variant = 'hero',
   blockConfig,
   onConfigClick,
-  variant = 'hero'
+  isPreviewOnly = false
 }) => {
   const {
     blockState,
@@ -95,91 +98,122 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
 
   const currentVariant = variants.find(v => v.id === blockState.currentVariant.variantType) || variants[0];
 
+  const handleVariantChange = (newVariant: FeaturedVariantType) => {
+    updateVariant(newVariant);
+  };
+
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <h2 className="text-lg font-medium text-gray-900 dark:text-white">
-            Gerenciador de Destaque
-          </h2>
+      {!isPreviewOnly && (
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <label htmlFor="variant-select" className="text-sm text-gray-600 dark:text-gray-400">
+                Variante:
+              </label>
+              <select
+                id="variant-select"
+                value={blockState.currentVariant.variantType}
+                onChange={(e) => handleVariantChange(e.target.value as FeaturedVariantType)}
+                className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
+              >
+                {variants.map(variant => (
+                  <option key={variant.id} value={variant.id}>
+                    {variant.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
           <div className="flex items-center gap-2">
-            <label htmlFor="variant-select" className="text-sm text-gray-600 dark:text-gray-400">
-              Variante:
-            </label>
-            <select
-              id="variant-select"
-              value={blockState.currentVariant.variantType}
-              onChange={(e) => updateVariant(e.target.value as 'hero' | 'split' | 'triple')}
-              className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
+            <button
+              onClick={handleSave}
+              className="px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
-              {variants.map(variant => (
-                <option key={variant.id} value={variant.id}>
-                  {variant.label}
-                </option>
-              ))}
-            </select>
+              Salvar
+            </button>
+            <button
+              onClick={onConfigClick}
+              className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Configurar Estilos
+            </button>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onConfigClick}
-            className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Configurar Estilos
-          </button>
-          <button
-            onClick={handleSave}
-            className="px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-          >
-            Salvar
-          </button>
-        </div>
-      </div>
+      )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        <div className="lg:col-span-2">
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="flex flex-col gap-4">
-              <ArticlesPool
-                droppableId="pool"
-                articles={blockState.articles.pool || []}
-                isDarkTheme={isDarkTheme}
-              />
-              <div className="w-full">
-                <DroppableColumn
-                  id="col-0"
-                  droppableId="col-0"
-                  title={currentVariant.label}
-                  articles={blockState.articles['col-0'] || []}
-                  maxItems={currentVariant.maxItems}
-                  isDarkTheme={isDarkTheme}
-                  width="w-full"
-                  showExcerpt={blockConfig.styles.showExcerpt}
-                  isFeatured={true}
-                  headingProps={{
-                    fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
-                    fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
-                    color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
-                  }}
-                  subtitleProps={{
-                    fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
-                    color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
-                  }}
-                  onRemoveArticle={handleRemoveArticle}
-                />
-              </div>
-            </div>
-          </DragDropContext>
-        </div>
-        <div className="lg:col-span-3">
+      {isPreviewOnly ? (
+        <div className="w-full">
           <FeaturedLayoutPreview
             variantType={blockState.currentVariant.variantType}
-            isDarkTheme={isDarkTheme}
             columns={blockState.articles}
+            isDarkTheme={isDarkTheme}
             blockConfig={blockConfig}
           />
         </div>
-      </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          <div className="lg:col-span-2">
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <div className="flex flex-col gap-4">
+                <ArticlesPool
+                  droppableId="pool"
+                  articles={blockState.articles.pool}
+                  isDarkTheme={isDarkTheme}
+                />
+                <div className="grid grid-cols-1 gap-4">
+                  <DroppableColumn
+                    id="col-0"
+                    droppableId="col-0"
+                    title="Artigo Principal"
+                    articles={blockState.articles['col-0'] || []}
+                    maxItems={1}
+                    isDarkTheme={isDarkTheme}
+                    width="w-full"
+                    headingProps={{
+                      fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
+                      fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
+                      color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
+                    }}
+                    subtitleProps={{
+                      fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
+                      color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
+                    }}
+                    onRemoveArticle={handleRemoveArticle}
+                  />
+                  <DroppableColumn
+                    id="col-1"
+                    droppableId="col-1"
+                    title="Artigos Secundários"
+                    articles={blockState.articles['col-1'] || []}
+                    maxItems={currentVariant.maxItems}
+                    isDarkTheme={isDarkTheme}
+                    width="w-full"
+                    headingProps={{
+                      fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
+                      fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
+                      color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
+                    }}
+                    subtitleProps={{
+                      fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
+                      color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
+                    }}
+                    onRemoveArticle={handleRemoveArticle}
+                  />
+                </div>
+              </div>
+            </DragDropContext>
+          </div>
+          <div className="lg:col-span-3">
+            <FeaturedLayoutPreview
+              variantType={blockState.currentVariant.variantType}
+              columns={blockState.articles}
+              isDarkTheme={isDarkTheme}
+              blockConfig={blockConfig}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

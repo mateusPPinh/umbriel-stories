@@ -16,6 +16,7 @@ interface GridManagerProps {
   variant?: GridVariantType;
   blockConfig: BlockConfig;
   onConfigClick: () => void;
+  isPreviewOnly?: boolean;
 }
 
 interface HeadingProps {
@@ -118,7 +119,8 @@ const GridManager: React.FC<GridManagerProps> = ({
   onSave, 
   variant = 'standard',
   blockConfig,
-  onConfigClick
+  onConfigClick,
+  isPreviewOnly = false
 }) => {
   const {
     blockState,
@@ -388,67 +390,80 @@ const GridManager: React.FC<GridManagerProps> = ({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <h2 className="text-lg font-medium text-gray-900 dark:text-white">
-            Gerenciador de Grid
-          </h2>
+      {!isPreviewOnly && (
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <h2 className="text-lg font-medium text-gray-900 dark:text-white">
+              Gerenciador de Grid
+            </h2>
+            <div className="flex items-center gap-2">
+              <label htmlFor="variant-select" className="text-sm text-gray-600 dark:text-gray-400">
+                Variante:
+              </label>
+              <select
+                id="variant-select"
+                value={blockState.currentVariant.variantType}
+                onChange={(e) => updateVariant(e.target.value as GridVariantType)}
+                className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
+              >
+                {Object.values(GRID_VARIANTS).map(variant => (
+                  <option key={variant.id} value={variant.id}>
+                    {variant.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
           <div className="flex items-center gap-2">
-            <label htmlFor="variant-select" className="text-sm text-gray-600 dark:text-gray-400">
-              Variante:
-            </label>
-            <select
-              id="variant-select"
-              value={blockState.currentVariant.variantType}
-              onChange={(e) => updateVariant(e.target.value as GridVariantType)}
-              className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
+            <button
+              onClick={handleSave}
+              className="px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
-              {Object.values(GRID_VARIANTS).map(variant => (
-                <option key={variant.id} value={variant.id}>
-                  {variant.title}
-                </option>
-              ))}
-            </select>
+              Salvar
+            </button>
+            <button
+              onClick={onConfigClick}
+              className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Configurar Estilos
+            </button>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleSave}
-            className="px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-          >
-            Salvar
-          </button>
-          <button
-            onClick={onConfigClick}
-            className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Configurar Estilos
-          </button>
-        </div>
-      </div>
+      )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        <div className="lg:col-span-2">
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="flex flex-col gap-4">
-              <ArticlesPool
-                droppableId="pool"
-                articles={blockState.articles.pool}
-                isDarkTheme={isDarkTheme}
-              />
-              {renderColumns()}
-            </div>
-          </DragDropContext>
-        </div>
-        <div className="lg:col-span-3">
+      {isPreviewOnly ? (
+        <div className="w-full">
           <LayoutPreview
             variantType={blockState.currentVariant.variantType}
-            isDarkTheme={isDarkTheme}
             columns={blockState.articles}
+            isDarkTheme={isDarkTheme}
             blockConfig={blockConfig}
           />
         </div>
-      </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          <div className="lg:col-span-2">
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <div className="flex flex-col gap-4">
+                <ArticlesPool
+                  droppableId="pool"
+                  articles={blockState.articles.pool}
+                  isDarkTheme={isDarkTheme}
+                />
+                {renderColumns()}
+              </div>
+            </DragDropContext>
+          </div>
+          <div className="lg:col-span-3">
+            <LayoutPreview
+              variantType={blockState.currentVariant.variantType}
+              columns={blockState.articles}
+              isDarkTheme={isDarkTheme}
+              blockConfig={blockConfig}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

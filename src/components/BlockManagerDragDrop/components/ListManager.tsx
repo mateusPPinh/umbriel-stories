@@ -8,6 +8,24 @@ import { BlockConfig } from './StyleConfigModal';
 import { useBlockState } from '../hooks/useBlockState';
 import { ListVariantType } from '../types';
 
+// Definição dos tipos de variantes de layout
+const LAYOUT_VARIANTS = {
+  chronological: {
+    label: 'Cronológico',
+    maxItems: 10
+  },
+  compact: {
+    label: 'Compacto',
+    maxItems: 10
+  },
+  card: {
+    label: 'Cartão',
+    maxItems: 10
+  }
+};
+
+type LayoutVariant = keyof typeof LAYOUT_VARIANTS;
+
 interface ListBlockConfig {
   articles: Record<string, Article[]>;
   variant?: 'chronological' | 'compact' | 'card';
@@ -97,6 +115,7 @@ interface ListManagerProps {
   variant?: ListVariantType;
   blockConfig: BlockConfig;
   onConfigClick: () => void;
+  isPreviewOnly?: boolean;
 }
 
 const ListManager: React.FC<ListManagerProps> = ({ 
@@ -105,8 +124,9 @@ const ListManager: React.FC<ListManagerProps> = ({
   isDarkTheme, 
   onSave, 
   variant = 'chronological',
-  blockConfig: initialBlockConfig,
-  onConfigClick
+  blockConfig: externalBlockConfig,
+  onConfigClick,
+  isPreviewOnly = false
 }) => {
   const {
     blockState,
@@ -209,6 +229,9 @@ const ListManager: React.FC<ListManagerProps> = ({
     }));
   }, [blockState.currentVariant.variantType, blockState.articles]);
 
+  // Obtém o tipo de variante válido
+  const validVariantType = blockState.currentVariant.variantType as 'chronological' | 'compact' | 'card';
+
   const handleDragEnd = (result: DropResult) => {
     const { source, destination } = result;
 
@@ -266,102 +289,97 @@ const ListManager: React.FC<ListManagerProps> = ({
     updateArticlePositions(newColumns);
   };
 
-  const handleVariantChange = (newVariant: string) => {
-    updateVariant(newVariant as ListVariantType);
-  };
-
-  const handleSave = () => {
-    const blockData = getApiFormat();
-    onSave(blockData);
-  };
-
-  const variants = [
-    { id: 'chronological', label: 'Timeline', maxItems: 10 },
-    { id: 'compact', label: 'Lista Compacta', maxItems: 15 },
-    { id: 'card', label: 'Cards', maxItems: 8 }
-  ];
-
-  const currentVariant = variants.find(v => v.id === blockState.currentVariant.variantType) || variants[0];
-
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <h2 className="text-lg font-medium text-gray-900 dark:text-white">
-            Gerenciador de Lista
-          </h2>
+      {!isPreviewOnly && (
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <label htmlFor="variant-select" className="text-sm text-gray-600 dark:text-gray-400">
+                Variante:
+              </label>
+              <select
+                id="variant-select"
+                value={blockState.currentVariant.variantType}
+                onChange={(e) => updateVariant(e.target.value as ListVariantType)}
+                className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
+              >
+                {Object.entries(LAYOUT_VARIANTS).map(([key, value]) => (
+                  <option key={key} value={key}>
+                    {value.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
           <div className="flex items-center gap-2">
-            <label htmlFor="variant-select" className="text-sm text-gray-600 dark:text-gray-400">
-              Variante:
-            </label>
-            <select
-              id="variant-select"
-              value={blockState.currentVariant.variantType}
-              onChange={(e) => handleVariantChange(e.target.value)}
-              className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
+            <button
+              onClick={() => onSave(getApiFormat())}
+              className="px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
-              {variants.map(variant => (
-                <option key={variant.id} value={variant.id}>
-                  {variant.label}
-                </option>
-              ))}
-            </select>
+              Salvar
+            </button>
+            <button
+              onClick={onConfigClick}
+              className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Configurar Estilos
+            </button>
           </div>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={onConfigClick}
-            className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
-          >
-            Configurar
-          </button>
-          <button
-            onClick={handleSave}
-            className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-          >
-            Salvar
-          </button>
-        </div>
-      </div>
+      )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        <div className="lg:col-span-2">
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="flex flex-col gap-4">
-              <ArticlesPool
-                droppableId="pool"
-                articles={blockState.articles.pool || []}
-                isDarkTheme={isDarkTheme}
-              />
-              <div className="w-full">
+      {isPreviewOnly ? (
+        <div className="w-full">
+          <ListLayoutPreview
+            variant={validVariantType}
+            articles={blockState.articles['col-0'] || []}
+            isDarkTheme={isDarkTheme}
+            blockConfig={externalBlockConfig}
+          />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          <div className="lg:col-span-2">
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <div className="flex flex-col gap-4">
+                <ArticlesPool
+                  droppableId="pool"
+                  articles={blockState.articles.pool}
+                  isDarkTheme={isDarkTheme}
+                />
                 <DroppableColumn
                   id="col-0"
                   droppableId="col-0"
-                  title="Lista de Artigos"
+                  title="Artigos da Lista"
                   articles={blockState.articles['col-0'] || []}
-                  maxItems={currentVariant.maxItems}
+                  maxItems={LAYOUT_VARIANTS[validVariantType].maxItems}
                   isDarkTheme={isDarkTheme}
-                  onRemoveArticle={handleRemoveArticle}
                   width="w-full"
-                  isChronological={blockState.currentVariant.variantType === 'chronological'}
-                  isCompact={blockState.currentVariant.variantType === 'compact'}
-                  isCard={blockState.currentVariant.variantType === 'card'}
+                  headingProps={{
+                    fontSize: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
+                    fontWeight: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
+                    color: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
+                  }}
+                  subtitleProps={{
+                    fontSize: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
+                    color: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
+                  }}
+                  onRemoveArticle={handleRemoveArticle}
                 />
               </div>
-            </div>
-          </DragDropContext>
+            </DragDropContext>
+          </div>
+          <div className="lg:col-span-3">
+            <ListLayoutPreview
+              variant={validVariantType}
+              articles={blockState.articles['col-0'] || []}
+              isDarkTheme={isDarkTheme}
+              blockConfig={externalBlockConfig}
+            />
+          </div>
         </div>
-
-        <div className="lg:col-span-3">
-          <ListLayoutPreview
-            blockConfig={{
-              ...blockConfig,
-              variant: blockState.currentVariant.variantType as 'chronological' | 'compact' | 'card'
-            }}
-            columns={[blockState.articles['col-0'] || []]}
-          />
-        </div>
-      </div>
+      )}
     </div>
   );
 };
