@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { Article } from '../../PageblockV2/types';
 import DroppableColumn from './DroppableColumn';
@@ -15,72 +15,31 @@ interface MixedManagerProps {
   onConfigClick: () => void;
 }
 
-type ColumnId = 'col-0' | 'col-1' | 'col-2';
+type BaseColumnId = 'col-0' | 'col-1' | 'col-2';
+type ColumnId = BaseColumnId;
 
-interface LayoutConfig {
+type VariantColumns<T extends BaseColumnId[]> = {
+  [K in T[number]]: K extends keyof Record<BaseColumnId, any> ? Record<BaseColumnId, any>[K] : never;
+};
+
+interface LayoutConfig<T extends BaseColumnId[]> {
   label: string;
-  maxItems: Record<ColumnId, number>;
-  columnLabels: Record<ColumnId, string>;
+  maxItems: { [K in T[number]]: number };
+  columnLabels: { [K in T[number]]: string };
 }
 
+type VariantConfig<T extends BaseColumnId[]> = {
+  label: string;
+  maxItems: { [K in T[number]]: number };
+  columnLabels: { [K in T[number]]: string };
+};
+
 type LayoutVariants = {
-  sidebar: {
-    label: string;
-    maxItems: {
-      'col-0': 1;
-      'col-1': 4;
-    };
-    columnLabels: {
-      'col-0': string;
-      'col-1': string;
-    };
-  };
-  showcase: {
-    label: string;
-    maxItems: {
-      'col-0': 1;
-      'col-1': 3;
-    };
-    columnLabels: {
-      'col-0': string;
-      'col-1': string;
-    };
-  };
-  newspaper: {
-    label: string;
-    maxItems: {
-      'col-0': 2;
-      'col-1': 4;
-    };
-    columnLabels: {
-      'col-0': string;
-      'col-1': string;
-    };
-  };
-  magazine: {
-    label: string;
-    maxItems: {
-      'col-0': 1;
-      'col-1': 3;
-      'col-2': 4;
-    };
-    columnLabels: {
-      'col-0': string;
-      'col-1': string;
-      'col-2': string;
-    };
-  };
-  videogrid: {
-    label: string;
-    maxItems: {
-      'col-0': 1;
-      'col-1': 3;
-    };
-    columnLabels: {
-      'col-0': string;
-      'col-1': string;
-    };
-  };
+  sidebar: VariantConfig<['col-0', 'col-1']>;
+  showcase: VariantConfig<['col-0', 'col-1', 'col-2']>;
+  newspaper: VariantConfig<['col-0', 'col-1', 'col-2']>;
+  magazine: VariantConfig<['col-0', 'col-1', 'col-2']>;
+  videogrid: VariantConfig<['col-0', 'col-1']>;
 };
 
 const LAYOUT_VARIANTS: LayoutVariants = {
@@ -100,10 +59,12 @@ const LAYOUT_VARIANTS: LayoutVariants = {
     maxItems: {
       'col-0': 1,
       'col-1': 3,
+      'col-2': 4,
     },
     columnLabels: {
       'col-0': 'Artigo Principal',
       'col-1': 'Artigos Secundários',
+      'col-2': 'Artigos Secundários',
     },
   },
   newspaper: {
@@ -111,10 +72,12 @@ const LAYOUT_VARIANTS: LayoutVariants = {
     maxItems: {
       'col-0': 2,
       'col-1': 4,
+      'col-2': 4,
     },
     columnLabels: {
       'col-0': 'Artigos Principais',
       'col-1': 'Artigos Secundários',
+      'col-2': 'Artigos Secundários',
     },
   },
   magazine: {
@@ -158,8 +121,34 @@ const MixedManager: React.FC<MixedManagerProps> = ({
     pool: articles,
     'col-0': [],
     'col-1': [],
-    'col-2': [],
+    'col-2': []
   });
+
+  // Limpa as colunas quando a variante muda
+  useEffect(() => {
+    // Pega as colunas disponíveis na variante atual
+    const availableColumns = Object.keys(LAYOUT_VARIANTS[variantType].maxItems) as ColumnId[];
+    
+    // Cria um novo objeto de colunas apenas com as colunas disponíveis
+    const newColumns: { [key: string]: Article[] } = {
+      pool: [...columns.pool]
+    };
+
+    // Inicializa as colunas disponíveis com arrays vazios
+    availableColumns.forEach(colId => {
+      newColumns[colId] = [];
+    });
+
+    // Retorna todos os artigos das colunas para a pool
+    Object.entries(columns).forEach(([key, articles]) => {
+      if (key !== 'pool') {
+        newColumns.pool = [...newColumns.pool, ...articles];
+      }
+    });
+
+    setColumns(newColumns);
+    onSave(newColumns);
+  }, [variantType]);
 
   const handleDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -289,24 +278,16 @@ const MixedManager: React.FC<MixedManagerProps> = ({
                 isDarkTheme={isDarkTheme}
               />
               <div className="space-y-4">
-                {Object.keys(currentVariant.maxItems || {}).map((colId) => {
-                  const columnId = colId as ColumnId;
-                  
-                  // Verificar se a coluna existe no objeto currentVariant
-                  if (!currentVariant || 
-                      !(columnId in currentVariant.columnLabels) || 
-                      !(columnId in currentVariant.maxItems)) {
-                    return null;
-                  }
-                  
+                {(Object.keys(currentVariant.maxItems) as BaseColumnId[]).map((colId) => {
+                  const columnId = colId as keyof typeof currentVariant.maxItems;
                   return (
                     <div key={columnId}>
                       <DroppableColumn
                         id={columnId}
                         droppableId={columnId}
-                        title={currentVariant.columnLabels[columnId as keyof typeof currentVariant.columnLabels]}
+                        title={currentVariant.columnLabels[columnId]}
                         articles={columns[columnId] || []}
-                        maxItems={currentVariant.maxItems[columnId as keyof typeof currentVariant.maxItems]}
+                        maxItems={currentVariant.maxItems[columnId]}
                         isDarkTheme={isDarkTheme}
                         width="w-full"
                         showExcerpt={blockConfig.styles.showExcerpt}
