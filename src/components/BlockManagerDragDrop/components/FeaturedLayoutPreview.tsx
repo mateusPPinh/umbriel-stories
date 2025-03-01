@@ -111,16 +111,16 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
     }
     
     return (
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-4">
         {[...Array(2)].map((_, i) => {
           const article = columns['col-0']?.[i];
           
           return (
-            <div key={i} className="flex gap-2">
+            <div key={i} className="flex gap-4">
               {/* Image */}
               <div className="w-1/2">
                 <div className={`
-                  aspect-video rounded overflow-hidden
+                  aspect-video rounded-lg overflow-hidden
                   ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
                 `}>
                   {article?.content?.image?.desktop_image_path && (
@@ -137,19 +137,32 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
               <div className="w-1/2">
                 {article ? (
                   <>
-                    <div className="text-[8px] font-medium text-gray-900 dark:text-white mb-1">
+                    <div 
+                      className="text-base font-medium text-gray-900 dark:text-white mb-2"
+                      style={{
+                        fontSize: theme.headingProps.fontSize,
+                        fontWeight: theme.headingProps.fontWeight,
+                        color: theme.headingProps.color
+                      }}
+                    >
                       {article.title}
                     </div>
                     {article.subtitle && (
-                      <div className="text-[6px] text-gray-500 dark:text-gray-400">
+                      <div 
+                        className="text-sm text-gray-500 dark:text-gray-400"
+                        style={{
+                          fontSize: theme.subtitleProps.fontSize,
+                          color: theme.subtitleProps.color
+                        }}
+                      >
                         {article.subtitle}
                       </div>
                     )}
                   </>
                 ) : (
                   <>
-                    <div className={`h-1.5 w-full rounded mb-1 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                    <div className={`h-1 w-2/3 rounded ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
+                    <div className={`h-4 w-full rounded mb-2 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
+                    <div className={`h-3 w-2/3 rounded ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
                   </>
                 )}
               </div>
@@ -168,7 +181,7 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
     }
     
     return (
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 gap-4">
         {[...Array(3)].map((_, i) => {
           const article = columns['col-0']?.[i];
           
@@ -176,7 +189,7 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
             <div key={i} className="flex flex-col">
               {/* Image */}
               <div className={`
-                aspect-video rounded overflow-hidden mb-1
+                aspect-video rounded-lg overflow-hidden mb-3
                 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
               `}>
                 {article?.content?.image?.desktop_image_path && (
@@ -191,19 +204,32 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
               {/* Content */}
               {article ? (
                 <>
-                  <div className="text-[8px] font-medium text-gray-900 dark:text-white mb-0.5">
+                  <div 
+                    className="font-medium text-gray-900 dark:text-white mb-2"
+                    style={{
+                      fontSize: theme.headingProps.fontSize,
+                      fontWeight: theme.headingProps.fontWeight,
+                      color: theme.headingProps.color
+                    }}
+                  >
                     {article.title}
                   </div>
                   {article.subtitle && (
-                    <div className="text-[6px] text-gray-500 dark:text-gray-400">
+                    <div 
+                      className="text-gray-500 dark:text-gray-400"
+                      style={{
+                        fontSize: theme.subtitleProps.fontSize,
+                        color: theme.subtitleProps.color
+                      }}
+                    >
                       {article.subtitle}
                     </div>
                   )}
                 </>
               ) : (
                 <>
-                  <div className={`h-1.5 w-full rounded mb-1 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
-                  <div className={`h-1 w-2/3 rounded ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
+                  <div className={`h-4 w-full rounded mb-2 ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
+                  <div className={`h-3 w-2/3 rounded ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}`} />
                 </>
               )}
             </div>
@@ -222,7 +248,7 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
       case 'triple':
         return renderTriplePreview();
       default:
-        return null;
+        return currentVariant.skeleton;
     }
   };
 
