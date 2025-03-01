@@ -2,7 +2,21 @@ import { Article } from '../PageblockV2/types';
 
 export type BlockType = 'articles';
 export type TemplateType = 'featured' | 'grid' | 'list' | 'mixed';
-export type VariantType = 'hero' | 'split' | 'triple' | 'standard' | 'masonry' | 'sidebargrid' | 'newsgrid' | 'newsfeed' | 'chronological' | 'compact' | 'card' | 'sidebar' | 'showcase' | 'newspaper' | 'magazine' | 'videogrid';
+
+// Variantes do Featured
+export type FeaturedVariantType = 'hero' | 'split' | 'triple';
+
+// Variantes do Grid
+export type GridVariantType = 'standard' | 'featured' | 'masonry' | 'sidebargrid' | 'newsfeed' | 'newsgrid';
+
+// Variantes do List
+export type ListVariantType = 'chronological' | 'compact' | 'card';
+
+// Variantes do Mixed
+export type MixedVariantType = 'sidebar' | 'showcase' | 'newspaper' | 'magazine' | 'videogrid';
+
+// Todas as variantes possíveis
+export type VariantType = FeaturedVariantType | GridVariantType | ListVariantType | MixedVariantType;
 
 export interface ColumnStyle {
   background: string;
@@ -86,4 +100,24 @@ export interface LocalBlockState extends Omit<PageBlock, 'variants'> {
   articles: {
     [key: string]: Article[];
   };
+}
+
+export interface Column {
+  id: string;
+  title: string;
+  width?: string;
+}
+
+export interface GridLayout {
+  container: string;
+  grid?: string;
+  wrapper?: string;
+}
+
+export interface GridVariant {
+  id: string;
+  title: string;
+  maxItems: number;
+  columns: Column[];
+  layout: GridLayout;
 }

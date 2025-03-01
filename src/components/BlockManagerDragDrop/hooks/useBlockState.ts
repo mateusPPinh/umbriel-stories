@@ -88,6 +88,112 @@ export const useBlockState = ({
 
     // Inicializa o estado para cada variante
     const variantStates = {
+      // Grid variants
+      standard: {
+        variantType: 'standard' as VariantType,
+        variantPosition: 1,
+        articles: {
+          'pool': initialArticles,
+          'col-0': [],
+          'col-1': [],
+          'col-2': []
+        },
+        config: {
+          ...defaultConfig,
+          articles: {
+            'pool': initialArticles.map(article => article.id),
+            'col-0': [],
+            'col-1': [],
+            'col-2': []
+          }
+        }
+      },
+      featured: {
+        variantType: 'featured' as VariantType,
+        variantPosition: 1,
+        articles: {
+          'pool': initialArticles,
+          'col-0': [],
+          'col-1': []
+        },
+        config: {
+          ...defaultConfig,
+          articles: {
+            'pool': initialArticles.map(article => article.id),
+            'col-0': [],
+            'col-1': []
+          }
+        }
+      },
+      masonry: {
+        variantType: 'masonry' as VariantType,
+        variantPosition: 1,
+        articles: {
+          'pool': initialArticles,
+          'col-0': [],
+          'col-1': [],
+          'col-2': []
+        },
+        config: {
+          ...defaultConfig,
+          articles: {
+            'pool': initialArticles.map(article => article.id),
+            'col-0': [],
+            'col-1': [],
+            'col-2': []
+          }
+        }
+      },
+      sidebargrid: {
+        variantType: 'sidebargrid' as VariantType,
+        variantPosition: 1,
+        articles: {
+          'pool': initialArticles,
+          'col-0': [],
+          'col-1': []
+        },
+        config: {
+          ...defaultConfig,
+          articles: {
+            'pool': initialArticles.map(article => article.id),
+            'col-0': [],
+            'col-1': []
+          }
+        }
+      },
+      newsfeed: {
+        variantType: 'newsfeed' as VariantType,
+        variantPosition: 1,
+        articles: {
+          'pool': initialArticles,
+          'col-0': []
+        },
+        config: {
+          ...defaultConfig,
+          articles: {
+            'pool': initialArticles.map(article => article.id),
+            'col-0': []
+          }
+        }
+      },
+      newsgrid: {
+        variantType: 'newsgrid' as VariantType,
+        variantPosition: 1,
+        articles: {
+          'pool': initialArticles,
+          'col-0': [],
+          'col-1': []
+        },
+        config: {
+          ...defaultConfig,
+          articles: {
+            'pool': initialArticles.map(article => article.id),
+            'col-0': [],
+            'col-1': []
+          }
+        }
+      },
+      // Featured variants
       hero: {
         variantType: 'hero' as VariantType,
         variantPosition: 1,
@@ -254,12 +360,26 @@ export const useBlockState = ({
   const getApiFormat = useCallback((): PageBlock => {
     const getMaxColumns = (variantType: VariantType): number => {
       switch (variantType) {
+        // Featured variants
         case 'hero':
           return 1;
         case 'split':
           return 2;
         case 'triple':
           return 3;
+        // Grid variants
+        case 'standard':
+          return 3;
+        case 'featured':
+          return 2;
+        case 'masonry':
+          return 3;
+        case 'sidebargrid':
+          return 2;
+        case 'newsfeed':
+          return 1;
+        case 'newsgrid':
+          return 2;
         default:
           return 1;
       }
