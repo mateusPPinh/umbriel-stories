@@ -128,6 +128,7 @@ const BlockManagerDragDrop: React.FC<BlockManagerDragDropProps> = ({
             onSave={onSave}
             blockConfig={blockConfig}
             onConfigClick={handleOpenConfigModal}
+            variant={currentVariant as 'hero' | 'split' | 'triple'}
           />
         );
       default:

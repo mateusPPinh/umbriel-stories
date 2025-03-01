@@ -5,7 +5,7 @@ import { createArticles } from '../../PageblockV2/stories/mockData';
 
 interface BlockManagerDragDropProps {
   articles: any[];
-  blockType: 'grid' | 'list' | 'mixed';
+  blockType: 'grid' | 'list' | 'mixed' | 'featured';
   isDarkTheme?: boolean;
   onSave: (columns: { [key: string]: any[] }) => void;
   variant?: string;
@@ -172,4 +172,31 @@ Theme_Dark_Mixed.args = {
   ...Mixed_Sidebar.args,
   isDarkTheme: true,
 };
-Theme_Dark_Mixed.storyName = 'Theme/Dark/Mixed'; 
+Theme_Dark_Mixed.storyName = 'Theme/Dark/Mixed';
+
+// Featured Variants
+export const Featured_Hero = Template.bind({});
+Featured_Hero.args = {
+  blockType: 'featured',
+  articles: mockArticles,
+  isDarkTheme: false,
+  onSave: (columns) => console.log('Updated columns:', columns),
+  variant: 'hero'
+};
+Featured_Hero.storyName = 'Featured/Hero';
+
+export const Featured_Split = Template.bind({});
+Featured_Split.args = {
+  ...Featured_Hero.args,
+  blockType: 'featured',
+  variant: 'split'
+};
+Featured_Split.storyName = 'Featured/Split';
+
+export const Featured_Triple = Template.bind({});
+Featured_Triple.args = {
+  ...Featured_Hero.args,
+  blockType: 'featured',
+  variant: 'triple'
+};
+Featured_Triple.storyName = 'Featured/Triple'; 

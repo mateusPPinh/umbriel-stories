@@ -14,75 +14,102 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
   const heroHeight = blockConfig.styles.heroHeight || '400px';
   const splitRatio = blockConfig.styles.splitRatio || '1:1';
   
+  const variants = [
+    { 
+      id: 'hero', 
+      skeleton: (
+        <div className="w-full aspect-[21/9] rounded-lg overflow-hidden">
+          <div className={`w-full h-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'} animate-pulse`} />
+          <div className="absolute bottom-0 left-0 right-0 p-4">
+            <div className="space-y-2">
+              <div className={`h-6 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-3/4 animate-pulse`} />
+              <div className={`h-4 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-1/2 animate-pulse`} />
+            </div>
+          </div>
+        </div>
+      )
+    },
+    { 
+      id: 'split',
+      skeleton: (
+        <div className="grid grid-cols-2 gap-4">
+          {[...Array(2)].map((_, i) => (
+            <div key={i} className="flex gap-4">
+              <div className="w-1/2">
+                <div className={`aspect-video rounded-lg ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'} animate-pulse`} />
+              </div>
+              <div className="w-1/2 space-y-2">
+                <div className={`h-4 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-full animate-pulse`} />
+                <div className={`h-4 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-2/3 animate-pulse`} />
+              </div>
+            </div>
+          ))}
+        </div>
+      )
+    },
+    { 
+      id: 'triple',
+      skeleton: (
+        <div className="grid grid-cols-3 gap-4">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="space-y-2">
+              <div className={`aspect-video rounded-lg ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'} animate-pulse`} />
+              <div className={`h-4 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-full animate-pulse`} />
+              <div className={`h-4 ${isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'} rounded w-2/3 animate-pulse`} />
+            </div>
+          ))}
+        </div>
+      )
+    }
+  ];
+
+  const currentVariant = variants.find(v => v.id === variantType) || variants[0];
+
   const renderHeroPreview = () => {
+    console.log('Columns:', columns);
     const article = columns['col-0']?.[0];
+    console.log('Selected Article:', article);
+    
+    if (!article) {
+      return currentVariant.skeleton;
+    }
     
     return (
-      <div 
-        className="relative rounded overflow-hidden"
-        style={{ height: heroHeight }}
-      >
-        {/* Background */}
-        <div className={`absolute inset-0 ${isDarkTheme ? 'bg-gray-800' : 'bg-gray-200'}`}>
-          {article?.content?.image?.desktop_image_path && (
-            <div className="relative w-full h-full">
+      <div className="w-full aspect-[21/9] rounded-lg overflow-hidden">
+        <div className="relative w-full h-full">
+          {article.content?.image?.desktop_image_path && (
+            <>
               <img
                 src={article.content.image.desktop_image_path}
                 alt={article.title}
-                className={`w-full h-full object-${blockConfig.mediaConfig?.imageConfig?.fit || 'cover'} object-${blockConfig.mediaConfig?.imageConfig?.position || 'center'}`}
+                className="w-full h-full object-cover"
               />
-              {blockConfig.mediaConfig?.imageConfig?.overlay?.enabled && (
-                <div 
-                  className="absolute inset-0" 
-                  style={{
-                    backgroundColor: blockConfig.mediaConfig.imageConfig.overlay.color || 'rgba(0,0,0,0.5)',
-                    opacity: blockConfig.mediaConfig.imageConfig.overlay.opacity || 0.5
-                  }}
-                />
-              )}
-            </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+            </>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-        </div>
-
-        {/* Content */}
-        <div className="absolute bottom-0 left-0 right-0 p-4">
-          {article ? (
-            <div className="max-w-3xl">
-              <div 
-                className="text-white text-xl md:text-2xl font-bold mb-2"
-                style={{
-                  fontSize: theme.headingProps.fontSize,
-                  fontWeight: theme.headingProps.fontWeight,
-                  color: 'white' // Mantém branco para legibilidade
-                }}
-              >
-                {article.title}
-              </div>
-              {blockConfig.styles.showExcerpt && article.content?.description && (
-                <div 
-                  className="text-white/80 text-sm md:text-base line-clamp-2"
-                  style={{
-                    fontSize: theme.subtitleProps.fontSize,
-                    color: 'rgba(255, 255, 255, 0.8)' // Mantém branco com transparência para legibilidade
-                  }}
-                >
-                  {article.content.description}
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="max-w-3xl">
-              <div className="h-6 bg-gray-300 dark:bg-gray-600 rounded w-3/4 mb-2"></div>
-              <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-1/2"></div>
-            </div>
-          )}
+          
+          <div className="absolute bottom-0 left-0 right-0 p-8">
+            <h2 className="text-white text-2xl font-bold mb-2">
+              {article.title}
+            </h2>
+            {article.subtitle && (
+              <p className="text-white/80 text-base">
+                {article.subtitle}
+              </p>
+            )}
+          </div>
         </div>
       </div>
     );
   };
 
   const renderSplitPreview = () => {
+    const articles = columns['col-0'] || [];
+    
+    if (articles.length === 0) {
+      return currentVariant.skeleton;
+    }
+    
     return (
       <div className="grid grid-cols-2 gap-3">
         {[...Array(2)].map((_, i) => {
@@ -134,6 +161,12 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
   };
 
   const renderTriplePreview = () => {
+    const articles = columns['col-0'] || [];
+    
+    if (articles.length === 0) {
+      return currentVariant.skeleton;
+    }
+    
     return (
       <div className="grid grid-cols-3 gap-2">
         {[...Array(3)].map((_, i) => {
