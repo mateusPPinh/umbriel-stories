@@ -116,36 +116,50 @@ const MixedManager: React.FC<MixedManagerProps> = ({
   blockConfig,
   onConfigClick
 }) => {
-  const [variantType, setVariantType] = useState<LayoutVariant>(variant as LayoutVariant);
-  const [columns, setColumns] = useState<{ [key: string]: Article[] }>({
-    pool: articles,
-    'col-0': [],
-    'col-1': [],
-    'col-2': []
-  });
+  const [variantType, setVariantType] = useState<LayoutVariant>(
+    LAYOUT_VARIANTS[variant as LayoutVariant] ? (variant as LayoutVariant) : 'sidebar'
+  );
+  
+  // Função auxiliar para criar o estado inicial das colunas
+  const createInitialColumns = (variant: LayoutVariant) => {
+    // Garante que a variante existe, senão usa 'sidebar' como fallback
+    const safeVariant = LAYOUT_VARIANTS[variant] ? variant : 'sidebar';
+    const availableColumns = Object.keys(LAYOUT_VARIANTS[safeVariant].maxItems) as ColumnId[];
+    const initialColumns: { [key: string]: Article[] } = {
+      pool: articles
+    };
+    
+    availableColumns.forEach(colId => {
+      initialColumns[colId] = [];
+    });
+    
+    return initialColumns;
+  };
+  
+  const [columns, setColumns] = useState<{ [key: string]: Article[] }>(() => 
+    createInitialColumns(variant as LayoutVariant)
+  );
 
   // Limpa as colunas quando a variante muda
   useEffect(() => {
-    // Pega as colunas disponíveis na variante atual
-    const availableColumns = Object.keys(LAYOUT_VARIANTS[variantType].maxItems) as ColumnId[];
+    // Garante que a variante existe, senão usa 'sidebar' como fallback
+    if (!LAYOUT_VARIANTS[variantType]) {
+      setVariantType('sidebar');
+      return;
+    }
     
-    // Cria um novo objeto de colunas apenas com as colunas disponíveis
-    const newColumns: { [key: string]: Article[] } = {
-      pool: [...columns.pool]
-    };
-
-    // Inicializa as colunas disponíveis com arrays vazios
-    availableColumns.forEach(colId => {
-      newColumns[colId] = [];
-    });
-
     // Retorna todos os artigos das colunas para a pool
+    const allArticles = [...columns.pool];
     Object.entries(columns).forEach(([key, articles]) => {
       if (key !== 'pool') {
-        newColumns.pool = [...newColumns.pool, ...articles];
+        allArticles.push(...articles);
       }
     });
-
+    
+    // Cria um novo estado com as colunas da nova variante
+    const newColumns = createInitialColumns(variantType);
+    newColumns.pool = allArticles;
+    
     setColumns(newColumns);
     onSave(newColumns);
   }, [variantType]);
@@ -268,8 +282,8 @@ const MixedManager: React.FC<MixedManagerProps> = ({
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        <div className="lg:col-span-2">
+      <div className={`grid grid-cols-1 ${Object.keys(currentVariant.maxItems).length > 2 ? 'lg:grid-cols-2' : 'lg:grid-cols-5'} gap-6`}>
+        <div className={Object.keys(currentVariant.maxItems).length > 2 ? 'lg:col-span-1' : 'lg:col-span-2'}>
           <DragDropContext onDragEnd={handleDragEnd}>
             <div className="flex flex-col gap-4">
               <ArticlesPool
@@ -277,7 +291,7 @@ const MixedManager: React.FC<MixedManagerProps> = ({
                 articles={columns.pool}
                 isDarkTheme={isDarkTheme}
               />
-              <div className="space-y-4">
+              <div className={`grid ${Object.keys(currentVariant.maxItems).length > 2 ? 'grid-cols-3' : 'grid-cols-1'} gap-4`}>
                 {(Object.keys(currentVariant.maxItems) as BaseColumnId[]).map((colId) => {
                   const columnId = colId as keyof typeof currentVariant.maxItems;
                   return (
@@ -309,7 +323,7 @@ const MixedManager: React.FC<MixedManagerProps> = ({
             </div>
           </DragDropContext>
         </div>
-        <div className="lg:col-span-3">
+        <div className={Object.keys(currentVariant.maxItems).length > 2 ? 'lg:col-span-1' : 'lg:col-span-3'}>
           <MixedLayoutPreview
             variantType={variantType}
             isDarkTheme={isDarkTheme}

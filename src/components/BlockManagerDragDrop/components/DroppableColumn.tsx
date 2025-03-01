@@ -137,7 +137,7 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
               </div>
             )}
             
-            {articles.map((article, index) => (
+            {articles.filter(article => article && article.id).map((article, index) => (
               <DraggableArticle
                 key={article.id}
                 article={article}
