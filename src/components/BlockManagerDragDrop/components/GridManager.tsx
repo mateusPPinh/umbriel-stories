@@ -160,10 +160,10 @@ const GridManager: React.FC<GridManagerProps> = ({
       return;
     }
 
-    const sourceCol = Array.from(blockState.articles[source.droppableId]);
+    const sourceCol = JSON.parse(JSON.stringify(blockState.articles[source.droppableId]));
     const destCol = source.droppableId === destination.droppableId
       ? sourceCol
-      : Array.from(blockState.articles[destination.droppableId]);
+      : JSON.parse(JSON.stringify(blockState.articles[destination.droppableId]));
 
     const [removed] = sourceCol.splice(source.index, 1);
     destCol.splice(destination.index, 0, removed);
@@ -389,7 +389,7 @@ const GridManager: React.FC<GridManagerProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       {!isPreviewOnly && (
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
@@ -441,28 +441,35 @@ const GridManager: React.FC<GridManagerProps> = ({
           />
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          <div className="lg:col-span-2">
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <div className="flex flex-col gap-4" style={{ overflow: 'visible' }}>
-                <ArticlesPool
-                  droppableId="pool"
-                  articles={blockState.articles.pool}
-                  isDarkTheme={isDarkTheme}
-                />
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <div className="flex flex-row gap-4 w-full">
+            {/* Item 1: Lista de artigos (Pool) - Coluna estreita */}
+            <div className="w-1/6 min-w-[180px]" style={{ maxHeight: '70vh', overflow: 'hidden' }}>
+              <ArticlesPool
+                droppableId="pool"
+                articles={blockState.articles.pool}
+                isDarkTheme={isDarkTheme}
+              />
+            </div>
+            
+            {/* Item 2: Colunas para os artigos - Coluna mais estreita */}
+            <div className="w-1/4 min-w-[250px]" style={{ maxHeight: '70vh', overflow: 'auto' }}>
+              <div className="flex flex-col gap-3" style={{ overflow: 'visible' }}>
                 {renderColumns()}
               </div>
-            </DragDropContext>
+            </div>
+            
+            {/* Item 3: Preview - Coluna mais larga, ocupando o espaço restante */}
+            <div className="flex-1 min-w-[300px]" style={{ maxHeight: '70vh', overflow: 'auto' }}>
+              <LayoutPreview
+                variantType={blockState.currentVariant.variantType}
+                columns={blockState.articles}
+                isDarkTheme={isDarkTheme}
+                blockConfig={blockConfig}
+              />
+            </div>
           </div>
-          <div className="lg:col-span-3">
-            <LayoutPreview
-              variantType={blockState.currentVariant.variantType}
-              columns={blockState.articles}
-              isDarkTheme={isDarkTheme}
-              blockConfig={blockConfig}
-            />
-          </div>
-        </div>
+        </DragDropContext>
       )}
     </div>
   );

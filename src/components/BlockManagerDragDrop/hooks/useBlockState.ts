@@ -402,18 +402,21 @@ export const useBlockState = ({
     setBlockState(prev => {
       const currentVariantType = prev.currentVariant.variantType;
       
+      // Criar cópias profundas para evitar problemas de referência
+      const deepCopyColumns = JSON.parse(JSON.stringify(newColumns)) as typeof newColumns;
+      
       return {
         ...prev,
         variantStates: {
           ...prev.variantStates,
           [currentVariantType]: {
             ...prev.variantStates[currentVariantType],
-            articles: newColumns,
+            articles: deepCopyColumns,
             config: {
               ...prev.variantStates[currentVariantType].config,
-              articles: Object.entries(newColumns).reduce((acc, [key, articles]) => ({
+              articles: Object.entries(deepCopyColumns).reduce<Record<string, string[]>>((acc, [key, articles]) => ({
                 ...acc,
-                [key]: articles.map(article => String(article.id))
+                [key]: articles.map((article: Article) => String(article.id))
               }), {})
             }
           }

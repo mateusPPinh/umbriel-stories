@@ -69,14 +69,14 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
 
   // Helper function to determine the appropriate class for the droppable area
   const getDroppableAreaClass = () => {
-    let baseClasses = `min-h-[100px] p-3 rounded-md transition-colors duration-200 ${
+    let baseClasses = `min-h-[50px] p-1 rounded-md transition-colors duration-200 ${
       isDarkTheme 
         ? 'bg-gray-800 border-gray-700' 
         : 'bg-white border-gray-200'
     }`;
 
     if (isMasonry) {
-      return `${baseClasses} columns-1 sm:columns-2 md:columns-3 gap-4 space-y-4`;
+      return `${baseClasses} columns-1 sm:columns-2 gap-1.5 space-y-1.5`;
     }
 
     if (isFeatured) {
@@ -92,18 +92,18 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
     }
 
     if (isChronological) {
-      return `${baseClasses} space-y-4`;
+      return `${baseClasses} space-y-1.5`;
     }
 
     if (isCompact) {
-      return `${baseClasses} space-y-2`;
+      return `${baseClasses} space-y-1`;
     }
 
     if (isCard) {
-      return `${baseClasses} grid grid-cols-1 sm:grid-cols-2 gap-4`;
+      return `${baseClasses} grid grid-cols-1 gap-1.5`;
     }
 
-    return `${baseClasses} space-y-4`;
+    return `${baseClasses} space-y-1.5`;
   };
 
   const handleRemoveArticle = (articleId: string | number) => {
@@ -305,11 +305,11 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   };
 
   return (
-    <div className={`${width || 'w-full'} mb-4`} style={style}>
-      <div className="flex justify-between items-center mb-2">
+    <div className={`${width || 'w-full'} mb-1.5`} style={style}>
+      <div className="flex justify-between items-center mb-0.5">
         <h3 
           style={{
-            fontSize: headingProps?.fontSize || '1rem',
+            fontSize: headingProps?.fontSize || '0.7rem',
             fontWeight: headingProps?.fontWeight || '600',
             color: headingProps?.color || 'inherit'
           }}
@@ -318,15 +318,17 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
           {title}
         </h3>
         <span 
-          className={`text-xs px-2 py-0.5 rounded-full ${
-            isDarkTheme ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
+          className={`text-[0.65rem] px-1 py-0.5 rounded-full ${
+            isFull 
+              ? isDarkTheme ? 'bg-red-700 text-white' : 'bg-red-100 text-red-700'
+              : isDarkTheme ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
           }`}
         >
           {articles.length}/{maxItems}
         </span>
       </div>
 
-      <Droppable droppableId={droppableId}>
+      <Droppable droppableId={droppableId} isDropDisabled={isFull}>
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
@@ -335,8 +337,13 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
               snapshot.isDraggingOver 
                 ? isDarkTheme ? 'bg-blue-900/20' : 'bg-blue-50' 
                 : ''
-            } border`}
-            style={{ overflow: 'visible' }}
+            } ${isFull ? 'opacity-75' : ''} border`}
+            style={{ 
+              overflow: 'visible', 
+              maxHeight: '250px', 
+              overflowY: 'auto',
+              cursor: isFull ? 'not-allowed' : 'auto'
+            }}
           >
             {articles.length > 0 ? (
               <>
@@ -352,15 +359,22 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
                     onRemove={() => handleRemoveArticle(article.id)}
                   />
                 ))}
+                {isFull && !snapshot.isDraggingOver && (
+                  <div className={`mt-1 text-center py-1 px-2 rounded-md text-[0.65rem] ${
+                    isDarkTheme ? 'bg-red-900/20 text-red-300' : 'bg-red-50 text-red-600'
+                  }`}>
+                    Limite máximo atingido
+                  </div>
+                )}
               </>
             ) : (
-              <div className={`flex flex-col items-center justify-center py-6 ${
+              <div className={`flex flex-col items-center justify-center py-4 ${
                 isDarkTheme ? 'text-gray-400' : 'text-gray-500'
               }`}>
-                <svg className="w-8 h-8 mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-6 h-6 mb-1 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
                 </svg>
-                <p className="text-sm">Arraste artigos para esta coluna</p>
+                <p className="text-xs">Arraste artigos para esta coluna</p>
               </div>
             )}
             {provided.placeholder}

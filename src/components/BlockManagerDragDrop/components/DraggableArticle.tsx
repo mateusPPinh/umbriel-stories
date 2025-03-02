@@ -73,7 +73,7 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
           {isMasonry ? (
             <article className="relative">
               {article.content?.image?.desktop_image_path && (
-                <div className="relative w-full overflow-hidden mb-4">
+                <div className="relative w-full overflow-hidden mb-2">
                   <img
                     src={article.content.image.desktop_image_path}
                     alt={article.title}
@@ -82,12 +82,12 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
                 </div>
               )}
               
-              <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
-                <h2 className="text-[1.2rem] font-semibold mb-3 text-gray-900 dark:text-white">
+              <div className="p-2 bg-white dark:bg-gray-800 rounded-lg">
+                <h2 className="text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white">
                   {article.title}
                 </h2>
                 {showExcerpt && article.subtitle && (
-                  <p className="text-[0.9rem] text-gray-700 dark:text-gray-300">
+                  <p className="text-[0.8rem] text-gray-700 dark:text-gray-300">
                     {article.subtitle}
                   </p>
                 )}
@@ -97,9 +97,9 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
               {showRemoveButton && (
                 <button
                   onClick={() => onRemove(article.id)}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
+                  className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                   </svg>
                 </button>
@@ -112,10 +112,11 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
               border border-gray-200 dark:border-gray-700
               hover:border-blue-500/50 dark:hover:border-blue-500/50
               transition-all duration-200
+              rounded-md
             `}>
               {/* Image */}
               {article.content?.image?.desktop_image_path && (
-                <div className="relative aspect-[16/10] overflow-hidden">
+                <div className="relative aspect-[16/9] overflow-hidden rounded-t-md">
                   <img
                     src={article.content.image.desktop_image_path}
                     alt={article.title}
@@ -125,19 +126,21 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
               )}
 
               {/* Content */}
-              <div className="p-4">
+              <div className="p-1">
                 <h4 className={`
                   text-gray-900 dark:text-white
                   font-semibold
-                  mb-2
-                  ${subtitleProps?.fontSize || 'text-[1rem]'}
+                  mb-0.5
+                  line-clamp-2
+                  ${subtitleProps?.fontSize || 'text-[0.7rem]'}
                 `}>
                   {article.title}
                 </h4>
                 {showExcerpt && article.subtitle && (
                   <p className={`
                     text-gray-600 dark:text-gray-300
-                    ${subtitleProps?.fontSize || 'text-[0.8rem]'}
+                    line-clamp-1
+                    ${subtitleProps?.fontSize || 'text-[0.65rem]'}
                   `}>
                     {article.subtitle}
                   </p>
@@ -148,9 +151,9 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
               {showRemoveButton && (
                 <button
                   onClick={() => onRemove(article.id)}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
+                  className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-2 w-2" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                   </svg>
                 </button>
