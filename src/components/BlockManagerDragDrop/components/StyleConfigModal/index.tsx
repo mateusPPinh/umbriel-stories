@@ -16,8 +16,8 @@ export interface BlockConfig {
   };
   styles: {
     theme: {
-      light: ThemeConfig;
-      dark: ThemeConfig;
+      light: ThemeConfigProps;
+      dark: ThemeConfigProps;
     };
     showExcerpt: boolean;
     // Grid specific
@@ -56,7 +56,7 @@ export interface BlockConfig {
   variant?: string;
 }
 
-interface ThemeConfig {
+interface ThemeConfigProps {
   columnStyle: {
     background: string;
     padding: string;

@@ -7,9 +7,16 @@ import packageJson from './package.json' assert { type: 'json' };
 import postcss from 'rollup-plugin-postcss';
 import url from '@rollup/plugin-url';
 import { fileURLToPath } from 'url';
+import path from 'path';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const __filename = fileURLToPath(import.meta.url);
 global.__filename = __filename;
+
+// Extrair os diretórios dos arquivos de saída
+const cjsDir = path.dirname(packageJson.main);
+const esmDir = path.dirname(packageJson.module);
+const cjsFilename = path.basename(packageJson.main);
+const esmFilename = path.basename(packageJson.module);
 
 export default [
   {
@@ -19,16 +26,24 @@ export default [
     },
     output: [
       {
-        file: packageJson.main,
+        dir: cjsDir,
+        entryFileNames: cjsFilename,
         format: 'cjs',
         sourcemap: true,
-        interop: 'compat'
+        interop: 'compat',
+        exports: 'named',
+        preserveModules: false,
+        chunkFileNames: 'chunks/[name]-[hash].js'
       },
       {
-        file: packageJson.module,
+        dir: esmDir,
+        entryFileNames: esmFilename,
         format: 'esm',
         sourcemap: true,
-        interop: 'compat'
+        interop: 'compat',
+        exports: 'named',
+        preserveModules: false,
+        chunkFileNames: 'chunks/[name]-[hash].js'
       }
     ],
     plugins: [
@@ -70,7 +85,11 @@ export default [
   },
   {
     input: 'src/components/index.ts',
-    output: [{ file: 'dist/index.d.ts', format: 'es' }],
+    output: {
+      dir: 'dist',
+      entryFileNames: 'index.d.ts',
+      format: 'es'
+    },
     plugins: [dts({
       exclude: ['**/*.stories.tsx', '**/mocks/*.mock.*', '**/mocks/**/*.ts']
     })],
