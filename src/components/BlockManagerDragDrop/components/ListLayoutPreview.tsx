@@ -1,41 +1,33 @@
 import React from 'react';
-import { Article, BlockConfig } from '../../../components/PageblockV2/types';
+import { Article } from '../../../components/PageblockV2/types';
+import { BlockConfig } from '../components/StyleConfigModal';
 import { defaultClasses } from '../../../components/PageblockV2/constants/defaultClasses';
 import { generateArticleUrl } from '../../../components/PageblockV2/utils/generateArticleUrl';
 import { formatDistanceToNow } from 'date-fns';
 import { DisplayConfig } from './StyleConfigModal/MediaConfig';
 
+// Definindo a interface ThemeConfig localmente para evitar problemas de importação
+interface ThemeConfig {
+  columnStyle: {
+    background: string;
+    padding: string;
+  };
+  headingProps: {
+    fontSize: string;
+    fontWeight: string;
+    color: string;
+  };
+  subtitleProps: {
+    fontSize: string;
+    color: string;
+  };
+}
+
 interface ExtendedBlockConfig extends Omit<BlockConfig, 'mediaConfig'> {
   styles: {
     theme: {
-      light: {
-        columnStyle: {
-          background: string
-        }
-        headingProps: {
-          fontSize: string
-          fontWeight?: number
-          color: string
-        }
-        subtitleProps: {
-          fontSize: string
-          color: string
-        }
-      }
-      dark: {
-        columnStyle: {
-          background: string
-        }
-        headingProps: {
-          fontSize: string
-          fontWeight?: number
-          color: string
-        }
-        subtitleProps: {
-          fontSize: string
-          color: string
-        }
-      }
+      light: ThemeConfig;
+      dark: ThemeConfig;
     }
     showExcerpt: boolean
     showMetadata: boolean
@@ -50,15 +42,25 @@ interface ExtendedBlockConfig extends Omit<BlockConfig, 'mediaConfig'> {
   }
   variant?: 'chronological' | 'compact' | 'card'
   mediaConfig?: {
-    videoConfig?: any;
-    imageConfig?: any;
     displayConfig?: DisplayConfig;
+    type?: string;
+    customUrl?: string;
+    videoConfig?: {
+      loop: boolean;
+      muted: boolean;
+      autoplay: boolean;
+      controls: boolean;
+    };
+    useArticleMedia?: boolean;
   };
 }
 
 interface ListLayoutPreviewProps {
   blockConfig: ExtendedBlockConfig;
-  columns: Article[][];
+  columns?: Article[][];
+  articles?: Article[];
+  variant?: 'chronological' | 'compact' | 'card';
+  isDarkTheme?: boolean;
 }
 
 type HoverEffect = 'highlight' | 'scale' | 'background' | 'translate' | 'none';
@@ -174,9 +176,14 @@ const getThumbnailShape = (thumbnailShape?: ThumbnailShape) => {
   }
 };
 
-const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({ blockConfig, columns }) => {
-  const isDarkMode = false;
-  const theme = blockConfig.styles.theme[isDarkMode ? 'dark' : 'light'];
+const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({ 
+  blockConfig, 
+  columns = [], 
+  articles = [], 
+  variant = 'chronological',
+  isDarkTheme = false 
+}) => {
+  const theme = blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'];
   
   // Configurações globais de exibição
   const globalDisplayConfig = blockConfig.mediaConfig?.displayConfig || {
@@ -204,15 +211,20 @@ const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({ blockConfig, colu
     };
   };
 
+  // Preparar os dados de artigos para compatibilidade
+  const articlesData = columns.length > 0 ? columns : articles.length > 0 ? [articles] : [[]];
+
+  console.log('ListLayoutPreview:', { variant, itemsLength: articlesData[0]?.length, articlesData });
+
   const renderChronologicalList = () => {
-    const articles = columns[0] || [];
+    const articles = articlesData[0] || [];
     const displayConfig = getColumnDisplayConfig('col-0');
     
     if (articles.length === 0) {
       return renderSkeleton('timeline');
     }
 
-    return (
+          return (
       <div className="space-y-2">
         {articles.map((article, index) => (
           <div key={index} className="flex items-start gap-4 py-4">
@@ -221,7 +233,7 @@ const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({ blockConfig, colu
               className={`
                 w-3 h-3 mt-2 shrink-0
                 ${getMarkerShape(blockConfig.styles.markerStyle)}
-                ${isDarkMode ? 'bg-gray-200' : 'bg-gray-700'}
+                ${isDarkTheme ? 'bg-gray-200' : 'bg-gray-700'}
               `}
             />
             
@@ -260,23 +272,23 @@ const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({ blockConfig, colu
             </div>
           </div>
         ))}
-      </div>
-    );
-  };
+    </div>
+  );
+};
 
   const renderCompactList = () => {
-    const articles = columns[0] || [];
+    const articles = articlesData[0] || [];
     const displayConfig = getColumnDisplayConfig('col-0');
     
     if (articles.length === 0) {
       return renderSkeleton('compact');
     }
 
-    return (
+  return (
       <div className="space-y-0">
         {articles.map((article, index) => (
           <div 
-            key={index} 
+            key={index}
             className={`
               py-3 
               ${index !== articles.length - 1 ? getBorderStyle(blockConfig.styles.dividerStyle) : ''}
@@ -316,23 +328,23 @@ const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({ blockConfig, colu
             )}
           </div>
         ))}
-      </div>
-    );
-  };
+    </div>
+  );
+};
 
   const renderCardList = () => {
-    const articles = columns[0] || [];
+    const articles = articlesData[0] || [];
     const displayConfig = getColumnDisplayConfig('col-0');
     
     if (articles.length === 0) {
       return renderSkeleton('card');
     }
 
-    return (
+  return (
       <div className="space-y-4">
         {articles.map((article, index) => (
           <div 
-            key={index} 
+            key={index}
             className={`
               flex gap-4 py-4
               ${index !== articles.length - 1 ? getBorderStyle(blockConfig.styles.dividerStyle) : ''}
@@ -347,8 +359,8 @@ const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({ blockConfig, colu
                   ${getThumbnailShape(blockConfig.styles.thumbnailShape)}
                 `}
               >
-                <img 
-                  src={article.content.image.desktop_image_path} 
+                <img
+                  src={article.content.image.desktop_image_path}
                   alt={article.title}
                   className="w-full h-full object-cover"
                 />
@@ -385,19 +397,14 @@ const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({ blockConfig, colu
               {displayConfig.showPublishDate && blockConfig.styles.showMetadata && article.published_at && (
                 <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   {formatDistanceToNow(new Date(article.published_at), { addSuffix: true })}
-                </div>
+            </div>
               )}
             </div>
           </div>
         ))}
-      </div>
-    );
-  };
-
-  const variant = blockConfig?.variant || 'chronological';
-
-  // Debug log to check what's being received
-  console.log('ListLayoutPreview:', { variant, itemsLength: columns[0]?.length, columns });
+    </div>
+  );
+};
 
   switch (variant) {
     case 'chronological':

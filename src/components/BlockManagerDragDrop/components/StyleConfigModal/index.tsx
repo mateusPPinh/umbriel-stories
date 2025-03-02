@@ -41,12 +41,19 @@ export interface BlockConfig {
     };
     thumbnailShape?: 'square' | 'rounded' | 'circle';
     imagePosition?: 'left' | 'right';
+    // Common properties
+    showMetadata?: boolean;
+    titleSize?: string;
   };
   mediaConfig?: {
     videoConfig?: VideoConfig;
     imageConfig?: ImageConfig;
     displayConfig?: DisplayConfig;
   };
+  // Optional articles property for preview
+  articles?: any[];
+  // Optional variant property
+  variant?: string;
 }
 
 interface ThemeConfig {
