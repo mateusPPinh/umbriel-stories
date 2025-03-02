@@ -1,5 +1,5 @@
 import React from 'react';
-import { DragDropContext, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Article } from '../../PageblockV2/types';
 import LayoutPreview from './LayoutPreview';
 import ArticlesPool from './ArticlesPool';
@@ -30,9 +30,6 @@ interface SubtitleProps {
   fontSize: string;
   color: string;
 }
-
-// @ts-ignore
-const DragDropContextFix = DragDropContext as any;
 
 const GRID_VARIANTS: Record<GridVariantType, GridVariant> = {
   standard: {
@@ -446,7 +443,7 @@ const GridManager: React.FC<GridManagerProps> = ({
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <div className="lg:col-span-2">
-            <DragDropContextFix  onDragEnd={handleDragEnd}>
+            <DragDropContext onDragEnd={handleDragEnd}>
               <div className="flex flex-col gap-4" style={{ overflow: 'visible' }}>
                 <ArticlesPool
                   droppableId="pool"
@@ -455,7 +452,7 @@ const GridManager: React.FC<GridManagerProps> = ({
                 />
                 {renderColumns()}
               </div>
-            </DragDropContextFix>
+            </DragDropContext>
           </div>
           <div className="lg:col-span-3">
             <LayoutPreview

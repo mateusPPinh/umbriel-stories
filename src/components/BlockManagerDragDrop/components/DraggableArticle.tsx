@@ -1,5 +1,5 @@
 import React from 'react';
-import { Draggable } from 'react-beautiful-dnd';
+import { Draggable } from '@hello-pangea/dnd';
 import { Article } from '../../PageblockV2/types';
 
 interface DraggableArticleProps {
@@ -57,7 +57,7 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
 
   return (
     <Draggable draggableId={article.id.toString()} index={index}>
-      {(provided, snapshot) => (
+      {(provided: any, snapshot: any) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
