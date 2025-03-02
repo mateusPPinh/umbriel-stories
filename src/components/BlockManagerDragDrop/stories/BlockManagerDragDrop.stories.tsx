@@ -36,7 +36,7 @@ export default {
 const mockArticles = createArticles(15);
 
 const Template: Story<BlockManagerDragDropProps> = (args) => (
-  <div className="w-[calc(100vw-400px)] mx-auto"><BlockManagerDragDrop {...args} /></div>
+  <div className="w-full mx-auto"><BlockManagerDragDrop {...args} /></div>
 );
 
 // Grid Variants

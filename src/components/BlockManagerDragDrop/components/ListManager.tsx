@@ -255,6 +255,16 @@ const ListManager: React.FC<ListManagerProps> = ({
       source.index === destination.index
     ) return;
 
+    // Verificar se a coluna de destino já atingiu o limite máximo de artigos
+    if (
+      source.droppableId !== destination.droppableId && 
+      destination.droppableId === 'col-0' && 
+      blockState.articles['col-0'] && 
+      blockState.articles['col-0'].length >= LAYOUT_VARIANTS[validVariantType].maxItems
+    ) {
+      return;
+    }
+
     // Copia os arrays de origem e destino
     const sourceCol = Array.from(blockState.articles[source.droppableId] || []);
     const destCol = source.droppableId === destination.droppableId
@@ -350,38 +360,40 @@ const ListManager: React.FC<ListManagerProps> = ({
           />
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          <div className="lg:col-span-2">
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <div className="flex flex-col gap-4">
-                <ArticlesPool
-                  droppableId="pool"
-                  articles={blockState.articles.pool}
-                  isDarkTheme={isDarkTheme}
-                />
-                <DroppableColumn
-                  id="col-0"
-                  droppableId="col-0"
-                  title="Artigos da Lista"
-                  articles={blockState.articles['col-0'] || []}
-                  maxItems={LAYOUT_VARIANTS[validVariantType].maxItems}
-                  isDarkTheme={isDarkTheme}
-                  width="w-full"
-                  headingProps={{
-                    fontSize: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
-                    fontWeight: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
-                    color: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
-                  }}
-                  subtitleProps={{
-                    fontSize: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
-                    color: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
-                  }}
-                  onRemoveArticle={handleRemoveArticle}
-                />
-              </div>
-            </DragDropContext>
-          </div>
-          <div className="lg:col-span-3">
+        <div className="flex h-[70vh] gap-4">
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <div className="w-1/6 min-w-[180px] max-h-[70vh] overflow-y-auto">
+              <ArticlesPool
+                droppableId="pool"
+                articles={blockState.articles.pool}
+                isDarkTheme={isDarkTheme}
+              />
+            </div>
+            
+            <div className="w-1/4 min-w-[250px] max-h-[70vh] overflow-y-auto">
+              <DroppableColumn
+                id="col-0"
+                droppableId="col-0"
+                title="Artigos da Lista"
+                articles={blockState.articles['col-0'] || []}
+                maxItems={LAYOUT_VARIANTS[validVariantType].maxItems}
+                isDarkTheme={isDarkTheme}
+                width="w-full"
+                headingProps={{
+                  fontSize: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
+                  fontWeight: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
+                  color: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
+                }}
+                subtitleProps={{
+                  fontSize: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
+                  color: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
+                }}
+                onRemoveArticle={handleRemoveArticle}
+              />
+            </div>
+          </DragDropContext>
+          
+          <div className="flex-1 max-h-[70vh] overflow-y-auto">
             <ListLayoutPreview
               variant={validVariantType}
               articles={blockState.articles['col-0'] || []}

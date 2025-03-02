@@ -47,6 +47,25 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
 
     if (!destination) return;
 
+    // Se a origem e destino forem iguais e o índice for o mesmo, não fazer nada
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) return;
+
+    // Verificar se a coluna de destino já atingiu o limite máximo de artigos
+    const maxItems = destination.droppableId === 'col-0' 
+      ? 1 // Coluna principal sempre tem limite de 1
+      : currentVariant.maxItems;
+
+    if (
+      source.droppableId !== destination.droppableId && 
+      blockState.articles[destination.droppableId] && 
+      blockState.articles[destination.droppableId].length >= maxItems
+    ) {
+      return;
+    }
+
     const sourceCol = Array.from(blockState.articles[source.droppableId] || []);
     const destCol = source.droppableId === destination.droppableId
       ? sourceCol
@@ -152,59 +171,61 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
           />
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          <div className="lg:col-span-2">
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <div className="flex flex-col gap-4">
-                <ArticlesPool
-                  droppableId="pool"
-                  articles={blockState.articles.pool}
+        <div className="flex h-[70vh] gap-4">
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <div className="w-1/6 min-w-[180px] max-h-[70vh] overflow-y-auto">
+              <ArticlesPool
+                droppableId="pool"
+                articles={blockState.articles.pool}
+                isDarkTheme={isDarkTheme}
+              />
+            </div>
+            
+            <div className="w-1/4 min-w-[250px] max-h-[70vh] overflow-y-auto">
+              <div className="grid grid-cols-1 gap-4">
+                <DroppableColumn
+                  id="col-0"
+                  droppableId="col-0"
+                  title="Artigo Principal"
+                  articles={blockState.articles['col-0'] || []}
+                  maxItems={1}
                   isDarkTheme={isDarkTheme}
+                  width="w-full"
+                  headingProps={{
+                    fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
+                    fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
+                    color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
+                  }}
+                  subtitleProps={{
+                    fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
+                    color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
+                  }}
+                  onRemoveArticle={handleRemoveArticle}
                 />
-                <div className="grid grid-cols-1 gap-4">
-                  <DroppableColumn
-                    id="col-0"
-                    droppableId="col-0"
-                    title="Artigo Principal"
-                    articles={blockState.articles['col-0'] || []}
-                    maxItems={1}
-                    isDarkTheme={isDarkTheme}
-                    width="w-full"
-                    headingProps={{
-                      fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
-                      fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
-                      color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
-                    }}
-                    subtitleProps={{
-                      fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
-                      color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
-                    }}
-                    onRemoveArticle={handleRemoveArticle}
-                  />
-                  <DroppableColumn
-                    id="col-1"
-                    droppableId="col-1"
-                    title="Artigos Secundários"
-                    articles={blockState.articles['col-1'] || []}
-                    maxItems={currentVariant.maxItems}
-                    isDarkTheme={isDarkTheme}
-                    width="w-full"
-                    headingProps={{
-                      fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
-                      fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
-                      color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
-                    }}
-                    subtitleProps={{
-                      fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
-                      color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
-                    }}
-                    onRemoveArticle={handleRemoveArticle}
-                  />
-                </div>
+                <DroppableColumn
+                  id="col-1"
+                  droppableId="col-1"
+                  title="Artigos Secundários"
+                  articles={blockState.articles['col-1'] || []}
+                  maxItems={currentVariant.maxItems}
+                  isDarkTheme={isDarkTheme}
+                  width="w-full"
+                  headingProps={{
+                    fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
+                    fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
+                    color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
+                  }}
+                  subtitleProps={{
+                    fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
+                    color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
+                  }}
+                  onRemoveArticle={handleRemoveArticle}
+                />
               </div>
-            </DragDropContext>
-          </div>
-          <div className="lg:col-span-3">
+            </div>
+          </DragDropContext>
+          
+          <div className="flex-1 max-h-[70vh] overflow-y-auto">
             <FeaturedLayoutPreview
               variantType={blockState.currentVariant.variantType}
               columns={blockState.articles}

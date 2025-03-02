@@ -342,44 +342,46 @@ const MixedManager: React.FC<MixedManagerProps> = ({
           />
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-          <div className="lg:col-span-2">
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <div className="flex flex-col gap-4">
-                <ArticlesPool
-                  droppableId="pool"
-                  articles={blockState.articles.pool}
-                  isDarkTheme={isDarkTheme}
-                />
-                <div className={getColumnsLayout()}>
-                  {availableColumns.map(colId => (
-                    <DroppableColumn
-                      key={colId}
-                      id={colId}
-                      droppableId={colId}
-                      title={currentVariant.columnLabels[colId as keyof typeof currentVariant.columnLabels]}
-                      articles={blockState.articles[colId] || []}
-                      maxItems={currentVariant.maxItems[colId as keyof typeof currentVariant.maxItems]}
-                      isDarkTheme={isDarkTheme}
-                      width="w-full"
-                      headingProps={{
-                        fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
-                        fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
-                        color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
-                      }}
-                      subtitleProps={{
-                        fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
-                        color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
-                      }}
-                      onRemoveArticle={handleRemoveArticle}
-                      {...getColumnProps(colId)}
-                    />
-                  ))}
-                </div>
+        <div className="flex h-[70vh] gap-4">
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <div className="w-1/6 min-w-[180px] max-h-[70vh] overflow-y-auto">
+              <ArticlesPool
+                droppableId="pool"
+                articles={blockState.articles.pool}
+                isDarkTheme={isDarkTheme}
+              />
+            </div>
+            
+            <div className="w-1/4 min-w-[250px] max-h-[70vh] overflow-y-auto">
+              <div className={getColumnsLayout()}>
+                {availableColumns.map(colId => (
+                  <DroppableColumn
+                    key={colId}
+                    id={colId}
+                    droppableId={colId}
+                    title={currentVariant.columnLabels[colId as keyof typeof currentVariant.columnLabels]}
+                    articles={blockState.articles[colId] || []}
+                    maxItems={currentVariant.maxItems[colId as keyof typeof currentVariant.maxItems]}
+                    isDarkTheme={isDarkTheme}
+                    width="w-full"
+                    headingProps={{
+                      fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
+                      fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
+                      color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
+                    }}
+                    subtitleProps={{
+                      fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
+                      color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
+                    }}
+                    onRemoveArticle={handleRemoveArticle}
+                    {...getColumnProps(colId)}
+                  />
+                ))}
               </div>
-            </DragDropContext>
-          </div>
-          <div className="lg:col-span-3">
+            </div>
+          </DragDropContext>
+          
+          <div className="flex-1 max-h-[70vh] overflow-y-auto">
             <MixedLayoutPreview
               variant={validVariantType}
               columns={blockState.articles}
