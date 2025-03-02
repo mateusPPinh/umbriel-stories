@@ -403,7 +403,27 @@ export const useBlockState = ({
       const currentVariantType = prev.currentVariant.variantType;
       
       // Criar cópias profundas para evitar problemas de referência
-      const deepCopyColumns = JSON.parse(JSON.stringify(newColumns)) as typeof newColumns;
+      // Usando estrutura de dados imutável para garantir que os objetos de artigo mantenham sua identidade
+      const deepCopyColumns: { [key: string]: Article[] } = {};
+      
+      // Garantir que cada artigo mantenha sua identidade original
+      Object.entries(newColumns).forEach(([key, articles]) => {
+        deepCopyColumns[key] = articles.map(article => {
+          // Garantir que o ID seja preservado como string para consistência
+          const articleId = String(article.id);
+          
+          // Procurar o artigo original em todas as colunas anteriores para manter a referência
+          for (const [prevKey, prevArticles] of Object.entries(prev.variantStates[currentVariantType].articles)) {
+            const originalArticle = prevArticles.find(a => String(a.id) === articleId);
+            if (originalArticle) {
+              return originalArticle;
+            }
+          }
+          
+          // Se não encontrar (caso improvável), usar o artigo atual
+          return article;
+        });
+      });
       
       return {
         ...prev,
@@ -564,7 +584,8 @@ export const useBlockState = ({
         .slice(0, maxColumns)
         .reduce((acc, [key, articles]) => ({
           ...acc,
-          [key]: articles
+          // Garantir que os IDs dos artigos sejam sempre strings
+          [key]: articles.map(id => String(id))
         }), {});
       
       return {

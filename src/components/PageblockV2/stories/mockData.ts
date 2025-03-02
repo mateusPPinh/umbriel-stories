@@ -116,12 +116,86 @@ export const baseLayoutConfig = {
 
 // Helper para criar múltiplos artigos
 export const createArticles = (count: number) => {
-  return Array.from({ length: count }).map((_, index) => ({
-    ...mockArticle,
-    id: `${mockArticle.id}-${index}`,
-    title: `${mockArticle.title} ${index + 1}`,
-    slug: `${mockArticle.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${index + 1}`,
-  }));
+  const imageUrls = [
+    "https://barzuputru.local.api.umbrielcms.com.br:3001/uploads/6370ab4d976b0a5a95ea-24putin-anniversary-hvgm-superJumbo.webp?width=2048&height=1365",
+    "https://images.unsplash.com/photo-1682687220063-4742bd7fd538?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1682687220208-22d7a2543e88?q=80&w=1000&auto=format&fit=crop",
+    "", // Artigo sem imagem
+    "https://images.unsplash.com/photo-1575936123452-b67c3203c357?q=80&w=1000&auto=format&fit=crop",
+    null, // Artigo com imagem nula
+    "https://images.unsplash.com/photo-1682695796954-bad0d0f59ff1?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1501854140801-50d01698950b?q=80&w=1000&auto=format&fit=crop",
+    "", // Outro artigo sem imagem
+    "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=1000&auto=format&fit=crop",
+    null, // Mais um artigo com imagem nula
+    "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?q=80&w=1000&auto=format&fit=crop"
+  ];
+  
+  const titles = [
+    "Three Years Into War in Ukraine, Trump Ushers in New World for Putin",
+    "Climate Change Accelerates as Global Temperatures Rise",
+    "Tech Giants Face New Regulations in European Union",
+    "Economic Recovery Shows Signs of Slowing Down",
+    "New Medical Breakthrough Promises Treatment for Rare Disease",
+    "Sports Championship Ends with Unexpected Victory",
+    "Cultural Festival Attracts Record Number of Visitors",
+    "Scientists Discover New Species in Amazon Rainforest",
+    "Global Summit Addresses International Security Concerns",
+    "Renewable Energy Investments Reach All-Time High",
+    "Education Reform Bill Passes with Bipartisan Support",
+    "Space Exploration Mission Reveals Surprising Findings",
+    "Film Industry Celebrates Diverse Voices at Annual Awards",
+    "Public Health Officials Warn of New Virus Variant",
+    "Historic Peace Agreement Signed After Decades of Conflict"
+  ];
+  
+  const subtitles = [
+    "Fresh possibilities have emerged for President Vladimir V. Putin of Russia with a change of power in Washington",
+    "Scientists warn of irreversible damage if immediate action is not taken",
+    "Legislation aims to curb monopolistic practices and protect user data",
+    "Inflation and supply chain issues continue to impact global markets",
+    "Researchers announce promising results from clinical trials",
+    "Underdog team defeats reigning champions in dramatic final match",
+    "Event showcases diverse artistic expressions from around the world",
+    "Newly identified species could hold key to ecological balance",
+    "Leaders from 50 nations discuss strategies for global cooperation",
+    "Private sector leads transition to sustainable energy solutions",
+    "New legislation focuses on improving access to quality education",
+    "Mission data challenges existing theories about planetary formation",
+    "Recognition of underrepresented filmmakers marks industry shift",
+    "Experts recommend precautionary measures as cases increase",
+    "Agreement includes provisions for economic cooperation and human rights"
+  ];
+
+  return Array.from({ length: count }).map((_, index) => {
+    const imageIndex = index % imageUrls.length;
+    const titleIndex = index % titles.length;
+    
+    // Determine if this article should have an image
+    const hasImage = imageUrls[imageIndex] !== "" && imageUrls[imageIndex] !== null;
+    
+    // Create a unique ID with a random component to ensure uniqueness
+    const uniqueId = `article-${index + 1}-${Math.floor(Math.random() * 1000)}`;
+    
+    return {
+      ...mockArticle,
+      id: uniqueId,
+      title: titles[titleIndex] + ` ${index + 1}`,
+      subtitle: subtitles[titleIndex],
+      slug: `${titles[titleIndex].toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${index + 1}`,
+      content: {
+        ...mockArticle.content,
+        image: hasImage ? {
+          desktop_image_path: imageUrls[imageIndex],
+          image_mobile_path: imageUrls[imageIndex]
+        } : {
+          desktop_image_path: "",
+          image_mobile_path: ""
+        }
+      }
+    };
+  });
 };
 
 // Mock blocks para cada tipo

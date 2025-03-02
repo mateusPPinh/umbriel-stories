@@ -9,6 +9,7 @@ interface BlockManagerDragDropProps {
   isDarkTheme?: boolean;
   onSave: (columns: { [key: string]: any[] }) => void;
   variant?: string;
+  pageId: string;
 }
 
 export default {
@@ -33,7 +34,7 @@ export default {
   ]
 } as Meta;
 
-const mockArticles = createArticles(15);
+const mockArticles = createArticles(30);
 
 const Template: Story<BlockManagerDragDropProps> = (args) => (
   <div className="w-full mx-auto"><BlockManagerDragDrop {...args} /></div>
@@ -46,7 +47,8 @@ Grid_Standard.args = {
   articles: mockArticles,
   isDarkTheme: false,
   onSave: (columns) => console.log('Updated columns:', columns),
-  variant: 'standard'
+  variant: 'standard',
+  pageId: 'mock-page-id'
 };
 Grid_Standard.storyName = 'Grid/Standard';
 
@@ -97,6 +99,7 @@ List_Chronological.args = {
   articles: mockArticles,
   isDarkTheme: false,
   onSave: (columns) => console.log('Updated columns:', columns),
+  pageId: 'mock-page-id'
 };
 List_Chronological.storyName = 'List/Chronological';
 
@@ -121,6 +124,7 @@ Mixed_Sidebar.args = {
   articles: mockArticles,
   isDarkTheme: false,
   onSave: (columns) => console.log('Updated columns:', columns),
+  pageId: 'mock-page-id'
 };
 Mixed_Sidebar.storyName = 'Mixed/Sidebar';
 
@@ -181,7 +185,8 @@ Featured_Hero.args = {
   articles: mockArticles,
   isDarkTheme: false,
   onSave: (columns) => console.log('Updated columns:', columns),
-  variant: 'hero'
+  variant: 'hero',
+  pageId: 'mock-page-id'
 };
 Featured_Hero.storyName = 'Featured/Hero';
 

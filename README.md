@@ -379,3 +379,149 @@ O componente é compatível com os seguintes navegadores:
 ## Licença
 
 Este componente é parte da biblioteca @umbriel/storybook e está sujeito aos termos de licença da mesma.
+
+# Umbriel Storybook Components
+
+This library contains reusable React components for the Umbriel CMS project.
+
+## Installation
+
+```bash
+npm install @umbriel/components
+# or
+yarn add @umbriel/components
+```
+
+## Usage
+
+### BlockManagerDragDrop Component
+
+The `BlockManagerDragDrop` component is a powerful drag-and-drop interface for managing article layouts in different block types and variants.
+
+#### Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `articles` | `Article[]` | Array of articles to be used in the block |
+| `blockType` | `'grid' \| 'list' \| 'mixed' \| 'featured'` | Type of block layout |
+| `isDarkTheme` | `boolean` | Whether to use dark theme styling |
+| `onSave` | `(data: any) => void` | Callback function when saving the block |
+| `variant` | `string` | Variant of the block layout |
+| `pageId` | `string` | ID of the page where the block is located |
+| `config` | `BlockConfig` | Configuration for the block styling and layout |
+| `className` | `string` | Additional CSS classes to apply to the component |
+
+#### Example
+
+```jsx
+import { BlockManagerDragDrop, BlockConfig } from '@umbriel/components';
+
+const MyComponent = () => {
+  const articles = [...]; // Your articles data
+  
+  const handleSave = (data) => {
+    console.log('Block data saved:', data);
+    // Save to your backend
+  };
+  
+  const defaultConfig = {
+    layout: {
+      columns: '3',
+      gap: '6',
+      styles: {
+        width: '100%',
+        backgroundColor: 'transparent'
+      }
+    },
+    styles: {
+      theme: {
+        light: {
+          columnStyle: {
+            background: '#ffffff',
+            padding: '1rem'
+          },
+          headingProps: {
+            fontSize: '1.125rem',
+            fontWeight: 500,
+            color: '#111827'
+          },
+          subtitleProps: {
+            fontSize: '0.875rem',
+            color: '#6B7280'
+          }
+        },
+        dark: {
+          columnStyle: {
+            background: '#1F2937',
+            padding: '1rem'
+          },
+          headingProps: {
+            fontSize: '1.125rem',
+            fontWeight: 500,
+            color: '#F9FAFB'
+          },
+          subtitleProps: {
+            fontSize: '0.875rem',
+            color: '#9CA3AF'
+          }
+        }
+      },
+      showExcerpt: true,
+      showMetadata: true,
+      titleSize: 'text-lg'
+    }
+  };
+  
+  return (
+    <BlockManagerDragDrop
+      articles={articles}
+      blockType="grid"
+      isDarkTheme={false}
+      onSave={handleSave}
+      variant="standard"
+      pageId="page-123"
+      config={defaultConfig}
+      className="w-full"
+    />
+  );
+};
+```
+
+## Available Components
+
+- `BlockManagerDragDrop`: Main component for managing article layouts
+- `ListManager`: Component for managing list layouts
+- `GridManager`: Component for managing grid layouts
+- `MixedManager`: Component for managing mixed layouts
+- `FeaturedManager`: Component for managing featured layouts
+- `DroppableColumn`: Component for creating droppable columns
+- `ArticlesPool`: Component for displaying available articles
+- `StyleConfigModal`: Component for configuring block styles
+
+## Types
+
+- `BlockConfig`: Configuration type for block styling and layout
+- `Article`: Type for article data
+- `ListVariantType`: Type for list variants
+- `GridVariantType`: Type for grid variants
+- `MixedVariantType`: Type for mixed variants
+- `FeaturedVariantType`: Type for featured variants
+
+## Development
+
+To develop and test this library locally:
+
+1. Clone the repository
+2. Install dependencies: `yarn install`
+3. Start the development server: `yarn start`
+4. Build the library: `yarn build`
+
+## Using with Yalc for Local Testing
+
+To test this library in another project locally:
+
+1. Install yalc globally: `npm install -g yalc`
+2. Build the library: `yarn build`
+3. Publish to local yalc store: `yalc publish`
+4. In your consuming project: `yalc add @umbriel/components`
+5. After making changes to the library: `yarn build && yalc push`

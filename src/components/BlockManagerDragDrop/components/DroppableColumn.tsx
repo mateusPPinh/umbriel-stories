@@ -108,7 +108,7 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
 
   const handleRemoveArticle = (articleId: string | number) => {
     if (onRemoveArticle) {
-      onRemoveArticle(droppableId, articleId);
+      onRemoveArticle(droppableId, String(articleId));
     }
   };
 

@@ -158,7 +158,7 @@ const BlockManagerDragDrop: React.FC<BlockManagerDragDropProps> = React.memo(({
   }, [articles, blockType, isDarkTheme, onSave, currentVariant, blockConfig, handleOpenConfigModal, pageId, isPreviewOnly]);
 
   return (
-    <div className="w-full h-full">
+    <div className={`w-full h-full max-w-full ${className || ''}`} style={{ width: '100%' }}>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-medium text-gray-900 dark:text-white">
           Gerenciador de Layout {blockType === 'mixed' ? 'Misto' : blockType === 'grid' ? 'Grid' : blockType === 'list' ? 'Lista' : 'Destaque'}

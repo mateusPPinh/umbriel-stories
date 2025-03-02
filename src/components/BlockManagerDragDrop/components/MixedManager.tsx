@@ -178,12 +178,16 @@ const MixedManager: React.FC<MixedManagerProps> = ({
       return;
     }
 
-    const sourceCol = Array.from(blockState.articles[source.droppableId]);
+    // Usar spread operator para manter as referências aos objetos originais
+    const sourceCol = [...blockState.articles[source.droppableId]];
     const destCol = source.droppableId === destination.droppableId
       ? sourceCol
-      : Array.from(blockState.articles[destination.droppableId]);
+      : [...blockState.articles[destination.droppableId]];
 
+    // Remover o artigo da coluna de origem e manter a referência ao objeto original
     const [removed] = sourceCol.splice(source.index, 1);
+    
+    // Adicionar o mesmo objeto (não uma cópia) na coluna de destino
     destCol.splice(destination.index, 0, removed);
 
     const newColumns = {
@@ -196,11 +200,15 @@ const MixedManager: React.FC<MixedManagerProps> = ({
   };
 
   const handleRemoveArticle = (columnId: string, articleId: string | number) => {
-    const article = blockState.articles[columnId].find(a => a.id === articleId);
+    // Encontra o artigo na coluna - garantindo que estamos usando a referência original
+    const article = blockState.articles[columnId].find(a => String(a.id) === String(articleId));
     
     if (!article) return;
     
-    const updatedColumn = blockState.articles[columnId].filter(a => a.id !== articleId);
+    // Remove o artigo da coluna
+    const updatedColumn = blockState.articles[columnId].filter(a => String(a.id) !== String(articleId));
+    
+    // Adiciona o artigo de volta à pool - usando a referência original do artigo
     const updatedPool = [...blockState.articles.pool, article];
     
     const newColumns = {

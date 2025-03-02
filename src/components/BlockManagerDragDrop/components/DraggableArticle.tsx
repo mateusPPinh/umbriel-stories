@@ -56,7 +56,7 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
   };
 
   return (
-    <Draggable draggableId={article.id.toString()} index={index}>
+    <Draggable draggableId={String(article.id)} index={index}>
       {(provided: any, snapshot: any) => (
         <div
           ref={provided.innerRef}
@@ -68,6 +68,7 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
             group
             ${snapshot.isDragging ? 'opacity-50' : 'opacity-100'}
           `}
+          data-article-id={String(article.id)}
         >
           {/* Article content */}
           {isMasonry ? (
@@ -96,7 +97,7 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
               {/* Remove button */}
               {showRemoveButton && (
                 <button
-                  onClick={() => onRemove(article.id)}
+                  onClick={() => onRemove(String(article.id))}
                   className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
@@ -150,7 +151,7 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
               {/* Remove button */}
               {showRemoveButton && (
                 <button
-                  onClick={() => onRemove(article.id)}
+                  onClick={() => onRemove(String(article.id))}
                   className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-600"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-2 w-2" viewBox="0 0 20 20" fill="currentColor">

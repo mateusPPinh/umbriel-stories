@@ -265,16 +265,16 @@ const ListManager: React.FC<ListManagerProps> = ({
       return;
     }
 
-    // Copia os arrays de origem e destino
-    const sourceCol = Array.from(blockState.articles[source.droppableId] || []);
+    // Copia os arrays de origem e destino mantendo as referências aos objetos originais
+    const sourceCol = [...(blockState.articles[source.droppableId] || [])];
     const destCol = source.droppableId === destination.droppableId
       ? sourceCol
-      : Array.from(blockState.articles[destination.droppableId] || []);
+      : [...(blockState.articles[destination.droppableId] || [])];
 
-    // Remove o item da origem
+    // Remove o item da origem e mantém a referência ao objeto original
     const [removed] = sourceCol.splice(source.index, 1);
 
-    // Adiciona o item no destino
+    // Adiciona o mesmo objeto (não uma cópia) no destino
     destCol.splice(destination.index, 0, removed);
 
     // Atualiza o estado
@@ -289,15 +289,15 @@ const ListManager: React.FC<ListManagerProps> = ({
 
   // Função para remover um artigo de uma coluna e devolvê-lo para a pool
   const handleRemoveArticle = (columnId: string, articleId: string | number) => {
-    // Encontra o artigo na coluna
-    const article = blockState.articles[columnId]?.find(a => a.id === articleId);
+    // Encontra o artigo na coluna - garantindo que estamos usando a referência original
+    const article = blockState.articles[columnId]?.find(a => String(a.id) === String(articleId));
     
     if (!article) return;
     
     // Remove o artigo da coluna
-    const updatedColumn = blockState.articles[columnId]?.filter(a => a.id !== articleId) || [];
+    const updatedColumn = blockState.articles[columnId]?.filter(a => String(a.id) !== String(articleId)) || [];
     
-    // Adiciona o artigo de volta à pool
+    // Adiciona o artigo de volta à pool - usando a referência original do artigo
     const updatedPool = [...(blockState.articles.pool || []), article];
     
     // Atualiza o estado

@@ -21,9 +21,6 @@ const esmFilename = path.basename(packageJson.module);
 export default [
   {
     input: 'src/components/index.ts',
-    server: {
-      open: false
-    },
     output: [
       {
         dir: cjsDir,

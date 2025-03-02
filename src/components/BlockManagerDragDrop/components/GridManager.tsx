@@ -160,10 +160,10 @@ const GridManager: React.FC<GridManagerProps> = ({
       return;
     }
 
-    const sourceCol = JSON.parse(JSON.stringify(blockState.articles[source.droppableId]));
+    const sourceCol = [...blockState.articles[source.droppableId]];
     const destCol = source.droppableId === destination.droppableId
       ? sourceCol
-      : JSON.parse(JSON.stringify(blockState.articles[destination.droppableId]));
+      : [...blockState.articles[destination.droppableId]];
 
     const [removed] = sourceCol.splice(source.index, 1);
     destCol.splice(destination.index, 0, removed);
@@ -178,11 +178,11 @@ const GridManager: React.FC<GridManagerProps> = ({
   };
 
   const handleRemoveArticle = (columnId: string, articleId: string | number) => {
-    const article = blockState.articles[columnId].find(a => a.id === articleId);
+    const article = blockState.articles[columnId].find(a => String(a.id) === String(articleId));
     
     if (!article) return;
     
-    const updatedColumn = blockState.articles[columnId].filter(a => a.id !== articleId);
+    const updatedColumn = blockState.articles[columnId].filter(a => String(a.id) !== String(articleId));
     const updatedPool = [...blockState.articles.pool, article];
     
     const newColumns = {
