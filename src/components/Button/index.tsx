@@ -43,7 +43,7 @@ export default function Button({
           <span>{children}</span>
         </>
       ) : (
-        children
+        <>{children}</>
       )}
     </Container>
   )

@@ -1,4 +1,4 @@
-import { css, styled } from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const Container = styled.div`
   max-width: 432px;

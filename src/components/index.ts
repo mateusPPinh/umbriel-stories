@@ -9,18 +9,11 @@ export { default as BlurredImagem } from './ImageBlur'
 export { default as TopBar } from './TopBar'
 export { default as Link } from './Link'
 export { default as LazyImage } from './LazyImage'
-export { default as Article } from './Article'
-export { default as Author } from './Article/Author'
-export { default as Body } from './Article/Body'
-export { default as Share } from './Article/Share'
-export { default as Subtitle } from './Article/Subtitle'
-export { default as Title } from './Article/Title'
 export { default as PageBlockV2 } from './PageblockV2'
 
 // theme
 export * from '../styles/deliveryThemeFunc'
 // types
-export * from './Article/types'
 
 // icons and types
 export * from '../../public/icons/types'

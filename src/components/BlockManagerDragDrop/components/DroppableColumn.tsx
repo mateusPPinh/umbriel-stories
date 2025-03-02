@@ -69,29 +69,41 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
 
   // Helper function to determine the appropriate class for the droppable area
   const getDroppableAreaClass = () => {
-    if (isNewsGrid) {
-      return 'grid grid-cols-1 md:grid-cols-2 gap-4';
-    }
-    if (isFeatured) {
-      // Para o artigo principal do Showcase, usamos um layout de coluna única
-      return 'flex flex-col';
-    }
-    if (isSidebarMain) {
-      return 'grid grid-cols-1 gap-4';
-    }
-    if (isSidebarSide) {
-      return 'space-y-4';
-    }
-    if (isNewsFeedMain || isNewsFeedSide) {
-      return 'space-y-4';
-    }
+    let baseClasses = `min-h-[100px] p-3 rounded-md transition-colors duration-200 ${
+      isDarkTheme 
+        ? 'bg-gray-800 border-gray-700' 
+        : 'bg-white border-gray-200'
+    }`;
+
     if (isMasonry) {
-      // Match the column count and gap from the real implementation
-      const columnCount = 3; // Default from the real implementation
-      const gap = '24px'; // Default from the real implementation
-      return `columns-1 md:columns-2 lg:columns-${columnCount} gap-x-[${gap}] space-y-0`;
+      return `${baseClasses} columns-1 sm:columns-2 md:columns-3 gap-4 space-y-4`;
     }
-    return 'space-y-4';
+
+    if (isFeatured) {
+      return baseClasses;
+    }
+
+    if (isSidebarMain || isSidebarSide) {
+      return baseClasses;
+    }
+
+    if (isNewsFeedMain || isNewsFeedSide) {
+      return baseClasses;
+    }
+
+    if (isChronological) {
+      return `${baseClasses} space-y-4`;
+    }
+
+    if (isCompact) {
+      return `${baseClasses} space-y-2`;
+    }
+
+    if (isCard) {
+      return `${baseClasses} grid grid-cols-1 sm:grid-cols-2 gap-4`;
+    }
+
+    return `${baseClasses} space-y-4`;
   };
 
   const handleRemoveArticle = (articleId: string | number) => {
@@ -293,86 +305,65 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   };
 
   return (
-    <div className={`${width} mb-4`} style={style}>
-      {/* Cabeçalho da coluna */}
-      <div className={`
-        flex items-center justify-between mb-2
-        ${isDarkTheme ? 'text-white' : 'text-gray-900'}
-      `}>
+    <div className={`${width || 'w-full'} mb-4`} style={style}>
+      <div className="flex justify-between items-center mb-2">
         <h3 
-          className="font-medium"
           style={{
             fontSize: headingProps?.fontSize || '1rem',
-            fontWeight: headingProps?.fontWeight || '500',
-            color: headingProps?.color || (isDarkTheme ? '#F9FAFB' : '#111827')
+            fontWeight: headingProps?.fontWeight || '600',
+            color: headingProps?.color || 'inherit'
           }}
+          className="font-medium"
         >
           {title}
         </h3>
-        {articles.length > 0 && (
-          <span className={`text-xs ${isFull ? 'text-red-500 dark:text-red-400 font-medium' : 'text-gray-500 dark:text-gray-400'}`}>
-            {articles.length}/{maxItems}
-          </span>
-        )}
+        <span 
+          className={`text-xs px-2 py-0.5 rounded-full ${
+            isDarkTheme ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
+          }`}
+        >
+          {articles.length}/{maxItems}
+        </span>
       </div>
 
-      {/* Área de drop */}
-      <Droppable droppableId={droppableId} isDropDisabled={isFull}>
+      <Droppable droppableId={droppableId}>
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`
-              rounded-lg border-2 p-4 h-full max-h-[400px] overflow-y-auto
-              ${snapshot.isDraggingOver
-                ? isDarkTheme
-                  ? 'border-blue-500 bg-gray-700'
-                  : 'border-blue-500 bg-blue-50'
-                : isFull
-                  ? isDarkTheme
-                    ? 'border-red-500/30 bg-gray-800/90'
-                    : 'border-red-200 bg-gray-50/90'
-                  : isDarkTheme
-                    ? 'border-gray-700 bg-gray-800'
-                    : 'border-gray-200 bg-gray-50'
-              }
-              ${getDroppableAreaClass()}
-              ${isFull ? 'opacity-90' : 'opacity-100'}
-              transition-all duration-200
-            `}
-            style={{ minHeight: articles.length === 0 ? '220px' : 'auto' }}
+            className={`${getDroppableAreaClass()} ${
+              snapshot.isDraggingOver 
+                ? isDarkTheme ? 'bg-blue-900/20' : 'bg-blue-50' 
+                : ''
+            } border`}
+            style={{ overflow: 'visible' }}
           >
-            {articles.length === 0 ? (
-              renderSkeleton()
+            {articles.length > 0 ? (
+              <>
+                {articles.map((article, index) => (
+                  <DraggableArticle
+                    key={article.id}
+                    article={article}
+                    index={index}
+                    isDarkTheme={isDarkTheme}
+                    isMasonry={isMasonry}
+                    showExcerpt={showExcerpt}
+                    subtitleProps={subtitleProps}
+                    onRemove={() => handleRemoveArticle(article.id)}
+                  />
+                ))}
+              </>
             ) : (
-              articles.filter(article => article && article.id).map((article, index) => (
-                <DraggableArticle
-                  key={article.id}
-                  article={article}
-                  index={index}
-                  isDarkTheme={isDarkTheme}
-                  isMasonry={isMasonry}
-                  subtitleProps={{
-                    fontSize: subtitleProps?.fontSize || 'sm',
-                    color: subtitleProps?.color || (isDarkTheme ? 'gray-300' : 'gray-600')
-                  }}
-                  showExcerpt={showExcerpt}
-                  onRemove={handleRemoveArticle}
-                />
-              ))
-            )}
-            {provided.placeholder}
-            {isFull && articles.length > 0 && (
-              <div
-                className={`
-                  mt-2 rounded-md p-2 text-center text-sm
-                  ${isDarkTheme ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}
-                  ${isNewsGrid ? 'col-span-full' : ''}
-                `}
-              >
-                Máximo de {maxItems} artigos atingido
+              <div className={`flex flex-col items-center justify-center py-6 ${
+                isDarkTheme ? 'text-gray-400' : 'text-gray-500'
+              }`}>
+                <svg className="w-8 h-8 mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                </svg>
+                <p className="text-sm">Arraste artigos para esta coluna</p>
               </div>
             )}
+            {provided.placeholder}
           </div>
         )}
       </Droppable>

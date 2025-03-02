@@ -49,133 +49,80 @@ const ArticlesPool: React.FC<ArticlesPoolProps> = ({ articles, isDarkTheme, drop
         </span>
       </div>
 
-      {/* Search and Controls */}
+      {/* Barra de pesquisa e ordenação */}
       <div className={`p-3 border-b ${isDarkTheme ? 'border-gray-700' : 'border-gray-200'}`}>
         <div className="flex flex-col sm:flex-row gap-2">
-          <div className="flex-1 relative">
-            <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
-              <svg className={`h-4 w-4 ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
+          <div className="relative flex-1">
             <input
               type="text"
               placeholder="Buscar artigos..."
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
-                setCurrentPage(1); // Reset to first page on search
+                setCurrentPage(1);
               }}
-              className={`
-                w-full pl-7 pr-3 py-1.5 text-sm rounded
-                transition-colors duration-200
-                ${isDarkTheme 
-                  ? 'bg-gray-700 text-white placeholder-gray-400 border-gray-600' 
-                  : 'bg-gray-50 text-gray-900 placeholder-gray-500 border-gray-300'
-                }
-                border focus:outline-none focus:ring-1 focus:ring-blue-500
-              `}
+              className={`w-full pl-8 pr-3 py-1.5 text-sm rounded-md ${
+                isDarkTheme 
+                  ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-blue-500' 
+                  : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500'
+              } border focus:ring-blue-500 focus:outline-none`}
             />
+            <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+              <svg className={`h-4 w-4 ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
           </div>
-          <div className="flex items-center">
-            <label className={`mr-2 text-xs ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'}`}>
-              Ordenar:
-            </label>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as 'date' | 'title')}
-              className={`
-                px-2 py-1.5 text-sm rounded
-                transition-colors duration-200
-                ${isDarkTheme
-                  ? 'bg-gray-700 text-white border-gray-600'
-                  : 'bg-gray-50 text-gray-900 border-gray-300'
-                }
-                border focus:outline-none focus:ring-1 focus:ring-blue-500
-              `}
-            >
-              <option value="date">Mais recentes</option>
-              <option value="title">Ordem alfabética</option>
-            </select>
-          </div>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as 'date' | 'title')}
+            className={`text-sm rounded-md ${
+              isDarkTheme 
+                ? 'bg-gray-700 border-gray-600 text-white' 
+                : 'bg-white border-gray-300 text-gray-900'
+            } border focus:ring-blue-500 focus:border-blue-500`}
+          >
+            <option value="date">Mais recentes</option>
+            <option value="title">Título (A-Z)</option>
+          </select>
         </div>
       </div>
 
-      {/* Articles Grid */}
-      <Droppable droppableId={droppableId} direction="horizontal">
+      {/* Lista de artigos */}
+      <Droppable droppableId={droppableId}>
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`
-              grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 p-3
-              transition-all duration-200 min-h-[250px] max-h-[400px] overflow-y-auto
-              ${isDarkTheme ? 'bg-gray-800' : 'bg-white'}
-              ${snapshot.isDraggingOver ? 'bg-blue-50 dark:bg-blue-900/20' : ''}
-            `}
+            className={`p-3 min-h-[200px] ${
+              snapshot.isDraggingOver 
+                ? isDarkTheme ? 'bg-gray-700' : 'bg-blue-50' 
+                : ''
+            }`}
+            style={{ maxHeight: '400px', overflowY: 'auto', overflowX: 'hidden' }}
           >
             {paginatedArticles.length > 0 ? (
-              paginatedArticles.map((article, index) => (
-                <DraggableArticle
-                  key={article.id}
-                  article={article}
-                  index={index}
-                  isDarkTheme={isDarkTheme}
-                  showRemoveButton={false}
-                  onRemove={() => {}}
-                />
-              ))
+              <div className="grid grid-cols-1 gap-2">
+                {paginatedArticles.map((article, index) => (
+                  <DraggableArticle
+                    key={article.id}
+                    article={article}
+                    index={index}
+                    isDarkTheme={isDarkTheme}
+                    showRemoveButton={false}
+                    onRemove={() => {}}
+                  />
+                ))}
+              </div>
             ) : (
-              <div className={`
-                col-span-full flex flex-col items-center justify-center py-8
-                ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}
-              `}>
+              <div className={`flex flex-col items-center justify-center h-32 text-center ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`}>
+                <svg className="h-8 w-8 mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
                 {searchTerm ? (
-                  <>
-                    <svg
-                      className="w-8 h-8 mb-3 opacity-50"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                    <p className="text-sm font-medium">Nenhum artigo encontrado</p>
-                    <p className="text-xs mt-1">Tente ajustar seus filtros de busca</p>
-                    <button 
-                      onClick={() => setSearchTerm('')}
-                      className={`mt-3 px-3 py-1 rounded text-xs ${
-                        isDarkTheme 
-                          ? 'bg-gray-700 hover:bg-gray-600 text-white' 
-                          : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
-                      }`}
-                    >
-                      Limpar busca
-                    </button>
-                  </>
+                  <p className="text-sm">Nenhum artigo encontrado para "{searchTerm}"</p>
                 ) : (
-                  <>
-                    <svg
-                      className="w-8 h-8 mb-3 opacity-50"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                      />
-                    </svg>
-                    <p className="text-sm font-medium">Nenhum artigo disponível</p>
-                    <p className="text-xs mt-1">Adicione artigos para começar</p>
-                  </>
+                  <p className="text-sm">Todos os artigos já foram utilizados</p>
                 )}
               </div>
             )}

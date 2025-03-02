@@ -29,51 +29,135 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme,
   };
 
   const renderStandardGrid = () => {
-    const classes = defaultClasses.grid.standard;
     const items = columns['col-0'] || [];
+    const items2 = columns['col-1'] || [];
+    const items3 = columns['col-2'] || [];
 
     return (
-      <div className={classes.container}>
-        <div className={classes.grid}>
-          {items.length > 0 ? (
-            items.map((article: Article) => {
-              const articleUrl = generateArticleUrl(article);
-              return (
-                <article key={article.id} className={classes.article}>
-                  {article.content?.image?.desktop_image_path && (
-                    <div className={classes.image.wrapper}>
-                      <img
-                        src={article.content.image.desktop_image_path}
-                        alt={article.title}
-                        className={classes.image.img}
-                      />
-                    </div>
-                  )}
-                  
-                  <div className={classes.content.wrapper}>
-                    <Link href={articleUrl} className="hover:underline transition-all duration-300">
-                      <h2 className={classes.content.title}>
-                        {article.title}
-                      </h2>
-                    </Link>
-                    
-                    {blockConfig.styles.showExcerpt && (
-                      <p className={classes.content.subtitle}>
-                        {article.subtitle}
-                      </p>
+      <div className="w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-4">
+            {items.length > 0 ? (
+              items.map((article: Article) => {
+                const articleUrl = generateArticleUrl(article);
+                return (
+                  <article key={article.id} className="flex flex-col overflow-hidden rounded-lg">
+                    {article.content?.image?.desktop_image_path && (
+                      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg">
+                        <img
+                          src={article.content.image.desktop_image_path}
+                          alt={article.title}
+                          className="absolute inset-0 h-full w-full object-cover"
+                        />
+                      </div>
                     )}
-                  </div>
-                </article>
-              );
-            })
-          ) : (
-            // Skeleton grid
-            [...Array(6)].map((_, i) => (
-              <div key={i} className={classes.article}>
-                {renderArticleSkeleton('medium')}
+                    <div className="flex flex-1 flex-col justify-between p-4">
+                      <div className="flex-1">
+                        <Link href={articleUrl} className="mt-2 block">
+                          <h3 className={`text-lg font-semibold leading-tight ${isDarkTheme ? 'text-white' : 'text-gray-900'}`}>
+                            {article.title}
+                          </h3>
+                        </Link>
+                        {blockConfig.styles.showExcerpt && article.content?.description && (
+                          <p className={`mt-2 text-sm ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'}`}>
+                            {article.content.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })
+            ) : (
+              <div className="space-y-4">
+                {[...Array(2)].map((_, i) => (
+                  <div key={i}>{renderArticleSkeleton()}</div>
+                ))}
               </div>
-            ))
-          )}
+            )}
+          </div>
+          
+          <div className="space-y-4">
+            {items2.length > 0 ? (
+              items2.map((article: Article) => {
+                const articleUrl = generateArticleUrl(article);
+                return (
+                  <article key={article.id} className="flex flex-col overflow-hidden rounded-lg">
+                    {article.content?.image?.desktop_image_path && (
+                      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg">
+                        <img
+                          src={article.content.image.desktop_image_path}
+                          alt={article.title}
+                          className="absolute inset-0 h-full w-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <div className="flex flex-1 flex-col justify-between p-4">
+                      <div className="flex-1">
+                        <Link href={articleUrl} className="mt-2 block">
+                          <h3 className={`text-lg font-semibold leading-tight ${isDarkTheme ? 'text-white' : 'text-gray-900'}`}>
+                            {article.title}
+                          </h3>
+                        </Link>
+                        {blockConfig.styles.showExcerpt && article.content?.description && (
+                          <p className={`mt-2 text-sm ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'}`}>
+                            {article.content.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })
+            ) : (
+              <div className="space-y-4">
+                {[...Array(2)].map((_, i) => (
+                  <div key={i}>{renderArticleSkeleton()}</div>
+                ))}
+              </div>
+            )}
+          </div>
+          
+          <div className="space-y-4">
+            {items3.length > 0 ? (
+              items3.map((article: Article) => {
+                const articleUrl = generateArticleUrl(article);
+                return (
+                  <article key={article.id} className="flex flex-col overflow-hidden rounded-lg">
+                    {article.content?.image?.desktop_image_path && (
+                      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg">
+                        <img
+                          src={article.content.image.desktop_image_path}
+                          alt={article.title}
+                          className="absolute inset-0 h-full w-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <div className="flex flex-1 flex-col justify-between p-4">
+                      <div className="flex-1">
+                        <Link href={articleUrl} className="mt-2 block">
+                          <h3 className={`text-lg font-semibold leading-tight ${isDarkTheme ? 'text-white' : 'text-gray-900'}`}>
+                            {article.title}
+                          </h3>
+                        </Link>
+                        {blockConfig.styles.showExcerpt && article.content?.description && (
+                          <p className={`mt-2 text-sm ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'}`}>
+                            {article.content.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                );
+              })
+            ) : (
+              <div className="space-y-4">
+                {[...Array(2)].map((_, i) => (
+                  <div key={i}>{renderArticleSkeleton()}</div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );

@@ -1,4 +1,4 @@
-import { css, styled } from 'styled-components'
+import  styled, { css } from 'styled-components'
 
 const Container = styled.div<{
   $isSubmenuChildrenOpen?: boolean
@@ -78,7 +78,7 @@ const Container = styled.div<{
     color: ${(props) => props.theme.colors.gray800};
     font-size: 16px;
     font-weight: 700;
-    color: ${(props) => props.theme.colors800};
+    color: ${(props) => props.theme.colors.gray800};
   }
 
   .isChildren {

@@ -31,6 +31,9 @@ interface SubtitleProps {
   color: string;
 }
 
+// @ts-ignore
+const DragDropContextFix = DragDropContext as any;
+
 const GRID_VARIANTS: Record<GridVariantType, GridVariant> = {
   standard: {
     id: 'standard',
@@ -56,7 +59,7 @@ const GRID_VARIANTS: Record<GridVariantType, GridVariant> = {
     ],
     layout: {
       container: 'w-full',
-      grid: 'grid grid-cols-3 gap-6'
+      grid: 'grid grid-cols-1 md:grid-cols-3 gap-6'
     }
   },
   masonry: {
@@ -443,8 +446,8 @@ const GridManager: React.FC<GridManagerProps> = ({
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           <div className="lg:col-span-2">
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <div className="flex flex-col gap-4">
+            <DragDropContextFix  onDragEnd={handleDragEnd}>
+              <div className="flex flex-col gap-4" style={{ overflow: 'visible' }}>
                 <ArticlesPool
                   droppableId="pool"
                   articles={blockState.articles.pool}
@@ -452,7 +455,7 @@ const GridManager: React.FC<GridManagerProps> = ({
                 />
                 {renderColumns()}
               </div>
-            </DragDropContext>
+            </DragDropContextFix>
           </div>
           <div className="lg:col-span-3">
             <LayoutPreview
