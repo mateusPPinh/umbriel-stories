@@ -174,7 +174,7 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
       ) : (
         <div className="flex h-[70vh] gap-4">
           <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="w-1/6 min-w-[180px] max-h-[70vh] overflow-y-auto">
+            <div className="w-1/12 min-w-[120px] max-h-[70vh] overflow-y-auto">
               <ArticlesPool
                 droppableId="pool"
                 articles={blockState.articles.pool}
@@ -182,7 +182,7 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
               />
             </div>
             
-            <div className="w-1/4 min-w-[250px] max-h-[70vh] overflow-y-auto">
+            <div className="w-1/3 min-w-[250px] max-h-[70vh] overflow-y-auto">
               <div className="grid grid-cols-1 gap-4">
                 <DroppableColumn
                   id="col-0"

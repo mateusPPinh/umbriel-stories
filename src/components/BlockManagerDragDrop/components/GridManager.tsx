@@ -444,7 +444,7 @@ const GridManager: React.FC<GridManagerProps> = ({
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="flex flex-row gap-4 w-full">
             {/* Item 1: Lista de artigos (Pool) - Coluna estreita */}
-            <div className="w-1/6 min-w-[180px]" style={{ maxHeight: '70vh', overflow: 'hidden' }}>
+            <div className="w-1/12 min-w-[120px]" style={{ maxHeight: '70vh', overflow: 'hidden' }}>
               <ArticlesPool
                 droppableId="pool"
                 articles={blockState.articles.pool}
