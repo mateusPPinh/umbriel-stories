@@ -239,9 +239,9 @@ const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({
             
             <div className="flex-1">
               {/* Date */}
-              {displayConfig.showPublishDate && blockConfig.styles.showMetadata && article.published_at && (
+              {displayConfig.showPublishDate && blockConfig.styles.showMetadata && article.created_at && (
                 <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">
-                  {formatDistanceToNow(new Date(article.published_at), { addSuffix: true })}
+                  {formatDistanceToNow(new Date(article.created_at), { addSuffix: true })}
                 </div>
               )}
               
@@ -321,9 +321,9 @@ const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({
             )}
             
             {/* Date */}
-            {displayConfig.showPublishDate && blockConfig.styles.showMetadata && article.published_at && (
+            {displayConfig.showPublishDate && blockConfig.styles.showMetadata && article.created_at && (
               <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                {formatDistanceToNow(new Date(article.published_at), { addSuffix: true })}
+                {formatDistanceToNow(new Date(article.created_at), { addSuffix: true })}
               </div>
             )}
           </div>
@@ -394,9 +394,9 @@ const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({
               )}
               
               {/* Date */}
-              {displayConfig.showPublishDate && blockConfig.styles.showMetadata && article.published_at && (
+              {displayConfig.showPublishDate && blockConfig.styles.showMetadata && article.created_at && (
                 <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  {formatDistanceToNow(new Date(article.published_at), { addSuffix: true })}
+                  {formatDistanceToNow(new Date(article.created_at), { addSuffix: true })}
             </div>
               )}
             </div>

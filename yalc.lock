@@ -1,9 +1,0 @@
-{
-  "version": "v1",
-  "packages": {
-    "@umbriel/components": {
-      "signature": "19c15e5c019a7898143df82fb7cbb11f",
-      "file": true
-    }
-  }
-}

@@ -105,9 +105,9 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                 </div>
               )}
 
-              {mainDisplayConfig.showPublishDate && mainArticle?.published_at && (
+              {mainDisplayConfig.showPublishDate && mainArticle?.created_at && (
                 <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                  {new Date(mainArticle.published_at).toLocaleDateString('pt-BR')}
+                  {new Date(mainArticle.created_at).toLocaleDateString('pt-BR')}
                 </div>
               )}
             </div>
@@ -168,9 +168,9 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                     </div>
                   )}
 
-                  {sidebarDisplayConfig.showPublishDate && article?.published_at && (
+                  {sidebarDisplayConfig.showPublishDate && article?.created_at && (
                     <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      {new Date(article.published_at).toLocaleDateString('pt-BR')}
+                      {new Date(article.created_at).toLocaleDateString('pt-BR')}
                     </div>
                   )}
                 </div>
@@ -247,9 +247,9 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                 </div>
               )}
 
-              {mainDisplayConfig.showPublishDate && mainArticle?.published_at && (
+              {mainDisplayConfig.showPublishDate && mainArticle?.created_at && (
                 <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                  {new Date(mainArticle.published_at).toLocaleDateString('pt-BR')}
+                  {new Date(mainArticle.created_at).toLocaleDateString('pt-BR')}
                 </div>
               )}
             </div>
@@ -305,9 +305,9 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       </div>
                     )}
 
-                    {gridDisplayConfig.showPublishDate && article?.published_at && (
+                    {gridDisplayConfig.showPublishDate && article?.created_at && (
                       <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {new Date(article.published_at).toLocaleDateString('pt-BR')}
+                        {new Date(article.created_at).toLocaleDateString('pt-BR')}
                       </div>
                     )}
                   </div>
@@ -354,9 +354,9 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                     </div>
                   )}
 
-                  {listDisplayConfig.showPublishDate && article?.published_at && (
+                  {listDisplayConfig.showPublishDate && article?.created_at && (
                     <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      {new Date(article.published_at).toLocaleDateString('pt-BR')}
+                      {new Date(article.created_at).toLocaleDateString('pt-BR')}
                     </div>
                   )}
                 </article>
@@ -436,9 +436,9 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                     </div>
                   )}
 
-                  {getColumnDisplayConfig('col-0').showPublishDate && article?.published_at && (
+                  {getColumnDisplayConfig('col-0').showPublishDate && article?.created_at && (
                     <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      {new Date(article.published_at).toLocaleDateString('pt-BR')}
+                      {new Date(article.created_at).toLocaleDateString('pt-BR')}
                     </div>
                   )}
                 </div>
@@ -500,9 +500,9 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       </div>
                     )}
 
-                    {getColumnDisplayConfig('col-1').showPublishDate && article?.published_at && (
+                    {getColumnDisplayConfig('col-1').showPublishDate && article?.created_at && (
                       <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {new Date(article.published_at).toLocaleDateString('pt-BR')}
+                        {new Date(article.created_at).toLocaleDateString('pt-BR')}
                       </div>
                     )}
                   </div>
@@ -565,9 +565,9 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       </div>
                     )}
 
-                    {getColumnDisplayConfig('col-2').showPublishDate && article?.published_at && (
+                    {getColumnDisplayConfig('col-2').showPublishDate && article?.created_at && (
                       <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {new Date(article.published_at).toLocaleDateString('pt-BR')}
+                        {new Date(article.created_at).toLocaleDateString('pt-BR')}
                       </div>
                     )}
                   </div>
@@ -631,9 +631,9 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                 </div>
               )}
 
-              {getColumnDisplayConfig('col-0').showPublishDate && mainArticle?.published_at && (
+              {getColumnDisplayConfig('col-0').showPublishDate && mainArticle?.created_at && (
                 <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                  {new Date(mainArticle.published_at).toLocaleDateString('pt-BR')}
+                  {new Date(mainArticle.created_at).toLocaleDateString('pt-BR')}
                 </div>
               )}
             </div>
@@ -689,9 +689,9 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       </div>
                     )}
 
-                    {getColumnDisplayConfig('col-1').showPublishDate && article?.published_at && (
+                    {getColumnDisplayConfig('col-1').showPublishDate && article?.created_at && (
                       <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {new Date(article.published_at).toLocaleDateString('pt-BR')}
+                        {new Date(article.created_at).toLocaleDateString('pt-BR')}
                       </div>
                     )}
                   </div>
@@ -750,9 +750,9 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       </div>
                     )}
 
-                    {getColumnDisplayConfig('col-2').showPublishDate && article?.published_at && (
+                    {getColumnDisplayConfig('col-2').showPublishDate && article?.created_at && (
                       <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {new Date(article.published_at).toLocaleDateString('pt-BR')}
+                        {new Date(article.created_at).toLocaleDateString('pt-BR')}
                       </div>
                     )}
                   </div>
@@ -834,9 +834,9 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                 </div>
               )}
 
-              {getColumnDisplayConfig('col-0').showPublishDate && mainArticle?.published_at && (
+              {getColumnDisplayConfig('col-0').showPublishDate && mainArticle?.created_at && (
                 <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                  {new Date(mainArticle.published_at).toLocaleDateString('pt-BR')}
+                  {new Date(mainArticle.created_at).toLocaleDateString('pt-BR')}
                 </div>
               )}
             </div>
@@ -910,9 +910,9 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       </div>
                     )}
 
-                    {getColumnDisplayConfig('col-1').showPublishDate && article?.published_at && (
+                    {getColumnDisplayConfig('col-1').showPublishDate && article?.created_at && (
                       <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {new Date(article.published_at).toLocaleDateString('pt-BR')}
+                        {new Date(article.created_at).toLocaleDateString('pt-BR')}
                       </div>
                     )}
                   </div>
@@ -989,9 +989,9 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({ variant, isDark
                       </div>
                     )}
 
-                    {getColumnDisplayConfig('col-2').showPublishDate && article?.published_at && (
+                    {getColumnDisplayConfig('col-2').showPublishDate && article?.created_at && (
                       <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {new Date(article.published_at).toLocaleDateString('pt-BR')}
+                        {new Date(article.created_at).toLocaleDateString('pt-BR')}
                       </div>
                     )}
                   </div>

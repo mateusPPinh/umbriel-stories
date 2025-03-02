@@ -24,7 +24,7 @@ const ArticlesPool: React.FC<ArticlesPoolProps> = ({ articles, isDarkTheme, drop
       )
       .sort((a, b) => {
         if (sortBy === 'date') {
-          return new Date(b.published_at || '').getTime() - new Date(a.published_at || '').getTime();
+          return new Date(b.created_at || '').getTime() - new Date(a.created_at || '').getTime();
         }
         return a.title.localeCompare(b.title);
       });

@@ -134,19 +134,13 @@ const Chronological: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custo
                           </svg>
                         </span>
                       </>
-                    ) : article.content?.body ? (
+                    ) : article?.articleBody ? (
                       <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                        {truncateText(article.content.body, 150)}
+                        {truncateText(article.articleBody, 150)}
                       </p>
                     ) : null}
                   </div>
                 </a>
-
-                {styles.showMetadata ? (
-                  <div className={classes.content.metadata}>
-                    {/* Metadata aqui */}
-                  </div>
-                ) : null}
               </div>
             );
           })

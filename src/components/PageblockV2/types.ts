@@ -70,6 +70,7 @@ export interface Article {
   title: string;
   subtitle?: string;
   image?: string;
+  articleBody?: string;
   excerpt?: string;
   content?: {
     description?: string;
@@ -79,7 +80,19 @@ export interface Article {
     };
   };
   created_at: string;
-  published_at: string;
+  slug: string;
+  updated_at?: string;
+  editorial?: {
+    id: string;
+    name: string;
+    description: string;
+    slug: string;
+    status: boolean;
+    created_at: string;
+    updated_at: string;
+    tenantId: string;
+    numberOfArticles: number | null;
+  };
 }
 
 export type FontSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';

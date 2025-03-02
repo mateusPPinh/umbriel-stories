@@ -9,7 +9,7 @@ const mockArticles: Article[] = [
     title: 'Article 1',
     subtitle: 'Subtitle 1',
     slug: 'article-1',
-    published_at: '2025-02-27 18:43:44.989767',
+    created_at: '2025-02-27 18:43:44.989767',
     content: {
       image: {
         desktop_image_path: 'https://barzuputru.local.api.umbrielcms.com.br:3001/uploads/19948844ea8f931121e7-307824076_634234571684057_3979167513106415840_n.jpg?width=510&height=907'
@@ -21,7 +21,7 @@ const mockArticles: Article[] = [
     title: 'Article 2',
     subtitle: 'Subtitle 2',
     slug: 'article-2',
-    published_at: '2025-02-27 18:43:45.034907',
+    created_at: '2025-02-27 18:43:45.034907',
     content: {
       image: {
         desktop_image_path: 'https://barzuputru.local.api.umbrielcms.com.br:3001/uploads/370120c2c31c03636a96-edited_1739899336673.jpg?width=410&height=300'

@@ -8,7 +8,7 @@ const mockArticles: Article[] = [
     title: 'Article 1',
     subtitle: 'Subtitle 1',
     slug: 'article-1',
-    published_at: '2024-01-01',
+    created_at: '2025-02-27 18:43:44.989767',
     content: {
       image: {
         desktop_image_path: 'https://picsum.photos/800/600'
@@ -20,7 +20,7 @@ const mockArticles: Article[] = [
     title: 'Article 2',
     subtitle: 'Subtitle 2',
     slug: 'article-2',
-    published_at: '2024-01-01',
+    created_at: '2025-02-27 18:43:44.989767',
     content: {
       image: {
         desktop_image_path: 'https://picsum.photos/800/600'
