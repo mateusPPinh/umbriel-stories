@@ -54,14 +54,12 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
     ) return;
 
     // Verificar se a coluna de destino já atingiu o limite máximo de artigos
-    const maxItems = destination.droppableId === 'col-0' 
-      ? 1 // Coluna principal sempre tem limite de 1
-      : currentVariant.maxItems;
-
+    // Todos os artigos vão para col-0, independente da variante
     if (
       source.droppableId !== destination.droppableId && 
-      blockState.articles[destination.droppableId] && 
-      blockState.articles[destination.droppableId].length >= maxItems
+      destination.droppableId === 'col-0' &&
+      blockState.articles['col-0'] && 
+      blockState.articles['col-0'].length >= currentVariant.maxItems
     ) {
       return;
     }
@@ -120,6 +118,9 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
   const handleVariantChange = (newVariant: FeaturedVariantType) => {
     updateVariant(newVariant);
   };
+
+  // Determinar se devemos mostrar a coluna secundária com base na variante
+  const shouldShowSecondaryColumn = false; // Removemos a coluna secundária, todos os artigos vão para col-0
 
   return (
     <div className="flex flex-col gap-6">
@@ -186,27 +187,8 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
                 <DroppableColumn
                   id="col-0"
                   droppableId="col-0"
-                  title="Artigo Principal"
+                  title="Artigos"
                   articles={blockState.articles['col-0'] || []}
-                  maxItems={1}
-                  isDarkTheme={isDarkTheme}
-                  width="w-full"
-                  headingProps={{
-                    fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
-                    fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
-                    color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
-                  }}
-                  subtitleProps={{
-                    fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
-                    color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
-                  }}
-                  onRemoveArticle={handleRemoveArticle}
-                />
-                <DroppableColumn
-                  id="col-1"
-                  droppableId="col-1"
-                  title="Artigos Secundários"
-                  articles={blockState.articles['col-1'] || []}
                   maxItems={currentVariant.maxItems}
                   isDarkTheme={isDarkTheme}
                   width="w-full"

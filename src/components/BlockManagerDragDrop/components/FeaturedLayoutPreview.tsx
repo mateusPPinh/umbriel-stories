@@ -54,12 +54,12 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
   };
 
   const renderSplitPreview = () => {
-    const articles = columns['col-0'] || [];
+    const mainArticles = columns['col-0'] || [];
     
     return (
       <div className="grid grid-cols-2 gap-4">
         {[...Array(2)].map((_, i) => {
-          const article = articles[i];
+          const article = mainArticles[i];
           
           return (
             <div key={i} className="flex gap-4">
@@ -119,12 +119,12 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
   };
 
   const renderTriplePreview = () => {
-    const articles = columns['col-0'] || [];
+    const mainArticles = columns['col-0'] || [];
     
     return (
       <div className="grid grid-cols-3 gap-4">
         {[...Array(3)].map((_, i) => {
-          const article = articles[i];
+          const article = mainArticles[i];
           
           return (
             <div key={i} className="flex flex-col">
