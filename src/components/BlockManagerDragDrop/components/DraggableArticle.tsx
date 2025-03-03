@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Draggable } from '@hello-pangea/dnd';
 import { Article } from '../../PageblockV2/types';
 
@@ -43,6 +43,19 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
   subtitleProps = { fontSize: '1rem', color: 'inherit' },
   onRemove
 }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const isVideo = article.is_video || article.video_url;
+
+  useEffect(() => {
+    // Reset state when component mounts or article changes
+    setIsPlaying(false);
+    setError(null);
+  }, [article]);
+
   // Helper para gerar alturas aleatórias mas consistentes baseadas no índice
   const getRandomHeight = (index: number) => {
     const heights = ['h-48', 'h-64', 'h-56'];
@@ -53,6 +66,93 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
   const getRandomAspectRatio = (index: number) => {
     const ratios = ['aspect-square', 'aspect-[3/4]', 'aspect-[4/3]'];
     return ratios[index % ratios.length];
+  };
+  
+  const getVideoUrl = () => {
+    if (article.video_url) {
+      return article.video_url;
+    } else if (article.video_id) {
+      // Aqui você pode implementar lógica para gerar URLs de vídeo baseadas em IDs
+      // Por exemplo, se for um ID do YouTube: `https://www.youtube.com/embed/${article.video_id}`
+      return `https://example.com/video/${article.video_id}`;
+    }
+    return null;
+  };
+
+  const handleVideoError = () => {
+    console.error("Erro ao carregar o vídeo:", article.video_url);
+    setError("Não foi possível carregar o vídeo");
+  };
+
+  const togglePlayPause = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play().catch(err => {
+          console.error("Erro ao reproduzir vídeo:", err);
+          setError("Não foi possível reproduzir o vídeo");
+        });
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const renderVideo = () => {
+    const videoUrl = getVideoUrl();
+    
+    if (!videoUrl) {
+      return (
+        <div className="flex items-center justify-center h-full bg-gray-800 text-white text-center p-4">
+          <p>URL de vídeo inválida</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="relative w-full h-full">
+        <video
+          ref={videoRef}
+          src={videoUrl}
+          className="w-full h-full object-cover"
+          muted
+          playsInline
+          onLoadedData={() => setIsLoaded(true)}
+          onError={handleVideoError}
+          loop
+        />
+        
+        {!isLoaded && !error && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="w-8 h-8 border-t-2 border-blue-500 rounded-full animate-spin"></div>
+          </div>
+        )}
+        
+        {error && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white">
+            <p>{error}</p>
+          </div>
+        )}
+        
+        <div 
+          className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
+          onClick={togglePlayPause}
+        >
+          <button className="w-12 h-12 rounded-full bg-white bg-opacity-70 flex items-center justify-center">
+            {isPlaying ? (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            )}
+          </button>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -73,7 +173,11 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
           {/* Article content */}
           {isMasonry ? (
             <article className="relative">
-              {article.content?.image?.desktop_image_path && (
+              {isVideo ? (
+                <div className="relative w-full overflow-hidden mb-2">
+                  {renderVideo()}
+                </div>
+              ) : article.content?.image?.desktop_image_path && (
                 <div className="relative w-full overflow-hidden mb-2">
                   <img
                     src={article.content.image.desktop_image_path}
@@ -115,8 +219,12 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
               transition-all duration-200
               rounded-md
             `}>
-              {/* Image */}
-              {article.content?.image?.desktop_image_path && (
+              {/* Image or Video */}
+              {isVideo ? (
+                <div className="relative aspect-[16/9] overflow-hidden rounded-t-md">
+                  {renderVideo()}
+                </div>
+              ) : article.content?.image?.desktop_image_path && (
                 <div className="relative aspect-[16/9] overflow-hidden rounded-t-md">
                   <img
                     src={article.content.image.desktop_image_path}

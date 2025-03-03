@@ -2,6 +2,7 @@ import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import BlockManagerDragDrop from '../index';
 import { createArticles } from '../../PageblockV2/stories/mockData';
+import { mockVideos } from './video.mock';
 
 interface BlockManagerDragDropProps {
   articles: any[];
@@ -151,8 +152,13 @@ Mixed_Magazine.storyName = 'Mixed/Magazine';
 
 export const Mixed_VideoGrid = Template.bind({});
 Mixed_VideoGrid.args = {
-  ...Mixed_Sidebar.args,
   blockType: 'mixed',
+  articles: mockArticles,
+  isDarkTheme: false,
+  onSave: (columns) => console.log('Updated columns:', columns),
+  variant: 'videogrid',
+  pageId: 'mock-page-id',
+  videos: mockVideos
 };
 Mixed_VideoGrid.storyName = 'Mixed/Video Grid';
 

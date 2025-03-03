@@ -93,6 +93,18 @@ export interface Article {
     tenantId: string;
     numberOfArticles: number | null;
   };
+  is_video?: boolean;
+  video_id?: number;
+  video_url?: string;
+  video_metadata?: {
+    duration: number;
+    size: number;
+    format: string;
+    resolution: {
+      width: number;
+      height: number;
+    };
+  };
 }
 
 export type FontSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
