@@ -364,14 +364,16 @@ export const useBlockState = ({
         articles: {
           'pool': initialArticles,
           'col-0': [],
-          'col-1': []
+          'col-1': [],
+          'col-2': []
         },
         config: {
           ...defaultConfig,
           articles: {
             'pool': initialArticles.map(article => String(article.id)),
             'col-0': [],
-            'col-1': []
+            'col-1': [],
+            'col-2': []
           }
         }
       }
@@ -544,7 +546,7 @@ export const useBlockState = ({
         case 'magazine':
           return 3;
         case 'videogrid':
-          return 2;
+          return 3;
         default:
           return 1;
       }

@@ -43,7 +43,7 @@ type LayoutVariants = {
   showcase: VariantConfig<['col-0', 'col-1', 'col-2']>;
   newspaper: VariantConfig<['col-0', 'col-1', 'col-2']>;
   magazine: VariantConfig<['col-0', 'col-1', 'col-2']>;
-  videogrid: VariantConfig<['col-0', 'col-1']>;
+  videogrid: VariantConfig<['col-0', 'col-1', 'col-2']>;
 };
 
 const LAYOUT_VARIANTS: LayoutVariants = {
@@ -101,11 +101,13 @@ const LAYOUT_VARIANTS: LayoutVariants = {
     label: 'Video Grid',
     maxItems: {
       'col-0': 1,
-      'col-1': 3,
+      'col-1': 2,
+      'col-2': 2,
     },
     columnLabels: {
       'col-0': 'Vídeo Principal',
-      'col-1': 'Vídeos Secundários',
+      'col-1': 'Title and Description',
+      'col-2': 'Title and Description',
     },
   },
 };
@@ -181,8 +183,8 @@ const MixedManager: React.FC<MixedManagerProps> = ({
     // Usar spread operator para manter as referências aos objetos originais
     const sourceCol = [...blockState.articles[source.droppableId]];
     const destCol = source.droppableId === destination.droppableId
-      ? sourceCol
-      : [...blockState.articles[destination.droppableId]];
+    ? sourceCol
+    : [...blockState.articles[destination.droppableId]];
 
     // Remover o artigo da coluna de origem e manter a referência ao objeto original
     const [removed] = sourceCol.splice(source.index, 1);
@@ -275,7 +277,8 @@ const MixedManager: React.FC<MixedManagerProps> = ({
       case 'videogrid':
         return {
           isFeatured: colId === 'col-0', // Vídeo principal
-          isNewsGrid: colId === 'col-1', // Vídeos secundários em grid
+          isNewsGrid: colId === 'col-1', // Title and Subtitle without image
+          isNewsGrid2: colId === 'col-2', // Title and Subtitle without image
           showExcerpt: blockConfig.styles.showExcerpt
         };
       default:
@@ -294,7 +297,7 @@ const MixedManager: React.FC<MixedManagerProps> = ({
       case 'magazine':
         return 'grid grid-cols-1 md:grid-cols-[2fr,1fr,1fr] gap-4';
       case 'videogrid':
-        return 'grid grid-cols-1 md:grid-cols-[2fr,1fr] gap-4';
+        return 'grid grid-cols-1 md:grid-cols-[2fr,1fr,1fr] gap-4';
       default:
         return 'space-y-4';
     }
