@@ -8,6 +8,7 @@ import { BlockConfig } from './StyleConfigModal';
 import { useBlockState } from '../hooks/useBlockState';
 import { ListVariantType } from '../types';
 import { adaptBlockConfig } from '../utils/adapters';
+import Button from '../../../components/Button';
 
 // Definição dos tipos de variantes de layout
 const LAYOUT_VARIANTS = {
@@ -334,18 +335,12 @@ const ListManager = ({
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => onSave(getApiFormat())}
-              className="px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
+            <Button variant="primary" onClick={() => onSave(getApiFormat())}>
               Salvar
-            </button>
-            <button
-              onClick={onConfigClick}
-              className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
+            </Button>
+            <Button variant="info" onClick={onConfigClick}>
               Configurar Estilos
-            </button>
+            </Button>
           </div>
         </div>
       )}

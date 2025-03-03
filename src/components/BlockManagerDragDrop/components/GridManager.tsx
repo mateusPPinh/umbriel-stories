@@ -7,6 +7,7 @@ import DroppableColumn from './DroppableColumn';
 import { BlockConfig } from './StyleConfigModal';
 import { useBlockState } from '../hooks/useBlockState';
 import { GridVariantType, GridVariant, Column } from '../types';
+import Button from '../../../components/Button';
 
 interface GridManagerProps {
   pageId: string;
@@ -415,18 +416,12 @@ const GridManager: React.FC<GridManagerProps> = ({
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button
-              onClick={handleSave}
-              className="px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
+            <Button variant="primary" onClick={handleSave}>
               Salvar
-            </button>
-            <button
-              onClick={onConfigClick}
-              className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
+            </Button>
+            <Button variant="info" onClick={onConfigClick}>
               Configurar Estilos
-            </button>
+            </Button>
           </div>
         </div>
       )}
