@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import type { Meta, StoryObj } from '@storybook/react'
 import Button from '../Button'
-
 import Modal from './index'
 import BlockItemCards from '../BlockItemCards'
 import imageBlockFullWidth from '../../../public/image-block-fullwidth.svg'
@@ -11,6 +10,7 @@ import textBlockImage from '../../../public/text-block-image-block-1:2-width.svg
 import imageBlockOnly from '../../../public/image-block-image-block-1:2-width.svg'
 import nextProjectFullWidth from '../../../public/next-project-fullwidth.svg'
 import { useState } from 'react'
+import React from 'react'
 
 const dialogTriggerChild = () => {
   return (
@@ -90,6 +90,9 @@ const defaultBlocks = [
 const meta: Meta<typeof Modal> = {
   title: 'Componentes/Modal',
   component: Modal,
+  parameters: {
+    layout: 'fullscreen',
+  },
   argTypes: {
     modalContent: {
       control: { type: 'object' },
@@ -127,6 +130,7 @@ export const AddBlockModal: Story = {
         onCardSelect={(cardType) => {
           console.log(`Selected card: ${cardType}`)
         }}
+        isDarkMode={false}
       />
     ),
     modalTitle: 'Adicionar Bloco',
@@ -141,7 +145,7 @@ export const AddBlockModal: Story = {
       const [open, setOpen] = useState(context.args.open)
 
       return (
-        <div className="flex items-center justify-center h-screen w-screen">
+        <div id="storybook-root" className="flex items-center justify-center h-screen w-screen">
           <Story {...context.args} open={open} onOpenChange={setOpen} />
         </div>
       )

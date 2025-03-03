@@ -119,7 +119,7 @@ interface ListManagerProps {
   isPreviewOnly?: boolean;
 }
 
-const ListManager: React.FC<ListManagerProps> = ({ 
+const ListManager = ({ 
   pageId,
   articles, 
   isDarkTheme, 
@@ -128,7 +128,7 @@ const ListManager: React.FC<ListManagerProps> = ({
   blockConfig: externalBlockConfig,
   onConfigClick,
   isPreviewOnly = false
-}) => {
+}: ListManagerProps) => {
   const {
     blockState,
     updateArticlePositions,

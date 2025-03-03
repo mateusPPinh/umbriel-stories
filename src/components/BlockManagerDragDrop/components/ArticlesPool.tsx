@@ -9,7 +9,7 @@ interface ArticlesPoolProps {
   droppableId: string;
 }
 
-const ArticlesPool: React.FC<ArticlesPoolProps> = ({ articles, isDarkTheme, droppableId }) => {
+const ArticlesPool = ({ articles, isDarkTheme, droppableId }: ArticlesPoolProps) => {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [currentPage, setCurrentPage] = React.useState(1);
   const [sortBy, setSortBy] = React.useState<'date' | 'title'>('date');

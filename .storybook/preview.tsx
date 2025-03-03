@@ -1,29 +1,36 @@
 import React from 'react';
-import type { Preview } from '@storybook/react';
-import { themes } from '@storybook/theming';
-import '../src/styles/globals.css';
+import '../src/index.css'
+import Theme from '../src/styles/index'
+import '@fontsource/roboto'
+import { INITIAL_VIEWPORTS, MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
 
-const preview: Preview = {
+export const decorators = [
+  (Story) => {
+    return (
+      <Theme>
+        <Story />
+      </Theme>
+    )
+  },
+]
+
+const preview = {
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },
+    viewport: {
+      viewports: {
+        ...INITIAL_VIEWPORTS,
+        ...MINIMAL_VIEWPORTS,
+      },
+      defaultViewport: 'desktop',
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
-        date: /Date$/,
+        date: /Date$/i,
       },
     },
-    darkMode: {
-      dark: { ...themes.dark },
-      light: { ...themes.light }
-    }
   },
-  decorators: [
-    (Story) => (
-      <div className="font-sans">
-        <Story />
-      </div>
-    ),
-  ],
-};
+}
 
-export default preview; 
+export default preview

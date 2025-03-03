@@ -66,14 +66,14 @@ interface BlockManagerDragDropProps {
   pageId: string;
 }
 
-const BlockManagerDragDrop: React.FC<BlockManagerDragDropProps> = React.memo(({
+const BlockManagerDragDrop = React.memo(({
   articles,
   blockType,
   isDarkTheme,
   onSave,
   variant,
   pageId
-}) => {
+}: BlockManagerDragDropProps) => {
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [blockConfig, setBlockConfig] = useState<BlockConfig>(defaultBlockConfig);
   const [currentVariant, setCurrentVariant] = useState<string>(variant || 'standard');

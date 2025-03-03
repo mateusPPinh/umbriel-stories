@@ -7,7 +7,7 @@ import ArticlesPool from './ArticlesPool';
 import { BlockConfig } from './StyleConfigModal';
 import { useBlockState } from '../hooks/useBlockState';
 import { FeaturedVariantType } from '../types';
-
+import Button from '../../Button';
 interface FeaturedManagerProps {
   pageId: string;
   articles: Article[];
@@ -152,18 +152,18 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button
+            <Button
               onClick={handleSave}
-              className="px-3 py-1.5 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              variant="primary"
             >
               Salvar
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={onConfigClick}
-              className="px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              variant="secondary"
             >
               Configurar Estilos
-            </button>
+            </Button>
           </div>
         </div>
       )}

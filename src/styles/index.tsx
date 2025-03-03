@@ -6,7 +6,9 @@ import '@fontsource-variable/lora'
 import '@fontsource-variable/inter'
 import '@fontsource-variable/dm-sans'
 
-import { createContext, useContext, type PropsWithChildren } from 'react'
+import { ThemeProvider, StyleSheetManager } from 'styled-components'
+import { type PropsWithChildren } from 'react'
+import isPropValid from '@emotion/is-prop-valid'
 
 export const theme = {
   colors: {
@@ -86,20 +88,17 @@ export const theme = {
   },
 }
 
-export type Theme = typeof theme
-
-// Create a context for the theme
-const ThemeContext = createContext<Theme>(theme)
-
-// Hook to use the theme
-export const useTheme = () => useContext(ThemeContext)
-
 export default function CustomStyles({
   children,
 }: PropsWithChildren): JSX.Element {
   return (
-    <ThemeContext.Provider value={theme}>
-      {children}
-    </ThemeContext.Provider>
+    <StyleSheetManager
+      enableVendorPrefixes
+      shouldForwardProp={(propName, elementToBeRendered) =>
+        typeof elementToBeRendered === 'string' ? isPropValid(propName) : true
+      }
+    >
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+    </StyleSheetManager>
   )
 }

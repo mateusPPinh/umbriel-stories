@@ -11,7 +11,7 @@
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
+    "noEmit": false,
     "jsx": "react-jsx",
     "declaration": true,
     "skipLibCheck": true,
@@ -19,11 +19,11 @@
     "declarationMap": true,
     "baseUrl": ".",
     "paths": {
-      "react-vite-library": ["src/components/index.ts"]
+      "react": ["./node_modules/@types/react"],
+      "react-dom": ["./node_modules/@types/react-dom"]
     },
-    "typeRoots": ["node_modules/@types", "src/components/index.d.ts"]
+    "typeRoots": ["node_modules/@types"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["**/*.stories.tsx", "**/mocks/*.mock.*", "**/mocks/**/*.ts", "**/mock.d.ts"],
-  "references": [{ "path": "./tsconfig.node.json" }],
+  "exclude": ["**/*.stories.tsx", "**/mocks/*.mock.*", "**/mocks/**/*.ts", "**/mock.d.ts"]
 }

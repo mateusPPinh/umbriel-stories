@@ -176,13 +176,13 @@ const getThumbnailShape = (thumbnailShape?: ThumbnailShape) => {
   }
 };
 
-const ListLayoutPreview: React.FC<ListLayoutPreviewProps> = ({ 
+const ListLayoutPreview = ({ 
   blockConfig, 
   columns = [], 
   articles = [], 
   variant = 'chronological',
   isDarkTheme = false 
-}) => {
+}: ListLayoutPreviewProps) => {
   const theme = blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'];
   
   // Configurações globais de exibição
