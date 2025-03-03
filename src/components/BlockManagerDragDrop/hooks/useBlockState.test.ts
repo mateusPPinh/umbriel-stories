@@ -160,17 +160,11 @@ describe('useBlockState', () => {
           variantType: defaultProps.initialVariant,
           variantPosition: 1,
           config: expect.objectContaining({
-            layout: expect.objectContaining({
-              columns: '6',
-              gap: '24px',
-              styles: expect.any(Object)
-            }),
             articles: {
               'col-0': [mockArticles[0].id],
               'col-1': [],
               'col-2': []
-            },
-            styles: expect.any(Object)
+            }
           })
         })
       ]

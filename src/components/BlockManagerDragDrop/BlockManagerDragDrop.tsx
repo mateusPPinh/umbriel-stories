@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, lazy, Suspense } from 'react';
+import React, { useState, useCallback, useMemo, lazy, Suspense, useRef } from 'react';
 import { Article } from '../PageblockV2/types';
 import type { BlockConfig } from './components/StyleConfigModal';
 import { GridVariantType, MixedVariantType, FeaturedVariantType, ListVariantType } from './types';
@@ -82,8 +82,13 @@ const BlockManagerDragDrop = React.memo(({
   const [blockConfig, setBlockConfig] = useState<BlockConfig>(config || defaultBlockConfig);
   const [currentVariant, setCurrentVariant] = useState<string>(variant || 'standard');
   const [isPreviewOnly, setIsPreviewOnly] = useState(false);
+  const isDraggingRef = useRef(false);
 
   const handleOpenConfigModal = useCallback(() => {
+    if (isDraggingRef.current) {
+      console.warn('Cannot open config modal during drag operation');
+      return;
+    }
     setIsConfigModalOpen(true);
   }, []);
 
@@ -97,18 +102,44 @@ const BlockManagerDragDrop = React.memo(({
   }, []);
 
   const togglePreviewMode = useCallback(() => {
+    if (isDraggingRef.current) {
+      console.warn('Cannot toggle preview mode during drag operation');
+      return;
+    }
     setIsPreviewOnly(prev => !prev);
+  }, []);
+
+  const handleSave = useCallback((data: any) => {
+    if (isDraggingRef.current) {
+      console.warn('Cannot save during drag operation');
+      return;
+    }
+    onSave(data);
+  }, [onSave]);
+
+  const handleDragStart = useCallback(() => {
+    isDraggingRef.current = true;
+    
+    document.dispatchEvent(new Event('dragstart'));
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    isDraggingRef.current = false;
+    
+    document.dispatchEvent(new Event('dragend'));
   }, []);
 
   const renderManager = useMemo(() => {
     const commonProps = {
       articles,
       isDarkTheme,
-      onSave,
+      onSave: handleSave,
       blockConfig,
       onConfigClick: handleOpenConfigModal,
       pageId,
-      isPreviewOnly
+      isPreviewOnly,
+      onDragStart: handleDragStart,
+      onDragEnd: handleDragEnd
     };
 
     const fallback = <div className="w-full h-64 flex items-center justify-center">
@@ -155,10 +186,10 @@ const BlockManagerDragDrop = React.memo(({
       default:
         return null;
     }
-  }, [articles, blockType, isDarkTheme, onSave, currentVariant, blockConfig, handleOpenConfigModal, pageId, isPreviewOnly]);
+  }, [articles, blockType, isDarkTheme, handleSave, currentVariant, blockConfig, handleOpenConfigModal, pageId, isPreviewOnly, handleDragStart, handleDragEnd]);
 
   return (
-    <div className={`w-full h-full max-w-full ${className || ''}`} style={{ width: '100%' }}>
+    <div className={`w-full max-w-full ${className || ''}`}>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-medium text-gray-900 dark:text-white">
           Gerenciador de Layout {blockType === 'mixed' ? 'Misto' : blockType === 'grid' ? 'Grid' : blockType === 'list' ? 'Lista' : 'Destaque'}
@@ -190,7 +221,7 @@ const BlockManagerDragDrop = React.memo(({
       
       {renderManager}
       
-      <Suspense fallback={null}>
+      {isConfigModalOpen && (
         <StyleConfigModal
           isOpen={isConfigModalOpen}
           onClose={handleCloseConfigModal}
@@ -199,7 +230,7 @@ const BlockManagerDragDrop = React.memo(({
           blockType={blockType}
           variantType={currentVariant}
         />
-      </Suspense>
+      )}
     </div>
   );
 });

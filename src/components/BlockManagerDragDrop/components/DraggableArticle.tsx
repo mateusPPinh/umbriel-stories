@@ -174,7 +174,7 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
           {isMasonry ? (
             <article className="relative">
               {isVideo ? (
-                <div className="relative w-full overflow-hidden mb-2">
+                <div className="relative w-full overflow-hidden mb-2 scrollable-container">
                   {renderVideo()}
                 </div>
               ) : article.content?.image?.desktop_image_path && (
@@ -217,7 +217,7 @@ const DraggableArticle: React.FC<DraggableArticleProps> = ({
               border border-gray-200 dark:border-gray-700
               hover:border-blue-500/50 dark:hover:border-blue-500/50
               transition-all duration-200
-              rounded-md
+              rounded-md w-full
             `}>
               {/* Image or Video */}
               {isVideo ? (

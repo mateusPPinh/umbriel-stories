@@ -1,37 +1,15 @@
-import React from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Article } from '../../PageblockV2/types';
+import { useBlockState } from '../hooks/useBlockState';
+import DroppableColumn from './DroppableColumn';
+import Button from '../../Button';
 import LayoutPreview from './LayoutPreview';
 import ArticlesPool from './ArticlesPool';
-import DroppableColumn from './DroppableColumn';
 import { BlockConfig } from './StyleConfigModal';
-import { useBlockState } from '../hooks/useBlockState';
-import { GridVariantType, GridVariant, Column } from '../types';
-import Button from '../../../components/Button';
+import { GridVariantType, VariantType, Column, GridVariant } from '../types';
 
-interface GridManagerProps {
-  pageId: string;
-  articles: Article[];
-  isDarkTheme?: boolean;
-  onSave: (data: any) => void;
-  variant?: GridVariantType;
-  blockConfig: BlockConfig;
-  onConfigClick: () => void;
-  isPreviewOnly?: boolean;
-}
-
-interface HeadingProps {
-  text?: string;
-  fontSize: string;
-  fontWeight: string;
-  color: string;
-}
-
-interface SubtitleProps {
-  fontSize: string;
-  color: string;
-}
-
+// Definindo os layouts de grid disponíveis
 const GRID_VARIANTS: Record<GridVariantType, GridVariant> = {
   standard: {
     id: 'standard',
@@ -113,6 +91,29 @@ const GRID_VARIANTS: Record<GridVariantType, GridVariant> = {
   }
 };
 
+interface GridManagerProps {
+  pageId: string;
+  articles: Article[];
+  isDarkTheme?: boolean;
+  onSave: (data: any) => void;
+  variant?: GridVariantType;
+  blockConfig: BlockConfig;
+  onConfigClick: () => void;
+  isPreviewOnly?: boolean;
+}
+
+interface HeadingProps {
+  text?: string;
+  fontSize: string;
+  fontWeight: string;
+  color: string;
+}
+
+interface SubtitleProps {
+  fontSize: string;
+  color: string;
+}
+
 const GridManager: React.FC<GridManagerProps> = ({ 
   pageId,
   articles, 
@@ -138,12 +139,57 @@ const GridManager: React.FC<GridManagerProps> = ({
     initialVariant: variant,
     blockPosition: 1
   });
+  
+  const [showVariantSelector, setShowVariantSelector] = useState<boolean>(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  
+  // Performance optimizations
+  const dragStyles = useMemo(() => ({
+    draggingContainer: {
+      transition: 'background-color 0.2s ease',
+      opacity: isDragging ? 0.8 : 1,
+    },
+    draggingItem: {
+      transition: 'transform 0.1s cubic-bezier(0.2, 0, 0, 1)',
+      willChange: 'transform',
+    }
+  }), [isDragging]);
 
-  const handleDragEnd = (result: DropResult) => {
+  // Função auxiliar para obter todos os IDs de artigos que já estão em uso nas colunas
+  const getUsedArticleIds = useCallback(() => {
+    const usedIds: (string | number)[] = [];
+    const columnsToCheck = Object.keys(blockState.articles)
+      .filter(key => key !== 'pool');
+    
+    columnsToCheck.forEach(colId => {
+      const columnArticles = blockState.articles[colId] || [];
+      columnArticles.forEach(article => {
+        usedIds.push(article.id);
+      });
+    });
+    
+    return usedIds;
+  }, [blockState.articles]);
+
+  // Função para iniciar o arrastar - seta o estado de arrastar
+  const handleDragStart = useCallback(() => {
+    setIsDragging(true);
+    // Congelamos todas as animações durante o drag
+    document.body.classList.add('reduced-animation');
+    
+    // Previne que o nível de zoom interrompa o drag
+    document.body.style.pointerEvents = 'auto';
+  }, []);
+
+  const handleDragEnd = useCallback((result: DropResult) => {
+    // Restaura animações e estado após o drag
+    document.body.classList.remove('reduced-animation');
+    document.body.style.pointerEvents = '';
+    setIsDragging(false);
+    
     const { source, destination } = result;
 
     if (!destination) return;
-
     if (
       source.droppableId === destination.droppableId &&
       source.index === destination.index
@@ -161,6 +207,7 @@ const GridManager: React.FC<GridManagerProps> = ({
       return;
     }
 
+    // Evitamos modificar o estado se o componente for desmontado
     const sourceCol = [...blockState.articles[source.droppableId]];
     const destCol = source.droppableId === destination.droppableId
       ? sourceCol
@@ -169,225 +216,208 @@ const GridManager: React.FC<GridManagerProps> = ({
     const [removed] = sourceCol.splice(source.index, 1);
     destCol.splice(destination.index, 0, removed);
 
+    // Batching das alterações de estado
     const newColumns = {
       ...blockState.articles,
       [source.droppableId]: sourceCol,
       [destination.droppableId]: destCol
     };
 
+    // Atualizamos o estado em um único lote
     updateArticlePositions(newColumns);
-  };
+  }, [blockState.articles, blockState.currentVariant.variantType, updateArticlePositions]);
 
-  const handleRemoveArticle = (columnId: string, articleId: string | number) => {
-    const article = blockState.articles[columnId].find(a => String(a.id) === String(articleId));
+  const handleRemoveArticle = useCallback((columnId: string, articleId: string | number) => {
+    const columnArticles = [...blockState.articles[columnId]];
+    const articleIndex = columnArticles.findIndex(article => article.id === articleId);
     
-    if (!article) return;
+    if (articleIndex === -1) return;
     
-    const updatedColumn = blockState.articles[columnId].filter(a => String(a.id) !== String(articleId));
-    const updatedPool = [...blockState.articles.pool, article];
+    columnArticles.splice(articleIndex, 1);
     
     const newColumns = {
       ...blockState.articles,
-      [columnId]: updatedColumn,
-      pool: updatedPool
+      [columnId]: columnArticles
     };
     
     updateArticlePositions(newColumns);
-  };
+  }, [blockState.articles, updateArticlePositions]);
 
-  const handleSave = () => {
-    const data = getApiFormat();
-    onSave(data);
-  };
+  const handleSave = useCallback(() => {
+    onSave(getApiFormat());
+  }, [getApiFormat, onSave]);
 
   const currentVariant = GRID_VARIANTS[blockState.currentVariant.variantType as GridVariantType];
 
-  const getColumnHeadingProps = (column: Column): HeadingProps => ({
+  const getColumnHeadingProps = useCallback((column: Column): HeadingProps => ({
     text: column.title,
-    fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
-    fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
-    color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
-  });
+    fontSize: '18px',
+    fontWeight: '600',
+    color: isDarkTheme ? '#FFFFFF' : '#000000'
+  }), [isDarkTheme]);
 
-  const getColumnSubtitleProps = (): SubtitleProps => ({
-    fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
-    color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
-  });
+  const getColumnSubtitleProps = useCallback((): SubtitleProps => ({
+    fontSize: '14px',
+    color: isDarkTheme ? '#E2E8F0' : '#4A5568'
+  }), [isDarkTheme]);
 
-  const renderMasonryLayout = () => (
-    <div className={currentVariant.layout.container}>
+  // Render layout functions with memoization for performance
+  const renderMasonryLayout = useMemo(() => (
+    <div className={currentVariant.layout.container} style={dragStyles.draggingContainer}>
       <DroppableColumn
         key={currentVariant.columns[0].id}
-        id={currentVariant.columns[0].id}
-        droppableId={currentVariant.columns[0].id}
-        title={currentVariant.columns[0].title}
+        columnId={currentVariant.columns[0].id}
         articles={blockState.articles[currentVariant.columns[0].id] || []}
         maxItems={currentVariant.maxItems}
         isDarkTheme={isDarkTheme}
-        width="w-full"
-        showExcerpt={blockConfig.styles.showExcerpt}
-        isMasonry={true}
-        headingProps={getColumnHeadingProps(currentVariant.columns[0])}
-        subtitleProps={getColumnSubtitleProps()}
-        onRemoveArticle={handleRemoveArticle}
+        label={currentVariant.columns[0].title}
+        blockConfig={blockConfig}
+        handleRemoveArticle={handleRemoveArticle}
+        variant="masonry"
+        useCompactView={true}
       />
     </div>
-  );
+  ), [blockState.articles, currentVariant, isDarkTheme, blockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
 
-  const renderFeaturedLayout = () => (
-    <div className={currentVariant.layout.container}>
-      <div className="space-y-4">
-        <DroppableColumn
-          key={currentVariant.columns[0].id}
-          id={currentVariant.columns[0].id}
-          droppableId={currentVariant.columns[0].id}
-          title={currentVariant.columns[0].title}
-          articles={blockState.articles[currentVariant.columns[0].id] || []}
-          maxItems={currentVariant.maxItems}
-          isDarkTheme={isDarkTheme}
-          width="w-full"
-          showExcerpt={true}
-          isFeatured={true}
-          headingProps={getColumnHeadingProps(currentVariant.columns[0])}
-          subtitleProps={getColumnSubtitleProps()}
-          onRemoveArticle={handleRemoveArticle}
-        />
-        <DroppableColumn
-          key={currentVariant.columns[1].id}
-          id={currentVariant.columns[1].id}
-          droppableId={currentVariant.columns[1].id}
-          title={currentVariant.columns[1].title}
-          articles={blockState.articles[currentVariant.columns[1].id] || []}
-          maxItems={currentVariant.maxItems}
-          isDarkTheme={isDarkTheme}
-          width="w-full"
-          showExcerpt={false}
-          isFeatured={true}
-          headingProps={getColumnHeadingProps(currentVariant.columns[1])}
-          subtitleProps={getColumnSubtitleProps()}
-          onRemoveArticle={handleRemoveArticle}
-        />
-      </div>
-    </div>
-  );
-
-  const renderSidebarLayout = () => (
-    <div className={currentVariant.layout.container}>
-      <div className={currentVariant.layout.wrapper || ''}>
-        <div className="w-full md:w-2/3">
-          <DroppableColumn
-            key={currentVariant.columns[0].id}
-            id={currentVariant.columns[0].id}
-            droppableId={currentVariant.columns[0].id}
-            title={currentVariant.columns[0].title}
-            articles={blockState.articles[currentVariant.columns[0].id] || []}
-            maxItems={currentVariant.maxItems}
-            isDarkTheme={isDarkTheme}
-            width={currentVariant.columns[0].width || 'w-full'}
-            showExcerpt={true}
-            isSidebarMain={true}
-            headingProps={getColumnHeadingProps(currentVariant.columns[0])}
-            subtitleProps={getColumnSubtitleProps()}
-            onRemoveArticle={handleRemoveArticle}
-          />
-        </div>
-        <div className="w-full md:w-1/3">
-          <DroppableColumn
-            key={currentVariant.columns[1].id}
-            id={currentVariant.columns[1].id}
-            droppableId={currentVariant.columns[1].id}
-            title={currentVariant.columns[1].title}
-            articles={blockState.articles[currentVariant.columns[1].id] || []}
-            maxItems={currentVariant.maxItems}
-            isDarkTheme={isDarkTheme}
-            width={currentVariant.columns[1].width || 'w-full'}
-            showExcerpt={false}
-            isSidebarSide={true}
-            headingProps={getColumnHeadingProps(currentVariant.columns[1])}
-            subtitleProps={getColumnSubtitleProps()}
-            onRemoveArticle={handleRemoveArticle}
-          />
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderNewsFeedLayout = () => (
-    <div className={currentVariant.layout.container}>
+  const renderFeaturedLayout = useMemo(() => (
+    <div className={currentVariant.layout.container} style={dragStyles.draggingContainer}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="col-span-2">
           <DroppableColumn
             key={currentVariant.columns[0].id}
-            id={currentVariant.columns[0].id}
-            droppableId={currentVariant.columns[0].id}
-            title={currentVariant.columns[0].title}
+            columnId={currentVariant.columns[0].id}
             articles={blockState.articles[currentVariant.columns[0].id] || []}
             maxItems={currentVariant.maxItems}
             isDarkTheme={isDarkTheme}
-            width="w-full"
-            showExcerpt={true}
-            isNewsFeedMain={true}
-            headingProps={getColumnHeadingProps(currentVariant.columns[0])}
-            subtitleProps={getColumnSubtitleProps()}
-            onRemoveArticle={handleRemoveArticle}
+            label={currentVariant.columns[0].title}
+            blockConfig={blockConfig}
+            handleRemoveArticle={handleRemoveArticle}
+            variant="featured-main"
+            useCompactView={true}
           />
         </div>
         <div className="col-span-1">
           <DroppableColumn
             key={currentVariant.columns[1].id}
-            id={currentVariant.columns[1].id}
-            droppableId={currentVariant.columns[1].id}
-            title={currentVariant.columns[1].title}
+            columnId={currentVariant.columns[1].id}
             articles={blockState.articles[currentVariant.columns[1].id] || []}
             maxItems={currentVariant.maxItems}
             isDarkTheme={isDarkTheme}
-            width="w-full"
-            showExcerpt={false}
-            isNewsFeedSide={true}
-            headingProps={getColumnHeadingProps(currentVariant.columns[1])}
-            subtitleProps={getColumnSubtitleProps()}
-            onRemoveArticle={handleRemoveArticle}
+            label={currentVariant.columns[1].title}
+            blockConfig={blockConfig}
+            handleRemoveArticle={handleRemoveArticle}
+            variant="featured-side"
+            useCompactView={true}
           />
         </div>
       </div>
     </div>
-  );
+  ), [blockState.articles, currentVariant, isDarkTheme, blockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
 
-  const renderStandardLayout = () => (
-    <div className="space-y-4">
+  const renderSidebarLayout = useMemo(() => (
+    <div className={currentVariant.layout.container} style={dragStyles.draggingContainer}>
+      <div className={currentVariant.layout.wrapper || ''}>
+        <div className="w-full md:w-2/3">
+          <DroppableColumn
+            key={currentVariant.columns[0].id}
+            columnId={currentVariant.columns[0].id}
+            articles={blockState.articles[currentVariant.columns[0].id] || []}
+            maxItems={currentVariant.maxItems}
+            isDarkTheme={isDarkTheme}
+            label={currentVariant.columns[0].title}
+            blockConfig={blockConfig}
+            handleRemoveArticle={handleRemoveArticle}
+            variant="sidebar-main"
+            useCompactView={true}
+          />
+        </div>
+        <div className="w-full md:w-1/3">
+          <DroppableColumn
+            key={currentVariant.columns[1].id}
+            columnId={currentVariant.columns[1].id}
+            articles={blockState.articles[currentVariant.columns[1].id] || []}
+            maxItems={currentVariant.maxItems}
+            isDarkTheme={isDarkTheme}
+            label={currentVariant.columns[1].title}
+            blockConfig={blockConfig}
+            handleRemoveArticle={handleRemoveArticle}
+            variant="sidebar-side"
+            useCompactView={true}
+          />
+        </div>
+      </div>
+    </div>
+  ), [blockState.articles, currentVariant, isDarkTheme, blockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
+
+  const renderNewsFeedLayout = useMemo(() => (
+    <div className={currentVariant.layout.container} style={dragStyles.draggingContainer}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="col-span-2">
+          <DroppableColumn
+            key={currentVariant.columns[0].id}
+            columnId={currentVariant.columns[0].id}
+            articles={blockState.articles[currentVariant.columns[0].id] || []}
+            maxItems={currentVariant.maxItems}
+            isDarkTheme={isDarkTheme}
+            label={currentVariant.columns[0].title}
+            blockConfig={blockConfig}
+            handleRemoveArticle={handleRemoveArticle}
+            variant="newsfeed-main"
+            useCompactView={true}
+          />
+        </div>
+        <div className="col-span-1">
+          <DroppableColumn
+            key={currentVariant.columns[1].id}
+            columnId={currentVariant.columns[1].id}
+            articles={blockState.articles[currentVariant.columns[1].id] || []}
+            maxItems={currentVariant.maxItems}
+            isDarkTheme={isDarkTheme}
+            label={currentVariant.columns[1].title}
+            blockConfig={blockConfig}
+            handleRemoveArticle={handleRemoveArticle}
+            variant="newsfeed-side"
+            useCompactView={true}
+          />
+        </div>
+      </div>
+    </div>
+  ), [blockState.articles, currentVariant, isDarkTheme, blockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
+
+  const renderStandardLayout = useMemo(() => (
+    <div className={currentVariant.layout.wrapper || ''} style={dragStyles.draggingContainer}>
       {currentVariant.columns.map(column => (
         <DroppableColumn
           key={column.id}
-          id={column.id}
-          droppableId={column.id}
-          title={column.title}
+          columnId={column.id}
           articles={blockState.articles[column.id] || []}
           maxItems={currentVariant.maxItems}
           isDarkTheme={isDarkTheme}
-          width={column.width || 'w-full'}
-          showExcerpt={blockConfig.styles.showExcerpt}
-          headingProps={getColumnHeadingProps(column)}
-          subtitleProps={getColumnSubtitleProps()}
-          onRemoveArticle={handleRemoveArticle}
+          label={column.title}
+          blockConfig={blockConfig}
+          handleRemoveArticle={handleRemoveArticle}
+          variant="standard"
+          useCompactView={true}
         />
       ))}
     </div>
-  );
+  ), [blockState.articles, currentVariant, isDarkTheme, blockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
 
-  const renderColumns = () => {
+  const renderColumns = useCallback(() => {
     switch (blockState.currentVariant.variantType) {
       case 'masonry':
-        return renderMasonryLayout();
+        return renderMasonryLayout;
       case 'featured':
-        return renderFeaturedLayout();
+        return renderFeaturedLayout;
       case 'sidebargrid':
-        return renderSidebarLayout();
+        return renderSidebarLayout;
       case 'newsfeed':
-        return renderNewsFeedLayout();
+        return renderNewsFeedLayout;
+      case 'standard':
       default:
-        return renderStandardLayout();
+        return renderStandardLayout;
     }
-  };
+  }, [blockState.currentVariant.variantType, renderMasonryLayout, renderFeaturedLayout, renderSidebarLayout, renderNewsFeedLayout, renderStandardLayout]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -407,9 +437,9 @@ const GridManager: React.FC<GridManagerProps> = ({
                 onChange={(e) => updateVariant(e.target.value as GridVariantType)}
                 className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
               >
-                {Object.values(GRID_VARIANTS).map(variant => (
-                  <option key={variant.id} value={variant.id}>
-                    {variant.title}
+                {Object.keys(GRID_VARIANTS).map(variant => (
+                  <option key={variant} value={variant}>
+                    {variant}
                   </option>
                 ))}
               </select>
@@ -428,7 +458,7 @@ const GridManager: React.FC<GridManagerProps> = ({
 
       {isPreviewOnly ? (
         <div className="w-full">
-          <LayoutPreview
+          <LayoutPreview 
             variantType={blockState.currentVariant.variantType}
             columns={blockState.articles}
             isDarkTheme={isDarkTheme}
@@ -436,14 +466,16 @@ const GridManager: React.FC<GridManagerProps> = ({
           />
         </div>
       ) : (
-        <DragDropContext onDragEnd={handleDragEnd}>
+        <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           <div className="flex flex-row gap-4 w-full">
             {/* Item 1: Lista de artigos (Pool) - Coluna estreita */}
             <div className="w-1/12 min-w-[120px]" style={{ maxHeight: '70vh', overflow: 'hidden' }}>
               <ArticlesPool
-                droppableId="pool"
                 articles={blockState.articles.pool}
                 isDarkTheme={isDarkTheme}
+                blockConfig={blockConfig}
+                usedArticleIds={getUsedArticleIds()}
+                isCompact={true}
               />
             </div>
             
@@ -456,7 +488,7 @@ const GridManager: React.FC<GridManagerProps> = ({
             
             {/* Item 3: Preview - Coluna mais larga, ocupando o espaço restante */}
             <div className="flex-1 min-w-[300px]" style={{ maxHeight: '70vh', overflow: 'auto' }}>
-              <LayoutPreview
+              <LayoutPreview 
                 variantType={blockState.currentVariant.variantType}
                 columns={blockState.articles}
                 isDarkTheme={isDarkTheme}
@@ -468,6 +500,13 @@ const GridManager: React.FC<GridManagerProps> = ({
       )}
     </div>
   );
-};
+}
 
-export default GridManager; 
+export default React.memo(GridManager, (prevProps, nextProps) => {
+  return (
+    prevProps.articles === nextProps.articles &&
+    prevProps.variant === nextProps.variant &&
+    prevProps.blockConfig === nextProps.blockConfig &&
+    prevProps.isDarkTheme === nextProps.isDarkTheme
+  );
+}); 

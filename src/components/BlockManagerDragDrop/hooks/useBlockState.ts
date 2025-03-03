@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { Article } from '../../PageblockV2/types';
 import { 
   LocalBlockState, 
@@ -32,15 +32,24 @@ export const useBlockState = ({
   initialArticles,
   blockPosition = 1
 }: UseBlockStateProps) => {
+  // Track drag state
+  const isDraggingRef = useRef(false);
+  
   // Estado local que será usado no componente
   const [blockState, setBlockState] = useState<LocalBlockState & { variantStates: { [key: string]: VariantState } }>(() => {
     const defaultConfig = {
       layout: {
         columns: '6',
-        gap: '24px',
+        gap: '0px',
+        padding: '24px',
         styles: {
           width: '100%',
           backgroundColor: 'transparent'
+        },
+        responsive: {
+          mobile: 1,
+          tablet: 1,
+          desktop: 1
         }
       },
       articles: {
@@ -57,13 +66,19 @@ export const useBlockState = ({
               padding: '16px'
             },
             headingProps: {
-              fontSize: 'xl',
-              fontWeight: 'bold',
+              fontSize: 'lg',
+              fontWeight: 'medium',
               color: '#1a1a1a'
             },
             subtitleProps: {
-              fontSize: 'lg',
+              fontSize: 'sm',
               color: '#4a5568'
+            },
+            timelineProps: {
+              color: '#3182ce',
+              width: '2px',
+              markerSize: '12px',
+              markerColor: '#3182ce'
             }
           },
           dark: {
@@ -72,17 +87,28 @@ export const useBlockState = ({
               padding: '16px'
             },
             headingProps: {
-              fontSize: 'xl',
-              fontWeight: 'bold',
+              fontSize: 'lg',
+              fontWeight: 'medium',
               color: '#ffffff'
             },
             subtitleProps: {
-              fontSize: 'lg',
+              fontSize: 'sm',
               color: '#a0aec0'
+            },
+            timelineProps: {
+              color: '#63b3ed',
+              width: '2px',
+              markerSize: '12px',
+              markerColor: '#63b3ed'
             }
           }
         },
-        showExcerpt: true
+        showExcerpt: true,
+        showMetadata: true,
+        showDate: true,
+        timelineStyle: 'solid',
+        markerStyle: 'circle',
+        hoverEffect: 'highlight'
       }
     };
 
@@ -387,7 +413,7 @@ export const useBlockState = ({
       currentVariant: {
         variantType: initialVariant,
         variantPosition: 1,
-        config: defaultConfig
+        config: variantStates[initialVariant].config
       },
       articles: {
         'pool': initialArticles,
@@ -399,63 +425,78 @@ export const useBlockState = ({
     };
   });
 
-  // Função para atualizar a posição dos artigos
-  const updateArticlePositions = useCallback((newColumns: { [key: string]: Article[] }) => {
-    setBlockState(prev => {
-      const currentVariantType = prev.currentVariant.variantType;
+  // Função para atualizar as posições dos artigos
+  const updateArticlePositions = useCallback((newArticles: { [key: string]: Article[] }) => {
+    // Usar uma função de atualização de estado para garantir que estamos trabalhando com o estado mais recente
+    setBlockState(prevState => {
+      // Criar uma cópia profunda do estado atual para evitar mutações
+      const updatedState = { ...prevState };
       
-      // Criar cópias profundas para evitar problemas de referência
-      // Usando estrutura de dados imutável para garantir que os objetos de artigo mantenham sua identidade
-      const deepCopyColumns: { [key: string]: Article[] } = {};
+      // Atualizar o estado da variante atual
+      const currentVariantState = { ...updatedState.variantStates[updatedState.currentVariant.variantType] };
       
-      // Garantir que cada artigo mantenha sua identidade original
-      Object.entries(newColumns).forEach(([key, articles]) => {
-        deepCopyColumns[key] = articles.map(article => {
-          // Garantir que o ID seja preservado como string para consistência
-          const articleId = String(article.id);
-          
-          // Procurar o artigo original em todas as colunas anteriores para manter a referência
-          for (const [prevKey, prevArticles] of Object.entries(prev.variantStates[currentVariantType].articles)) {
-            const originalArticle = prevArticles.find(a => String(a.id) === articleId);
-            if (originalArticle) {
-              return originalArticle;
-            }
-          }
-          
-          // Se não encontrar (caso improvável), usar o artigo atual
-          return article;
-        });
+      // Atualizar os artigos da variante atual
+      currentVariantState.articles = newArticles;
+      
+      // Atualizar o config.articles para refletir os IDs dos artigos
+      const updatedConfig = { ...currentVariantState.config };
+      const updatedArticlesConfig: { [key: string]: string[] } = {};
+      
+      // Para cada coluna, atualizar os IDs dos artigos
+      Object.keys(newArticles).forEach(columnId => {
+        updatedArticlesConfig[columnId] = newArticles[columnId].map(article => 
+          // Verifica se o artigo já é um ID (string) ou um objeto com ID
+          typeof article === 'string' ? String(article) : String(article.id)
+        );
       });
       
-      return {
-        ...prev,
-        variantStates: {
-          ...prev.variantStates,
-          [currentVariantType]: {
-            ...prev.variantStates[currentVariantType],
-            articles: deepCopyColumns,
-            config: {
-              ...prev.variantStates[currentVariantType].config,
-              articles: Object.entries(deepCopyColumns).reduce<Record<string, string[]>>((acc, [key, articles]) => ({
-                ...acc,
-                [key]: articles.map((article: Article) => String(article.id))
-              }), {})
-            }
-          }
-        }
-      };
+      // Atualizar o config com os novos IDs de artigos
+      updatedConfig.articles = updatedArticlesConfig;
+      currentVariantState.config = updatedConfig;
+      
+      // Atualizar o estado da variante no estado global
+      updatedState.variantStates[updatedState.currentVariant.variantType] = currentVariantState;
+      
+      // Atualizar os artigos no estado global
+      updatedState.articles = newArticles;
+      
+      return updatedState;
     });
   }, []);
 
-  // Função para atualizar a variante atual
-  const updateVariant = useCallback((newVariant: VariantType) => {
-    setBlockState(prev => ({
-      ...prev,
-      currentVariant: {
-        ...prev.currentVariant,
-        variantType: newVariant
+  // Set drag state
+  const setDragging = useCallback((isDragging: boolean) => {
+    isDraggingRef.current = isDragging;
+  }, []);
+
+  // Função para atualizar a variante
+  const updateVariant = useCallback((newVariantType: VariantType) => {
+    // Don't update variant during drag operations
+    if (isDraggingRef.current) {
+      console.warn('Cannot update variant during drag operation');
+      return;
+    }
+    
+    setBlockState(prev => {
+      // Verificar se a variante existe
+      if (!prev.variantStates[newVariantType]) {
+        console.error(`Variante "${newVariantType}" não encontrada em variantStates`);
+        return prev;
       }
-    }));
+      
+      // Obter o estado da variante
+      const variantState = prev.variantStates[newVariantType];
+      
+      return {
+        ...prev,
+        articles: variantState.articles,
+        currentVariant: {
+          variantType: newVariantType,
+          variantPosition: variantState.variantPosition,
+          config: variantState.config
+        }
+      };
+    });
   }, []);
 
   // Função para atualizar a posição da variante
@@ -465,6 +506,10 @@ export const useBlockState = ({
       
       return {
         ...prev,
+        currentVariant: {
+          ...prev.currentVariant,
+          variantPosition: position
+        },
         variantStates: {
           ...prev.variantStates,
           [currentVariantType]: {
@@ -506,108 +551,38 @@ export const useBlockState = ({
   }, []);
 
   // Função para gerar o formato final para a API
-  const getApiFormat = useCallback((): PageBlock => {
-    const getMaxColumns = (variantType: VariantType): number => {
-      switch (variantType) {
-        // Featured variants
-        case 'hero':
-          return 1;
-        case 'split':
-          return 2;
-        case 'triple':
-          return 3;
-        // Grid variants
-        case 'standard':
-          return 3;
-        case 'featured':
-          return 2;
-        case 'masonry':
-          return 1;
-        case 'sidebargrid':
-          return 2;
-        case 'newsfeed':
-          return 2;
-        case 'newsgrid':
-          return 2;
-        // List variants
-        case 'chronological':
-          return 1;
-        case 'compact':
-          return 1;
-        case 'card':
-          return 1;
-        // Mixed variants
-        case 'sidebar':
-          return 2;
-        case 'showcase':
-          return 3;
-        case 'newspaper':
-          return 3;
-        case 'magazine':
-          return 3;
-        case 'videogrid':
-          return 3;
-        default:
-          return 1;
-      }
+  const getApiFormat = () => {
+    const { currentVariant } = blockState;
+    
+    // Obter o estado atual da variante
+    const variantState = blockState.variantStates[currentVariant.variantType];
+    
+    // Obter os IDs dos artigos diretamente do config da variante
+    const { articles: allArticlesConfig } = variantState.config;
+    
+    // Remove o pool e mantém apenas as colunas reais
+    const { pool, ...columnsArticlesConfig } = allArticlesConfig;
+    
+    // Cria uma cópia do config sem o pool e garante que o formato está correto
+    const configWithoutPool = {
+      ...variantState.config,
+      articles: columnsArticlesConfig
     };
-
-    // Primeiro, filtramos apenas as variantes que têm artigos configurados
-    const variantsWithArticles = Object.values(blockState.variantStates)
-      .filter(variantState => {
-        const { pool, ...articleColumns } = variantState.config.articles;
-        return Object.values(articleColumns).some(articles => articles.length > 0);
-      });
-
-    // Depois, organizamos as posições para garantir que não haja conflito
-    const variantsByType = variantsWithArticles.reduce((acc, variant) => {
-      if (!acc[variant.variantType]) {
-        acc[variant.variantType] = [];
-      }
-      acc[variant.variantType].push(variant);
-      return acc;
-    }, {} as Record<VariantType, typeof variantsWithArticles>);
-
-    // Para cada tipo, reordenamos as posições se necessário
-    Object.values(variantsByType).forEach(variants => {
-      variants.forEach((variant, index) => {
-        variant.variantPosition = index + 1;
-      });
-    });
-
-    // Finalmente, geramos o formato final
-    const variants = variantsWithArticles.map(variantState => {
-      const { pool, ...articleColumns } = variantState.config.articles;
-      
-      // Filtra apenas as colunas que têm artigos e respeita o limite de colunas da variante
-      const maxColumns = getMaxColumns(variantState.variantType);
-      const filteredColumns = Object.entries(articleColumns)
-        .filter(([_, articles]) => articles.length > 0)
-        .slice(0, maxColumns)
-        .reduce((acc, [key, articles]) => ({
-          ...acc,
-          // Garantir que os IDs dos artigos sejam sempre strings
-          [key]: articles.map(id => String(id))
-        }), {});
-      
-      return {
-        variantType: variantState.variantType,
-        variantPosition: variantState.variantPosition,
-        config: {
-          ...variantState.config,
-          articles: filteredColumns
-        }
-      };
-    });
 
     return {
       pageId: blockState.pageId,
-      blockType: blockState.blockType,
+      blockType: 'articles',
       blockPosition: blockState.blockPosition,
       template: blockState.template,
-      variants
+      variants: [
+        {
+          variantType: currentVariant.variantType,
+          variantPosition: currentVariant.variantPosition,
+          config: configWithoutPool
+        }
+      ]
     };
-  }, [blockState]);
+  };
 
   // Retorna o estado atual da variante selecionada
   const getCurrentVariantState = useCallback(() => {
@@ -628,6 +603,7 @@ export const useBlockState = ({
     updateVariantPosition,
     updateBlockPosition,
     updateBlockConfig,
-    getApiFormat
+    getApiFormat,
+    setDragging
   };
 }; 

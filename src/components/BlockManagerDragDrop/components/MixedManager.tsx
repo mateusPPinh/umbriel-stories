@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { Article } from '../../PageblockV2/types';
 import DroppableColumn from './DroppableColumn';
@@ -18,6 +18,8 @@ interface MixedManagerProps {
   blockConfig: BlockConfig;
   onConfigClick: () => void;
   isPreviewOnly?: boolean;
+  onDragStart?: () => void;
+  onDragEnd?: () => void;
 }
 
 type BaseColumnId = 'col-0' | 'col-1' | 'col-2';
@@ -128,8 +130,13 @@ const MixedManager: React.FC<MixedManagerProps> = ({
   variant = 'sidebar',
   blockConfig,
   onConfigClick,
-  isPreviewOnly = false
+  isPreviewOnly = false,
+  onDragStart,
+  onDragEnd
 }) => {
+  // Add a ref to track drag state
+  const isDraggingRef = useRef(false);
+  
   const {
     blockState,
     updateArticlePositions,
@@ -137,7 +144,8 @@ const MixedManager: React.FC<MixedManagerProps> = ({
     updateVariantPosition,
     updateBlockPosition,
     updateBlockConfig,
-    getApiFormat
+    getApiFormat,
+    setDragging
   } = useBlockState({
     pageId,
     template: 'mixed',
@@ -146,7 +154,23 @@ const MixedManager: React.FC<MixedManagerProps> = ({
     blockPosition: 1
   });
 
-  const handleDragEnd = (result: DropResult) => {
+  const handleDragStartInternal = useCallback(() => {
+    // Set dragging state to true when drag starts
+    isDraggingRef.current = true;
+    setDragging?.(true);
+    
+    // Call parent onDragStart if provided
+    onDragStart?.();
+  }, [onDragStart, setDragging]);
+
+  const handleDragEndInternal = useCallback((result: DropResult) => {
+    // Set dragging state to false when drag ends
+    isDraggingRef.current = false;
+    setDragging?.(false);
+    
+    // Call parent onDragEnd if provided
+    onDragEnd?.();
+    
     const { source, destination } = result;
 
     if (!destination) return;
@@ -181,47 +205,62 @@ const MixedManager: React.FC<MixedManagerProps> = ({
       return;
     }
 
-    // Usar spread operator para manter as referências aos objetos originais
-    const sourceCol = [...blockState.articles[source.droppableId]];
+    // Create deep copies of arrays to avoid mutations
+    const newArticles = { ...blockState.articles };
+    
+    // Create copies of arrays for source and destination columns
+    const sourceCol = [...newArticles[source.droppableId]];
     const destCol = source.droppableId === destination.droppableId
-    ? sourceCol
-    : [...blockState.articles[destination.droppableId]];
+      ? sourceCol
+      : [...newArticles[destination.droppableId]];
 
-    // Remover o artigo da coluna de origem e manter a referência ao objeto original
+    // Remove the article from source column
     const [removed] = sourceCol.splice(source.index, 1);
     
-    // Adicionar o mesmo objeto (não uma cópia) na coluna de destino
+    // Add the article to destination column
     destCol.splice(destination.index, 0, removed);
 
+    // Update state with new columns
     const newColumns = {
-      ...blockState.articles,
+      ...newArticles,
       [source.droppableId]: sourceCol,
       [destination.droppableId]: destCol
     };
 
+    // Update article positions after drag ends
     updateArticlePositions(newColumns);
-  };
+  }, [blockState.articles, blockState.currentVariant.variantType, updateArticlePositions, onDragEnd, setDragging]);
 
-  const handleRemoveArticle = (columnId: string, articleId: string | number) => {
-    // Encontra o artigo na coluna - garantindo que estamos usando a referência original
+  const handleRemoveArticle = useCallback((columnId: string, articleId: string | number) => {
+    // Don't remove articles during drag operations
+    if (isDraggingRef.current) {
+      console.warn('Cannot remove article during drag operation');
+      return;
+    }
+    
+    // Find the article in the column
     const article = blockState.articles[columnId].find(a => String(a.id) === String(articleId));
     
     if (!article) return;
     
-    // Remove o artigo da coluna
-    const updatedColumn = blockState.articles[columnId].filter(a => String(a.id) !== String(articleId));
+    // Create deep copies of arrays to avoid mutations
+    const newArticles = { ...blockState.articles };
     
-    // Adiciona o artigo de volta à pool - usando a referência original do artigo
-    const updatedPool = [...blockState.articles.pool, article];
+    // Remove the article from the column
+    const updatedColumn = newArticles[columnId].filter(a => String(a.id) !== String(articleId));
+    
+    // Add the article back to the pool
+    const updatedPool = [...newArticles.pool, article];
     
     const newColumns = {
-      ...blockState.articles,
+      ...newArticles,
       [columnId]: updatedColumn,
       pool: updatedPool
     };
     
+    // Update article positions
     updateArticlePositions(newColumns);
-  };
+  }, [blockState.articles, updateArticlePositions]);
 
   const handleSave = () => {
     const data = getApiFormat();
@@ -238,12 +277,13 @@ const MixedManager: React.FC<MixedManagerProps> = ({
   const currentVariant = LAYOUT_VARIANTS[validVariantType];
   const availableColumns = Object.keys(currentVariant.maxItems) as ColumnId[];
 
-  // Se a variante atual não for válida, atualizá-la para uma variante válida
-  if (validVariantType !== variantType) {
-    console.warn(`Variante "${variantType}" não encontrada, usando "sidebar" como fallback`);
-    // Atualizar a variante para uma válida na próxima renderização
-    setTimeout(() => updateVariant('sidebar' as VariantType), 0);
-  }
+  // Usar useEffect para atualizar a variante se necessário
+  useEffect(() => {
+    if (validVariantType !== variantType) {
+      console.warn(`Variante "${variantType}" não encontrada, usando "sidebar" como fallback`);
+      updateVariant('sidebar' as VariantType);
+    }
+  }, [variantType, validVariantType, updateVariant]);
 
   // Função para determinar as propriedades específicas de cada coluna com base na variante
   const getColumnProps = (colId: string) => {
@@ -291,21 +331,37 @@ const MixedManager: React.FC<MixedManagerProps> = ({
   const getColumnsLayout = () => {
     switch (validVariantType) {
       case 'sidebar':
-        return 'grid grid-cols-1 md:grid-cols-[2fr,1fr] gap-4';
+        return 'grid grid-cols-1 md:grid-cols-0 gap-4';
       case 'showcase':
+        return 'grid grid-cols-1 md:grid-cols-0 gap-4';
       case 'newspaper':
-        return 'grid grid-cols-1 md:grid-cols-3 gap-4';
+        return 'grid grid-cols-1 md:grid-cols-0 gap-4';
       case 'magazine':
-        return 'grid grid-cols-1 md:grid-cols-[2fr,1fr,1fr] gap-4';
+        return 'grid grid-cols-1 md:grid-cols-0 gap-4';
       case 'videogrid':
-        return 'grid grid-cols-1 md:grid-cols-[2fr,1fr,1fr] gap-4';
+        return 'grid grid-cols-1 md:grid-cols-0 gap-4';
       default:
         return 'space-y-4';
     }
   };
 
+  // Função auxiliar para obter todos os IDs de artigos que já estão em uso nas colunas
+  const getUsedArticleIds = useCallback(() => {
+    const usedIds: (string | number)[] = [];
+    
+    // Percorre todas as colunas disponíveis e coleta os IDs dos artigos
+    availableColumns.forEach(colId => {
+      const columnArticles = blockState.articles[colId] || [];
+      columnArticles.forEach(article => {
+        usedIds.push(article.id);
+      });
+    });
+    
+    return usedIds;
+  }, [blockState.articles, availableColumns]);
+
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col h-full">
       {!isPreviewOnly && (
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
@@ -349,45 +405,38 @@ const MixedManager: React.FC<MixedManagerProps> = ({
         </div>
       ) : (
         <div className="flex h-[70vh] gap-4">
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="w-1/12 min-w-[120px] max-h-[70vh] overflow-y-auto">
+          <DragDropContext onDragStart={handleDragStartInternal} onDragEnd={handleDragEndInternal}>
+            <div className="w-[10%] min-w-[120px] max-h-[70vh] overflow-y-auto scrollable-container">
               <ArticlesPool
-                droppableId="pool"
                 articles={blockState.articles.pool}
                 isDarkTheme={isDarkTheme}
+                blockConfig={blockConfig}
+                usedArticleIds={getUsedArticleIds()}
+                isCompact={true}
               />
             </div>
             
-            <div className="w-1/3 min-w-[250px] max-h-[70vh] overflow-y-auto">
+            <div className="w-[20%] min-w-[150px] h-full overflow-y-auto scrollable-container">
               <div className={getColumnsLayout()}>
                 {availableColumns.map(colId => (
                   <DroppableColumn
                     key={colId}
-                    id={colId}
-                    droppableId={colId}
-                    title={currentVariant.columnLabels[colId as keyof typeof currentVariant.columnLabels]}
+                    columnId={colId}
                     articles={blockState.articles[colId] || []}
-                    maxItems={currentVariant.maxItems[colId as keyof typeof currentVariant.maxItems]}
                     isDarkTheme={isDarkTheme}
-                    width="w-full"
-                    headingProps={{
-                      fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
-                      fontWeight: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
-                      color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
-                    }}
-                    subtitleProps={{
-                      fontSize: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
-                      color: blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
-                    }}
-                    onRemoveArticle={handleRemoveArticle}
-                    {...getColumnProps(colId)}
+                    label={currentVariant.columnLabels[colId as keyof typeof currentVariant.columnLabels]}
+                    maxItems={currentVariant.maxItems[colId as keyof typeof currentVariant.maxItems]}
+                    blockConfig={blockConfig}
+                    handleRemoveArticle={handleRemoveArticle}
+                    variant={validVariantType}
+                    useCompactView={true}
                   />
                 ))}
               </div>
             </div>
           </DragDropContext>
           
-          <div className="flex-1 max-h-[70vh] overflow-y-auto">
+          <div className="flex-1 max-h-[70vh] overflow-y-auto scrollable-container">
             <MixedLayoutPreview
               variant={validVariantType}
               columns={blockState.articles}
@@ -401,4 +450,4 @@ const MixedManager: React.FC<MixedManagerProps> = ({
   );
 };
 
-export default MixedManager; 
+export default React.memo(MixedManager); 

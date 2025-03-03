@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Article } from '../../PageblockV2/types';
 import DroppableColumn from './DroppableColumn';
@@ -231,18 +231,17 @@ const ListManager = ({
     }));
   }, [blockState.currentVariant.variantType, blockState.articles]);
 
-  // Obtém o tipo de variante válido e garante que seja uma chave válida em LAYOUT_VARIANTS
-  const rawVariantType = blockState.currentVariant.variantType as string;
-  const isValidVariant = Object.keys(LAYOUT_VARIANTS).includes(rawVariantType);
-  const validVariantType = isValidVariant ? rawVariantType as LayoutVariant : 'chronological';
-
-  // Se a variante atual não for válida, atualizá-la para uma variante válida
+  // Garantir que estamos usando uma variante válida
+  const variantType = blockState.currentVariant.variantType as LayoutVariant;
+  const validVariantType = LAYOUT_VARIANTS[variantType] ? variantType : 'chronological';
+  
+  // Usar useEffect para atualizar a variante se necessário
   useEffect(() => {
-    if (!isValidVariant) {
-      console.warn(`Variante "${rawVariantType}" não encontrada, usando "chronological" como fallback`);
+    if (validVariantType !== variantType) {
+      console.warn(`Variante "${variantType}" não encontrada, usando "chronological" como fallback`);
       updateVariant('chronological' as ListVariantType);
     }
-  }, [rawVariantType, isValidVariant, updateVariant]);
+  }, [variantType, validVariantType, updateVariant]);
 
   const handleDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -311,6 +310,23 @@ const ListManager = ({
     updateArticlePositions(newColumns);
   };
 
+  // Mover a função getUsedArticleIds para dentro do componente e usar useCallback
+  const getUsedArticleIds = useCallback(() => {
+    const usedIds: (string | number)[] = [];
+    
+    // Percorre todas as colunas disponíveis e coleta os IDs dos artigos
+    Object.keys(blockState.articles).forEach(colId => {
+      if (colId !== 'pool') {
+        const columnArticles = blockState.articles[colId] || [];
+        columnArticles.forEach(article => {
+          usedIds.push(article.id);
+        });
+      }
+    });
+    
+    return usedIds;
+  }, [blockState.articles]);
+
   return (
     <div className="flex flex-col gap-6">
       {!isPreviewOnly && (
@@ -359,31 +375,25 @@ const ListManager = ({
           <DragDropContext onDragEnd={handleDragEnd}>
             <div className="w-1/6 min-w-[180px] max-h-[70vh] overflow-y-auto">
               <ArticlesPool
-                droppableId="pool"
                 articles={blockState.articles.pool}
                 isDarkTheme={isDarkTheme}
+                blockConfig={adaptBlockConfig(externalBlockConfig) as any}
+                usedArticleIds={getUsedArticleIds()}
+                isCompact={true}
               />
             </div>
             
             <div className="w-1/4 min-w-[250px] max-h-[70vh] overflow-y-auto">
               <DroppableColumn
-                id="col-0"
-                droppableId="col-0"
-                title="Artigos da Lista"
+                columnId="col-0"
                 articles={blockState.articles['col-0'] || []}
-                maxItems={LAYOUT_VARIANTS[validVariantType].maxItems}
                 isDarkTheme={isDarkTheme}
-                width="w-full"
-                headingProps={{
-                  fontSize: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontSize,
-                  fontWeight: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.fontWeight,
-                  color: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].headingProps.color
-                }}
-                subtitleProps={{
-                  fontSize: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.fontSize,
-                  color: externalBlockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'].subtitleProps.color
-                }}
-                onRemoveArticle={handleRemoveArticle}
+                label="Artigos da Lista"
+                maxItems={LAYOUT_VARIANTS[validVariantType].maxItems}
+                blockConfig={adaptBlockConfig(externalBlockConfig) as any}
+                handleRemoveArticle={handleRemoveArticle}
+                variant={validVariantType}
+                useCompactView={true}
               />
             </div>
           </DragDropContext>
@@ -402,4 +412,4 @@ const ListManager = ({
   );
 };
 
-export default ListManager; 
+export default React.memo(ListManager); 
