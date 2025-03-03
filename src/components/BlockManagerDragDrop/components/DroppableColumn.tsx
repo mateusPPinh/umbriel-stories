@@ -43,8 +43,14 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   useCompactView = false,
 }) => {
   const isEmpty = articles.length === 0;
-  const isDraggingRef = useRef(false);
   const [stableArticles, setStableArticles] = useState(articles);
+  const isDraggingRef = useRef(false);
+  
+  // Log para depuração
+  useEffect(() => {
+    console.log('DroppableColumn - columnId:', columnId);
+    console.log('DroppableColumn - articles:', articles);
+  }, [columnId, articles]);
   
   // Update stable articles only when not dragging
   useEffect(() => {
@@ -132,6 +138,7 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
                   isDarkTheme={isDarkTheme} 
                   blockConfig={blockConfig}
                   variant={variant}
+                  onRemove={handleRemoveArticleCallback}
                 />
               ) : renderPreviewItem ? (
                 renderPreviewItem(article, index)

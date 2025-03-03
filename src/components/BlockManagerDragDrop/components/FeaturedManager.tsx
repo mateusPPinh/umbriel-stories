@@ -45,7 +45,12 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
 
   const handleDragEnd = useCallback((result: DropResult) => {
     const { source, destination } = result;
-
+    
+    // Log para depuração
+    console.log('FeaturedManager - handleDragEnd - result:', result);
+    console.log('FeaturedManager - handleDragEnd - source:', source);
+    console.log('FeaturedManager - handleDragEnd - destination:', destination);
+    
     if (!destination) return;
 
     // Se a origem e destino forem iguais e o índice for o mesmo, não fazer nada
@@ -62,6 +67,7 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
       blockState.articles['col-0'] && 
       blockState.articles['col-0'].length >= currentVariant.maxItems
     ) {
+      console.log('FeaturedManager - Limite máximo de artigos atingido:', currentVariant.maxItems);
       return;
     }
 
@@ -146,6 +152,11 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
 
   // Memoizar o conteúdo renderizado para evitar re-renderizações desnecessárias
   const renderContent = useMemo(() => {
+    // Log para depuração
+    console.log('FeaturedManager - blockState:', blockState);
+    console.log('FeaturedManager - currentVariant:', blockState.currentVariant);
+    console.log('FeaturedManager - articles col-0:', blockState.articles['col-0']);
+    
     if (isPreviewOnly) {
       return (
         <div className="w-full">
@@ -165,7 +176,7 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
           {/* Área de artigos disponíveis */}
           <div className="md:col-span-1">
             <ArticlesPool
-              articles={articles}
+              articles={blockState.articles.pool}
               isDarkTheme={isDarkTheme}
               blockConfig={blockConfig}
               usedArticleIds={getUsedArticleIds()}
@@ -173,7 +184,7 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
             />
           </div>
           
-          {/* Área de colunas */}
+          {/* Área de colunas e preview */}
           <div className="md:col-span-2">
             <div className="mb-4">
               <div className="flex justify-between items-center">
@@ -213,18 +224,32 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
               </div>
             </div>
             
-            <div className="grid grid-cols-1 gap-4">
-              <DroppableColumn
-                columnId="col-0"
-                label={shouldShowSecondaryColumn ? 'Artigo Principal' : 'Artigos em destaque'}
-                articles={blockState.articles['col-0'] || []}
-                maxItems={currentVariant.maxItems}
-                isDarkTheme={isDarkTheme}
-                blockConfig={blockConfig}
-                handleRemoveArticle={handleRemoveArticle}
-                variant={blockState.currentVariant.variantType}
-                useCompactView={true}
-              />
+            {/* Layout em duas colunas para DroppableColumn e Preview */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Coluna para os artigos */}
+              <div>
+                <DroppableColumn
+                  columnId="col-0"
+                  label={shouldShowSecondaryColumn ? 'Artigo Principal' : 'Artigos em destaque'}
+                  articles={blockState.articles['col-0'] || []}
+                  maxItems={currentVariant.maxItems}
+                  isDarkTheme={isDarkTheme}
+                  blockConfig={blockConfig}
+                  handleRemoveArticle={handleRemoveArticle}
+                  variant={blockState.currentVariant.variantType}
+                  useCompactView={true}
+                />
+              </div>
+              
+              {/* Coluna para o preview */}
+              <div>
+                <FeaturedLayoutPreview
+                  variantType={blockState.currentVariant.variantType}
+                  columns={blockState.articles}
+                  isDarkTheme={isDarkTheme}
+                  blockConfig={blockConfig}
+                />
+              </div>
             </div>
           </div>
         </div>

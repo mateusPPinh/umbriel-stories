@@ -40,6 +40,7 @@ interface ArticleCompactPreviewProps {
   isDarkTheme?: boolean;
   blockConfig: BlockConfig;
   variant?: string;
+  onRemove?: (articleId: string | number) => void;
 }
 
 /**
@@ -51,7 +52,8 @@ const ArticleCompactPreview: React.FC<ArticleCompactPreviewProps> = ({
   columnId,
   isDarkTheme = false,
   blockConfig,
-  variant
+  variant,
+  onRemove
 }) => {
   // Memoizar valores que dependem de cálculos para evitar recálculos
   const theme = useMemo(() => blockConfig?.styles?.theme?.[isDarkTheme ? 'dark' : 'light'] || {
@@ -141,6 +143,14 @@ const ArticleCompactPreview: React.FC<ArticleCompactPreviewProps> = ({
     return null;
   }, [article.category, article.featuredImage]);
 
+  // Handler para o botão de remoção
+  const handleRemove = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Evita que o evento se propague para o Draggable
+    if (onRemove) {
+      onRemove(article.id);
+    }
+  };
+
   return (
     <div className="article-compact-preview" style={{
       display: 'flex',
@@ -202,6 +212,42 @@ const ArticleCompactPreview: React.FC<ArticleCompactPreviewProps> = ({
           {article.category}
         </span>
       )}
+
+      {/* Botão de remoção */}
+      {onRemove && (
+        <button 
+          onClick={handleRemove}
+          style={{
+            marginLeft: '8px',
+            background: 'none',
+            border: 'none',
+            padding: '2px',
+            cursor: 'pointer',
+            color: isDarkTheme ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '20px',
+            height: '20px',
+            flexShrink: 0,
+            transition: 'color 0.2s, background-color 0.2s'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.color = '#ef4444';
+            e.currentTarget.style.backgroundColor = isDarkTheme ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.color = isDarkTheme ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)';
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }}
+          title="Remover artigo"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 };
@@ -213,6 +259,7 @@ export default React.memo(ArticleCompactPreview, (prevProps, nextProps) => {
     prevProps.article.id === nextProps.article.id &&
     prevProps.columnId === nextProps.columnId &&
     prevProps.isDarkTheme === nextProps.isDarkTheme &&
-    prevProps.blockConfig === nextProps.blockConfig
+    prevProps.blockConfig === nextProps.blockConfig &&
+    prevProps.onRemove === nextProps.onRemove
   );
 }); 

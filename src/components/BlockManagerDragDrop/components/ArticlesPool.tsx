@@ -50,6 +50,7 @@ interface ArticlesPoolProps {
   isCompact?: boolean;
   blockConfig: BlockConfig;
   usedArticleIds: (string | number)[]; // IDs dos artigos que já estão em uso
+  onRemoveArticle?: (articleId: string | number) => void; // Função para remover artigos
 }
 
 interface RowRendererProps extends ListRowProps {
@@ -67,7 +68,8 @@ const ArticlesPool: React.FC<ArticlesPoolProps> = ({
   isDarkTheme = false,
   isCompact = false,
   blockConfig,
-  usedArticleIds = []
+  usedArticleIds = [],
+  onRemoveArticle
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const isDraggingRef = useRef(false);
@@ -176,6 +178,7 @@ const ArticlesPool: React.FC<ArticlesPoolProps> = ({
                 columnId="pool"
                 isDarkTheme={isDarkTheme}
                 blockConfig={blockConfig}
+                onRemove={!isUsed && onRemoveArticle ? onRemoveArticle : undefined}
               />
             ) : (
               <div className="p-3 bg-white dark:bg-gray-800">
@@ -200,7 +203,7 @@ const ArticlesPool: React.FC<ArticlesPoolProps> = ({
         )}
       </Draggable>
     );
-  }, [stableArticles, blockConfig, isDarkTheme, isCompact]);
+  }, [stableArticles, blockConfig, isDarkTheme, isCompact, onRemoveArticle]);
 
   const rowRenderer = useCallback(({ index, style }: RowRendererProps) => {
     const article = filteredArticles[index];
