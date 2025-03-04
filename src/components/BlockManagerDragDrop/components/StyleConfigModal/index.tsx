@@ -5,6 +5,12 @@ import ThemeConfig from './ThemeConfig';
 import MediaConfig, { VideoConfig, ImageConfig, DisplayConfig } from './MediaConfig';
 import VariantConfig from './VariantConfig';
 
+// Lazy load the config components
+import LayoutConfigLazy from './LayoutConfig';
+import ThemeConfigLazy from './ThemeConfig';
+import MediaConfigLazy from './MediaConfig';
+import VariantConfigLazy from './VariantConfig';
+
 export interface BlockConfig {
   layout: {
     columns: string;
@@ -198,51 +204,51 @@ const StyleConfigModal: React.FC<StyleConfigModalProps> = ({
               <Tab.Panels className="mt-6">
                 {/* Layout Tab */}
                 <Tab.Panel>
-                  <LayoutConfig
-                    config={config.layout}
-                    onChange={handleLayoutChange}
-                  />
+                    <LayoutConfigLazy
+                      config={config.layout}
+                      onChange={handleLayoutChange}
+                    />
                 </Tab.Panel>
 
                 {/* Light Theme Tab */}
                 <Tab.Panel>
-                  <ThemeConfig
-                    theme="light"
-                    config={config.styles.theme.light}
-                    onChange={handleLightThemeChange}
-                  />
+                    <ThemeConfigLazy
+                      theme="light"
+                      config={config.styles.theme.light}
+                      onChange={handleLightThemeChange}
+                    />
                 </Tab.Panel>
 
                 {/* Dark Theme Tab */}
                 <Tab.Panel>
-                  <ThemeConfig
-                    theme="dark"
-                    config={config.styles.theme.dark}
-                    onChange={handleDarkThemeChange}
-                  />
+                    <ThemeConfigLazy
+                      theme="dark"
+                      config={config.styles.theme.dark}
+                      onChange={handleDarkThemeChange}
+                    />
                 </Tab.Panel>
 
                 {/* Media Tab (conditional) */}
                 {(blockType === 'featured' || blockType === 'mixed' || variantType === 'video') && (
                   <Tab.Panel>
-                    <MediaConfig
-                      config={config.mediaConfig}
-                      onChange={handleMediaChange}
-                      showVideo={variantType.toLowerCase().includes('video')}
-                      blockType={blockType}
-                      variant={variantType}
-                    />
+                      <MediaConfigLazy
+                        config={config.mediaConfig}
+                        onChange={handleMediaChange}
+                        showVideo={variantType.toLowerCase().includes('video')}
+                        blockType={blockType}
+                        variant={variantType}
+                      />
                   </Tab.Panel>
                 )}
 
                 {/* Variant Tab */}
                 <Tab.Panel>
-                  <VariantConfig
-                    blockType={blockType}
-                    variantType={variantType}
-                    config={config}
-                    onChange={setConfig}
-                  />
+                    <VariantConfigLazy
+                      blockType={blockType}
+                      variantType={variantType}
+                      config={config}
+                      onChange={setConfig}
+                    />
                 </Tab.Panel>
               </Tab.Panels>
             </Tab.Group>

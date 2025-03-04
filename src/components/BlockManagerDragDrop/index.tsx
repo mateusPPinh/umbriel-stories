@@ -1,14 +1,14 @@
-import React, { useState, useCallback, useMemo, lazy, Suspense } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Article } from '../PageblockV2/types';
 import type { BlockConfig } from './components/StyleConfigModal';
 import { GridVariantType, MixedVariantType, FeaturedVariantType, ListVariantType } from './types';
 
-// Lazy loading dos componentes pesados
-const GridManager = lazy(() => import('./components/GridManager'));
-const ListManager = lazy(() => import('./components/ListManager'));
-const MixedManager = lazy(() => import('./components/MixedManager'));
-const FeaturedManager = lazy(() => import('./components/FeaturedManager'));
-const StyleConfigModal = lazy(() => import('./components/StyleConfigModal'));
+// Static imports
+import GridManager from './components/GridManager';
+import ListManager from './components/ListManager';
+import MixedManager from './components/MixedManager';
+import FeaturedManager from './components/FeaturedManager';
+import StyleConfigModal from './components/StyleConfigModal';
 
 // Configuração padrão memoizada
 const defaultBlockConfig: BlockConfig = {
@@ -96,62 +96,22 @@ const BlockManagerDragDrop = React.memo(({
     setIsPreviewOnly(prev => !prev);
   }, []);
 
-  const renderManager = useMemo(() => {
-    const commonProps = {
-      articles,
-      isDarkTheme,
-      onSave,
-      blockConfig,
-      onConfigClick: handleOpenConfigModal,
-      pageId,
-      isPreviewOnly
-    };
+  const commonProps = {
+    articles,
+    isDarkTheme,
+    onSave,
+    blockConfig,
+    onConfigClick: handleOpenConfigModal,
+    pageId,
+    isPreviewOnly
+  };
 
-    const fallback = <div className="w-full h-64 flex items-center justify-center">
-      <div className="animate-pulse text-gray-500 dark:text-gray-400">Carregando gerenciador...</div>
-    </div>;
-
-    switch (blockType) {
-      case 'grid':
-        return (
-          <Suspense fallback={fallback}>
-            <GridManager
-              {...commonProps}
-              variant={currentVariant as GridVariantType}
-            />
-          </Suspense>
-        );
-      case 'list':
-        return (
-          <Suspense fallback={fallback}>
-            <ListManager
-              {...commonProps}
-              variant={currentVariant as ListVariantType}
-            />
-          </Suspense>
-        );
-      case 'mixed':
-        return (
-          <Suspense fallback={fallback}>
-            <MixedManager
-              {...commonProps}
-              variant={currentVariant as MixedVariantType}
-            />
-          </Suspense>
-        );
-      case 'featured':
-        return (
-          <Suspense fallback={fallback}>
-            <FeaturedManager
-              {...commonProps}
-              variant={currentVariant as FeaturedVariantType}
-            />
-          </Suspense>
-        );
-      default:
-        return null;
-    }
-  }, [articles, blockType, isDarkTheme, onSave, currentVariant, blockConfig, handleOpenConfigModal, pageId, isPreviewOnly]);
+  const managers = {
+    grid: <GridManager {...commonProps} variant={currentVariant as GridVariantType} />,
+    list: <ListManager {...commonProps} variant={currentVariant as ListVariantType} />,
+    mixed: <MixedManager {...commonProps} variant={currentVariant as MixedVariantType} />,
+    featured: <FeaturedManager {...commonProps} variant={currentVariant as FeaturedVariantType} />
+  };
 
   return (
     <div className="w-full h-full">
@@ -184,9 +144,9 @@ const BlockManagerDragDrop = React.memo(({
         </div>
       </div>
       
-      {renderManager}
+      {managers[blockType]}
       
-      <Suspense fallback={null}>
+      {isConfigModalOpen && (
         <StyleConfigModal
           isOpen={isConfigModalOpen}
           onClose={handleCloseConfigModal}
@@ -195,7 +155,7 @@ const BlockManagerDragDrop = React.memo(({
           blockType={blockType}
           variantType={currentVariant}
         />
-      </Suspense>
+      )}
     </div>
   );
 });

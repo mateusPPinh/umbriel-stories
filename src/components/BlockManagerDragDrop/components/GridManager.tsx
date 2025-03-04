@@ -131,7 +131,8 @@ const GridManager: React.FC<GridManagerProps> = ({
     updateVariantPosition,
     updateBlockPosition,
     updateBlockConfig,
-    getApiFormat
+    getApiFormat,
+    handleRemoveArticle
   } = useBlockState({
     pageId,
     template: 'grid',
@@ -143,6 +144,15 @@ const GridManager: React.FC<GridManagerProps> = ({
   const [showVariantSelector, setShowVariantSelector] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   
+  // Add safety check for currentVariant
+  const currentVariantType = blockState.currentVariant?.variantType as GridVariantType;
+  const currentVariant = GRID_VARIANTS[currentVariantType] || GRID_VARIANTS.standard;
+
+  // Add console warning if variant is not found
+  if (!GRID_VARIANTS[currentVariantType]) {
+    console.warn(`Grid variant "${currentVariantType}" not found, falling back to standard layout`);
+  }
+
   // Performance optimizations
   const dragStyles = useMemo(() => ({
     draggingContainer: {
@@ -195,7 +205,6 @@ const GridManager: React.FC<GridManagerProps> = ({
       source.index === destination.index
     ) return;
 
-    const currentVariant = GRID_VARIANTS[blockState.currentVariant.variantType as GridVariantType];
     const destColumn = currentVariant.columns.find(col => col.id === destination.droppableId);
     
     if (
@@ -225,29 +234,11 @@ const GridManager: React.FC<GridManagerProps> = ({
 
     // Atualizamos o estado em um único lote
     updateArticlePositions(newColumns);
-  }, [blockState.articles, blockState.currentVariant.variantType, updateArticlePositions]);
-
-  const handleRemoveArticle = useCallback((columnId: string, articleId: string | number) => {
-    const columnArticles = [...blockState.articles[columnId]];
-    const articleIndex = columnArticles.findIndex(article => article.id === articleId);
-    
-    if (articleIndex === -1) return;
-    
-    columnArticles.splice(articleIndex, 1);
-    
-    const newColumns = {
-      ...blockState.articles,
-      [columnId]: columnArticles
-    };
-    
-    updateArticlePositions(newColumns);
-  }, [blockState.articles, updateArticlePositions]);
+  }, [blockState.articles, currentVariant, updateArticlePositions]);
 
   const handleSave = useCallback(() => {
     onSave(getApiFormat());
   }, [getApiFormat, onSave]);
-
-  const currentVariant = GRID_VARIANTS[blockState.currentVariant.variantType as GridVariantType];
 
   const getColumnHeadingProps = useCallback((column: Column): HeadingProps => ({
     text: column.title,
@@ -263,14 +254,14 @@ const GridManager: React.FC<GridManagerProps> = ({
 
   // Render layout functions with memoization for performance
   const renderMasonryLayout = useMemo(() => (
-    <div className={currentVariant.layout.container} style={dragStyles.draggingContainer}>
+    <div className={currentVariant?.layout?.container} style={dragStyles.draggingContainer}>
       <DroppableColumn
-        key={currentVariant.columns[0].id}
-        columnId={currentVariant.columns[0].id}
-        articles={blockState.articles[currentVariant.columns[0].id] || []}
-        maxItems={currentVariant.maxItems}
+        key={currentVariant?.columns[0]?.id}
+        columnId={currentVariant?.columns[0]?.id}
+        articles={blockState.articles[currentVariant?.columns[0]?.id] || []}
+        maxItems={currentVariant?.maxItems}
         isDarkTheme={isDarkTheme}
-        label={currentVariant.columns[0].title}
+        label={currentVariant?.columns[0]?.title}
         blockConfig={blockConfig}
         handleRemoveArticle={handleRemoveArticle}
         variant="masonry"
@@ -280,16 +271,16 @@ const GridManager: React.FC<GridManagerProps> = ({
   ), [blockState.articles, currentVariant, isDarkTheme, blockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
 
   const renderFeaturedLayout = useMemo(() => (
-    <div className={currentVariant.layout.container} style={dragStyles.draggingContainer}>
+    <div className={currentVariant?.layout?.container} style={dragStyles.draggingContainer}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="col-span-2">
           <DroppableColumn
-            key={currentVariant.columns[0].id}
-            columnId={currentVariant.columns[0].id}
-            articles={blockState.articles[currentVariant.columns[0].id] || []}
-            maxItems={currentVariant.maxItems}
+            key={currentVariant?.columns[0]?.id}
+            columnId={currentVariant?.columns[0]?.id}
+            articles={blockState.articles[currentVariant?.columns[0]?.id] || []}
+            maxItems={currentVariant?.maxItems}
             isDarkTheme={isDarkTheme}
-            label={currentVariant.columns[0].title}
+            label={currentVariant?.columns[0]?.title}
             blockConfig={blockConfig}
             handleRemoveArticle={handleRemoveArticle}
             variant="featured-main"
@@ -298,15 +289,15 @@ const GridManager: React.FC<GridManagerProps> = ({
         </div>
         <div className="col-span-1">
           <DroppableColumn
-            key={currentVariant.columns[1].id}
-            columnId={currentVariant.columns[1].id}
-            articles={blockState.articles[currentVariant.columns[1].id] || []}
-            maxItems={currentVariant.maxItems}
+            key={currentVariant?.columns[1]?.id}
+            columnId={currentVariant?.columns[1]?.id}
+            articles={blockState.articles[currentVariant?.columns[1]?.id] || []}
+            maxItems={currentVariant?.maxItems}
             isDarkTheme={isDarkTheme}
-            label={currentVariant.columns[1].title}
+            label={currentVariant?.columns[1]?.title}
             blockConfig={blockConfig}
             handleRemoveArticle={handleRemoveArticle}
-            variant="featured-side"
+            variant="featured-secondary"
             useCompactView={true}
           />
         </div>
@@ -404,7 +395,7 @@ const GridManager: React.FC<GridManagerProps> = ({
   ), [blockState.articles, currentVariant, isDarkTheme, blockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
 
   const renderColumns = useCallback(() => {
-    switch (blockState.currentVariant.variantType) {
+    switch (currentVariantType) {
       case 'masonry':
         return renderMasonryLayout;
       case 'featured':
@@ -417,7 +408,7 @@ const GridManager: React.FC<GridManagerProps> = ({
       default:
         return renderStandardLayout;
     }
-  }, [blockState.currentVariant.variantType, renderMasonryLayout, renderFeaturedLayout, renderSidebarLayout, renderNewsFeedLayout, renderStandardLayout]);
+  }, [currentVariantType, renderMasonryLayout, renderFeaturedLayout, renderSidebarLayout, renderNewsFeedLayout, renderStandardLayout]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -433,7 +424,7 @@ const GridManager: React.FC<GridManagerProps> = ({
               </label>
               <select
                 id="variant-select"
-                value={blockState.currentVariant.variantType}
+                value={currentVariantType}
                 onChange={(e) => updateVariant(e.target.value as GridVariantType)}
                 className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
               >
@@ -459,7 +450,7 @@ const GridManager: React.FC<GridManagerProps> = ({
       {isPreviewOnly ? (
         <div className="w-full">
           <LayoutPreview 
-            variantType={blockState.currentVariant.variantType}
+            variantType={currentVariantType}
             columns={blockState.articles}
             isDarkTheme={isDarkTheme}
             blockConfig={blockConfig}
@@ -489,7 +480,7 @@ const GridManager: React.FC<GridManagerProps> = ({
             {/* Item 3: Preview - Coluna mais larga, ocupando o espaço restante */}
             <div className="flex-1 min-w-[300px]" style={{ maxHeight: '70vh', overflow: 'auto' }}>
               <LayoutPreview 
-                variantType={blockState.currentVariant.variantType}
+                variantType={currentVariantType}
                 columns={blockState.articles}
                 isDarkTheme={isDarkTheme}
                 blockConfig={blockConfig}

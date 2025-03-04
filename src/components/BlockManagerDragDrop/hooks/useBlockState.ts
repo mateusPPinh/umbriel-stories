@@ -589,6 +589,44 @@ export const useBlockState = ({
     return blockState.variantStates[blockState.currentVariant.variantType];
   }, [blockState.currentVariant.variantType, blockState.variantStates]);
 
+  const handleRemoveArticle = useCallback((columnId: string, articleId: string | number) => {
+    setBlockState(prev => {
+      const currentVariantType = prev.currentVariant.variantType;
+      const currentState = prev.variantStates[currentVariantType];
+      
+      // Get the articles for the specified column
+      const columnArticles = [...(currentState.articles[columnId] || [])];
+      const articleIndex = columnArticles.findIndex(article => article.id === articleId);
+      
+      if (articleIndex === -1) return prev;
+      
+      // Remove the article from the column
+      columnArticles.splice(articleIndex, 1);
+      
+      // Update the variant state with the new articles
+      const updatedVariantState = {
+        ...currentState,
+        articles: {
+          ...currentState.articles,
+          [columnId]: columnArticles
+        }
+      };
+      
+      // Return the updated state
+      return {
+        ...prev,
+        articles: {
+          ...prev.articles,
+          [columnId]: columnArticles
+        },
+        variantStates: {
+          ...prev.variantStates,
+          [currentVariantType]: updatedVariantState
+        }
+      };
+    });
+  }, []);
+
   return {
     blockState: {
       ...blockState,
@@ -604,6 +642,7 @@ export const useBlockState = ({
     updateBlockPosition,
     updateBlockConfig,
     getApiFormat,
+    handleRemoveArticle,
     setDragging
   };
 }; 

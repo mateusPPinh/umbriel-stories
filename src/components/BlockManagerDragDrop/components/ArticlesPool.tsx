@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback, useRef, useEffect } from 'react';
+import React, { useMemo, useState, useCallback, useRef, useEffect, CSSProperties } from 'react';
 import { Droppable, Draggable } from '@hello-pangea/dnd';
 import { List, AutoSizer, ListRowProps } from 'react-virtualized';
 import { Article } from '../../PageblockV2/types';
@@ -60,6 +60,16 @@ interface RowRendererProps extends ListRowProps {
 interface AutoSizerProps {
   width: number;
   height: number;
+}
+
+interface VirtualItem {
+  index: number;
+  style: {
+    height: number;
+    top: number;
+    left: number;
+    right: number;
+  };
 }
 
 // Componente otimizado para renderizar artigos em pool
@@ -135,81 +145,64 @@ const ArticlesPool: React.FC<ArticlesPoolProps> = ({
     };
   }, [blockConfig, isDarkTheme]);
 
-  const renderArticlePoolItem = useCallback((article: ExtendedArticle, isUsed: boolean, style: React.CSSProperties) => {
-    const draggableId = `pool-article-${article.id}`;
-    const index = stableArticles.findIndex(a => a.id === article.id);
-    
-    if (index === -1) return null;
-    
+  const renderArticle = (article: Article, style: ListRowProps['style']) => {
+    const isUsed = usedArticleIds.includes(article.id);
+
     return (
       <Draggable
-        key={draggableId}
-        draggableId={draggableId}
-        index={index}
+        key={article.id}
+        draggableId={String(article.id)}
+        index={articles.findIndex(a => a.id === article.id)}
         isDragDisabled={isUsed}
       >
-        {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            style={{
-              ...style,
-              ...provided.draggableProps.style,
-              opacity: isUsed ? 0.5 : snapshot.isDragging ? 0.7 : 1,
-              transform: snapshot.isDragging ? provided.draggableProps.style?.transform : 'translate3d(0, 0, 0)',
-              willChange: 'transform',
-              pointerEvents: isUsed ? 'none' : 'auto',
-              height: style.height,
-              position: 'absolute',
-              top: style.top,
-              left: style.left,
-              right: style.right
-            }}
-            className={`
-              rounded-md overflow-hidden transition-all duration-100
-              ${isUsed ? 'cursor-not-allowed' : 'cursor-grab'}
-              ${snapshot.isDragging ? 'shadow-lg z-10' : 'shadow-sm'}
-            `}
-          >
-            {isCompact ? (
+        {(provided, snapshot) => {
+          const combinedStyle: CSSProperties = {
+            ...provided.draggableProps.style,
+            opacity: isUsed ? 0.5 : snapshot.isDragging ? 0.7 : 1,
+            transform: snapshot.isDragging ? provided.draggableProps.style?.transform : 'translate3d(0, 0, 0)',
+            willChange: 'transform',
+            pointerEvents: isUsed ? 'none' : 'auto',
+            position: 'absolute',
+            ...(style as CSSProperties)
+          };
+
+          return (
+            <div
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              style={combinedStyle}
+              className={`
+                rounded-md overflow-hidden transition-all duration-100
+                ${isUsed ? 'cursor-not-allowed' : 'cursor-grab'}
+                ${snapshot.isDragging ? 'shadow-lg z-10' : 'shadow-sm'}
+              `}
+            >
               <ArticleCompactPreview
                 article={article}
                 columnId="pool"
                 isDarkTheme={isDarkTheme}
                 blockConfig={blockConfig}
-                onRemove={!isUsed && onRemoveArticle ? onRemoveArticle : undefined}
               />
-            ) : (
-              <div className="p-3 bg-white dark:bg-gray-800">
-                <div className="font-medium text-gray-900 dark:text-white mb-2 truncate">
-                  {article.title}
+              {isUsed && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 dark:bg-opacity-50">
+                  <span className="text-xs font-medium text-white px-2 py-1 rounded-full bg-blue-500">
+                    Em uso
+                  </span>
                 </div>
-                {article.excerpt && (
-                  <div className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
-                    {article.excerpt}
-                  </div>
-                )}
-              </div>
-            )}
-            {isUsed && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 dark:bg-opacity-50">
-                <span className="text-xs font-medium text-white px-2 py-1 rounded-full bg-blue-500">
-                  Em uso
-                </span>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          );
+        }}
       </Draggable>
     );
-  }, [stableArticles, blockConfig, isDarkTheme, isCompact, onRemoveArticle]);
+  };
 
-  const rowRenderer = useCallback(({ index, style }: RowRendererProps) => {
+  const rowRenderer = useCallback(({ index, style }: ListRowProps) => {
     const article = filteredArticles[index];
-    const isUsed = usedArticleIds.includes(article.id.toString()) || usedArticleIds.includes(article.id);
-    return renderArticlePoolItem(article, isUsed, style);
-  }, [filteredArticles, usedArticleIds, renderArticlePoolItem]);
+    if (!article) return null;
+    return renderArticle(article, style);
+  }, [filteredArticles, renderArticle]);
 
   const getRowHeight = useCallback(({ index }: { index: number }) => {
     return isCompact ? 80 : 100;
@@ -242,7 +235,7 @@ const ArticlesPool: React.FC<ArticlesPoolProps> = ({
             {...provided.dragHandleProps}
             ref={provided.innerRef}
           >
-            {renderArticlePoolItem(filteredArticles[rubric.source.index], false, {})}
+            {renderArticle(filteredArticles[rubric.source.index], {})}
           </div>
         )}
       >
