@@ -1,6 +1,5 @@
-import React, { useMemo, useCallback, useState, useEffect, useRef } from 'react';
-import { Droppable, Draggable } from '@hello-pangea/dnd';
-import ArticleCompactPreview from './ArticleCompactPreview';
+import React, { useMemo, useCallback, useState } from 'react';
+import { Droppable } from '@hello-pangea/dnd';
 import { Article } from '../../PageblockV2/types';
 import { BlockConfig } from './StyleConfigModal';
 import DraggableArticle from './DraggableArticle';
@@ -41,7 +40,29 @@ const DroppableColumn = ({
   variant = 'standard',
   useCompactView = false
 }: DroppableColumnProps) => {
+  const [selectedArticleIds, setSelectedArticleIds] = useState<(string | number)[]>([]);
   const isAtLimit = articles.length >= maxItems;
+
+  const handleArticleSelect = useCallback((articleId: string | number) => {
+    setSelectedArticleIds(prev => {
+      const newSelection = prev.includes(articleId)
+        ? prev.filter(id => id !== articleId)
+        : [...prev, articleId];
+      return newSelection;
+    });
+  }, []);
+
+  const handleRemoveSelected = useCallback(() => {
+    if (!handleRemoveArticle) return;
+    
+    // Remove cada artigo selecionado
+    selectedArticleIds.forEach(articleId => {
+      handleRemoveArticle(columnId, articleId);
+    });
+    
+    // Limpa a seleção
+    setSelectedArticleIds([]);
+  }, [columnId, handleRemoveArticle, selectedArticleIds]);
 
   return (
     <div className="w-full">
@@ -49,18 +70,49 @@ const DroppableColumn = ({
         <h3 className={`text-sm font-medium ${isDarkTheme ? 'text-gray-200' : 'text-gray-700'}`}>
           {label}
         </h3>
-        <span className={`text-xs flex items-center gap-2 ${
-          isAtLimit 
-            ? isDarkTheme ? 'text-red-300' : 'text-red-500'
-            : isDarkTheme ? 'text-gray-400' : 'text-gray-500'
-        }`}>
-          {articles.length}/{maxItems} artigos
-          {isAtLimit && (
-            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
-              Limite atingido
-            </span>
+        <div className="flex items-center gap-2">
+          {selectedArticleIds.length > 0 && (
+            <button
+              onClick={handleRemoveSelected}
+              className={`
+                inline-flex items-center px-2 py-1 text-xs font-medium rounded
+                ${isDarkTheme 
+                  ? 'bg-red-900/30 text-red-300 hover:bg-red-900/50' 
+                  : 'bg-red-100 text-red-700 hover:bg-red-200'
+                }
+                transition-colors duration-150
+              `}
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                className="h-3 w-3 mr-1" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" 
+                />
+              </svg>
+              Remover {selectedArticleIds.length} selecionado(s)
+            </button>
           )}
-        </span>
+          <span className={`text-xs flex items-center gap-2 ${
+            isAtLimit 
+              ? isDarkTheme ? 'text-red-300' : 'text-red-500'
+              : isDarkTheme ? 'text-gray-400' : 'text-gray-500'
+          }`}>
+            {articles.length}/{maxItems} artigos
+            {isAtLimit && (
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                Limite atingido
+              </span>
+            )}
+          </span>
+        </div>
       </div>
 
       <Droppable droppableId={columnId} isDropDisabled={isAtLimit}>
@@ -95,9 +147,12 @@ const DroppableColumn = ({
                     article={article}
                     index={index}
                     isDarkTheme={isDarkTheme}
-                    onRemove={handleRemoveArticle ? () => handleRemoveArticle(columnId, article.id) : undefined}
+                    onRemove={handleRemoveArticle ? (articleId) => handleRemoveArticle(columnId, articleId) : undefined}
                     variant={variant}
                     isCompact={useCompactView}
+                    isSelected={selectedArticleIds.includes(article.id)}
+                    onSelect={handleArticleSelect}
+                    isSelectionEnabled={true}
                   />
                 ))}
               </div>

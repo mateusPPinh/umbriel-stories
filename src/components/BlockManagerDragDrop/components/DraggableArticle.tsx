@@ -9,6 +9,9 @@ interface DraggableArticleProps {
   onRemove?: (articleId: string | number) => void;
   variant?: string;
   isCompact?: boolean;
+  isSelected?: boolean;
+  onSelect?: (articleId: string | number) => void;
+  isSelectionEnabled?: boolean;
 }
 
 const DraggableArticle = ({
@@ -17,8 +20,21 @@ const DraggableArticle = ({
   isDarkTheme = false,
   onRemove,
   variant = 'standard',
-  isCompact = false
+  isCompact = false,
+  isSelected = false,
+  onSelect,
+  isSelectionEnabled = true
 }: DraggableArticleProps) => {
+  const handleClick = (e: React.MouseEvent) => {
+    if (!isSelectionEnabled) return;
+    
+    // Se pressionou Ctrl/Cmd, permite seleção
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      onSelect?.(article.id);
+    }
+  };
+
   return (
     <Draggable draggableId={`article-${article.id}`} index={index}>
       {(provided, snapshot) => (
@@ -26,6 +42,7 @@ const DraggableArticle = ({
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          onClick={handleClick}
           className={`
             relative rounded-lg overflow-hidden transition-all duration-200 ease-in-out
             border cursor-grab active:cursor-grabbing
@@ -40,6 +57,10 @@ const DraggableArticle = ({
             ${isCompact ? 'p-3' : 'p-4'}
             ${snapshot.isDragging 
               ? (isDarkTheme ? 'bg-gray-600' : 'bg-blue-50 border-blue-100') 
+              : ''
+            }
+            ${isSelected 
+              ? (isDarkTheme ? 'bg-blue-900/30 border-blue-500' : 'bg-blue-50 border-blue-200')
               : ''
             }
           `}
@@ -62,7 +83,29 @@ const DraggableArticle = ({
                 </p>
               )}
             </div>
-            {onRemove && (
+            {/* Indicador de seleção */}
+            {isSelected && (
+              <div className="absolute top-2 right-2">
+                <div className={`
+                  w-4 h-4 rounded-full border-2
+                  ${isDarkTheme ? 'border-blue-400 bg-blue-600' : 'border-blue-500 bg-blue-600'}
+                `}>
+                  <svg 
+                    className="w-3 h-3 text-white" 
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path 
+                      fillRule="evenodd" 
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" 
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </div>
+            )}
+            {/* Botão de remover */}
+            {onRemove && !isSelected && (
               <button
                 onClick={() => onRemove(article.id)}
                 className={`

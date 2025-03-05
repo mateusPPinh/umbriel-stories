@@ -11,6 +11,7 @@ import { GridVariantType, VariantType, Column, GridVariant } from '../types';
 import Sidebar from './Sidebar';
 import { PageResponse } from '../interfaces/pages.types';
 import { Editorial } from '../interfaces/editorial.types';
+import DragDropTips from './DragDropTips';
 
 interface ArticleFilters {
   hasImage: boolean;
@@ -175,6 +176,7 @@ const GridManager: React.FC<GridManagerProps> = ({
     searchTerm: ''
   });
   const [selectedArticleIds, setSelectedArticleIds] = useState<(string | number)[]>([]);
+  const [showTips, setShowTips] = useState(false);
 
   // Add safety check for currentVariant
   const currentVariantType = blockState.currentVariant?.variantType as GridVariantType;
@@ -545,103 +547,131 @@ const GridManager: React.FC<GridManagerProps> = ({
   }, [blockState]);
 
   return (
-    <div className="flex flex-col gap-4">
-      {!isPreviewOnly && (
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <h2 className="text-lg font-medium text-gray-900 dark:text-white">
-              Gerenciador de Grid
-            </h2>
+    <div className="relative">
+      <DragDropTips 
+        isDarkTheme={isDarkTheme} 
+        isForced={showTips}
+        onDismiss={() => setShowTips(false)}
+      />
+
+      <div className="flex flex-col gap-4">
+        {!isPreviewOnly && (
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <h2 className="text-lg font-medium text-gray-900 dark:text-white">
+                Gerenciador de Grid
+              </h2>
+              <div className="flex items-center gap-2">
+                <label htmlFor="variant-select" className="text-sm text-gray-600 dark:text-gray-400">
+                  Variante:
+                </label>
+                <select
+                  id="variant-select"
+                  value={currentVariantType}
+                  onChange={(e) => updateVariant(e.target.value as GridVariantType)}
+                  className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                >
+                  {Object.keys(GRID_VARIANTS).map(variant => (
+                    <option key={variant} value={variant}>
+                      {variant}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
             <div className="flex items-center gap-2">
-              <label htmlFor="variant-select" className="text-sm text-gray-600 dark:text-gray-400">
-                Variante:
-              </label>
-              <select
-                id="variant-select"
-                value={currentVariantType}
-                onChange={(e) => updateVariant(e.target.value as GridVariantType)}
-                className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
+              <button
+                onClick={() => setShowTips(true)}
+                className={`
+                  p-2 rounded-full transition-colors
+                  ${isDarkTheme 
+                    ? 'hover:bg-gray-700 text-gray-400 hover:text-gray-300' 
+                    : 'hover:bg-gray-100 text-gray-500 hover:text-gray-700'
+                  }
+                `}
+                title="Mostrar dicas de uso"
               >
-                {Object.keys(GRID_VARIANTS).map(variant => (
-                  <option key={variant} value={variant}>
-                    {variant}
-                  </option>
-                ))}
-              </select>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+                  />
+                </svg>
+              </button>
+              <Button variant="primary" onClick={handleSave}>
+                Salvar
+              </Button>
+              <Button variant="info" onClick={onConfigClick}>
+                Configurar Estilos
+              </Button>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="primary" onClick={handleSave}>
-              Salvar
-            </Button>
-            <Button variant="info" onClick={onConfigClick}>
-              Configurar Estilos
-            </Button>
-          </div>
-        </div>
-      )}
+        )}
 
-      {isPreviewOnly ? (
-        <div className="w-full">
-          <LayoutPreview 
-            variantType={currentVariantType}
-            columns={blockState.articles}
-            isDarkTheme={isDarkTheme}
-            blockConfig={blockConfig}
-          />
-        </div>
-      ) : (
-        <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-          <div className="flex flex-row gap-4 w-full h-full">
-            {/* Item 1: Lista de artigos (Pool) - Coluna estreita */}
-            <Sidebar 
-              pageData={pageData}
-              editorialsData={editorialsData}
-              isPagesLoading={isPagesLoading}
-              isEditorialsLoading={isEditorialsLoading}
+        {isPreviewOnly ? (
+          <div className="w-full">
+            <LayoutPreview 
+              variantType={currentVariantType}
+              columns={blockState.articles}
+              isDarkTheme={isDarkTheme}
               blockConfig={blockConfig}
-              filters={filters}
-              onFiltersChange={setFilters}
-              onPageSelect={handlePageSelect}
-              onEditorialSelect={handleEditorialSelect}
-              onClearSelection={handleClearSelection}
-              onPublishBlock={onPublishBlock}
-              onSave={() => {}}
-              onConfigClick={() => {}}
-              className='max-w-[320px] w-full p-0'
-            >
-              <div className="w-full scrollable-container" style={{ maxHeight: '35vh', overflowY: 'auto', marginBottom: '10px' }}>
-                <ArticlesPool
-                  articles={filteredArticles}
+            />
+          </div>
+        ) : (
+          <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+            <div className="flex flex-row gap-4 w-full h-full">
+              {/* Item 1: Lista de artigos (Pool) - Coluna estreita */}
+              <Sidebar 
+                pageData={pageData}
+                editorialsData={editorialsData}
+                isPagesLoading={isPagesLoading}
+                isEditorialsLoading={isEditorialsLoading}
+                blockConfig={blockConfig}
+                filters={filters}
+                onFiltersChange={setFilters}
+                onPageSelect={handlePageSelect}
+                onEditorialSelect={handleEditorialSelect}
+                onClearSelection={handleClearSelection}
+                onPublishBlock={onPublishBlock}
+                onSave={() => {}}
+                onConfigClick={() => {}}
+                className='max-w-[320px] w-full p-0'
+              >
+                <div className="w-full scrollable-container" style={{ maxHeight: '35vh', overflowY: 'auto', marginBottom: '10px' }}>
+                  <ArticlesPool
+                    articles={filteredArticles}
+                    isDarkTheme={isDarkTheme}
+                    blockConfig={blockConfig}
+                    usedArticleIds={getUsedArticleIds()}
+                    isCompact={true}
+                    isMultiSelectEnabled={isMultiSelectEnabled}
+                    onSelectionChange={setSelectedArticleIds}
+                  />
+                </div>
+              </Sidebar>
+              
+              {/* Item 2: Colunas para os artigos - Coluna mais estreita */}
+              <div className="w-1/4 min-w-[250px]" style={{ maxHeight: '70vh', overflow: 'auto' }}>
+                <div className="flex flex-col gap-3" style={{ overflow: 'visible' }}>
+                  {renderColumns()}
+                </div>
+              </div>
+              
+              {/* Item 3: Preview - Coluna mais larga, ocupando o espaço restante */}
+              <div className="flex-1 min-w-[300px]" style={{ maxHeight: '70vh', overflow: 'auto' }}>
+                <LayoutPreview 
+                  variantType={currentVariantType}
+                  columns={blockState.articles}
                   isDarkTheme={isDarkTheme}
                   blockConfig={blockConfig}
-                  usedArticleIds={getUsedArticleIds()}
-                  isCompact={true}
-                  isMultiSelectEnabled={isMultiSelectEnabled}
-                  onSelectionChange={setSelectedArticleIds}
                 />
               </div>
-            </Sidebar>
-            
-            {/* Item 2: Colunas para os artigos - Coluna mais estreita */}
-            <div className="w-1/4 min-w-[250px]" style={{ maxHeight: '70vh', overflow: 'auto' }}>
-              <div className="flex flex-col gap-3" style={{ overflow: 'visible' }}>
-                {renderColumns()}
-              </div>
             </div>
-            
-            {/* Item 3: Preview - Coluna mais larga, ocupando o espaço restante */}
-            <div className="flex-1 min-w-[300px]" style={{ maxHeight: '70vh', overflow: 'auto' }}>
-              <LayoutPreview 
-                variantType={currentVariantType}
-                columns={blockState.articles}
-                isDarkTheme={isDarkTheme}
-                blockConfig={blockConfig}
-              />
-            </div>
-          </div>
-        </DragDropContext>
-      )}
+          </DragDropContext>
+        )}
+      </div>
     </div>
   );
 }

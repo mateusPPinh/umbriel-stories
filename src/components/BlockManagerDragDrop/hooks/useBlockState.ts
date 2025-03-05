@@ -639,15 +639,22 @@ export const useBlockState = ({
       
       if (articleIndex === -1) return prev;
       
+      // Get the article before removing it
+      const removedArticle = columnArticles[articleIndex];
+      
       // Remove the article from the column
       columnArticles.splice(articleIndex, 1);
+      
+      // Add the article back to the pool
+      const updatedPool = [...currentState.articles.pool, removedArticle];
       
       // Update the variant state with the new articles
       const updatedVariantState = {
         ...currentState,
         articles: {
           ...currentState.articles,
-          [columnId]: columnArticles
+          [columnId]: columnArticles,
+          pool: updatedPool
         }
       };
       
@@ -656,7 +663,8 @@ export const useBlockState = ({
         ...prev,
         articles: {
           ...prev.articles,
-          [columnId]: columnArticles
+          [columnId]: columnArticles,
+          pool: updatedPool
         },
         variantStates: {
           ...prev.variantStates,
