@@ -32,7 +32,7 @@ const GRID_VARIANTS: Record<GridVariantType, GridVariant> = {
     ],
     layout: {
       container: 'w-full',
-      grid: 'grid grid-cols-1 md:grid-cols-3 gap-6'
+      grid: 'flex flex-col gap-6'
     }
   },
   featured: {
@@ -45,7 +45,7 @@ const GRID_VARIANTS: Record<GridVariantType, GridVariant> = {
     ],
     layout: {
       container: 'w-full',
-      grid: 'grid grid-cols-1 md:grid-cols-3 gap-6'
+      grid: 'flex flex-col gap-6'
     }
   },
   masonry: {
@@ -57,7 +57,7 @@ const GRID_VARIANTS: Record<GridVariantType, GridVariant> = {
     ],
     layout: {
       container: 'w-full',
-      grid: 'columns-1 sm:columns-2 md:columns-3 gap-4 space-y-4'
+      grid: 'flex flex-col gap-6'
     }
   },
   sidebargrid: {
@@ -70,7 +70,7 @@ const GRID_VARIANTS: Record<GridVariantType, GridVariant> = {
     ],
     layout: {
       container: 'w-full',
-      wrapper: 'flex flex-col md:flex-row gap-6'
+      grid: 'flex flex-col gap-6'
     }
   },
   newsfeed: {
@@ -83,7 +83,7 @@ const GRID_VARIANTS: Record<GridVariantType, GridVariant> = {
     ],
     layout: {
       container: 'w-full',
-      grid: 'grid grid-cols-1 md:grid-cols-3 gap-6'
+      grid: 'flex flex-col gap-6'
     }
   },
   newsgrid: {
@@ -96,7 +96,7 @@ const GRID_VARIANTS: Record<GridVariantType, GridVariant> = {
     ],
     layout: {
       container: 'w-full',
-      grid: 'grid grid-cols-1 md:grid-cols-2 gap-6'
+      grid: 'flex flex-col gap-6'
     }
   }
 };
@@ -147,7 +147,7 @@ const GridManager: React.FC<GridManagerProps> = ({
   onPageSelect,
   onEditorialSelect,
   onPublishBlock
-}) => {
+}): JSX.Element => {
   const {
     blockState,
     updateArticlePositions,
@@ -260,6 +260,13 @@ const GridManager: React.FC<GridManagerProps> = ({
     return !hasColumnWithSingleItem;
   }, [currentVariantType, currentVariant]);
 
+  // Função para calcular o número máximo de itens na sidebar
+  const getMaxSidebarItems = useCallback((mainColumnId: string) => {
+    const mainArticlesCount = blockState.articles[mainColumnId]?.length || 0;
+    // Para cada artigo no Main, permitimos 2 no Sidebar
+    return Math.max(currentVariant.maxItems, mainArticlesCount * 2);
+  }, [blockState.articles, currentVariant.maxItems]);
+
   // Função para mover múltiplos artigos
   const moveMultipleArticles = useCallback((sourceId: string, destinationId: string, destinationIndex: number) => {
     const sourceCol = [...blockState.articles[sourceId]];
@@ -271,8 +278,13 @@ const GridManager: React.FC<GridManagerProps> = ({
     // Remove os artigos selecionados da coluna de origem
     const newSourceCol = sourceCol.filter(article => !selectedArticleIds.includes(article.id));
     
+    // Determina o maxItems baseado na coluna de destino
+    const maxItems = destinationId === 'col-1' && currentVariantType === 'sidebargrid'
+      ? getMaxSidebarItems(currentVariant.columns[0].id)
+      : currentVariant.maxItems;
+    
     // Verifica se a coluna de destino tem espaço para todos os artigos selecionados
-    const availableSpace = currentVariant.maxItems - destCol.length;
+    const availableSpace = maxItems - destCol.length;
     const articlesToMove = selectedArticles.slice(0, availableSpace);
     
     // Insere os artigos na posição de destino
@@ -287,7 +299,7 @@ const GridManager: React.FC<GridManagerProps> = ({
     
     updateArticlePositions(newColumns);
     setSelectedArticleIds([]); // Limpa a seleção após mover
-  }, [blockState.articles, selectedArticleIds, currentVariant.maxItems, updateArticlePositions]);
+  }, [blockState.articles, selectedArticleIds, currentVariant, currentVariantType, updateArticlePositions, getMaxSidebarItems]);
 
   // Função para iniciar o arrastar - seta o estado de arrastar
   const handleDragStart = useCallback(() => {
@@ -322,13 +334,15 @@ const GridManager: React.FC<GridManagerProps> = ({
     }
 
     // Verifica se há espaço na coluna de destino
-    if (
-      source.droppableId !== destination.droppableId && 
-      destColumn && 
-      blockState.articles[destination.droppableId] && 
-      blockState.articles[destination.droppableId].length >= currentVariant.maxItems
-    ) {
-      return;
+    if (source.droppableId !== destination.droppableId && destColumn) {
+      const destArticles = blockState.articles[destination.droppableId] || [];
+      const maxItems = destination.droppableId === 'col-1' && currentVariantType === 'sidebargrid'
+        ? getMaxSidebarItems(currentVariant.columns[0].id)
+        : currentVariant.maxItems;
+
+      if (destArticles.length >= maxItems) {
+        return;
+      }
     }
 
     // Comportamento padrão para um único artigo
@@ -347,7 +361,7 @@ const GridManager: React.FC<GridManagerProps> = ({
     };
 
     updateArticlePositions(newColumns);
-  }, [blockState.articles, currentVariant, updateArticlePositions, selectedArticleIds, moveMultipleArticles]);
+  }, [blockState.articles, currentVariant, currentVariantType, updateArticlePositions, selectedArticleIds, moveMultipleArticles, getMaxSidebarItems]);
 
   const handleSave = useCallback(() => {
     onSave(getApiFormat());
@@ -385,8 +399,13 @@ const GridManager: React.FC<GridManagerProps> = ({
 
   const renderFeaturedLayout = useMemo(() => (
     <div className={currentVariant?.layout?.container} style={dragStyles.draggingContainer}>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="col-span-2">
+      <div className={currentVariant?.layout?.grid}>
+        <div className="relative">
+          <div className="absolute -left-2 top-0 bottom-0 w-1 bg-green-500 rounded-full"></div>
+          <div className="mb-2 flex items-center">
+            <span className="text-sm font-medium text-green-500">Featured</span>
+            <span className="ml-2 text-xs text-gray-500">(Artigos em destaque)</span>
+          </div>
           <DroppableColumn
             key={currentVariant?.columns[0]?.id}
             columnId={currentVariant?.columns[0]?.id}
@@ -400,7 +419,12 @@ const GridManager: React.FC<GridManagerProps> = ({
             useCompactView={true}
           />
         </div>
-        <div className="col-span-1">
+        <div className="relative mt-8">
+          <div className="absolute -left-2 top-0 bottom-0 w-1 bg-amber-500 rounded-full"></div>
+          <div className="mb-2 flex items-center">
+            <span className="text-sm font-medium text-amber-500">Secondary</span>
+            <span className="ml-2 text-xs text-gray-500">(Artigos secundários)</span>
+          </div>
           <DroppableColumn
             key={currentVariant?.columns[1]?.id}
             columnId={currentVariant?.columns[1]?.id}
@@ -420,8 +444,13 @@ const GridManager: React.FC<GridManagerProps> = ({
 
   const renderSidebarLayout = useMemo(() => (
     <div className={currentVariant.layout.container} style={dragStyles.draggingContainer}>
-      <div className={currentVariant.layout.wrapper || ''}>
-        <div className="w-full md:w-2/3">
+      <div className={currentVariant.layout.grid}>
+        <div className="relative">
+          <div className="absolute -left-2 top-0 bottom-0 w-1 bg-blue-500 rounded-full"></div>
+          <div className="mb-2 flex items-center">
+            <span className="text-sm font-medium text-blue-500">Main</span>
+            <span className="ml-2 text-xs text-gray-500">(Conteúdo principal)</span>
+          </div>
           <DroppableColumn
             key={currentVariant.columns[0].id}
             columnId={currentVariant.columns[0].id}
@@ -435,12 +464,17 @@ const GridManager: React.FC<GridManagerProps> = ({
             useCompactView={true}
           />
         </div>
-        <div className="w-full md:w-1/3">
+        <div className="relative mt-8">
+          <div className="absolute -left-2 top-0 bottom-0 w-1 bg-purple-500 rounded-full"></div>
+          <div className="mb-2 flex items-center">
+            <span className="text-sm font-medium text-purple-500">Sidebar</span>
+            <span className="ml-2 text-xs text-gray-500">(Conteúdo secundário)</span>
+          </div>
           <DroppableColumn
             key={currentVariant.columns[1].id}
             columnId={currentVariant.columns[1].id}
             articles={blockState.articles[currentVariant.columns[1].id] || []}
-            maxItems={currentVariant.maxItems}
+            maxItems={getMaxSidebarItems(currentVariant.columns[0].id)}
             isDarkTheme={isDarkTheme}
             label={currentVariant.columns[1].title}
             blockConfig={blockConfig}
@@ -451,12 +485,17 @@ const GridManager: React.FC<GridManagerProps> = ({
         </div>
       </div>
     </div>
-  ), [blockState.articles, currentVariant, isDarkTheme, blockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
+  ), [blockState.articles, currentVariant, isDarkTheme, blockConfig, handleRemoveArticle, dragStyles.draggingContainer, getMaxSidebarItems]);
 
   const renderNewsFeedLayout = useMemo(() => (
     <div className={currentVariant.layout.container} style={dragStyles.draggingContainer}>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="col-span-2">
+      <div className={currentVariant.layout.grid}>
+        <div className="relative">
+          <div className="absolute -left-2 top-0 bottom-0 w-1 bg-blue-500 rounded-full"></div>
+          <div className="mb-2 flex items-center">
+            <span className="text-sm font-medium text-blue-500">Main Feed</span>
+            <span className="ml-2 text-xs text-gray-500">(Artigos principais)</span>
+          </div>
           <DroppableColumn
             key={currentVariant.columns[0].id}
             columnId={currentVariant.columns[0].id}
@@ -470,7 +509,12 @@ const GridManager: React.FC<GridManagerProps> = ({
             useCompactView={true}
           />
         </div>
-        <div className="col-span-1">
+        <div className="relative mt-8">
+          <div className="absolute -left-2 top-0 bottom-0 w-1 bg-purple-500 rounded-full"></div>
+          <div className="mb-2 flex items-center">
+            <span className="text-sm font-medium text-purple-500">Side Feed</span>
+            <span className="ml-2 text-xs text-gray-500">(Artigos secundários)</span>
+          </div>
           <DroppableColumn
             key={currentVariant.columns[1].id}
             columnId={currentVariant.columns[1].id}
@@ -489,21 +533,39 @@ const GridManager: React.FC<GridManagerProps> = ({
   ), [blockState.articles, currentVariant, isDarkTheme, blockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
 
   const renderStandardLayout = useMemo(() => (
-    <div className={currentVariant.layout.wrapper || ''} style={dragStyles.draggingContainer}>
-      {currentVariant.columns.map(column => (
-        <DroppableColumn
-          key={column.id}
-          columnId={column.id}
-          articles={blockState.articles[column.id] || []}
-          maxItems={currentVariant.maxItems}
-          isDarkTheme={isDarkTheme}
-          label={column.title}
-          blockConfig={blockConfig}
-          handleRemoveArticle={handleRemoveArticle}
-          variant="standard"
-          useCompactView={true}
-        />
-      ))}
+    <div className={currentVariant.layout.container} style={dragStyles.draggingContainer}>
+      <div className={currentVariant.layout.grid}>
+        {currentVariant.columns.map((column, index) => (
+          <div key={column.id} className="relative">
+            <div className={`absolute -left-2 top-0 bottom-0 w-1 rounded-full ${
+              index === 0 ? 'bg-indigo-500' :
+              index === 1 ? 'bg-pink-500' :
+              'bg-cyan-500'
+            }`}></div>
+            <div className="mb-2 flex items-center">
+              <span className={`text-sm font-medium ${
+                index === 0 ? 'text-indigo-500' :
+                index === 1 ? 'text-pink-500' :
+                'text-cyan-500'
+              }`}>{column.title}</span>
+              <span className="ml-2 text-xs text-gray-500">(Coluna {index + 1})</span>
+            </div>
+            <DroppableColumn
+              key={column.id}
+              columnId={column.id}
+              articles={blockState.articles[column.id] || []}
+              maxItems={currentVariant.maxItems}
+              isDarkTheme={isDarkTheme}
+              label={column.title}
+              blockConfig={blockConfig}
+              handleRemoveArticle={handleRemoveArticle}
+              variant="standard"
+              useCompactView={true}
+            />
+            {index < currentVariant.columns.length - 1 && <div className="mt-8" />}
+          </div>
+        ))}
+      </div>
     </div>
   ), [blockState.articles, currentVariant, isDarkTheme, blockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
 
