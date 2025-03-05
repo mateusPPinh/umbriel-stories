@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Article } from '../../PageblockV2/types';
 import { useBlockState } from '../hooks/useBlockState';
@@ -8,7 +8,9 @@ import LayoutPreview from './LayoutPreview';
 import ArticlesPool from './ArticlesPool';
 import { BlockConfig } from './StyleConfigModal';
 import { GridVariantType, VariantType, Column, GridVariant } from '../types';
-
+import Sidebar from './Sidebar';
+import { PageResponse } from '../interfaces/pages.types';
+import { Editorial } from '../interfaces/editorial.types';
 // Definindo os layouts de grid disponíveis
 const GRID_VARIANTS: Record<GridVariantType, GridVariant> = {
   standard: {
@@ -100,6 +102,13 @@ interface GridManagerProps {
   blockConfig: BlockConfig;
   onConfigClick: () => void;
   isPreviewOnly?: boolean;
+  pageData?: PageResponse[];
+  editorialsData?: Editorial;
+  isPagesLoading?: boolean;
+  isEditorialsLoading?: boolean;
+  onPageSelect?: (pageId: string) => void;
+  onEditorialSelect?: (editorialId: string, subEditorialId?: string) => void;
+  onPublishBlock?: () => void;
 }
 
 interface HeadingProps {
@@ -122,7 +131,14 @@ const GridManager: React.FC<GridManagerProps> = ({
   variant = 'standard',
   blockConfig,
   onConfigClick,
-  isPreviewOnly = false
+  isPreviewOnly = false,
+  pageData,
+  editorialsData,
+  isPagesLoading = false,
+  isEditorialsLoading = false,
+  onPageSelect,
+  onEditorialSelect,
+  onPublishBlock
 }) => {
   const {
     blockState,
@@ -131,14 +147,17 @@ const GridManager: React.FC<GridManagerProps> = ({
     updateVariantPosition,
     updateBlockPosition,
     updateBlockConfig,
+    updateBlockIdentifiers,
     getApiFormat,
-    handleRemoveArticle
+    handleRemoveArticle,
   } = useBlockState({
     pageId,
     template: 'grid',
     initialArticles: articles,
     initialVariant: variant,
-    blockPosition: 1
+    blockPosition: 1,
+    pageData: pageData,
+    editorialsData: editorialsData
   });
   
   const [showVariantSelector, setShowVariantSelector] = useState<boolean>(false);
@@ -410,6 +429,26 @@ const GridManager: React.FC<GridManagerProps> = ({
     }
   }, [currentVariantType, renderMasonryLayout, renderFeaturedLayout, renderSidebarLayout, renderNewsFeedLayout, renderStandardLayout]);
 
+  const handlePageSelect = useCallback((selectedPageId: string) => {
+    updateBlockIdentifiers(selectedPageId, undefined, undefined);
+    if (onPageSelect) {
+      onPageSelect(selectedPageId);
+    }
+  }, [updateBlockIdentifiers, onPageSelect]);
+
+  const handleEditorialSelect = useCallback((selectedEditorialId: string, selectedSubEditorialId?: string) => {
+    updateBlockIdentifiers(undefined, selectedEditorialId, selectedSubEditorialId);
+    if (onEditorialSelect) {
+      onEditorialSelect(selectedEditorialId, selectedSubEditorialId);
+    }
+  }, [updateBlockIdentifiers, onEditorialSelect]);
+
+  const handleClearSelection = useCallback(() => {
+    // Não limpa o pageId pois ele é obrigatório na inicialização
+    // Apenas limpa as seleções de editorias
+    updateBlockIdentifiers(pageId, undefined, undefined);
+  }, [pageId, updateBlockIdentifiers]);
+
   return (
     <div className="flex flex-col gap-4">
       {!isPreviewOnly && (
@@ -458,9 +497,23 @@ const GridManager: React.FC<GridManagerProps> = ({
         </div>
       ) : (
         <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-          <div className="flex flex-row gap-4 w-full">
+          <div className="flex flex-row gap-4 w-full h-full">
             {/* Item 1: Lista de artigos (Pool) - Coluna estreita */}
-            <div className="w-1/12 min-w-[120px]" style={{ maxHeight: '70vh', overflow: 'hidden' }}>
+            <Sidebar 
+              pageData={pageData}
+              editorialsData={editorialsData}
+              isPagesLoading={isPagesLoading}
+              isEditorialsLoading={isEditorialsLoading}
+              blockConfig={blockConfig}
+              onPageSelect={handlePageSelect}
+              onEditorialSelect={handleEditorialSelect}
+              onClearSelection={handleClearSelection}
+              onPublishBlock={onPublishBlock}
+              onSave={() => {}}
+              onConfigClick={() => {}}
+              className='max-w-[320px] w-full p-0'
+            >
+               <div className="w-full scrollable-container" style={{ maxHeight: '35vh', overflowY: 'auto', marginBottom: '10px' }}>
               <ArticlesPool
                 articles={blockState.articles.pool}
                 isDarkTheme={isDarkTheme}
@@ -469,6 +522,7 @@ const GridManager: React.FC<GridManagerProps> = ({
                 isCompact={true}
               />
             </div>
+            </Sidebar>
             
             {/* Item 2: Colunas para os artigos - Coluna mais estreita */}
             <div className="w-1/4 min-w-[250px]" style={{ maxHeight: '70vh', overflow: 'auto' }}>

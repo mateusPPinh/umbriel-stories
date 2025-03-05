@@ -87,11 +87,15 @@ export interface BlockVariant {
 }
 
 export interface PageBlock {
-  pageId: string;
+  pageId?: string;
+  editorialId?: string;
+  subEditorialId?: string;
   blockType: BlockType;
   blockPosition: number;
   template: TemplateType;
   variants: BlockVariant[];
+  pageData?: any;
+  editorialsData?: any;
 }
 
 // Interface para o estado local que será usado no componente

@@ -2,6 +2,8 @@ import React, { useState, useCallback, useMemo, useRef, useTransition } from 're
 import { Article } from '../PageblockV2/types';
 import type { BlockConfig } from './components/StyleConfigModal';
 import { GridVariantType, MixedVariantType, FeaturedVariantType, ListVariantType } from './types';
+import { PageResponse } from './interfaces/pages.types';
+import { Editorial } from './interfaces/editorial.types';
 
 // Static imports
 import GridManager from './components/GridManager';
@@ -66,6 +68,13 @@ interface BlockManagerDragDropProps {
   pageId: string;
   config?: BlockConfig;
   className?: string;
+  pageData?: PageResponse[];
+  editorialsData?: Editorial;
+  isPagesLoading?: boolean;
+  isEditorialsLoading?: boolean;
+  onPageSelect?: (pageId: string) => void;
+  onEditorialSelect?: (editorialId: string, subEditorialId?: string) => void;
+  onPublishBlock?: () => void;
 }
 
 const BlockManagerDragDrop = React.memo(({
@@ -76,7 +85,14 @@ const BlockManagerDragDrop = React.memo(({
   variant,
   pageId,
   config,
-  className
+  className,
+  pageData,
+  editorialsData,
+  isPagesLoading = false,
+  isEditorialsLoading = false,
+  onPageSelect,
+  onEditorialSelect,
+  onPublishBlock
 }: BlockManagerDragDropProps) => {
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [blockConfig, setBlockConfig] = useState<BlockConfig>(config || defaultBlockConfig);
@@ -148,6 +164,13 @@ const BlockManagerDragDrop = React.memo(({
           blockConfig={blockConfig}
           onConfigClick={handleOpenConfigModal}
           isPreviewOnly={isPreviewOnly}
+          pageData={pageData}
+          editorialsData={editorialsData}
+          isPagesLoading={isPagesLoading}
+          isEditorialsLoading={isEditorialsLoading}
+          onPageSelect={onPageSelect}
+          onEditorialSelect={onEditorialSelect}
+          onPublishBlock={onPublishBlock}
         />
       )}
 

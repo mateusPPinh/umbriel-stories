@@ -4,39 +4,7 @@ import { List, AutoSizer, ListRowProps } from 'react-virtualized';
 import { Article } from '../../PageblockV2/types';
 import debounce from 'lodash/debounce';
 import ArticleCompactPreview from './ArticleCompactPreview';
-
-interface BlockConfig {
-  styles: {
-    theme: {
-      light: {
-        columnStyle?: {
-          background?: string;
-          itemBackground?: string;
-          padding?: string;
-        };
-        headingProps?: {
-          color?: string;
-        };
-        subtitleProps?: {
-          color?: string;
-        };
-      };
-      dark: {
-        columnStyle?: {
-          background?: string;
-          itemBackground?: string;
-          padding?: string;
-        };
-        headingProps?: {
-          color?: string;
-        };
-        subtitleProps?: {
-          color?: string;
-        };
-      };
-    };
-  };
-}
+import { BlockConfig } from '../components/StyleConfigModal';
 
 // Estendendo o tipo Article para incluir featuredImage e excerpt
 interface ExtendedArticle extends Article {
@@ -147,24 +115,37 @@ const ArticlesPool: React.FC<ArticlesPoolProps> = ({
 
   const renderArticle = (article: Article, style: ListRowProps['style']) => {
     const isUsed = usedArticleIds.includes(article.id);
+    
+    // Criar um ID estável para o draggable
+    const draggableId = `article-${article.id}`;
+    
+    // Garantir que o estilo tenha as propriedades necessárias
+    const safeStyle = {
+      position: 'absolute' as const,
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: isCompact ? '80px' : '100px',
+      ...style
+    };
 
     return (
       <Draggable
         key={article.id}
-        draggableId={String(article.id)}
+        draggableId={draggableId}
         index={articles.findIndex(a => a.id === article.id)}
         isDragDisabled={isUsed}
       >
         {(provided, snapshot) => {
-          const combinedStyle: CSSProperties = {
+          const combinedStyle = {
             ...provided.draggableProps.style,
             opacity: isUsed ? 0.5 : snapshot.isDragging ? 0.7 : 1,
             transform: snapshot.isDragging ? provided.draggableProps.style?.transform : 'translate3d(0, 0, 0)',
             willChange: 'transform',
             pointerEvents: isUsed ? 'none' : 'auto',
-            position: 'absolute',
-            ...(style as CSSProperties)
-          };
+            ...safeStyle,
+            zIndex: snapshot.isDragging ? 9999 : 'auto',
+          } as React.CSSProperties;
 
           return (
             <div
@@ -177,6 +158,7 @@ const ArticlesPool: React.FC<ArticlesPoolProps> = ({
                 ${isUsed ? 'cursor-not-allowed' : 'cursor-grab'}
                 ${snapshot.isDragging ? 'shadow-lg z-10' : 'shadow-sm'}
               `}
+              data-article-id={article.id}
             >
               <ArticleCompactPreview
                 article={article}
@@ -184,8 +166,8 @@ const ArticlesPool: React.FC<ArticlesPoolProps> = ({
                 isDarkTheme={isDarkTheme}
                 blockConfig={blockConfig}
               />
-              {isUsed && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 dark:bg-opacity-50">
+              {usedArticleIds.includes(article.id) && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
                   <span className="text-xs font-medium text-white px-2 py-1 rounded-full bg-blue-500">
                     Em uso
                   </span>
@@ -201,52 +183,42 @@ const ArticlesPool: React.FC<ArticlesPoolProps> = ({
   const rowRenderer = useCallback(({ index, style }: ListRowProps) => {
     const article = filteredArticles[index];
     if (!article) return null;
-    return renderArticle(article, style);
-  }, [filteredArticles, renderArticle]);
+    
+    // Garantir que o estilo tenha as propriedades necessárias
+    const safeStyle = {
+      ...style,
+      position: 'absolute' as const,
+      top: style.top || 0,
+      left: style.left || 0,
+      width: style.width || '100%',
+      height: isCompact ? 80 : 100,
+    };
+    
+    return renderArticle(article, safeStyle as React.CSSProperties);
+  }, [filteredArticles, renderArticle, isCompact]);
 
-  const getRowHeight = useCallback(({ index }: { index: number }) => {
+  const getRowHeight = useCallback(() => {
     return isCompact ? 80 : 100;
   }, [isCompact]);
 
   return (
-    <div className="articles-pool h-full flex flex-col">
-      <div className="mb-4">
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
-          <input
-            type="text"
-            placeholder="Pesquisar artigos..."
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 text-sm"
-            onChange={handleSearchChange}
-          />
-        </div>
-      </div>
-
+    <div className="articles-pool w-full">
       <Droppable
         droppableId="pool"
-        mode="virtual"
-        renderClone={(provided, snapshot, rubric) => (
-          <div
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            ref={provided.innerRef}
-          >
-            {renderArticle(filteredArticles[rubric.source.index], {})}
-          </div>
-        )}
+        isDropDisabled={true}
       >
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
-            className="flex-1 p-3 rounded-lg"
+            {...provided.droppableProps}
+            className="rounded-lg"
             style={{
               backgroundColor: theme?.columnStyle?.background || (isDarkTheme ? '#1a202c' : '#f7fafc'),
-              height: 'calc(100vh - 200px)' // Adjust this value based on your layout
+              minHeight: '200px',
+              height: '100%',
+              padding: '8px',
             }}
+            data-droppable-id="pool"
           >
             {filteredArticles.length === 0 ? (
               <div className="text-center py-4">
@@ -255,19 +227,53 @@ const ArticlesPool: React.FC<ArticlesPoolProps> = ({
                 </p>
               </div>
             ) : (
-              <AutoSizer>
-                {({ width, height }: AutoSizerProps) => (
-                  <List
-                    ref={listRef}
-                    width={width}
-                    height={height}
-                    rowCount={filteredArticles.length}
-                    rowHeight={getRowHeight}
-                    rowRenderer={rowRenderer}
-                    overscanRowCount={5}
-                  />
-                )}
-              </AutoSizer>
+              <div className="space-y-2">
+                {filteredArticles.map((article, index) => {
+                  const isUsed = usedArticleIds.includes(article.id);
+                  return (
+                    <Draggable
+                      key={article.id}
+                      draggableId={`article-${article.id}`}
+                      index={index}
+                      isDragDisabled={isUsed}
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className={`
+                            relative rounded-md overflow-hidden transition-all duration-100
+                            ${isUsed ? 'opacity-50' : ''}
+                            ${snapshot.isDragging ? 'shadow-lg z-10' : 'shadow-sm'}
+                          `}
+                          style={{
+                            ...provided.draggableProps.style,
+                            height: isCompact ? '30px' : '30px',
+                            cursor: isUsed ? 'not-allowed' : 'grab'
+                          }}
+                          data-article-id={article.id}
+                        >
+                          <ArticleCompactPreview
+                            article={article}
+                            columnId="pool"
+                            isDarkTheme={isDarkTheme}
+                            blockConfig={blockConfig}
+                          />
+                          {isUsed && (
+                            <div className="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center">
+                              <span className="text-xs font-medium text-gray-600 px-2 py-1 rounded-full bg-gray-200">
+                                Em uso
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                })}
+                {provided.placeholder}
+              </div>
             )}
           </div>
         )}

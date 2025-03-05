@@ -2,6 +2,8 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { Article } from '../PageblockV2/types';
 import type { BlockConfig } from './components/StyleConfigModal';
 import { GridVariantType, MixedVariantType, FeaturedVariantType, ListVariantType } from './types';
+import { PageResponse } from './interfaces/pages.types';
+import { Editorial } from './interfaces/editorial.types';
 
 // Static imports
 import GridManager from './components/GridManager';
@@ -64,6 +66,14 @@ interface BlockManagerDragDropProps {
   onSave: (columns: { [key: string]: Article[] }) => void;
   variant?: string;
   pageId: string;
+  pageData?: PageResponse[];
+  editorialsData?: Editorial;
+  isPagesLoading?: boolean;
+  isEditorialsLoading?: boolean;
+  onPageSelect?: (pageId: string) => void;
+  onEditorialSelect?: (editorialId: string, subEditorialId?: string) => void;
+  onPublishBlock?: () => void;
+  showSidebar?: boolean;
 }
 
 const BlockManagerDragDrop = React.memo(({
@@ -72,12 +82,32 @@ const BlockManagerDragDrop = React.memo(({
   isDarkTheme,
   onSave,
   variant,
-  pageId
+  pageId,
+  pageData,
+  editorialsData,
+  isPagesLoading = false,
+  isEditorialsLoading = false,
+  onPageSelect,
+  onEditorialSelect,
+  onPublishBlock
 }: BlockManagerDragDropProps) => {
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [blockConfig, setBlockConfig] = useState<BlockConfig>(defaultBlockConfig);
   const [currentVariant, setCurrentVariant] = useState<string>(variant || 'standard');
   const [isPreviewOnly, setIsPreviewOnly] = useState(false);
+
+  // Garantir que pageData é sempre um array
+  const safePageData = useMemo(() => {
+    return Array.isArray(pageData) ? pageData : [];
+  }, [pageData]);
+
+  // Garantir que editorialsData tem a estrutura correta
+  const safeEditorialsData = useMemo(() => {
+    if (!editorialsData) {
+      return { editorials: [] };
+    }
+    return editorialsData;
+  }, [editorialsData]);
 
   const handleOpenConfigModal = useCallback(() => {
     setIsConfigModalOpen(true);
@@ -103,7 +133,14 @@ const BlockManagerDragDrop = React.memo(({
     blockConfig,
     onConfigClick: handleOpenConfigModal,
     pageId,
-    isPreviewOnly
+    isPreviewOnly,
+    pageData: safePageData,
+    editorialsData: safeEditorialsData,
+    isPagesLoading,
+    isEditorialsLoading,
+    onPageSelect,
+    onEditorialSelect,
+    onPublishBlock
   };
 
   const managers = {

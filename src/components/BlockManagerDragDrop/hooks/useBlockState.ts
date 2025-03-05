@@ -1,5 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { Article } from '../../PageblockV2/types';
+import { PageResponse } from '../interfaces/pages.types';
+import { Editorial } from '../interfaces/editorial.types';
 import { 
   LocalBlockState, 
   BlockVariant, 
@@ -9,11 +11,15 @@ import {
 } from '../types';
 
 interface UseBlockStateProps {
-  pageId: string;
+  pageId?: string;
+  editorialId?: string;
+  subEditorialId?: string;
   template: TemplateType;
   initialVariant: VariantType;
   initialArticles: Article[];
   blockPosition?: number;
+  pageData?: PageResponse[];
+  editorialsData?: Editorial;
 }
 
 interface VariantState {
@@ -27,10 +33,14 @@ interface VariantState {
 
 export const useBlockState = ({
   pageId,
+  editorialId,
+  subEditorialId,
   template,
   initialVariant,
   initialArticles,
-  blockPosition = 1
+  blockPosition = 1,
+  pageData,
+  editorialsData
 }: UseBlockStateProps) => {
   // Track drag state
   const isDraggingRef = useRef(false);
@@ -407,9 +417,13 @@ export const useBlockState = ({
 
     return {
       pageId,
+      editorialId,
+      subEditorialId,
       blockType: 'articles',
       blockPosition,
       template,
+      pageData,
+      editorialsData,
       currentVariant: {
         variantType: initialVariant,
         variantPosition: 1,
@@ -550,6 +564,16 @@ export const useBlockState = ({
     });
   }, []);
 
+  // Atualizar o pageId, editorialId ou subEditorialId
+  const updateBlockIdentifiers = useCallback((newPageId?: string, newEditorialId?: string, newSubEditorialId?: string) => {
+    setBlockState(prev => ({
+      ...prev,
+      pageId: newPageId || prev.pageId,
+      editorialId: newEditorialId || prev.editorialId,
+      subEditorialId: newSubEditorialId || prev.subEditorialId
+    }));
+  }, []);
+
   // Função para gerar o formato final para a API
   const getApiFormat = () => {
     const { currentVariant } = blockState;
@@ -569,8 +593,7 @@ export const useBlockState = ({
       articles: columnsArticlesConfig
     };
 
-    return {
-      pageId: blockState.pageId,
+    const apiData = {
       blockType: 'articles',
       blockPosition: blockState.blockPosition,
       template: blockState.template,
@@ -582,6 +605,22 @@ export const useBlockState = ({
         }
       ]
     };
+
+    // Adicionar pageId ou editorialId conforme disponível
+    if (blockState.pageId) {
+      return {
+        ...apiData,
+        pageId: blockState.pageId
+      };
+    } else if (blockState.editorialId) {
+      return {
+        ...apiData,
+        editorialId: blockState.editorialId,
+        ...(blockState.subEditorialId ? { subEditorialId: blockState.subEditorialId } : {})
+      };
+    }
+
+    return apiData;
   };
 
   // Retorna o estado atual da variante selecionada
@@ -628,19 +667,13 @@ export const useBlockState = ({
   }, []);
 
   return {
-    blockState: {
-      ...blockState,
-      articles: getCurrentVariantState().articles,
-      currentVariant: {
-        ...blockState.currentVariant,
-        config: getCurrentVariantState().config
-      }
-    },
+    blockState,
     updateArticlePositions,
     updateVariant,
     updateVariantPosition,
     updateBlockPosition,
     updateBlockConfig,
+    updateBlockIdentifiers,
     getApiFormat,
     handleRemoveArticle,
     setDragging
