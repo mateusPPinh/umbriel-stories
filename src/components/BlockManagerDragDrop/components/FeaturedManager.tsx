@@ -6,8 +6,12 @@ import FeaturedLayoutPreview from './FeaturedLayoutPreview';
 import ArticlesPool from './ArticlesPool';
 import { BlockConfig } from './StyleConfigModal';
 import { useBlockState } from '../hooks/useBlockState';
-import { FeaturedVariantType } from '../types';
+import { FeaturedVariantType, ArticleFilters } from '../types';
 import Button from '../../Button';
+import Sidebar from './Sidebar';
+import { PageResponse } from '../interfaces/pages.types';
+import { Editorial } from '../interfaces/editorial.types';
+import DragDropTips from './DragDropTips';
 
 interface FeaturedManagerProps {
   pageId: string;
@@ -18,6 +22,13 @@ interface FeaturedManagerProps {
   blockConfig: BlockConfig;
   onConfigClick: () => void;
   isPreviewOnly?: boolean;
+  pageData?: PageResponse[];
+  editorialsData?: Editorial;
+  isPagesLoading?: boolean;
+  isEditorialsLoading?: boolean;
+  onPageSelect?: (pageId: string) => void;
+  onEditorialSelect?: (editorialId: string, subEditorialId?: string) => void;
+  onPublishBlock?: () => void;
 }
 
 const FeaturedManager: React.FC<FeaturedManagerProps> = ({ 
@@ -26,103 +37,54 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
   isDarkTheme, 
   onSave, 
   variant = 'hero',
-  blockConfig,
+  blockConfig: externalBlockConfig,
   onConfigClick,
-  isPreviewOnly = false
+  isPreviewOnly = false,
+  pageData = [],
+  editorialsData,
+  isPagesLoading = false,
+  isEditorialsLoading = false,
+  onPageSelect,
+  onEditorialSelect,
+  onPublishBlock
 }) => {
   const {
     blockState,
     updateArticlePositions,
     updateVariant,
     updateBlockConfig,
+    updateBlockIdentifiers,
     getApiFormat
   } = useBlockState({
     pageId,
     template: 'featured',
     initialVariant: variant,
-    initialArticles: articles
+    initialArticles: articles,
+    pageData: pageData,
+    editorialsData: editorialsData
   });
 
-  const handleDragEnd = useCallback((result: DropResult) => {
-    const { source, destination } = result;
-    
-    // Log para depuração
-    console.log('FeaturedManager - handleDragEnd - result:', result);
-    console.log('FeaturedManager - handleDragEnd - source:', source);
-    console.log('FeaturedManager - handleDragEnd - destination:', destination);
-    
-    if (!destination) return;
+  const [selectedPoolArticleIds, setSelectedPoolArticleIds] = useState<(string | number)[]>([]);
+  const [showTips, setShowTips] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [filters, setFilters] = useState<ArticleFilters>({
+    hasImage: false,
+    limit: 30,
+    searchTerm: '',
+    search: '',
+    page: '',
+    editorial: '',
+    subEditorial: '',
+    isMultiSelectEnabled: false
+  });
 
-    // Se a origem e destino forem iguais e o índice for o mesmo, não fazer nada
-    if (
-      source.droppableId === destination.droppableId &&
-      source.index === destination.index
-    ) return;
+  const handleFiltersChange = useCallback((newFilters: Partial<ArticleFilters>) => {
+    setFilters((prev: ArticleFilters) => ({ ...prev, ...newFilters }));
+  }, []);
 
-    // Verificar se a coluna de destino já atingiu o limite máximo de artigos
-    // Todos os artigos vão para col-0, independente da variante
-    if (
-      source.droppableId !== destination.droppableId && 
-      destination.droppableId === 'col-0' &&
-      blockState.articles['col-0'] && 
-      blockState.articles['col-0'].length >= currentVariant.maxItems
-    ) {
-      console.log('FeaturedManager - Limite máximo de artigos atingido:', currentVariant.maxItems);
-      return;
-    }
-
-    // Usar spread operator para manter as referências aos objetos originais
-    const sourceCol = [...(blockState.articles[source.droppableId] || [])];
-    const destCol = source.droppableId === destination.droppableId
-      ? sourceCol
-      : [...(blockState.articles[destination.droppableId] || [])];
-
-    // Remove o item da origem e mantém a referência ao objeto original
-    const [removed] = sourceCol.splice(source.index, 1);
-
-    // Adiciona o mesmo objeto (não uma cópia) no destino
-    destCol.splice(destination.index, 0, removed);
-
-    // Atualiza o estado
-    const newColumns = {
-      ...blockState.articles,
-      [source.droppableId]: sourceCol,
-      [destination.droppableId]: destCol
-    };
-
-    updateArticlePositions(newColumns);
-  }, [blockState, updateArticlePositions]);
-
-  const handleRemoveArticle = useCallback((columnId: string, articleId: string | number) => {
-    // Encontra o artigo na coluna - garantindo que estamos usando a referência original
-    const article = blockState.articles[columnId]?.find(a => String(a.id) === String(articleId));
-    
-    if (!article) return;
-    
-    // Remove o artigo da coluna
-    const updatedColumn = blockState.articles[columnId]?.filter(a => String(a.id) !== String(articleId)) || [];
-    
-    // Adiciona o artigo de volta à pool - usando a referência original do artigo
-    const updatedPool = [...(blockState.articles.pool || []), article];
-    
-    // Atualiza o estado
-    const newColumns = {
-      ...blockState.articles,
-      [columnId]: updatedColumn,
-      pool: updatedPool
-    };
-    
-    updateArticlePositions(newColumns);
-  }, [blockState, updateArticlePositions]);
-
-  const handleSave = useCallback(() => {
-    const blockData = getApiFormat();
-    onSave?.(blockData);
-  }, [blockState, onSave]);
-
-  const handleVariantChange = useCallback((newVariant: FeaturedVariantType) => {
-    updateVariant(newVariant);
-  }, [updateVariant]);
+  const handlePoolSelectionChange = useCallback((selectedIds: (string | number)[]) => {
+    setSelectedPoolArticleIds(selectedIds);
+  }, []);
 
   const variants = [
     { id: 'hero', label: 'Hero', maxItems: 1 },
@@ -132,13 +94,105 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
 
   const currentVariant = variants.find(v => v.id === blockState.currentVariant.variantType) || variants[0];
 
-  // Função memoizada para evitar cálculos repetidos
+  const handleDragStart = useCallback(() => {
+    setIsDragging(true);
+    document.body.classList.add('reduced-animation');
+    document.body.style.pointerEvents = 'auto';
+  }, []);
+
+  const handleDragEnd = useCallback((result: DropResult) => {
+    document.body.classList.remove('reduced-animation');
+    document.body.style.pointerEvents = '';
+    setIsDragging(false);
+    
+    const { source, destination } = result;
+
+    if (!destination) return;
+
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) return;
+
+    // Determina os artigos selecionados baseado na origem
+    const selectedArticles = source.droppableId === 'pool'
+      ? selectedPoolArticleIds.length > 0
+        ? blockState.articles.pool.filter(article => selectedPoolArticleIds.includes(article.id))
+        : [blockState.articles.pool[source.index]]
+      : blockState.articles[source.droppableId].filter(article => 
+          result.draggableId.includes(String(article.id))
+        );
+
+    if (
+      source.droppableId !== destination.droppableId && 
+      destination.droppableId === 'col-0' && 
+      blockState.articles['col-0'] && 
+      blockState.articles['col-0'].length + selectedArticles.length > currentVariant.maxItems
+    ) {
+      return;
+    }
+
+    const sourceCol = [...(blockState.articles[source.droppableId] || [])];
+    const destCol = source.droppableId === destination.droppableId
+      ? sourceCol
+      : [...(blockState.articles[destination.droppableId] || [])];
+
+    const removedArticles = selectedArticles.map(article => {
+      const index = sourceCol.findIndex(a => a.id === article.id);
+      if (index !== -1) {
+        return sourceCol.splice(index, 1)[0];
+      }
+      return article;
+    });
+
+    destCol.splice(destination.index, 0, ...removedArticles);
+
+    const newColumns = {
+      ...blockState.articles,
+      [source.droppableId]: sourceCol,
+      [destination.droppableId]: destCol
+    };
+
+    updateArticlePositions(newColumns);
+
+    if (source.droppableId === 'pool') {
+      setSelectedPoolArticleIds([]);
+    }
+  }, [blockState.articles, selectedPoolArticleIds, currentVariant.maxItems, updateArticlePositions]);
+
+  const handleRemoveArticles = useCallback((columnId: string, articleIds: (string | number)[]) => {
+    const articlesToRemove = blockState.articles[columnId]?.filter(article => 
+      articleIds.some(id => String(id) === String(article.id))
+    );
+    
+    if (!articlesToRemove?.length) return;
+    
+    const updatedColumn = blockState.articles[columnId]?.filter(article => 
+      !articleIds.some(id => String(id) === String(article.id))
+    ) || [];
+    
+    const updatedPool = [...(blockState.articles.pool || []), ...articlesToRemove];
+    
+    const newColumns = {
+      ...blockState.articles,
+      [columnId]: updatedColumn,
+      pool: updatedPool
+    };
+    
+    updateArticlePositions(newColumns);
+  }, [blockState.articles, updateArticlePositions]);
+
+  const handleRemoveArticle = useCallback((columnId: string, articleId: string | number) => {
+    handleRemoveArticles(columnId, [articleId]);
+  }, [handleRemoveArticles]);
+
   const getUsedArticleIds = useCallback(() => {
     const usedIds: (string | number)[] = [];
     
-    Object.keys(blockState.articles).forEach(colKey => {
-      if (colKey !== 'pool') {
-        blockState.articles[colKey].forEach(article => {
+    Object.keys(blockState.articles).forEach(colId => {
+      if (colId !== 'pool') {
+        const columnArticles = blockState.articles[colId] || [];
+        columnArticles.forEach(article => {
           usedIds.push(article.id);
         });
       }
@@ -147,135 +201,204 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
     return usedIds;
   }, [blockState.articles]);
 
-  // Determinar se devemos mostrar a coluna secundária com base na variante
-  const shouldShowSecondaryColumn = false; // Removemos a coluna secundária, todos os artigos vão para col-0
+  const handlePageSelect = useCallback((pageId: string) => {
+    updateBlockIdentifiers(pageId, undefined, undefined);
+    onPageSelect?.(pageId);
+    setFilters((prev: ArticleFilters) => ({
+      ...prev,
+      page: pageId,
+      editorial: '',
+      subEditorial: ''
+    }));
+  }, [onPageSelect, updateBlockIdentifiers]);
 
-  // Memoizar o conteúdo renderizado para evitar re-renderizações desnecessárias
-  const renderContent = useMemo(() => {
-    // Log para depuração
-    console.log('FeaturedManager - blockState:', blockState);
-    console.log('FeaturedManager - currentVariant:', blockState.currentVariant);
-    console.log('FeaturedManager - articles col-0:', blockState.articles['col-0']);
-    
-    if (isPreviewOnly) {
-      return (
-        <div className="w-full">
-          <FeaturedLayoutPreview
-            variantType={blockState.currentVariant.variantType}
-            columns={blockState.articles}
-            isDarkTheme={isDarkTheme}
-            blockConfig={blockConfig}
-          />
-        </div>
+  const handleEditorialSelect = useCallback((editorialId: string, subEditorialId?: string) => {
+    updateBlockIdentifiers(undefined, editorialId, subEditorialId);
+    onEditorialSelect?.(editorialId, subEditorialId);
+    setFilters((prev: ArticleFilters) => ({
+      ...prev,
+      editorial: editorialId,
+      subEditorial: subEditorialId || '',
+      page: ''
+    }));
+  }, [onEditorialSelect, updateBlockIdentifiers]);
+
+  const handleClearSelection = useCallback(() => {
+    updateBlockIdentifiers(pageId, undefined, undefined);
+    setFilters((prev: ArticleFilters) => ({
+      ...prev,
+      page: '',
+      editorial: '',
+      subEditorial: ''
+    }));
+  }, [pageId, updateBlockIdentifiers]);
+
+  // Filter articles based on current filters
+  const filteredArticles = useMemo(() => {
+    let filtered = blockState.articles.pool;
+
+    if (filters.hasImage) {
+      filtered = filtered.filter(article => {
+        const desktopImage = article.content?.image?.desktop_image_path;
+        const mobileImage = article.content?.image?.mobile_image_path;
+        
+        const hasValidDesktopImage = desktopImage && typeof desktopImage === 'string' && desktopImage.trim().length > 0;
+        const hasValidMobileImage = mobileImage && typeof mobileImage === 'string' && mobileImage.trim().length > 0;
+        
+        return hasValidDesktopImage || hasValidMobileImage;
+      });
+    }
+
+    if (filters.searchTerm) {
+      const searchLower = filters.searchTerm.toLowerCase();
+      filtered = filtered.filter(article => 
+        article.title.toLowerCase().includes(searchLower) ||
+        article.subtitle?.toLowerCase().includes(searchLower)
       );
     }
-    
-    return (
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Área de artigos disponíveis */}
-          <div className="md:col-span-1">
-            <ArticlesPool
-              articles={blockState.articles.pool}
+
+    return filtered.slice(0, filters.limit);
+  }, [blockState.articles.pool, filters]);
+
+  return (
+    <div className="relative">
+      <DragDropTips 
+        isDarkTheme={isDarkTheme} 
+        isForced={showTips}
+        onDismiss={() => setShowTips(false)}
+      />
+
+      <div className="flex flex-col gap-4">
+        {!isPreviewOnly && (
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <h2 className="text-lg font-medium text-gray-900 dark:text-white">
+                Gerenciador de Destaque
+              </h2>
+              <div className="flex items-center gap-2">
+                <label htmlFor="variant-select" className="text-sm text-gray-600 dark:text-gray-400">
+                  Variante:
+                </label>
+                <select
+                  id="variant-select"
+                  value={blockState.currentVariant.variantType}
+                  onChange={(e) => updateVariant(e.target.value as FeaturedVariantType)}
+                  className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                >
+                  {variants.map(variant => (
+                    <option key={variant.id} value={variant.id}>
+                      {variant.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowTips(true)}
+                className={`
+                  p-2 rounded-full transition-colors
+                  ${isDarkTheme 
+                    ? 'hover:bg-gray-700 text-gray-400 hover:text-gray-300' 
+                    : 'hover:bg-gray-100 text-gray-500 hover:text-gray-700'
+                  }
+                `}
+                title="Mostrar dicas de uso"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+                  />
+                </svg>
+              </button>
+              <Button variant="primary" onClick={() => onSave(getApiFormat())}>
+                Salvar
+              </Button>
+              <Button variant="info" onClick={onConfigClick}>
+                Configurar Estilos
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {isPreviewOnly ? (
+          <div className="w-full">
+            <FeaturedLayoutPreview
+              variantType={blockState.currentVariant.variantType}
+              columns={blockState.articles}
               isDarkTheme={isDarkTheme}
-              blockConfig={blockConfig}
-              usedArticleIds={getUsedArticleIds()}
-              isCompact={true}
+              blockConfig={externalBlockConfig}
             />
           </div>
-          
-          {/* Área de colunas e preview */}
-          <div className="md:col-span-2">
-            <div className="mb-4">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <label htmlFor="variant-select" className="text-sm text-gray-600 dark:text-gray-400">
-                      Variante:
-                    </label>
-                    <select
-                      id="variant-select"
-                      value={blockState.currentVariant.variantType}
-                      onChange={(e) => handleVariantChange(e.target.value as FeaturedVariantType)}
-                      className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    >
-                      {variants.map(variant => (
-                        <option key={variant.id} value={variant.id}>
-                          {variant.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+        ) : (
+          <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+            <div className="flex flex-row gap-4 w-full h-full">
+              {/* Item 1: Lista de artigos (Pool) - Coluna estreita */}
+              <Sidebar 
+                pageData={pageData}
+                editorialsData={editorialsData}
+                isPagesLoading={isPagesLoading}
+                isEditorialsLoading={isEditorialsLoading}
+                blockConfig={externalBlockConfig}
+                filters={filters}
+                onFiltersChange={handleFiltersChange}
+                onPageSelect={handlePageSelect}
+                onEditorialSelect={handleEditorialSelect}
+                onClearSelection={handleClearSelection}
+                onPublishBlock={onPublishBlock}
+                onSave={() => {}}
+                onConfigClick={() => {}}
+                className='max-w-[320px] w-full p-0'
+              >
+                <div className="w-full scrollable-container" style={{ maxHeight: '35vh', overflowY: 'auto', marginBottom: '10px' }}>
+                  <ArticlesPool
+                    articles={filteredArticles}
+                    isDarkTheme={isDarkTheme}
+                    blockConfig={externalBlockConfig}
+                    usedArticleIds={getUsedArticleIds()}
+                    isCompact={true}
+                    isMultiSelectEnabled={true}
+                    onSelectionChange={handlePoolSelectionChange}
+                  />
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button
-                    onClick={handleSave}
-                    variant="primary"
-                  >
-                    Salvar
-                  </Button>
-                  <Button
-                    onClick={onConfigClick}
-                    variant="secondary"
-                  >
-                    Configurar Estilos
-                  </Button>
+              </Sidebar>
+
+              {/* Item 2: Coluna de artigos e preview */}
+              <div className="flex-1 flex flex-row gap-4">
+                <div className="flex-1 max-h-[70vh] overflow-y-auto">
+                  <DroppableColumn
+                    columnId="col-0"
+                    articles={blockState.articles['col-0'] || []}
+                    isDarkTheme={isDarkTheme}
+                    label="Artigos em Destaque"
+                    maxItems={currentVariant.maxItems}
+                    blockConfig={externalBlockConfig}
+                    handleRemoveArticle={handleRemoveArticle}
+                    handleRemoveArticles={handleRemoveArticles}
+                    variant={blockState.currentVariant.variantType}
+                    useCompactView={true}
+                  />
+                </div>
+                
+                {/* Item 3: Preview */}
+                <div className="flex-1 max-h-[70vh] overflow-y-auto">
+                  <FeaturedLayoutPreview
+                    variantType={blockState.currentVariant.variantType}
+                    columns={blockState.articles}
+                    isDarkTheme={isDarkTheme}
+                    blockConfig={externalBlockConfig}
+                  />
                 </div>
               </div>
             </div>
-            
-            {/* Layout em duas colunas para DroppableColumn e Preview */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Coluna para os artigos */}
-              <div>
-                <DroppableColumn
-                  columnId="col-0"
-                  label={shouldShowSecondaryColumn ? 'Artigo Principal' : 'Artigos em destaque'}
-                  articles={blockState.articles['col-0'] || []}
-                  maxItems={currentVariant.maxItems}
-                  isDarkTheme={isDarkTheme}
-                  blockConfig={blockConfig}
-                  handleRemoveArticle={handleRemoveArticle}
-                  variant={blockState.currentVariant.variantType}
-                  useCompactView={true}
-                />
-              </div>
-              
-              {/* Coluna para o preview */}
-              <div>
-                <FeaturedLayoutPreview
-                  variantType={blockState.currentVariant.variantType}
-                  columns={blockState.articles}
-                  isDarkTheme={isDarkTheme}
-                  blockConfig={blockConfig}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </DragDropContext>
-    );
-  }, [
-    articles, 
-    blockState, 
-    blockConfig, 
-    handleDragEnd, 
-    handleRemoveArticle, 
-    isDarkTheme, 
-    isPreviewOnly, 
-    currentVariant, 
-    shouldShowSecondaryColumn, 
-    getUsedArticleIds,
-    handleSave,
-    onConfigClick
-  ]);
-  
-  return (
-    <div className="featured-manager">
-      {renderContent}
+          </DragDropContext>
+        )}
+      </div>
     </div>
   );
 };
 
-// Exportar com memo para evitar re-renders desnecessários
 export default React.memo(FeaturedManager); 
