@@ -429,25 +429,28 @@ const GridManager: React.FC<GridManagerProps> = ({
     }
   }, [currentVariantType, renderMasonryLayout, renderFeaturedLayout, renderSidebarLayout, renderNewsFeedLayout, renderStandardLayout]);
 
-  const handlePageSelect = useCallback((selectedPageId: string) => {
-    updateBlockIdentifiers(selectedPageId, undefined, undefined);
-    if (onPageSelect) {
-      onPageSelect(selectedPageId);
-    }
-  }, [updateBlockIdentifiers, onPageSelect]);
+  const handlePageSelect = useCallback((pageId: string) => {
+    updateBlockIdentifiers(pageId, undefined, undefined);
+    onPageSelect?.(pageId);
+  }, [onPageSelect, updateBlockIdentifiers]);
 
-  const handleEditorialSelect = useCallback((selectedEditorialId: string, selectedSubEditorialId?: string) => {
-    updateBlockIdentifiers(undefined, selectedEditorialId, selectedSubEditorialId);
-    if (onEditorialSelect) {
-      onEditorialSelect(selectedEditorialId, selectedSubEditorialId);
-    }
-  }, [updateBlockIdentifiers, onEditorialSelect]);
+  const handleEditorialSelect = useCallback((editorialId: string, subEditorialId?: string) => {
+    updateBlockIdentifiers(undefined, editorialId, subEditorialId);
+    onEditorialSelect?.(editorialId, subEditorialId);
+  }, [onEditorialSelect, updateBlockIdentifiers]);
 
   const handleClearSelection = useCallback(() => {
     // Não limpa o pageId pois ele é obrigatório na inicialização
     // Apenas limpa as seleções de editorias
     updateBlockIdentifiers(pageId, undefined, undefined);
   }, [pageId, updateBlockIdentifiers]);
+
+  useEffect(() => {
+    console.log("GridManager: Dados formatados:", {
+      blockState,
+      apiFormat: getApiFormat()
+    });
+  }, [blockState]);
 
   return (
     <div className="flex flex-col gap-4">

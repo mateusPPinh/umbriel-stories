@@ -74,6 +74,7 @@ function Sidebar({
     setSelectedPage('');
     setSelectedEditorial('');
     setSelectedSubEditorial('');
+    setSearchTerm('');
     onClearSelection?.();
   };
 
