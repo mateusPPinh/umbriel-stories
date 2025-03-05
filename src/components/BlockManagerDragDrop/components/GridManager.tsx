@@ -174,6 +174,7 @@ const GridManager: React.FC<GridManagerProps> = ({
     limit: 30,
     searchTerm: ''
   });
+  const [selectedArticleIds, setSelectedArticleIds] = useState<(string | number)[]>([]);
 
   // Add safety check for currentVariant
   const currentVariantType = blockState.currentVariant?.variantType as GridVariantType;
@@ -243,6 +244,49 @@ const GridManager: React.FC<GridManagerProps> = ({
     return usedIds;
   }, [blockState.articles]);
 
+  // Verifica se a variante atual permite múltipla seleção
+  const isMultiSelectEnabled = useMemo(() => {
+    // Se for masonry (1 coluna) ou qualquer variante com maxItems = 1, desabilita
+    if (currentVariantType === 'masonry') return false;
+    
+    // Verifica se alguma coluna tem maxItems = 1
+    const hasColumnWithSingleItem = currentVariant.columns.some(col => {
+      const columnMaxItems = currentVariant.maxItems;
+      return columnMaxItems === 1;
+    });
+
+    return !hasColumnWithSingleItem;
+  }, [currentVariantType, currentVariant]);
+
+  // Função para mover múltiplos artigos
+  const moveMultipleArticles = useCallback((sourceId: string, destinationId: string, destinationIndex: number) => {
+    const sourceCol = [...blockState.articles[sourceId]];
+    const destCol = [...blockState.articles[destinationId]];
+    
+    // Filtra os artigos selecionados da coluna de origem
+    const selectedArticles = sourceCol.filter(article => selectedArticleIds.includes(article.id));
+    
+    // Remove os artigos selecionados da coluna de origem
+    const newSourceCol = sourceCol.filter(article => !selectedArticleIds.includes(article.id));
+    
+    // Verifica se a coluna de destino tem espaço para todos os artigos selecionados
+    const availableSpace = currentVariant.maxItems - destCol.length;
+    const articlesToMove = selectedArticles.slice(0, availableSpace);
+    
+    // Insere os artigos na posição de destino
+    destCol.splice(destinationIndex, 0, ...articlesToMove);
+    
+    // Atualiza o estado
+    const newColumns = {
+      ...blockState.articles,
+      [sourceId]: newSourceCol,
+      [destinationId]: destCol
+    };
+    
+    updateArticlePositions(newColumns);
+    setSelectedArticleIds([]); // Limpa a seleção após mover
+  }, [blockState.articles, selectedArticleIds, currentVariant.maxItems, updateArticlePositions]);
+
   // Função para iniciar o arrastar - seta o estado de arrastar
   const handleDragStart = useCallback(() => {
     setIsDragging(true);
@@ -269,6 +313,13 @@ const GridManager: React.FC<GridManagerProps> = ({
 
     const destColumn = currentVariant.columns.find(col => col.id === destination.droppableId);
     
+    // Se houver artigos selecionados e o drag começou da pool
+    if (selectedArticleIds.length > 0 && source.droppableId === 'pool') {
+      moveMultipleArticles(source.droppableId, destination.droppableId, destination.index);
+      return;
+    }
+
+    // Verifica se há espaço na coluna de destino
     if (
       source.droppableId !== destination.droppableId && 
       destColumn && 
@@ -278,7 +329,7 @@ const GridManager: React.FC<GridManagerProps> = ({
       return;
     }
 
-    // Evitamos modificar o estado se o componente for desmontado
+    // Comportamento padrão para um único artigo
     const sourceCol = [...blockState.articles[source.droppableId]];
     const destCol = source.droppableId === destination.droppableId
       ? sourceCol
@@ -287,16 +338,14 @@ const GridManager: React.FC<GridManagerProps> = ({
     const [removed] = sourceCol.splice(source.index, 1);
     destCol.splice(destination.index, 0, removed);
 
-    // Batching das alterações de estado
     const newColumns = {
       ...blockState.articles,
       [source.droppableId]: sourceCol,
       [destination.droppableId]: destCol
     };
 
-    // Atualizamos o estado em um único lote
     updateArticlePositions(newColumns);
-  }, [blockState.articles, currentVariant, updateArticlePositions]);
+  }, [blockState.articles, currentVariant, updateArticlePositions, selectedArticleIds, moveMultipleArticles]);
 
   const handleSave = useCallback(() => {
     onSave(getApiFormat());
@@ -568,6 +617,8 @@ const GridManager: React.FC<GridManagerProps> = ({
                   blockConfig={blockConfig}
                   usedArticleIds={getUsedArticleIds()}
                   isCompact={true}
+                  isMultiSelectEnabled={isMultiSelectEnabled}
+                  onSelectionChange={setSelectedArticleIds}
                 />
               </div>
             </Sidebar>

@@ -64,8 +64,6 @@ function Sidebar({
   const [selectedSubEditorial, setSelectedSubEditorial] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState('');
 
-  console.log(filters);
-
   const handlePageSelect = (pageId: string) => {
     setSelectedPage(pageId);
     setSelectedEditorial('');

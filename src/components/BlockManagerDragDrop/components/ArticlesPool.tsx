@@ -1,17 +1,8 @@
 import React, { useMemo, useState, useCallback, useRef, useEffect, CSSProperties } from 'react';
-import { Droppable, Draggable } from '@hello-pangea/dnd';
-import { List, AutoSizer, ListRowProps } from 'react-virtualized';
+import { Droppable } from '@hello-pangea/dnd';
 import { Article } from '../../PageblockV2/types';
-import debounce from 'lodash/debounce';
-import ArticleCompactPreview from './ArticleCompactPreview';
 import { BlockConfig } from './StyleConfigModal';
-import DraggableArticle from './DraggableArticle';
-
-// Estendendo o tipo Article para incluir featuredImage e excerpt
-interface ExtendedArticle extends Article {
-  featuredImage?: string;
-  excerpt?: string;
-}
+import SelectableDraggableArticle from './SelectableDraggableArticle';
 
 interface ArticlesPoolProps {
   articles: Article[];
@@ -19,25 +10,8 @@ interface ArticlesPoolProps {
   blockConfig: BlockConfig;
   usedArticleIds: (string | number)[];
   isCompact?: boolean;
-}
-
-interface RowRendererProps extends ListRowProps {
-  style: React.CSSProperties;
-}
-
-interface AutoSizerProps {
-  width: number;
-  height: number;
-}
-
-interface VirtualItem {
-  index: number;
-  style: {
-    height: number;
-    top: number;
-    left: number;
-    right: number;
-  };
+  isMultiSelectEnabled?: boolean;
+  onSelectionChange?: (selectedIds: (string | number)[]) => void;
 }
 
 const ArticlesPool = ({ 
@@ -45,9 +19,45 @@ const ArticlesPool = ({
   isDarkTheme, 
   blockConfig, 
   usedArticleIds,
-  isCompact = false 
+  isCompact = false,
+  isMultiSelectEnabled = true,
+  onSelectionChange
 }: ArticlesPoolProps) => {
-  const availableArticles = articles.filter(article => !usedArticleIds.includes(article.id));
+  const [selectedArticleIds, setSelectedArticleIds] = useState<(string | number)[]>([]);
+  
+  // Memoize availableArticles para evitar recálculos desnecessários
+  const availableArticles = useMemo(() => 
+    articles.filter(article => !usedArticleIds.includes(article.id)),
+    [articles, usedArticleIds]
+  );
+
+  const handleArticleSelect = useCallback((articleId: string | number) => {
+    setSelectedArticleIds(prev => {
+      const newSelection = prev.includes(articleId)
+        ? prev.filter(id => id !== articleId)
+        : [...prev, articleId];
+      return newSelection;
+    });
+  }, []);
+
+  // Notifica mudanças na seleção
+  useEffect(() => {
+    if (onSelectionChange) {
+      onSelectionChange(selectedArticleIds);
+    }
+  }, [selectedArticleIds, onSelectionChange]);
+
+  // Limpa a seleção quando a lista de artigos disponíveis muda significativamente
+  useEffect(() => {
+    // Verifica se algum artigo selecionado não está mais disponível
+    const hasUnavailableSelection = selectedArticleIds.some(
+      id => !availableArticles.find(article => article.id === id)
+    );
+
+    if (hasUnavailableSelection) {
+      setSelectedArticleIds([]);
+    }
+  }, [availableArticles, selectedArticleIds]);
 
   return (
     <div className="w-full">
@@ -55,9 +65,16 @@ const ArticlesPool = ({
         <h3 className={`text-sm font-medium ${isDarkTheme ? 'text-gray-200' : 'text-gray-700'}`}>
           Artigos Disponíveis
         </h3>
-        <span className={`text-xs ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`}>
-          {availableArticles.length} artigos
-        </span>
+        <div className="flex items-center gap-2">
+          {selectedArticleIds.length > 0 && (
+            <span className={`text-xs ${isDarkTheme ? 'text-blue-400' : 'text-blue-600'}`}>
+              {selectedArticleIds.length} selecionado(s)
+            </span>
+          )}
+          <span className={`text-xs ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`}>
+            {availableArticles.length} artigos
+          </span>
+        </div>
       </div>
       
       <Droppable droppableId="pool">
@@ -74,13 +91,16 @@ const ArticlesPool = ({
             {availableArticles.length > 0 ? (
               <div className="space-y-2 p-2">
                 {availableArticles.map((article, index) => (
-                  <DraggableArticle
+                  <SelectableDraggableArticle
                     key={article.id}
                     article={article}
                     index={index}
                     isDarkTheme={isDarkTheme}
-                    blockConfig={blockConfig}
                     isCompact={isCompact}
+                    isSelected={selectedArticleIds.includes(article.id)}
+                    onSelect={handleArticleSelect}
+                    isSelectionEnabled={isMultiSelectEnabled}
+                    selectedCount={selectedArticleIds.length}
                   />
                 ))}
               </div>
@@ -97,5 +117,14 @@ const ArticlesPool = ({
   );
 };
 
-// Usar memo com comparação personalizada para evitar renders desnecessários
-export default React.memo(ArticlesPool); 
+// Otimiza re-renders comparando apenas as props que realmente importam
+export default React.memo(ArticlesPool, (prevProps, nextProps) => {
+  return (
+    prevProps.articles === nextProps.articles &&
+    prevProps.usedArticleIds === nextProps.usedArticleIds &&
+    prevProps.isDarkTheme === nextProps.isDarkTheme &&
+    prevProps.isCompact === nextProps.isCompact &&
+    prevProps.isMultiSelectEnabled === nextProps.isMultiSelectEnabled &&
+    prevProps.onSelectionChange === nextProps.onSelectionChange
+  );
+}); 
