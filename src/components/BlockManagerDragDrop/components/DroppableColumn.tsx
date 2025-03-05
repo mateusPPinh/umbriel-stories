@@ -3,17 +3,17 @@ import { Droppable, Draggable } from '@hello-pangea/dnd';
 import ArticleCompactPreview from './ArticleCompactPreview';
 import { Article } from '../../PageblockV2/types';
 import { BlockConfig } from './StyleConfigModal';
+import DraggableArticle from './DraggableArticle';
 
 export interface DroppableColumnProps {
   columnId: string;
   articles: Article[];
+  maxItems: number;
   isDarkTheme?: boolean;
   label?: string;
-  maxItems?: number;
   blockConfig: BlockConfig;
-  renderPreviewItem?: (article: Article, index: number) => React.ReactNode;
-  handleRemoveArticle: (columnId: string, articleId: string | number) => void;
-  variant: string;
+  handleRemoveArticle?: (columnId: string, articleId: string | number) => void;
+  variant?: string;
   useCompactView?: boolean;
 }
 
@@ -30,181 +30,97 @@ const performanceStyles = {
   }
 };
 
-const DroppableColumn: React.FC<DroppableColumnProps> = ({
+const DroppableColumn = ({
   columnId,
   articles,
+  maxItems,
   isDarkTheme = false,
   label,
-  maxItems = 10,
   blockConfig,
-  renderPreviewItem,
   handleRemoveArticle,
-  variant,
-  useCompactView = false,
-}) => {
-  const isEmpty = articles.length === 0;
-  const [stableArticles, setStableArticles] = useState(articles);
-  const isDraggingRef = useRef(false);
-  
-  // Log para depuração
-  useEffect(() => {
-    console.log('DroppableColumn - columnId:', columnId);
-    console.log('DroppableColumn - articles:', articles);
-  }, [columnId, articles]);
-  
-  // Update stable articles only when not dragging
-  useEffect(() => {
-    if (!isDraggingRef.current) {
-      setStableArticles(articles);
-    }
-  }, [articles]);
-  
-  // Track drag state from parent context
-  useEffect(() => {
-    const handleDragStart = () => {
-      isDraggingRef.current = true;
-    };
-    
-    const handleDragEnd = () => {
-      isDraggingRef.current = false;
-      // Update stable articles after drag ends
-      setStableArticles(articles);
-    };
-    
-    // Listen for drag events from the DragDropContext
-    document.addEventListener('dragstart', handleDragStart);
-    document.addEventListener('dragend', handleDragEnd);
-    
-    return () => {
-      document.removeEventListener('dragstart', handleDragStart);
-      document.removeEventListener('dragend', handleDragEnd);
-    };
-  }, [articles]);
-  
-  // Adicionar verificação de segurança para blockConfig
-  const theme = useMemo(() => {
-    return blockConfig?.styles?.theme?.[isDarkTheme ? 'dark' : 'light'] || {
-      columnStyle: {
-        background: isDarkTheme ? '#1a202c' : '#f7fafc',
-        itemBackground: isDarkTheme ? '#2d3748' : '#ffffff',
-        padding: '16px',
-      },
-      headingProps: {
-        color: isDarkTheme ? '#ffffff' : '#1a202c',
-      },
-      subtitleProps: {
-        color: isDarkTheme ? '#e2e8f0' : '#4a5568',
-      }
-    };
-  }, [blockConfig, isDarkTheme]);
-
-  // Memoize the remove article handler to prevent recreating it on each render
-  const handleRemoveArticleCallback = useCallback((articleId: string | number) => {
-    if (!isDraggingRef.current) {
-      handleRemoveArticle(columnId, articleId);
-    } else {
-      console.warn('Cannot remove article during drag operation');
-    }
-  }, [columnId, handleRemoveArticle]);
-
-  // Otimização para evitar cálculos desnecessários durante o drag
-  const renderDraggableItems = useMemo(() => {
-    return stableArticles.map((article, index) => {
-      // Create a stable ID that doesn't change between renders
-      const draggableId = `article-${columnId}-${article.id}`;
-      
-      return (
-        <Draggable 
-          key={draggableId} 
-          draggableId={draggableId} 
-          index={index}
-        >
-          {(provided, snapshot) => (
-            <div
-              ref={provided.innerRef}
-              {...provided.draggableProps}
-              {...provided.dragHandleProps}
-              style={{
-                ...provided.draggableProps.style,
-                ...performanceStyles.draggable,
-                opacity: snapshot.isDragging ? 0.8 : 1,
-                boxShadow: snapshot.isDragging ? '0 4px 8px rgba(0,0,0,0.1)' : 'none',
-              }}
-            >
-              {useCompactView ? (
-                <ArticleCompactPreview 
-                  article={article} 
-                  columnId={columnId} 
-                  isDarkTheme={isDarkTheme} 
-                  blockConfig={blockConfig}
-                  variant={variant}
-                  onRemove={handleRemoveArticleCallback}
-                />
-              ) : renderPreviewItem ? (
-                renderPreviewItem(article, index)
-              ) : (
-                <div className="p-3 bg-white dark:bg-gray-800 rounded-md shadow mb-2 border border-gray-200 dark:border-gray-700">
-                  <div className="flex justify-between items-center">
-                    <div className="font-medium truncate">{article.title}</div>
-                    <button 
-                      onClick={() => handleRemoveArticleCallback(article.id)}
-                      className="ml-2 text-gray-500 hover:text-red-500"
-                      title="Remover artigo"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </Draggable>
-      );
-    });
-  }, [stableArticles, columnId, isDarkTheme, blockConfig, variant, useCompactView, renderPreviewItem, handleRemoveArticleCallback]);
+  variant = 'standard',
+  useCompactView = false
+}: DroppableColumnProps) => {
+  const isAtLimit = articles.length >= maxItems;
 
   return (
-    <div className="flex flex-col h-full">
-      <div 
-        className="mb-2 font-medium px-2"
-        style={{ color: theme.headingProps.color }}
-      >
-        {label} {maxItems > 0 && `(${articles.length}/${maxItems})`}
+    <div className="w-full">
+      <div className="flex justify-between items-center mb-3 px-2">
+        <h3 className={`text-sm font-medium ${isDarkTheme ? 'text-gray-200' : 'text-gray-700'}`}>
+          {label}
+        </h3>
+        <span className={`text-xs flex items-center gap-2 ${
+          isAtLimit 
+            ? isDarkTheme ? 'text-red-300' : 'text-red-500'
+            : isDarkTheme ? 'text-gray-400' : 'text-gray-500'
+        }`}>
+          {articles.length}/{maxItems} artigos
+          {isAtLimit && (
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+              Limite atingido
+            </span>
+          )}
+        </span>
       </div>
-      
-      <Droppable droppableId={columnId}>
+
+      <Droppable droppableId={columnId} isDropDisabled={isAtLimit}>
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`flex-1 p-2 rounded-lg transition-colors duration-200 ${
-              snapshot.isDraggingOver ? 'bg-blue-50 dark:bg-blue-900/20' : ''
-            }`}
-            style={{
-              backgroundColor: theme.columnStyle.background,
-              minHeight: '100px',
-              // Removido maxHeight e overflow para evitar scroll containers aninhados
-            }}
+            className={`
+              rounded-lg min-h-[200px] transition-all duration-200
+              ${snapshot.isDraggingOver 
+                ? isDarkTheme 
+                  ? 'bg-gray-700 border-2 border-dashed border-gray-600' 
+                  : 'bg-gray-100 border-2 border-dashed border-gray-300'
+                : isDarkTheme 
+                  ? 'bg-gray-800' 
+                  : 'bg-gray-50'
+              }
+              ${isAtLimit 
+                ? isDarkTheme
+                  ? 'opacity-75 cursor-not-allowed border border-red-800'
+                  : 'opacity-75 cursor-not-allowed border border-red-200'
+                : ''
+              }
+              ${articles.length === 0 ? 'flex items-center justify-center' : 'p-2'}
+            `}
           >
-            {isEmpty && !snapshot.isDraggingOver && (
-              <div className="flex items-center justify-center h-full">
-                <p className="text-gray-400 dark:text-gray-500 text-sm italic">
-                  Arraste artigos para aqui
-                </p>
+            {articles.length > 0 ? (
+              <div className="space-y-2">
+                {articles.map((article, index) => (
+                  <DraggableArticle
+                    key={article.id}
+                    article={article}
+                    index={index}
+                    isDarkTheme={isDarkTheme}
+                    onRemove={handleRemoveArticle ? () => handleRemoveArticle(columnId, article.id) : undefined}
+                    variant={variant}
+                    isCompact={useCompactView}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className={`text-center p-4 ${isDarkTheme ? 'text-gray-400' : 'text-gray-500'}`}>
+                <svg 
+                  className="mx-auto h-12 w-12 mb-2 opacity-50" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                  />
+                </svg>
+                <p className="text-sm font-medium mb-1">Área para artigos</p>
+                <p className="text-xs">Arraste artigos para esta coluna</p>
               </div>
             )}
-            
-            {renderDraggableItems}
-            
             {provided.placeholder}
-            
-            {maxItems > 0 && articles.length >= maxItems && (
-              <div className="mt-2 py-2 px-3 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-200 text-xs rounded-md">
-                Máximo de artigos atingido
-              </div>
-            )}
           </div>
         )}
       </Droppable>
