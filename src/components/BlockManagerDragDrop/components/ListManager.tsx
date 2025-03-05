@@ -583,7 +583,7 @@ const ListManager = ({
               </Sidebar>
 
               {/* Item 2: Coluna de artigos da lista */}
-              <div className="flex-1 flex flex-col">
+              <div className="flex-1 flex flex-row gap-4">
                 <div className="flex-1 max-h-[70vh] overflow-y-auto">
                   <DroppableColumn
                     columnId="col-0"
@@ -600,7 +600,7 @@ const ListManager = ({
                 </div>
                 
                 {/* Item 3: Preview */}
-                <div className="flex-1 max-h-[70vh] overflow-y-auto mt-4">
+                <div className="flex-1 max-h-[70vh] overflow-y-auto">
                   <ListLayoutPreview
                     variant={validVariantType}
                     articles={blockState.articles['col-0'] || []}
