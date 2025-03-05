@@ -11,6 +11,13 @@ import { GridVariantType, VariantType, Column, GridVariant } from '../types';
 import Sidebar from './Sidebar';
 import { PageResponse } from '../interfaces/pages.types';
 import { Editorial } from '../interfaces/editorial.types';
+
+interface ArticleFilters {
+  hasImage: boolean;
+  limit: number;
+  searchTerm: string;
+}
+
 // Definindo os layouts de grid disponíveis
 const GRID_VARIANTS: Record<GridVariantType, GridVariant> = {
   standard: {
@@ -162,7 +169,12 @@ const GridManager: React.FC<GridManagerProps> = ({
   
   const [showVariantSelector, setShowVariantSelector] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  
+  const [filters, setFilters] = useState<ArticleFilters>({
+    hasImage: false,
+    limit: 30,
+    searchTerm: ''
+  });
+
   // Add safety check for currentVariant
   const currentVariantType = blockState.currentVariant?.variantType as GridVariantType;
   const currentVariant = GRID_VARIANTS[currentVariantType] || GRID_VARIANTS.standard;
@@ -183,6 +195,37 @@ const GridManager: React.FC<GridManagerProps> = ({
       willChange: 'transform',
     }
   }), [isDragging]);
+
+  // Filter articles based on current filters
+  const filteredArticles = useMemo(() => {
+    let filtered = blockState.articles.pool;
+
+    // Filter by image
+    if (filters.hasImage) {
+      filtered = filtered.filter(article => {
+        const desktopImage = article.content?.image?.desktop_image_path;
+        const mobileImage = article.content?.image?.mobile_image_path;
+        
+        // Verifica se pelo menos uma das imagens existe e tem conteúdo válido
+        const hasValidDesktopImage = desktopImage && typeof desktopImage === 'string' && desktopImage.trim().length > 0;
+        const hasValidMobileImage = mobileImage && typeof mobileImage === 'string' && mobileImage.trim().length > 0;
+        
+        return hasValidDesktopImage || hasValidMobileImage;
+      });
+    }
+
+    // Filter by text (title and subtitle)
+    if (filters.searchTerm) {
+      const searchLower = filters.searchTerm.toLowerCase();
+      filtered = filtered.filter(article => 
+        article.title.toLowerCase().includes(searchLower) ||
+        article.subtitle?.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Apply limit
+    return filtered.slice(0, filters.limit);
+  }, [blockState.articles.pool, filters]);
 
   // Função auxiliar para obter todos os IDs de artigos que já estão em uso nas colunas
   const getUsedArticleIds = useCallback(() => {
@@ -508,6 +551,8 @@ const GridManager: React.FC<GridManagerProps> = ({
               isPagesLoading={isPagesLoading}
               isEditorialsLoading={isEditorialsLoading}
               blockConfig={blockConfig}
+              filters={filters}
+              onFiltersChange={setFilters}
               onPageSelect={handlePageSelect}
               onEditorialSelect={handleEditorialSelect}
               onClearSelection={handleClearSelection}
@@ -516,15 +561,15 @@ const GridManager: React.FC<GridManagerProps> = ({
               onConfigClick={() => {}}
               className='max-w-[320px] w-full p-0'
             >
-               <div className="w-full scrollable-container" style={{ maxHeight: '35vh', overflowY: 'auto', marginBottom: '10px' }}>
-              <ArticlesPool
-                articles={blockState.articles.pool}
-                isDarkTheme={isDarkTheme}
-                blockConfig={blockConfig}
-                usedArticleIds={getUsedArticleIds()}
-                isCompact={true}
-              />
-            </div>
+              <div className="w-full scrollable-container" style={{ maxHeight: '35vh', overflowY: 'auto', marginBottom: '10px' }}>
+                <ArticlesPool
+                  articles={filteredArticles}
+                  isDarkTheme={isDarkTheme}
+                  blockConfig={blockConfig}
+                  usedArticleIds={getUsedArticleIds()}
+                  isCompact={true}
+                />
+              </div>
             </Sidebar>
             
             {/* Item 2: Colunas para os artigos - Coluna mais estreita */}
