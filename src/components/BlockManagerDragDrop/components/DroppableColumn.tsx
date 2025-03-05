@@ -12,6 +12,7 @@ export interface DroppableColumnProps {
   label?: string;
   blockConfig: BlockConfig;
   handleRemoveArticle?: (columnId: string, articleId: string | number) => void;
+  handleRemoveArticles?: (columnId: string, articleIds: (string | number)[]) => void;
   variant?: string;
   useCompactView?: boolean;
 }
@@ -37,6 +38,7 @@ const DroppableColumn = ({
   label,
   blockConfig,
   handleRemoveArticle,
+  handleRemoveArticles,
   variant = 'standard',
   useCompactView = false
 }: DroppableColumnProps) => {
@@ -53,16 +55,18 @@ const DroppableColumn = ({
   }, []);
 
   const handleRemoveSelected = useCallback(() => {
-    if (!handleRemoveArticle) return;
-    
-    // Remove cada artigo selecionado
-    selectedArticleIds.forEach(articleId => {
-      handleRemoveArticle(columnId, articleId);
-    });
+    if (handleRemoveArticles) {
+      handleRemoveArticles(columnId, selectedArticleIds);
+    } else if (handleRemoveArticle) {
+      // Fallback para o método antigo se handleRemoveArticles não estiver disponível
+      selectedArticleIds.forEach(articleId => {
+        handleRemoveArticle(columnId, articleId);
+      });
+    }
     
     // Limpa a seleção
     setSelectedArticleIds([]);
-  }, [columnId, handleRemoveArticle, selectedArticleIds]);
+  }, [columnId, handleRemoveArticle, handleRemoveArticles, selectedArticleIds]);
 
   return (
     <div className="w-full">

@@ -125,3 +125,15 @@ export interface GridVariant {
   columns: Column[];
   layout: GridLayout;
 }
+
+// Filters for articles
+export interface ArticleFilters {
+  hasImage: boolean;
+  limit: number;
+  searchTerm: string;
+  search: string;
+  page: string;
+  editorial: string;
+  subEditorial: string;
+  isMultiSelectEnabled: boolean;
+}

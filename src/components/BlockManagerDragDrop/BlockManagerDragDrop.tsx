@@ -184,6 +184,13 @@ const BlockManagerDragDrop = React.memo(({
           blockConfig={blockConfig}
           onConfigClick={handleOpenConfigModal}
           isPreviewOnly={isPreviewOnly}
+          pageData={pageData}
+          editorialsData={editorialsData}
+          isPagesLoading={isPagesLoading}
+          isEditorialsLoading={isEditorialsLoading}
+          onPageSelect={onPageSelect}
+          onEditorialSelect={onEditorialSelect}
+          onPublishBlock={onPublishBlock}
         />
       )}
 
