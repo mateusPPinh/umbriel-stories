@@ -206,6 +206,13 @@ const BlockManagerDragDrop = React.memo(({
           isPreviewOnly={isPreviewOnly}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          pageData={pageData}
+          editorialsData={editorialsData}
+          isPagesLoading={isPagesLoading}
+          isEditorialsLoading={isEditorialsLoading}
+          onPageSelect={onPageSelect}
+          onEditorialSelect={onEditorialSelect}
+          onPublishBlock={onPublishBlock}
         />
       )}
 

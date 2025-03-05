@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { Article } from '../../PageblockV2/types';
 import DroppableColumn from './DroppableColumn';
@@ -6,8 +6,13 @@ import MixedLayoutPreview from './MixedLayoutPreview';
 import ArticlesPool from './ArticlesPool';
 import { BlockConfig } from './StyleConfigModal';
 import { useBlockState } from '../hooks/useBlockState';
-import { VariantType } from '../types';
+import { VariantType, ArticleFilters } from '../types';
 import Button from '../../../components/Button';
+import Sidebar from './Sidebar';
+import { PageResponse } from '../interfaces/pages.types';
+import { Editorial } from '../interfaces/editorial.types';
+import DragDropTips from './DragDropTips';
+import { adaptBlockConfig } from '../utils/adapters';
 
 interface MixedManagerProps {
   pageId: string;
@@ -20,8 +25,16 @@ interface MixedManagerProps {
   isPreviewOnly?: boolean;
   onDragStart?: () => void;
   onDragEnd?: () => void;
+  pageData?: PageResponse[];
+  editorialsData?: Editorial;
+  isPagesLoading?: boolean;
+  isEditorialsLoading?: boolean;
+  onPageSelect?: (pageId: string) => void;
+  onEditorialSelect?: (editorialId: string, subEditorialId?: string) => void;
+  onPublishBlock?: () => void;
 }
 
+// Ajuste na tipagem das colunas
 type BaseColumnId = 'col-0' | 'col-1' | 'col-2';
 type ColumnId = BaseColumnId;
 
@@ -113,14 +126,22 @@ const LAYOUT_VARIANTS: LayoutVariants = {
       'col-2': 'Title and Description',
     },
   },
-};
+} as const;
 
 type LayoutVariant = keyof typeof LAYOUT_VARIANTS;
 
 // Função auxiliar para verificar se uma coluna existe em um layout
-const columnExistsInVariant = (columnId: string, variant: LayoutVariant): boolean => {
-  return Object.keys(LAYOUT_VARIANTS[variant].maxItems).includes(columnId);
+const columnExistsInVariant = (columnId: string, variant: LayoutVariant): columnId is keyof typeof LAYOUT_VARIANTS[typeof variant]['maxItems'] => {
+  return columnId in LAYOUT_VARIANTS[variant].maxItems;
 };
+
+// Ajuste na tipagem do MixedLayoutPreview
+interface MixedLayoutPreviewProps {
+  variant: keyof typeof LAYOUT_VARIANTS;
+  columns: Record<string, Article[]>;
+  isDarkTheme?: boolean;
+  blockConfig: BlockConfig;
+}
 
 const MixedManager: React.FC<MixedManagerProps> = ({ 
   pageId,
@@ -128,14 +149,41 @@ const MixedManager: React.FC<MixedManagerProps> = ({
   isDarkTheme, 
   onSave, 
   variant = 'sidebar',
-  blockConfig,
+  blockConfig: externalBlockConfig,
   onConfigClick,
   isPreviewOnly = false,
   onDragStart,
-  onDragEnd
+  onDragEnd,
+  pageData = [],
+  editorialsData,
+  isPagesLoading = false,
+  isEditorialsLoading = false,
+  onPageSelect,
+  onEditorialSelect,
+  onPublishBlock
 }) => {
-  // Add a ref to track drag state
+  // Garantir que sempre temos uma variante válida
+  const safeVariant = useMemo(() => {
+    const validVariant = variant && LAYOUT_VARIANTS[variant] ? variant : 'sidebar';
+    if (validVariant !== variant) {
+      console.warn(`Variante "${variant}" não encontrada, usando "sidebar" como fallback`);
+    }
+    return validVariant;
+  }, [variant]) as LayoutVariant;
+
   const isDraggingRef = useRef(false);
+  const [showTips, setShowTips] = useState(false);
+  const [selectedPoolArticleIds, setSelectedPoolArticleIds] = useState<(string | number)[]>([]);
+  const [filters, setFilters] = useState<ArticleFilters>({
+    hasImage: false,
+    limit: 30,
+    searchTerm: '',
+    search: '',
+    page: '',
+    editorial: '',
+    subEditorial: '',
+    isMultiSelectEnabled: false
+  });
   
   const {
     blockState,
@@ -144,31 +192,70 @@ const MixedManager: React.FC<MixedManagerProps> = ({
     updateVariantPosition,
     updateBlockPosition,
     updateBlockConfig,
+    updateBlockIdentifiers,
     getApiFormat,
     setDragging
   } = useBlockState({
     pageId,
     template: 'mixed',
     initialArticles: articles,
-    initialVariant: variant as any,
-    blockPosition: 1
+    initialVariant: safeVariant,
+    blockPosition: 1,
+    pageData: pageData,
+    editorialsData: editorialsData
   });
 
+  const handleFiltersChange = useCallback((newFilters: Partial<ArticleFilters>) => {
+    setFilters((prev: ArticleFilters) => ({ ...prev, ...newFilters }));
+  }, []);
+
+  const handlePoolSelectionChange = useCallback((selectedIds: (string | number)[]) => {
+    setSelectedPoolArticleIds(selectedIds);
+  }, []);
+
+  // Filter articles based on current filters
+  const filteredArticles = useMemo(() => {
+    let filtered = blockState.articles.pool;
+
+    // Filter by image
+    if (filters.hasImage) {
+      filtered = filtered.filter(article => {
+        const desktopImage = article.content?.image?.desktop_image_path;
+        const mobileImage = article.content?.image?.mobile_image_path;
+        
+        const hasValidDesktopImage = desktopImage && typeof desktopImage === 'string' && desktopImage.trim().length > 0;
+        const hasValidMobileImage = mobileImage && typeof mobileImage === 'string' && mobileImage.trim().length > 0;
+        
+        return hasValidDesktopImage || hasValidMobileImage;
+      });
+    }
+
+    // Filter by text (title and subtitle)
+    if (filters.searchTerm) {
+      const searchLower = filters.searchTerm.toLowerCase();
+      filtered = filtered.filter(article => 
+        article.title.toLowerCase().includes(searchLower) ||
+        article.subtitle?.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Apply limit
+    return filtered.slice(0, filters.limit);
+  }, [blockState.articles.pool, filters]);
+
   const handleDragStartInternal = useCallback(() => {
-    // Set dragging state to true when drag starts
     isDraggingRef.current = true;
     setDragging?.(true);
-    
-    // Call parent onDragStart if provided
+    document.body.classList.add('reduced-animation');
+    document.body.style.pointerEvents = 'auto';
     onDragStart?.();
   }, [onDragStart, setDragging]);
 
   const handleDragEndInternal = useCallback((result: DropResult) => {
-    // Set dragging state to false when drag ends
     isDraggingRef.current = false;
     setDragging?.(false);
-    
-    // Call parent onDragEnd if provided
+    document.body.classList.remove('reduced-animation');
+    document.body.style.pointerEvents = '';
     onDragEnd?.();
     
     const { source, destination } = result;
@@ -181,7 +268,6 @@ const MixedManager: React.FC<MixedManagerProps> = ({
     ) return;
 
     const variantType = blockState.currentVariant.variantType as LayoutVariant;
-    // Verificar se a variante existe no LAYOUT_VARIANTS
     if (!LAYOUT_VARIANTS[variantType]) {
       console.error(`Variante "${variantType}" não encontrada em LAYOUT_VARIANTS`);
       return;
@@ -190,262 +276,296 @@ const MixedManager: React.FC<MixedManagerProps> = ({
     const currentVariant = LAYOUT_VARIANTS[variantType];
     const destColumn = destination.droppableId as ColumnId;
     
-    // Verificar se a coluna de destino existe na variante atual
     if (!Object.keys(currentVariant.maxItems).includes(destColumn)) {
       console.error(`Coluna "${destColumn}" não encontrada na variante "${variantType}"`);
       return;
     }
-    
+
+    // Determina os artigos selecionados baseado na origem
+    const selectedArticles = source.droppableId === 'pool'
+      ? selectedPoolArticleIds.length > 0
+        ? blockState.articles.pool.filter(article => selectedPoolArticleIds.includes(article.id))
+        : [blockState.articles.pool[source.index]]
+      : blockState.articles[source.droppableId].filter(article => 
+          result.draggableId.includes(String(article.id))
+        );
+
+    // Verificar se a coluna de destino já atingiu o limite máximo de artigos
     if (
       source.droppableId !== destination.droppableId && 
       destColumn && 
       blockState.articles[destColumn] && 
-      blockState.articles[destColumn].length >= (currentVariant.maxItems[destColumn as keyof typeof currentVariant.maxItems] || 0)
+      blockState.articles[destColumn].length + selectedArticles.length > currentVariant.maxItems[destColumn]
     ) {
       return;
     }
 
-    // Create deep copies of arrays to avoid mutations
-    const newArticles = { ...blockState.articles };
-    
-    // Create copies of arrays for source and destination columns
-    const sourceCol = [...newArticles[source.droppableId]];
+    // Copia os arrays de origem e destino mantendo as referências aos objetos originais
+    const sourceCol = [...(blockState.articles[source.droppableId] || [])];
     const destCol = source.droppableId === destination.droppableId
       ? sourceCol
-      : [...newArticles[destination.droppableId]];
+      : [...(blockState.articles[destination.droppableId] || [])];
 
-    // Remove the article from source column
-    const [removed] = sourceCol.splice(source.index, 1);
-    
-    // Add the article to destination column
-    destCol.splice(destination.index, 0, removed);
+    // Remove os itens da origem e mantém a referência aos objetos originais
+    const removedArticles = selectedArticles.map(article => {
+      const index = sourceCol.findIndex(a => a.id === article.id);
+      if (index !== -1) {
+        return sourceCol.splice(index, 1)[0];
+      }
+      return article;
+    });
 
-    // Update state with new columns
+    // Adiciona os mesmos objetos (não cópias) no destino
+    destCol.splice(destination.index, 0, ...removedArticles);
+
+    // Atualiza o estado
     const newColumns = {
-      ...newArticles,
+      ...blockState.articles,
       [source.droppableId]: sourceCol,
       [destination.droppableId]: destCol
     };
 
-    // Update article positions after drag ends
     updateArticlePositions(newColumns);
-  }, [blockState.articles, blockState.currentVariant.variantType, updateArticlePositions, onDragEnd, setDragging]);
 
-  const handleRemoveArticle = useCallback((columnId: string, articleId: string | number) => {
-    // Don't remove articles during drag operations
+    // Limpa a seleção após o drag
+    if (source.droppableId === 'pool') {
+      setSelectedPoolArticleIds([]);
+    }
+  }, [blockState.articles, blockState.currentVariant.variantType, selectedPoolArticleIds, updateArticlePositions, onDragEnd, setDragging]);
+
+  // Função para remover múltiplos artigos
+  const handleRemoveArticles = useCallback((columnId: string, articleIds: (string | number)[]) => {
     if (isDraggingRef.current) {
-      console.warn('Cannot remove article during drag operation');
+      console.warn('Cannot remove articles during drag operation');
       return;
     }
     
-    // Find the article in the column
-    const article = blockState.articles[columnId].find(a => String(a.id) === String(articleId));
+    // Encontra os artigos na coluna - garantindo que estamos usando as referências originais
+    const articlesToRemove = blockState.articles[columnId]?.filter(article => 
+      articleIds.some(id => String(id) === String(article.id))
+    );
     
-    if (!article) return;
+    if (!articlesToRemove?.length) return;
     
-    // Create deep copies of arrays to avoid mutations
-    const newArticles = { ...blockState.articles };
+    // Remove os artigos da coluna
+    const updatedColumn = blockState.articles[columnId]?.filter(article => 
+      !articleIds.some(id => String(id) === String(article.id))
+    ) || [];
     
-    // Remove the article from the column
-    const updatedColumn = newArticles[columnId].filter(a => String(a.id) !== String(articleId));
+    // Adiciona os artigos de volta à pool - usando as referências originais
+    const updatedPool = [...(blockState.articles.pool || []), ...articlesToRemove];
     
-    // Add the article back to the pool
-    const updatedPool = [...newArticles.pool, article];
-    
+    // Atualiza o estado
     const newColumns = {
-      ...newArticles,
+      ...blockState.articles,
       [columnId]: updatedColumn,
       pool: updatedPool
     };
     
-    // Update article positions
     updateArticlePositions(newColumns);
   }, [blockState.articles, updateArticlePositions]);
 
-  const handleSave = () => {
-    const data = getApiFormat();
-    onSave(data);
-  };
+  // Função para remover um único artigo (mantida para compatibilidade)
+  const handleRemoveArticle = useCallback((columnId: string, articleId: string | number) => {
+    handleRemoveArticles(columnId, [articleId]);
+  }, [handleRemoveArticles]);
 
-  const handleVariantChange = (newVariant: LayoutVariant) => {
-    updateVariant(newVariant);
-  };
-
-  // Garantir que estamos usando uma variante válida
-  const variantType = blockState.currentVariant.variantType as LayoutVariant;
-  const validVariantType = LAYOUT_VARIANTS[variantType] ? variantType : 'sidebar';
-  const currentVariant = LAYOUT_VARIANTS[validVariantType];
-  const availableColumns = Object.keys(currentVariant.maxItems) as ColumnId[];
-
-  // Usar useEffect para atualizar a variante se necessário
-  useEffect(() => {
-    if (validVariantType !== variantType) {
-      console.warn(`Variante "${variantType}" não encontrada, usando "sidebar" como fallback`);
-      updateVariant('sidebar' as VariantType);
-    }
-  }, [variantType, validVariantType, updateVariant]);
-
-  // Função para determinar as propriedades específicas de cada coluna com base na variante
-  const getColumnProps = (colId: string) => {
-    switch (validVariantType) {
-      case 'sidebar':
-        return {
-          isSidebarMain: colId === 'col-0', // Artigos principais com imagem grande
-          isSidebarSide: colId === 'col-1', // Artigos secundários com imagem pequena
-          showExcerpt: colId === 'col-0' && blockConfig.styles.showExcerpt
-        };
-      case 'showcase':
-        return {
-          isFeatured: colId === 'col-0', // Artigo principal em destaque (1)
-          isNewsFeedSide: colId === 'col-1', // Artigos em lista com imagem (2)
-          isCompact: colId === 'col-2', // Artigos em lista sem imagem, só título e subtítulo (3)
-          showExcerpt: blockConfig.styles.showExcerpt
-        };
-      case 'newspaper':
-        return {
-          isNewsFeedMain: colId === 'col-0', // 2 artigos principais em lista vertical
-          isCompact: colId === 'col-1' || colId === 'col-2', // 4 artigos em lista vertical, só título e descrição
-          hasBorder: colId === 'col-1' || colId === 'col-2', // Borda à esquerda nas colunas 2 e 3
-          showExcerpt: blockConfig.styles.showExcerpt
-        };
-      case 'magazine':
-        return {
-          isMagazineMain: colId === 'col-0', // Artigo principal
-          isMagazineSecondary: colId === 'col-1', // Artigos secundários com imagem
-          isMagazineTertiary: colId === 'col-2', // Artigos terciários com imagem
-          showExcerpt: blockConfig.styles.showExcerpt
-        };
-      case 'videogrid':
-        return {
-          isFeatured: colId === 'col-0', // Vídeo principal
-          isNewsGrid: colId === 'col-1', // Title and Subtitle without image
-          isNewsGrid2: colId === 'col-2', // Title and Subtitle without image
-          showExcerpt: blockConfig.styles.showExcerpt
-        };
-      default:
-        return {};
-    }
-  };
-
-  // Função para determinar o layout das colunas com base na variante
-  const getColumnsLayout = () => {
-    switch (validVariantType) {
-      case 'sidebar':
-        return 'grid grid-cols-1 md:grid-cols-0 gap-4';
-      case 'showcase':
-        return 'grid grid-cols-1 md:grid-cols-0 gap-4';
-      case 'newspaper':
-        return 'grid grid-cols-1 md:grid-cols-0 gap-4';
-      case 'magazine':
-        return 'grid grid-cols-1 md:grid-cols-0 gap-4';
-      case 'videogrid':
-        return 'grid grid-cols-1 md:grid-cols-0 gap-4';
-      default:
-        return 'space-y-4';
-    }
-  };
-
-  // Função auxiliar para obter todos os IDs de artigos que já estão em uso nas colunas
+  // Mover a função getUsedArticleIds para dentro do componente e usar useCallback
   const getUsedArticleIds = useCallback(() => {
     const usedIds: (string | number)[] = [];
     
-    // Percorre todas as colunas disponíveis e coleta os IDs dos artigos
-    availableColumns.forEach(colId => {
-      const columnArticles = blockState.articles[colId] || [];
-      columnArticles.forEach(article => {
-        usedIds.push(article.id);
-      });
+    Object.keys(blockState.articles).forEach(colId => {
+      if (colId !== 'pool') {
+        const columnArticles = blockState.articles[colId] || [];
+        columnArticles.forEach(article => {
+          usedIds.push(article.id);
+        });
+      }
     });
     
     return usedIds;
-  }, [blockState.articles, availableColumns]);
+  }, [blockState.articles]);
+
+  const handlePageSelect = useCallback((pageId: string) => {
+    updateBlockIdentifiers(pageId, undefined, undefined);
+    onPageSelect?.(pageId);
+    setFilters((prev: ArticleFilters) => ({
+      ...prev,
+      page: pageId,
+      editorial: '',
+      subEditorial: ''
+    }));
+  }, [onPageSelect, updateBlockIdentifiers]);
+
+  const handleEditorialSelect = useCallback((editorialId: string, subEditorialId?: string) => {
+    updateBlockIdentifiers(undefined, editorialId, subEditorialId);
+    onEditorialSelect?.(editorialId, subEditorialId);
+    setFilters((prev: ArticleFilters) => ({
+      ...prev,
+      editorial: editorialId,
+      subEditorial: subEditorialId || '',
+      page: ''
+    }));
+  }, [onEditorialSelect, updateBlockIdentifiers]);
+
+  const handleClearSelection = useCallback(() => {
+    updateBlockIdentifiers(pageId, undefined, undefined);
+    setFilters((prev: ArticleFilters) => ({
+      ...prev,
+      page: '',
+      editorial: '',
+      subEditorial: ''
+    }));
+  }, [pageId, updateBlockIdentifiers]);
+
+  // Função para lidar com a mudança de variante
+  const handleVariantChange = useCallback((newVariant: string) => {
+    if (LAYOUT_VARIANTS[newVariant as LayoutVariant]) {
+      updateVariant(newVariant);
+    }
+  }, [updateVariant]);
 
   return (
-    <div className="flex flex-col h-full">
-      {!isPreviewOnly && (
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <label htmlFor="variant-select" className="text-sm text-gray-600 dark:text-gray-400">
-                Variante:
-              </label>
-              <select
-                id="variant-select"
-                value={blockState.currentVariant.variantType}
-                onChange={(e) => handleVariantChange(e.target.value as LayoutVariant)}
-                className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
-              >
-                {Object.entries(LAYOUT_VARIANTS).map(([key, value]) => (
-                  <option key={key} value={key}>
-                    {value.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="primary" onClick={handleSave}>
-              Salvar
-            </Button>
-            <Button variant="info" onClick={onConfigClick}>
-              Configurar Estilos
-            </Button>
-          </div>
-        </div>
-      )}
+    <div className="relative">
+      <DragDropTips 
+        isDarkTheme={isDarkTheme} 
+        isForced={showTips}
+        onDismiss={() => setShowTips(false)}
+      />
 
-      {isPreviewOnly ? (
-        <div className="w-full">
-          <MixedLayoutPreview
-            variant={validVariantType}
-            columns={blockState.articles}
-            isDarkTheme={isDarkTheme}
-            blockConfig={blockConfig}
-          />
-        </div>
-      ) : (
-        <div className="flex h-[70vh] gap-4">
-          <DragDropContext onDragStart={handleDragStartInternal} onDragEnd={handleDragEndInternal}>
-            <div className="w-[10%] min-w-[120px] max-h-[70vh] overflow-y-auto scrollable-container">
-              <ArticlesPool
-                articles={blockState.articles.pool}
-                isDarkTheme={isDarkTheme}
-                blockConfig={blockConfig}
-                usedArticleIds={getUsedArticleIds()}
-                isCompact={true}
-              />
+      <div className="flex flex-col gap-4">
+        {!isPreviewOnly && (
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <h2 className="text-lg font-medium text-gray-900 dark:text-white">
+                Gerenciador Mixed
+              </h2>
+              <div className="flex items-center gap-2">
+                <label htmlFor="variant-select" className="text-sm text-gray-600 dark:text-gray-400">
+                  Variante:
+                </label>
+                <select
+                  id="variant-select"
+                  value={blockState.currentVariant.variantType}
+                  onChange={(e) => handleVariantChange(e.target.value)}
+                  className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                >
+                  {Object.entries(LAYOUT_VARIANTS).map(([key, value]) => (
+                    <option key={key} value={key}>
+                      {value.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-            
-            <div className="w-[20%] min-w-[150px] h-full overflow-y-auto scrollable-container">
-              <div className={getColumnsLayout()}>
-                {availableColumns.map(colId => (
-                  <DroppableColumn
-                    key={colId}
-                    columnId={colId}
-                    articles={blockState.articles[colId] || []}
-                    isDarkTheme={isDarkTheme}
-                    label={currentVariant.columnLabels[colId as keyof typeof currentVariant.columnLabels]}
-                    maxItems={currentVariant.maxItems[colId as keyof typeof currentVariant.maxItems]}
-                    blockConfig={blockConfig}
-                    handleRemoveArticle={handleRemoveArticle}
-                    variant={validVariantType}
-                    useCompactView={true}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowTips(true)}
+                className={`
+                  p-2 rounded-full transition-colors
+                  ${isDarkTheme 
+                    ? 'hover:bg-gray-700 text-gray-400 hover:text-gray-300' 
+                    : 'hover:bg-gray-100 text-gray-500 hover:text-gray-700'
+                  }
+                `}
+                title="Mostrar dicas de uso"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
                   />
-                ))}
+                </svg>
+              </button>
+              <Button variant="primary" onClick={() => onSave(getApiFormat())}>
+                Salvar
+              </Button>
+              <Button variant="info" onClick={onConfigClick}>
+                Configurar Estilos
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {isPreviewOnly ? (
+          <div className="w-full">
+            <MixedLayoutPreview
+              variant={blockState.currentVariant.variantType as LayoutVariant}
+              columns={blockState.articles}
+              isDarkTheme={isDarkTheme}
+              blockConfig={adaptBlockConfig(externalBlockConfig) as any}
+            />
+          </div>
+        ) : (
+          <DragDropContext onDragStart={handleDragStartInternal} onDragEnd={handleDragEndInternal}>
+            <div className="flex flex-row gap-4 w-full h-full">
+              {/* Item 1: Lista de artigos (Pool) - Coluna estreita */}
+              <Sidebar 
+                pageData={pageData}
+                editorialsData={editorialsData}
+                isPagesLoading={isPagesLoading}
+                isEditorialsLoading={isEditorialsLoading}
+                blockConfig={adaptBlockConfig(externalBlockConfig) as any}
+                filters={filters}
+                onFiltersChange={handleFiltersChange}
+                onPageSelect={handlePageSelect}
+                onEditorialSelect={handleEditorialSelect}
+                onClearSelection={handleClearSelection}
+                onPublishBlock={onPublishBlock}
+                onSave={() => {}}
+                onConfigClick={() => {}}
+                className='max-w-[320px] w-full p-0'
+              >
+                <div className="w-full scrollable-container" style={{ maxHeight: '35vh', overflowY: 'auto', marginBottom: '10px' }}>
+                  <ArticlesPool
+                    articles={filteredArticles}
+                    isDarkTheme={isDarkTheme}
+                    blockConfig={adaptBlockConfig(externalBlockConfig) as any}
+                    usedArticleIds={getUsedArticleIds()}
+                    isCompact={true}
+                    isMultiSelectEnabled={true}
+                    onSelectionChange={handlePoolSelectionChange}
+                  />
+                </div>
+              </Sidebar>
+
+              {/* Item 2: Colunas do layout */}
+              <div className="flex-1 flex flex-col gap-6 mt-8">
+                {Object.entries(LAYOUT_VARIANTS[blockState.currentVariant.variantType as LayoutVariant].columnLabels)
+                  .filter(([columnId]) => columnExistsInVariant(columnId, blockState.currentVariant.variantType as LayoutVariant))
+                  .map(([columnId, label]) => (
+                    <div key={columnId} className="flex-1">
+                      <DroppableColumn
+                        columnId={columnId}
+                        articles={blockState.articles[columnId] || []}
+                        isDarkTheme={isDarkTheme}
+                        label={label}
+                        maxItems={LAYOUT_VARIANTS[blockState.currentVariant.variantType as LayoutVariant].maxItems[columnId]}
+                        blockConfig={adaptBlockConfig(externalBlockConfig) as any}
+                        handleRemoveArticle={handleRemoveArticle}
+                        handleRemoveArticles={handleRemoveArticles}
+                        variant={blockState.currentVariant.variantType as LayoutVariant}
+                        useCompactView={true}
+                      />
+                    </div>
+                  ))}
+              </div>
+
+              {/* Item 3: Preview */}
+              <div className="flex-1 max-h-[70vh] overflow-y-auto">
+                <MixedLayoutPreview
+                  variant={blockState.currentVariant.variantType as LayoutVariant}
+                  columns={blockState.articles}
+                  isDarkTheme={isDarkTheme}
+                  blockConfig={adaptBlockConfig(externalBlockConfig) as any}
+                />
               </div>
             </div>
           </DragDropContext>
-          
-          <div className="flex-1 max-h-[70vh] overflow-y-auto scrollable-container">
-            <MixedLayoutPreview
-              variant={validVariantType}
-              columns={blockState.articles}
-              isDarkTheme={isDarkTheme}
-              blockConfig={blockConfig}
-            />
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
