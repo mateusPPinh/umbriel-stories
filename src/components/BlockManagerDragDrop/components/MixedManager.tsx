@@ -295,7 +295,7 @@ const MixedManager: React.FC<MixedManagerProps> = ({
       source.droppableId !== destination.droppableId && 
       destColumn && 
       blockState.articles[destColumn] && 
-      blockState.articles[destColumn].length + selectedArticles.length > currentVariant.maxItems[destColumn]
+      blockState.articles[destColumn].length + selectedArticles.length > currentVariant.maxItems[destColumn as keyof typeof currentVariant.maxItems]
     ) {
       return;
     }
@@ -421,7 +421,7 @@ const MixedManager: React.FC<MixedManagerProps> = ({
   // Função para lidar com a mudança de variante
   const handleVariantChange = useCallback((newVariant: string) => {
     if (LAYOUT_VARIANTS[newVariant as LayoutVariant]) {
-      updateVariant(newVariant);
+      updateVariant(newVariant as VariantType);
     }
   }, [updateVariant]);
 
@@ -542,7 +542,7 @@ const MixedManager: React.FC<MixedManagerProps> = ({
                         articles={blockState.articles[columnId] || []}
                         isDarkTheme={isDarkTheme}
                         label={label}
-                        maxItems={LAYOUT_VARIANTS[blockState.currentVariant.variantType as LayoutVariant].maxItems[columnId]}
+                        maxItems={LAYOUT_VARIANTS[blockState.currentVariant.variantType as LayoutVariant].maxItems[columnId as keyof typeof LAYOUT_VARIANTS[LayoutVariant]['maxItems']]}
                         blockConfig={adaptBlockConfig(externalBlockConfig) as any}
                         handleRemoveArticle={handleRemoveArticle}
                         handleRemoveArticles={handleRemoveArticles}
