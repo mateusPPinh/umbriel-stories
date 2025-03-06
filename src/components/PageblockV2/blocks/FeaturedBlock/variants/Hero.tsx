@@ -19,21 +19,6 @@ const Hero: React.FC<BaseVariantProps> = ({
   const { articles } = variant.config
   const styles = variant.config.styles || {}
 
-  // Define default styles
-  const defaultStyles = {
-    container: [
-      'w-full max-w-[1238px] mx-auto mt-12 mb-12 bg-transparent',
-    ].join(' '),
-    grid: 'relative aspect-[21/9]',
-    article: ['relative w-full h-full'].join(' '),
-    image: 'w-full h-full object-cover',
-    content: 'p-2',
-    heading: [
-      'mb-0',
-      'text-[1.5rem] font-bold sm:text-[1rem] text-white dark:text-white',
-    ].join(' '),
-    subtitle: ['text-lg text-white/80 dark:text-white/80'].join(' '),
-  }
 
   return (
     <div className={`${classes.container} ${customStyles?.container || ''}`}>

@@ -368,7 +368,7 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
 
               {/* Item 2: Coluna de artigos e preview */}
               <div className="flex-1 flex flex-row gap-4">
-                <div className="flex-1 max-h-[70vh] overflow-y-auto">
+                <div className="flex-1 max-h-[70vh] overflow-y-auto scrollable-container">
                   <DroppableColumn
                     columnId="col-0"
                     articles={blockState.articles['col-0'] || []}
@@ -384,7 +384,7 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
                 </div>
                 
                 {/* Item 3: Preview */}
-                <div className="flex-1 max-h-[70vh] overflow-y-auto">
+                <div className="flex-1 max-h-[70vh] overflow-y-auto scrollable-container">
                   <FeaturedLayoutPreview
                     variantType={blockState.currentVariant.variantType}
                     columns={blockState.articles}

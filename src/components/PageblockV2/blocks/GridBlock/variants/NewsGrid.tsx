@@ -29,43 +29,6 @@ const NewsGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme }) => {
     return acc;
   }, {} as { [key: string]: { [key: string]: any } });
 
-  // const newsClasses = {
-  //   container: [
-  //     "w-full max-w-[1238px] mx-auto",
-  //     "mb-[40px] mt-[40px]",
-  //     "bg-transparent",
-  //     "p-6",
-  //   ].join(" "),
-  //   grid: [
-  //     "grid grid-cols-1",
-  //     "md:grid-cols-3",
-  //     "lg:grid-cols-5",
-  //     "gap-6",
-  //   ].join(" "),
-  //   column: "flex flex-col space-y-4",
-  //   mainArticle: [
-  //     "flex flex-col gap-4",
-  //     "hover:opacity-90 transition-opacity",
-  //   ].join(" "),
-  //   secondaryArticle: [
-  //     "border-t border-gray-200 dark:border-gray-800",
-  //     "pt-4",
-  //     "hover:opacity-90 transition-opacity",
-  //   ].join(" "),
-  //   imageWrapper: "relative aspect-[16/10] overflow-hidden mb-3",
-  //   image: "w-full h-full object-cover",
-  //   mainTitle: [
-  //     "text-[1rem] sm:text-[0.8rem] font-normal",
-  //     "text-gray-900 dark:text-white",
-  //     "leading-tight",
-  //   ].join(" "),
-  //   secondaryTitle: [
-  //     "text-[1rem] sm:text-[0.8rem] font-medium",
-  //     "text-gray-800 dark:text-gray-200",
-  //     "leading-snug",
-  //   ].join(" "),
-  // }
-
   return (
     <div className={classes.container}>
       {Object.entries(rows).map(([rowId, rowColumns]) => (

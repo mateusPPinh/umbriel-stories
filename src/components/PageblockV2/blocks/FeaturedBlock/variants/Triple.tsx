@@ -15,28 +15,6 @@ const Triple: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles
   const { articles } = variant.config;
   const styles = variant.config.styles || {};
 
-  // // Define default styles
-  // const defaultStyles = {
-  //   container: [
-  //     'w-full max-w-[1238px] mx-auto bg-transparent',
-  //     'mb-[40px] mt-[40px]'
-  //   ].join(' '),
-  //   grid: 'grid grid-cols-1 md:grid-cols-3 gap-6',
-  //   article: [
-  //     'flex flex-col gap-4',
-  //     'hover:opacity-90 transition-opacity'
-  //   ].join(' '),
-  //   image: 'w-full h-full object-cover',
-  //   content: 'p-2',
-  //   heading: [
-  //     'mb-0',
-  //     'text-[1.5rem] text-gray-900 font-bold sm:text-[1rem] dark:text-white',
-  //   ].join(' '),
-  //   subtitle: [
-  //     'text-lg text-gray-600 dark:text-gray-400',
-  //   ].join(' ')
-  // };
-
   return (
     <div className={`${classes.container} ${customStyles?.container || ''}`}  >
       <div className={`${classes.grid} ${customStyles?.grid || ''}`}>
