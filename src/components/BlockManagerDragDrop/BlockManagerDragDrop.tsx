@@ -218,6 +218,7 @@ const BlockManagerDragDrop = React.memo(({
           onPageSelect={onPageSelect}
           onEditorialSelect={onEditorialSelect}
           onPublishBlock={onPublishBlock}
+          clientGeneralSettingsData={clientGeneralSettingsData}
         />
       )}
 
@@ -238,6 +239,7 @@ const BlockManagerDragDrop = React.memo(({
           onPageSelect={onPageSelect}
           onEditorialSelect={onEditorialSelect}
           onPublishBlock={onPublishBlock}
+          clientGeneralSettingsData={clientGeneralSettingsData}
         />
       )}
       

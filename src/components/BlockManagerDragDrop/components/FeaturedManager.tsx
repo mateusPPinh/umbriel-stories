@@ -6,7 +6,7 @@ import FeaturedLayoutPreview from './FeaturedLayoutPreview';
 import ArticlesPool from './ArticlesPool';
 import { BlockConfig } from './StyleConfigModal';
 import { useBlockState } from '../hooks/useBlockState';
-import { FeaturedVariantType, ArticleFilters } from '../types';
+import { FeaturedVariantType, ArticleFilters, ClientTheme } from '../types';
 import Button from '../../Button';
 import Sidebar from './Sidebar';
 import { PageResponse } from '../interfaces/pages.types';
@@ -29,6 +29,7 @@ interface FeaturedManagerProps {
   onPageSelect?: (pageId: string) => void;
   onEditorialSelect?: (editorialId: string, subEditorialId?: string) => void;
   onPublishBlock?: () => void;
+  clientGeneralSettingsData: ClientTheme;
 }
 
 const FeaturedManager: React.FC<FeaturedManagerProps> = ({ 
@@ -46,7 +47,8 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
   isEditorialsLoading = false,
   onPageSelect,
   onEditorialSelect,
-  onPublishBlock
+  onPublishBlock,
+  clientGeneralSettingsData
 }) => {
   const {
     blockState,
@@ -331,6 +333,7 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
               columns={blockState.articles}
               isDarkTheme={isDarkTheme}
               blockConfig={externalBlockConfig}
+              clientGeneralSettingsData={clientGeneralSettingsData}
             />
           </div>
         ) : (
@@ -390,6 +393,7 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
                     columns={blockState.articles}
                     isDarkTheme={isDarkTheme}
                     blockConfig={externalBlockConfig}
+                    clientGeneralSettingsData={clientGeneralSettingsData}
                   />
                 </div>
               </div>

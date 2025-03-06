@@ -549,6 +549,7 @@ const ListManager = ({
               articles={blockState.articles['col-0'] || []}
               isDarkTheme={isDarkTheme}
               blockConfig={adaptBlockConfig(externalBlockConfig) as any}
+              clientGeneralSettingsData={clientGeneralSettingsData}
             />
           </div>
         ) : (
@@ -608,6 +609,7 @@ const ListManager = ({
                     articles={blockState.articles['col-0'] || []}
                     isDarkTheme={isDarkTheme}
                     blockConfig={adaptBlockConfig(externalBlockConfig) as any}
+                    clientGeneralSettingsData={clientGeneralSettingsData}
                   />
                 </div>
               </div>

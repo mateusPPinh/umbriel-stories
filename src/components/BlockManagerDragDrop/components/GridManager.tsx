@@ -681,6 +681,7 @@ const GridManager: React.FC<GridManagerProps> = ({
               columns={blockState.articles}
               isDarkTheme={isDarkTheme}
               blockConfig={blockConfig}
+              clientGeneralSettingsData={clientGeneralSettingsData}
             />
           </div>
         ) : (
@@ -730,6 +731,7 @@ const GridManager: React.FC<GridManagerProps> = ({
                   columns={blockState.articles}
                   isDarkTheme={isDarkTheme}
                   blockConfig={blockConfig}
+                  clientGeneralSettingsData={clientGeneralSettingsData}
                 />
               </div>
             </div>
