@@ -2,9 +2,10 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import NewsGrid from '../blocks/GridBlock/variants/NewsGrid';
-import { BlockVariant } from '../types';
+import { BlockVariant, ClientTheme } from '../types';
 import { createArticles } from './mockData';
 import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
+import { mockClientTheme } from './mockClientTheme';
 
 export default {
   title: 'PageBlockV2/Grid/NewsGrid',
@@ -18,7 +19,7 @@ export default {
   ],
 } as Meta;
 
-const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean }> = (args) => <NewsGrid {...args} />;
+const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean; clientGeneralSettingsData: ClientTheme }> = (args) => <NewsGrid {...args} clientGeneralSettingsData={mockClientTheme} />;
 
 // Criar artigos mock para grid com múltiplas rows
 const gridArticles = {

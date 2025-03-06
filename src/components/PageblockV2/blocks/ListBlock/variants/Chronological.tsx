@@ -1,10 +1,10 @@
 import React from 'react';
-import { BlockVariant, Article, TimelineStyles } from '../../../types';
+import { BlockVariant, Article, TimelineStyles, ClientTheme } from '../../../types';
 import { defaultClasses } from '../../../constants/defaultClasses';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { generateArticleUrl } from '../../../utils/generateArticleUrl';
-
+import { useClientTheme } from '../../../hooks/useClientTheme';
 interface BaseVariantProps {
   variant: BlockVariant & {
     config: {
@@ -13,9 +13,11 @@ interface BaseVariantProps {
   };
   isDarkTheme?: boolean;
   customStyles?: any;
+  clientGeneralSettingsData: ClientTheme;
 }
 
-const Chronological: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
+const Chronological: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles, clientGeneralSettingsData }) => {
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme })
   const classes = defaultClasses.list.chronological;
   const { articles } = variant.config;
   const styles = variant.config.styles || {};
@@ -85,12 +87,18 @@ const Chronological: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custo
                     ${classes.content.title}
                     group-hover:text-blue-600 dark:group-hover:text-blue-400
                     transition-colors duration-200
-                  `}>
+                  `} style={{
+                    color: theme.title.color,
+                    fontFamily: theme.title.fontFamily,
+                  }}>
                     {article.title}
                   </h3>
                   
                   {article.subtitle ? (
-                    <p className={classes.content.subtitle}>
+                    <p className={classes.content.subtitle} style={{
+                      color: theme.subtitle.color,
+                      fontFamily: theme.subtitle.fontFamily,
+                    }}>
                       {article.subtitle}
                     </p>
                   ) : null}
@@ -135,7 +143,10 @@ const Chronological: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custo
                         </span>
                       </>
                     ) : article?.articleBody ? (
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-2" style={{
+                        color: theme.subtitle.color,
+                        fontFamily: theme.subtitle.fontFamily,
+                      }}>
                         {truncateText(article.articleBody, 150)}
                       </p>
                     ) : null}

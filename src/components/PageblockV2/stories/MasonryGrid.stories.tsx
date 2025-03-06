@@ -1,9 +1,10 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import MasonryGrid from '../blocks/GridBlock/variants/MasonryGrid';
-import { BlockVariant } from '../types';
+import { BlockVariant, ClientTheme } from '../types';
 import { createArticles } from './mockData';
 import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
+import { mockClientTheme } from './mockClientTheme';
 
 export default {
   title: 'PageBlockV2/Grid/MasonryGrid',
@@ -17,7 +18,7 @@ export default {
   ],
 } as Meta;
 
-const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean }> = (args) => <MasonryGrid {...args} />;
+const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean; clientGeneralSettingsData: ClientTheme }> = (args) => <MasonryGrid {...args} clientGeneralSettingsData={mockClientTheme} />;
 
 // Criar artigos mock para masonry
 const masonryArticles = {

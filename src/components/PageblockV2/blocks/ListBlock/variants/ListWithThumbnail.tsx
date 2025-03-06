@@ -1,12 +1,14 @@
 import React from 'react';
 import { useBlockStyles } from '../../../hooks/useBlockStyles';
-import { BlockVariant, Article } from '../../../types';
+import { BlockVariant, Article, ClientTheme } from '../../../types';
 import { defaultClasses } from '../../../constants/defaultClasses';
+import { useClientTheme } from '../../../hooks/useClientTheme';
 
 interface BaseVariantProps {
   variant: BlockVariant;
   isDarkTheme?: boolean;
   customStyles?: any;
+  clientGeneralSettingsData: ClientTheme;
 }
 
 // Helper function to merge styles
@@ -40,7 +42,8 @@ const mergeStyles = (defaultStyles: any, customStyles: any) => {
   };
 };
 
-const ListWithThumbnail: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
+const ListWithThumbnail: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles, clientGeneralSettingsData }) => {
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme })
   const classes = defaultClasses.list.thumbnail;
   const { articles } = variant.config;
 
@@ -160,15 +163,24 @@ const ListWithThumbnail: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, c
               )}
               
               <div className="flex-grow">
-                <h3 className="mb-2" style={headingStyle}>
+                <h3 className="mb-2" style={{
+                  color: theme.title.color,
+                  fontFamily: theme.title.fontFamily,
+                }}>
                   {article.title}
                 </h3>
                 {mergedStyles.showExcerpt ? (
-                  <p className="mb-2" style={subtitleStyle}>
+                  <p className="mb-2" style={{
+                    color: theme.subtitle.color,
+                    fontFamily: theme.subtitle.fontFamily,
+                  }}>
                     {article.subtitle}
                   </p>
                 ) : (
-                  <p className="mb-2" style={subtitleStyle}>
+                  <p className="mb-2" style={{
+                    color: theme.subtitle.color,
+                    fontFamily: theme.subtitle.fontFamily,
+                  }}>
                     {article.subtitle}
                   </p>
                 )}

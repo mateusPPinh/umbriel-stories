@@ -1,7 +1,7 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import Magazine from '../blocks/MixedBlock/variants/Magazine';
-import { BlockVariant } from '../types';
+import { BlockVariant, ClientTheme } from '../types';
 import { createArticles } from './mockData';
 import { mockClientTheme } from './mockClientTheme';
 import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
@@ -18,7 +18,7 @@ export default {
   ],
 } as Meta;
 
-const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean }> = (args) => (
+const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean; clientGeneralSettingsData: ClientTheme }> = (args) => (
   <Magazine {...args} clientGeneralSettingsData={mockClientTheme} />
 );
 

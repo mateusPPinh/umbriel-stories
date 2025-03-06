@@ -1,9 +1,11 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import Chronological from '../blocks/ListBlock/variants/Chronological';
-import { BlockVariant } from '../types';
+import { BlockVariant, ClientTheme } from '../types';
 import { createArticles } from './mockData';
 import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
+import { mockClientTheme } from './mockClientTheme';
+   
 
 export default {
   title: 'PageBlockV2/List/Chronological',
@@ -17,7 +19,7 @@ export default {
   ],
 } as Meta;
 
-const Template: Story = (args) => <Chronological {...args} />;
+const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean; clientGeneralSettingsData: ClientTheme }> = (args) => <Chronological {...args} clientGeneralSettingsData={mockClientTheme} />;
 
 // Criar artigos mock para lista
 const listArticles = {

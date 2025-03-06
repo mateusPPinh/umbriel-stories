@@ -1,10 +1,10 @@
 import React from 'react';
 import { useBlockStyles } from '../../../hooks/useBlockStyles';
-import { BlockVariant, Article, MasonryStyles } from '../../../types';
+import { BlockVariant, Article, MasonryStyles, ClientTheme } from '../../../types';
 import { defaultClasses } from '../../../constants/defaultClasses';
 import { generateArticleUrl } from '../../../utils/generateArticleUrl';
 import Link from '../../../../Link'
-
+import { useClientTheme } from '../../../hooks/useClientTheme';
 interface BaseVariantProps {
   variant: BlockVariant & {
     config: {
@@ -13,9 +13,11 @@ interface BaseVariantProps {
   };
   isDarkTheme?: boolean;
   customStyles?: any;
+  clientGeneralSettingsData: ClientTheme;
 }
 
-const MasonryGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
+const MasonryGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles, clientGeneralSettingsData   }) => {
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme })
   const classes = defaultClasses.grid.masonry;
   const { articles } = variant.config;
   const styles = variant.config.styles || {};
@@ -68,16 +70,25 @@ const MasonryGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
               
               <div>
                <Link href={articleUrl} aria-label={article.title} className="hover:underline transition-all duration-300">
-               <h3 className={classes.content.title}>
+               <h3 className={classes.content.title} style={{
+                color: theme.title.color,
+                fontFamily: theme.title.fontFamily,
+               }}>
                   {article.title}
                 </h3>
                </Link>
                 {styles.showExcerpt ? (
-                  <p className={classes.content.subtitle}>
+                  <p className={classes.content.subtitle} style={{
+                    color: theme.subtitle.color,
+                    fontFamily: theme.subtitle.fontFamily,
+                  }}>
                     {article.subtitle}
                   </p>
                 ) : (
-                  <p className={classes.content.subtitle}>
+                  <p className={classes.content.subtitle} style={{
+                    color: theme.subtitle.color,
+                    fontFamily: theme.subtitle.fontFamily,
+                  }}>
                     {article.subtitle}
                   </p>
                 )}

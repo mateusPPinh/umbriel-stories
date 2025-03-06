@@ -1,20 +1,24 @@
 import React from 'react'
-import { BlockVariant, Article } from '../../../types'
+import { BlockVariant, Article, ClientTheme } from '../../../types'
 import { defaultClasses } from '../../../constants/defaultClasses'
 import { generateArticleUrl } from '../../../utils/generateArticleUrl'
 import Link from '../../../../Link'
+import { useClientTheme } from '../../../hooks/useClientTheme';
 
 interface BaseVariantProps {
   variant: BlockVariant
   isDarkTheme?: boolean
   customStyles?: any
+  clientGeneralSettingsData: ClientTheme
 }
 
 const Hero: React.FC<BaseVariantProps> = ({
   variant,
   isDarkTheme,
   customStyles,
+  clientGeneralSettingsData
 }) => {
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme })
   const classes = defaultClasses.featured.hero
   const { articles } = variant.config
   const styles = variant.config.styles || {}
@@ -51,12 +55,21 @@ const Hero: React.FC<BaseVariantProps> = ({
                     aria-label={article.title}
                     className="!hover:underline transition-all duration-300"
                   >
-                    <h2 className={classes.heading}>{article.title}</h2>
+                    <h2 className={classes.heading} style={{
+                      color: theme.title.color,
+                      fontFamily: theme.title.fontFamily,
+                    }}>{article.title}</h2>
                   </Link>
                   {styles.showExcerpt ? (
-                    <p className={classes.subtitle}>{article.subtitle}</p>
+                    <p className={classes.subtitle} style={{
+                      color: theme.subtitle.color,
+                      fontFamily: theme.subtitle.fontFamily,
+                    }}>{article.subtitle}</p>
                   ) : (
-                    <p className={classes.subtitle}>{article.subtitle}</p>
+                    <p className={classes.subtitle} style={{
+                      color: theme.subtitle.color,
+                      fontFamily: theme.subtitle.fontFamily,
+                    }}>{article.subtitle}</p>
                   )}
                 </div>
               </div>

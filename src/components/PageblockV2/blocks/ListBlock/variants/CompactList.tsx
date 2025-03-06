@@ -1,12 +1,13 @@
 import React from 'react';
 import { useBlockStyles } from '../../../hooks/useBlockStyles';
-import { BlockVariant, Article } from '../../../types';
+import { BlockVariant, Article, ClientTheme } from '../../../types';
 import { defaultClasses } from '../../../constants/defaultClasses';
-
+import { useClientTheme } from '../../../hooks/useClientTheme';
 interface BaseVariantProps {
   variant: BlockVariant;
   isDarkTheme?: boolean;
   customStyles?: any;
+  clientGeneralSettingsData: ClientTheme;
 }
 
 // Helper function to merge styles
@@ -40,7 +41,8 @@ const mergeStyles = (defaultStyles: any, customStyles: any) => {
   };
 };
 
-const CompactList: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
+const CompactList: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles, clientGeneralSettingsData }) => {
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme })
   const classes = defaultClasses.list.compact;
   const { articles } = variant.config;
 
@@ -143,15 +145,24 @@ const CompactList: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
               style={columnStyle(colKey)}
             >
               <div className="flex flex-col">
-                <h3 className="mb-1" style={headingStyle}>
-                  {article.title}
+                <h3 className="mb-1" style={{
+                  color: theme.title.color,
+                  fontFamily: theme.title.fontFamily,
+                }}>
+                    {article.title}
                 </h3>
                 {mergedStyles.showExcerpt ? (
-                  <p style={subtitleStyle}>
+                  <p style={{
+                    color: theme.subtitle.color,
+                    fontFamily: theme.subtitle.fontFamily,
+                  }}>
                     {article.subtitle}
                   </p>
                 ) : (
-                  <p style={subtitleStyle}>
+                  <p style={{
+                    color: theme.subtitle.color,
+                    fontFamily: theme.subtitle.fontFamily,
+                  }}>
                     {article.subtitle}
                   </p>
                 )}

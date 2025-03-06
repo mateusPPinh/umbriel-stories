@@ -1,8 +1,9 @@
 import React from 'react';
-import { BlockVariant, Article, GridStyles } from '../../../types';
+import { BlockVariant, Article, GridStyles, ClientTheme } from '../../../types';
 import { defaultClasses } from '../../../constants/defaultClasses';
 import { generateArticleUrl } from '../../../utils/generateArticleUrl';
 import Link from '../../../../Link';
+import { useClientTheme } from '../../../hooks/useClientTheme';
 interface BaseVariantProps {
   variant: BlockVariant & {
     config: {
@@ -11,9 +12,11 @@ interface BaseVariantProps {
   };
   isDarkTheme?: boolean;
   customStyles?: any;
+  clientGeneralSettingsData: ClientTheme;
 }
 
-const FeaturedGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
+const FeaturedGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles, clientGeneralSettingsData }) => {
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme })
   const classes = defaultClasses.grid.featured;
   const { articles } = variant.config;
   const styles = variant.config.styles || {};
@@ -61,11 +64,17 @@ const FeaturedGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
                         ${classes.content.title}
                         transition-colors duration-200
                         group-hover:text-blue-400
-                      `}>
+                      `} style={{
+                        color: theme.title.color,
+                        fontFamily: theme.title.fontFamily,
+                      }}>
                         {article.title}
                       </h3>
                       {article.subtitle && (
-                        <p className={classes.content.subtitle}>
+                        <p className={classes.content.subtitle} style={{
+                          color: theme.subtitle.color,
+                          fontFamily: theme.subtitle.fontFamily,
+                        }}>
                           {article.subtitle}
                         </p>
                       )}
@@ -80,11 +89,17 @@ const FeaturedGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
                       ${classes.content.title}
                       transition-colors duration-200
                       group-hover:text-blue-600 dark:group-hover:text-blue-400
-                    `}>
+                    `} style={{
+                      color: theme.title.color,
+                      fontFamily: theme.title.fontFamily,
+                    }}>
                       {article.title}
                     </h3>
                     {article.subtitle && (
-                      <p className={classes.content.subtitle}>
+                      <p className={classes.content.subtitle} style={{
+                        color: theme.subtitle.color,
+                        fontFamily: theme.subtitle.fontFamily,
+                      }}>
                         {article.subtitle}
                       </p>
                     )}

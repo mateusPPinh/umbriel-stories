@@ -29,11 +29,11 @@ const PageBlockV2 = ({ blocksData, isDarkTheme, clientGeneralSettingsData }: Pag
 
         switch (template) {
           case 'grid':
-            return <GridBlock key={block.id} block={block} isDarkTheme={isDarkTheme} />;
+            return <GridBlock key={block.id} block={block} isDarkTheme={isDarkTheme} clientGeneralSettingsData={clientGeneralSettingsData} />;
           case 'featured':
-            return <FeaturedBlock key={block.id} block={block} isDarkTheme={isDarkTheme} />;
+            return <FeaturedBlock key={block.id} block={block} isDarkTheme={isDarkTheme} clientGeneralSettingsData={clientGeneralSettingsData} />;
           case 'list':
-            return <ListBlock key={block.id} block={block} isDarkTheme={isDarkTheme} />;
+            return <ListBlock key={block.id} block={block} isDarkTheme={isDarkTheme} clientGeneralSettingsData={clientGeneralSettingsData} />;
           case 'mixed':
             return <MixedBlock key={block.id} block={block} isDarkTheme={isDarkTheme} clientGeneralSettingsData={clientGeneralSettingsData} />;
           default:

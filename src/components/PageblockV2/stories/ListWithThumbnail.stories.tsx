@@ -1,9 +1,10 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import ListWithThumbnail from '../blocks/ListBlock/variants/ListWithThumbnail';
-import { BlockVariant } from '../types';
+import { BlockVariant, ClientTheme } from '../types';
 import { createArticles } from './mockData';
 import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
+import { mockClientTheme } from './mockClientTheme';
 
 export default {
   title: 'PageBlockV2/List/ListWithThumbnail',
@@ -17,7 +18,7 @@ export default {
   ],
 } as Meta;
 
-const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean }> = (args) => <ListWithThumbnail {...args} />;
+const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean; clientGeneralSettingsData: ClientTheme }> = (args) => <ListWithThumbnail {...args} clientGeneralSettingsData={mockClientTheme} />;
 
 // Criar artigos mock para lista
 const listArticles = {

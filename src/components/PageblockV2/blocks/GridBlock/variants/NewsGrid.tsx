@@ -1,11 +1,11 @@
 // src/components/PageblockV2/blocks/GridBlock/variants/NewsGrid.tsx
 import React from 'react';
-import { Article, GridStyles } from 'src/components/PageblockV2/types';
+import { Article, ClientTheme, GridStyles } from 'src/components/PageblockV2/types';
 import { BlockVariant } from 'src/components/PageblockV2/types';
 import { generateArticleUrl } from '../../../utils/generateArticleUrl';
 import Link from '../../../../Link';
 import { defaultClasses } from '../../../constants/defaultClasses';
-
+import { useClientTheme } from '../../../hooks/useClientTheme';
 interface BaseVariantProps {
   variant: BlockVariant & {
     config: {
@@ -15,9 +15,11 @@ interface BaseVariantProps {
   };
   isDarkTheme?: boolean;
   customStyles?: any;
+  clientGeneralSettingsData: ClientTheme;   
 }
 
-const NewsGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme }) => {
+const NewsGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, clientGeneralSettingsData }) => {
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme })
   const { articles, links } = variant.config;
   const classes = defaultClasses.newsgrid;
 
@@ -55,13 +57,19 @@ const NewsGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme }) => {
                     )}
                     {index === 0 ? (
                       <Link href={articleUrl}>
-                        <h3 className={classes.mainTitle}>
+                        <h3 className={classes.mainTitle} style={{
+                          color: theme.title.color,
+                          fontFamily: theme.title.fontFamily,
+                        }}>
                           {article.title}
                         </h3>
                       </Link>
                     ) : (
                       <Link href={articleUrl}>
-                        <h3 className={classes.secondaryTitle}>
+                        <h3 className={classes.secondaryTitle} style={{
+                          color: theme.title.color,
+                          fontFamily: theme.title.fontFamily,
+                        }}>
                           {article.title}
                         </h3>
                       </Link>
