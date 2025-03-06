@@ -4,15 +4,26 @@ import { BlockConfig } from './StyleConfigModal';
 import { defaultClasses } from '../../PageblockV2/constants/defaultClasses';
 import Link from '../../Link';
 import { generateArticleUrl } from '../../PageblockV2/utils/generateArticleUrl';
+import { useClientTheme } from '../hooks/useClientTheme';
+import { ClientTheme } from '../types';
 
 interface LayoutPreviewProps {
   variantType: string;
   isDarkTheme?: boolean;
   columns: { [key: string]: Article[] };
   blockConfig: BlockConfig;
+  clientGeneralSettingsData: ClientTheme;
 }
 
-const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme, columns, blockConfig }) => {
+const LayoutPreview: React.FC<LayoutPreviewProps> = ({
+  variantType,
+  isDarkTheme,
+  columns,
+  blockConfig,
+  clientGeneralSettingsData
+}) => {
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme });
+
   // Helper para renderizar skeleton de artigo
   const renderArticleSkeleton = (size: 'small' | 'medium' | 'large' = 'medium') => {
     const aspectRatio = size === 'small' ? 'aspect-[4/3]' : size === 'large' ? 'aspect-[16/9]' : 'aspect-[16/10]';
@@ -54,12 +65,18 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme,
                     <div className="flex flex-1 flex-col justify-between p-4">
                       <div className="flex-1">
                         <Link href={articleUrl} className="mt-2 block">
-                          <h3 className={`text-lg font-semibold leading-tight ${isDarkTheme ? 'text-white' : 'text-gray-900'}`}>
+                          <h3 className="text-lg font-semibold leading-tight" style={{
+                            fontFamily: theme.title.fontFamily,
+                            color: theme.title.color,
+                          }}>
                             {article.title}
                           </h3>
                         </Link>
                         {blockConfig.styles.showExcerpt && article.content?.description && (
-                          <p className={`mt-2 text-sm ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'}`}>
+                          <p className="mt-2 text-sm" style={{
+                            fontFamily: theme.subtitle.fontFamily,
+                            color: theme.subtitle.color,
+                          }}>
                             {article.content.description}
                           </p>
                         )}
@@ -95,12 +112,18 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme,
                     <div className="flex flex-1 flex-col justify-between p-4">
                       <div className="flex-1">
                         <Link href={articleUrl} className="mt-2 block">
-                          <h3 className={`text-lg font-semibold leading-tight ${isDarkTheme ? 'text-white' : 'text-gray-900'}`}>
+                          <h3 className="text-lg font-semibold leading-tight" style={{
+                            fontFamily: theme.title.fontFamily,
+                            color: theme.title.color,
+                          }}>
                             {article.title}
                           </h3>
                         </Link>
                         {blockConfig.styles.showExcerpt && article.content?.description && (
-                          <p className={`mt-2 text-sm ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'}`}>
+                          <p className="mt-2 text-sm" style={{
+                            fontFamily: theme.subtitle.fontFamily,
+                            color: theme.subtitle.color,
+                          }}>
                             {article.content.description}
                           </p>
                         )}
@@ -136,12 +159,18 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({ variantType, isDarkTheme,
                     <div className="flex flex-1 flex-col justify-between p-4">
                       <div className="flex-1">
                         <Link href={articleUrl} className="mt-2 block">
-                          <h3 className={`text-lg font-semibold leading-tight ${isDarkTheme ? 'text-white' : 'text-gray-900'}`}>
+                          <h3 className="text-lg font-semibold leading-tight" style={{
+                            fontFamily: theme.title.fontFamily,
+                            color: theme.title.color,
+                          }}>
                             {article.title}
                           </h3>
                         </Link>
                         {blockConfig.styles.showExcerpt && article.content?.description && (
-                          <p className={`mt-2 text-sm ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'}`}>
+                          <p className="mt-2 text-sm" style={{
+                            fontFamily: theme.subtitle.fontFamily,
+                            color: theme.subtitle.color,
+                          }}>
                             {article.content.description}
                           </p>
                         )}

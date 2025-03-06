@@ -5,6 +5,8 @@ import { defaultClasses } from '../../../components/PageblockV2/constants/defaul
 import { generateArticleUrl } from '../../../components/PageblockV2/utils/generateArticleUrl';
 import { formatDistanceToNow } from 'date-fns';
 import { DisplayConfig } from './StyleConfigModal/MediaConfig';
+import { useClientTheme } from '../hooks/useClientTheme';
+import { ClientTheme } from '../types';
 
 // Definindo a interface ThemeConfig localmente para evitar problemas de importação
 interface ThemeConfig {
@@ -61,6 +63,7 @@ interface ListLayoutPreviewProps {
   articles?: Article[];
   variant?: 'chronological' | 'compact' | 'card';
   isDarkTheme?: boolean;
+  clientGeneralSettingsData: ClientTheme;
 }
 
 type HoverEffect = 'highlight' | 'scale' | 'background' | 'translate' | 'none';
@@ -181,9 +184,10 @@ const ListLayoutPreview = ({
   columns = [], 
   articles = [], 
   variant = 'chronological',
-  isDarkTheme = false 
+  isDarkTheme = false,
+  clientGeneralSettingsData
 }: ListLayoutPreviewProps) => {
-  const theme = blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'];
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme });
   
   // Configurações globais de exibição
   const globalDisplayConfig = blockConfig.mediaConfig?.displayConfig || {
@@ -224,7 +228,7 @@ const ListLayoutPreview = ({
       return renderSkeleton('timeline');
     }
 
-          return (
+    return (
       <div className="space-y-2">
         {articles.map((article, index) => (
           <div key={index} className="flex items-start gap-4 py-4">
@@ -249,9 +253,8 @@ const ListLayoutPreview = ({
               <h3 
                 className={`font-semibold mb-1 ${getTitleSizeClass(blockConfig.styles.titleSize)}`}
                 style={{
-                  fontSize: theme.headingProps.fontSize,
-                  fontWeight: theme.headingProps.fontWeight,
-                  color: theme.headingProps.color
+                  fontFamily: theme.title.fontFamily,
+                  color: theme.title.color,
                 }}
               >
                 {article.title}
@@ -262,8 +265,8 @@ const ListLayoutPreview = ({
                 <p 
                   className="text-sm line-clamp-2"
                   style={{
-                    fontSize: theme.subtitleProps.fontSize,
-                    color: theme.subtitleProps.color
+                    fontFamily: theme.subtitle.fontFamily,
+                    color: theme.subtitle.color,
                   }}
                 >
                   {article.subtitle}
@@ -272,9 +275,9 @@ const ListLayoutPreview = ({
             </div>
           </div>
         ))}
-    </div>
-  );
-};
+      </div>
+    );
+  };
 
   const renderCompactList = () => {
     const articles = articlesData[0] || [];
@@ -284,7 +287,7 @@ const ListLayoutPreview = ({
       return renderSkeleton('compact');
     }
 
-  return (
+    return (
       <div className="space-y-0">
         {articles.map((article, index) => (
           <div 
@@ -299,9 +302,8 @@ const ListLayoutPreview = ({
             <h3 
               className={`font-semibold mb-1 ${getTitleSizeClass(blockConfig.styles.titleSize)}`}
               style={{
-                fontSize: theme.headingProps.fontSize,
-                fontWeight: theme.headingProps.fontWeight,
-                color: theme.headingProps.color
+                fontFamily: theme.title.fontFamily,
+                color: theme.title.color,
               }}
             >
               {article.title}
@@ -312,8 +314,8 @@ const ListLayoutPreview = ({
               <p 
                 className="text-sm line-clamp-2"
                 style={{
-                  fontSize: theme.subtitleProps.fontSize,
-                  color: theme.subtitleProps.color
+                  fontFamily: theme.subtitle.fontFamily,
+                  color: theme.subtitle.color,
                 }}
               >
                 {article.subtitle}
@@ -328,9 +330,9 @@ const ListLayoutPreview = ({
             )}
           </div>
         ))}
-    </div>
-  );
-};
+      </div>
+    );
+  };
 
   const renderCardList = () => {
     const articles = articlesData[0] || [];
@@ -340,7 +342,7 @@ const ListLayoutPreview = ({
       return renderSkeleton('card');
     }
 
-  return (
+    return (
       <div className="space-y-4">
         {articles.map((article, index) => (
           <div 
@@ -372,9 +374,8 @@ const ListLayoutPreview = ({
               <h3 
                 className={`font-semibold mb-1 ${getTitleSizeClass(blockConfig.styles.titleSize)}`}
                 style={{
-                  fontSize: theme.headingProps.fontSize,
-                  fontWeight: theme.headingProps.fontWeight,
-                  color: theme.headingProps.color
+                  fontFamily: theme.title.fontFamily,
+                  color: theme.title.color,
                 }}
               >
                 {article.title}
@@ -385,8 +386,8 @@ const ListLayoutPreview = ({
                 <p 
                   className="text-sm line-clamp-2"
                   style={{
-                    fontSize: theme.subtitleProps.fontSize,
-                    color: theme.subtitleProps.color
+                    fontFamily: theme.subtitle.fontFamily,
+                    color: theme.subtitle.color,
                   }}
                 >
                   {article.subtitle}
@@ -397,14 +398,14 @@ const ListLayoutPreview = ({
               {displayConfig.showPublishDate && blockConfig.styles.showMetadata && article.created_at && (
                 <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   {formatDistanceToNow(new Date(article.created_at), { addSuffix: true })}
-            </div>
+                </div>
               )}
             </div>
           </div>
         ))}
-    </div>
-  );
-};
+      </div>
+    );
+  };
 
   switch (variant) {
     case 'chronological':

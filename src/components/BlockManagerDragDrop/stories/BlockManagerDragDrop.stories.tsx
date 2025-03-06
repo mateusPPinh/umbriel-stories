@@ -7,6 +7,47 @@ import { editorialsMock } from './editorials.mock';
 import { Editorial } from '../interfaces/editorial.types';
 import { PageResponse } from '../interfaces/pages.types';
 import { pageMock } from './page.mock';
+import { ClientTheme } from '../types';
+
+// Mock do clientGeneralSettingsData
+const mockClientTheme: ClientTheme = {
+  fontMapping: {
+    articleTitle: "Inter Variable, sans-serif",
+    articleSubtitle: "Inter Variable, sans-serif",
+    articleBody: "Inter Variable, sans-serif",
+    headerTitle: "Inter Variable, sans-serif",
+    headerText: "Inter Variable, sans-serif",
+  },
+  colorMapping: {
+    light: {
+      articleBackground: '#FFFFFF',
+      articleTitle: '#1A1A1A',
+      articleSubtitle: '#4A5568',
+      articleText: '#2D3748',
+      headerBackground: '#FFFFFF',
+      headerText: '#1A1A1A',
+      primaryButton: '#3182CE',
+      secondaryButton: '#718096',
+      accent: '#3182CE',
+      sidebarBackground: '#F7FAFC',
+      sidebarText: '#2D3748',
+    },
+    dark: {
+      articleBackground: '#1A1A1A',
+      articleTitle: '#FFFFFF',
+      articleSubtitle: '#A0AEC0',
+      articleText: '#E2E8F0',
+      headerBackground: '#1A1A1A',
+      headerText: '#FFFFFF',
+      primaryButton: '#4299E1',
+      secondaryButton: '#A0AEC0',
+      accent: '#4299E1',
+      sidebarBackground: '#2D3748',
+      sidebarText: '#E2E8F0',
+    },
+  },
+};
+
 interface BlockManagerDragDropProps {
   articles: any[];
   blockType: 'grid' | 'list' | 'mixed' | 'featured';
@@ -22,6 +63,7 @@ interface BlockManagerDragDropProps {
   onEditorialSelect?: (editorialId: string, subEditorialId?: string) => void;
   onPublishBlock?: () => void;
   showSidebar?: boolean;
+  clientGeneralSettingsData: ClientTheme;
 }
 
 export default {
@@ -65,7 +107,8 @@ const commonProps = {
   onPageSelect: (pageId) => console.log('Selected page:', pageId),
   onEditorialSelect: (editorialId, subEditorialId) => console.log('Selected editorial:', editorialId, subEditorialId),
   onPublishBlock: () => console.log('Publishing block'),
-  showSidebar: true
+  showSidebar: true,
+  clientGeneralSettingsData: mockClientTheme,
 };
 
 // Grid Variants

@@ -6,7 +6,7 @@ import ListLayoutPreview from './ListLayoutPreview';
 import ArticlesPool from './ArticlesPool';
 import { BlockConfig } from './StyleConfigModal';
 import { useBlockState } from '../hooks/useBlockState';
-import { ListVariantType, ArticleFilters } from '../types';
+import { ListVariantType, ArticleFilters, ClientTheme } from '../types';
 import { adaptBlockConfig } from '../utils/adapters';
 import Button from '../../../components/Button';
 import Sidebar from './Sidebar';
@@ -129,6 +129,7 @@ interface ListManagerProps {
   onPageSelect?: (pageId: string) => void;
   onEditorialSelect?: (editorialId: string, subEditorialId?: string) => void;
   onPublishBlock?: () => void;
+  clientGeneralSettingsData: ClientTheme;
 }
 
 const ListManager = ({ 
@@ -146,7 +147,8 @@ const ListManager = ({
   isEditorialsLoading = false,
   onPageSelect,
   onEditorialSelect,
-  onPublishBlock
+  onPublishBlock,
+  clientGeneralSettingsData
 }: ListManagerProps) => {
   const {
     blockState,

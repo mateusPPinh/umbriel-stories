@@ -1,6 +1,8 @@
 import React from 'react';
 import { Article } from '../../PageblockV2/types';
 import { BlockConfig } from './StyleConfigModal';
+import { useClientTheme } from '../hooks/useClientTheme';
+import { ClientTheme } from '../types';
 
 // Estendendo o tipo Article para incluir propriedades adicionais
 interface ExtendedArticle extends Article {
@@ -13,10 +15,11 @@ interface FeaturedLayoutPreviewProps {
   isDarkTheme?: boolean;
   columns: { [key: string]: ExtendedArticle[] };
   blockConfig: BlockConfig;
+  clientGeneralSettingsData: ClientTheme;
 }
 
-const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantType, isDarkTheme, columns, blockConfig }) => {
-  const theme = blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light'];
+const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantType, isDarkTheme, columns, blockConfig, clientGeneralSettingsData }) => {
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme });
   
   // Log para depuração
   console.log('FeaturedLayoutPreview - variantType:', variantType);
@@ -24,17 +27,13 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
   console.log('FeaturedLayoutPreview - col-0:', columns['col-0']);
 
   const renderHeroPreview = () => {
-    const article = columns['col-0']?.[0];
+    const mainArticles = columns['col-0'] || [];
+    const article = mainArticles[0];
+    const imagePath = article?.content?.image?.desktop_image_path;
     
     // Log para depuração do artigo
     console.log('FeaturedLayoutPreview - Hero article:', article);
-    console.log('FeaturedLayoutPreview - Hero image path:', article?.content?.image?.desktop_image_path);
-    
-    // Tentar obter a imagem de diferentes propriedades possíveis
-    const imagePath = article?.content?.image?.desktop_image_path || 
-                      article?.featuredImage || 
-                      article?.image || 
-                      (article?.content?.image && typeof article.content.image === 'string' ? article.content.image : null);
+    console.log('FeaturedLayoutPreview - Hero image path:', imagePath);
     
     return (
       <div className="w-full aspect-[21/9] rounded-lg overflow-hidden">
@@ -48,11 +47,17 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-8">
-                <h2 className="text-white text-2xl font-bold mb-2">
+                <h2 className="text-2xl font-bold mb-2" style={{
+                  fontFamily: theme.title.fontFamily,
+                  color: theme.title.color,
+                }}>
                   {article.title}
                 </h2>
                 {article.subtitle && (
-                  <p className="text-white/80 text-base">
+                  <p className="text-base" style={{
+                    fontFamily: theme.subtitle.fontFamily,
+                    color: theme.subtitle.color,
+                  }}>
                     {article.subtitle}
                   </p>
                 )}
@@ -76,58 +81,42 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
 
   const renderSplitPreview = () => {
     const mainArticles = columns['col-0'] || [];
-    
+
     return (
-      <div className="grid grid-cols-2 gap-4 w-full">
+      <div className="grid grid-cols-2 gap-6">
         {[...Array(2)].map((_, i) => {
           const article = mainArticles[i];
-          
-          // Tentar obter a imagem de diferentes propriedades possíveis
-          const imagePath = article?.content?.image?.desktop_image_path || 
-                          article?.featuredImage || 
-                          article?.image || 
-                          (article?.content?.image && typeof article.content.image === 'string' ? article.content.image : null);
-          
+          const imagePath = article?.content?.image?.desktop_image_path;
+
           return (
-            <div key={i} className="flex flex-col gap-4 h-full">
-              <div className={`
-                aspect-video rounded-lg overflow-hidden
-                ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-                w-full
-              `}>
-                {imagePath ? (
-                  <img
-                    src={imagePath}
-                    alt={article?.title || 'Preview image'}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className={`w-full h-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'} animate-pulse flex items-center justify-center`}>
-                    <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                )}
-              </div>
+            <div key={i} className="relative">
+              {imagePath ? (
+                <img
+                  src={imagePath}
+                  alt={article.title}
+                  className="w-full aspect-[16/9] object-cover rounded-lg mb-4"
+                />
+              ) : (
+                <div className={`w-full aspect-[16/9] ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'} rounded-lg mb-4 animate-pulse`} />
+              )}
 
               {article ? (
                 <>
                   <div 
-                    className="text-base font-medium text-gray-900 dark:text-white mb-2"
+                    className="text-base font-medium mb-2"
                     style={{
-                      fontSize: theme.headingProps.fontSize,
-                      fontWeight: theme.headingProps.fontWeight,
-                      color: theme.headingProps.color
+                      fontFamily: theme.title.fontFamily,
+                      color: theme.title.color,
                     }}
                   >
                     {article.title}
                   </div>
                   {article.subtitle && (
                     <div 
-                      className="text-sm text-gray-500 dark:text-gray-400"
+                      className="text-sm"
                       style={{
-                        fontSize: theme.subtitleProps.fontSize,
-                        color: theme.subtitleProps.color
+                        fontFamily: theme.subtitle.fontFamily,
+                        color: theme.subtitle.color,
                       }}
                     >
                       {article.subtitle}
@@ -149,58 +138,42 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
 
   const renderTriplePreview = () => {
     const mainArticles = columns['col-0'] || [];
-    
+
     return (
-      <div className="grid grid-cols-3 gap-4 w-full">
+      <div className="grid grid-cols-3 gap-6">
         {[...Array(3)].map((_, i) => {
           const article = mainArticles[i];
-          
-          // Tentar obter a imagem de diferentes propriedades possíveis
-          const imagePath = article?.content?.image?.desktop_image_path || 
-                          article?.featuredImage || 
-                          article?.image || 
-                          (article?.content?.image && typeof article.content.image === 'string' ? article.content.image : null);
-          
+          const imagePath = article?.content?.image?.desktop_image_path;
+
           return (
-            <div key={i} className="flex flex-col h-full">
-              <div className={`
-                aspect-video rounded-lg overflow-hidden mb-3
-                ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-                w-full
-              `}>
-                {imagePath ? (
-                  <img
-                    src={imagePath}
-                    alt={article?.title || 'Preview image'}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className={`w-full h-full ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'} animate-pulse flex items-center justify-center`}>
-                    <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                )}
-              </div>
+            <div key={i} className="relative">
+              {imagePath ? (
+                <img
+                  src={imagePath}
+                  alt={article.title}
+                  className="w-full aspect-[16/9] object-cover rounded-lg mb-4"
+                />
+              ) : (
+                <div className={`w-full aspect-[16/9] ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'} rounded-lg mb-4 animate-pulse`} />
+              )}
 
               {article ? (
                 <>
                   <div 
-                    className="font-medium text-gray-900 dark:text-white mb-2"
+                    className="font-medium mb-2"
                     style={{
-                      fontSize: theme.headingProps.fontSize,
-                      fontWeight: theme.headingProps.fontWeight,
-                      color: theme.headingProps.color
+                      fontFamily: theme.title.fontFamily,
+                      color: theme.title.color,
                     }}
                   >
                     {article.title}
                   </div>
                   {article.subtitle && (
                     <div 
-                      className="text-sm text-gray-500 dark:text-gray-400"
+                      className="text-sm"
                       style={{
-                        fontSize: theme.subtitleProps.fontSize,
-                        color: theme.subtitleProps.color
+                        fontFamily: theme.subtitle.fontFamily,
+                        color: theme.subtitle.color,
                       }}
                     >
                       {article.subtitle}

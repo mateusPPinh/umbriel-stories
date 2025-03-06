@@ -7,7 +7,7 @@ import Button from '../../Button';
 import LayoutPreview from './LayoutPreview';
 import ArticlesPool from './ArticlesPool';
 import { BlockConfig } from './StyleConfigModal';
-import { GridVariantType, VariantType, Column, GridVariant } from '../types';
+import { GridVariantType, VariantType, Column, GridVariant, ClientTheme } from '../types';
 import Sidebar from './Sidebar';
 import { PageResponse } from '../interfaces/pages.types';
 import { Editorial } from '../interfaces/editorial.types';
@@ -117,6 +117,7 @@ interface GridManagerProps {
   onPageSelect?: (pageId: string) => void;
   onEditorialSelect?: (editorialId: string, subEditorialId?: string) => void;
   onPublishBlock?: () => void;
+  clientGeneralSettingsData: ClientTheme;
 }
 
 interface HeadingProps {
@@ -146,7 +147,8 @@ const GridManager: React.FC<GridManagerProps> = ({
   isEditorialsLoading = false,
   onPageSelect,
   onEditorialSelect,
-  onPublishBlock
+  onPublishBlock,
+  clientGeneralSettingsData
 }): JSX.Element => {
   const {
     blockState,

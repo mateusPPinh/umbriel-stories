@@ -3,6 +3,8 @@ import { Article } from '../../PageblockV2/types'
 import { BlockConfig } from './StyleConfigModal'
 import { DisplayConfig } from './StyleConfigModal/MediaConfig'
 import SwitchTitleSubtitleSkeleton from './TitleSubtitleSkeleton'
+import { useClientTheme } from '../hooks/useClientTheme'
+import { ClientTheme } from '../types'
 
 type LayoutVariant =
   | 'sidebar'
@@ -16,6 +18,7 @@ interface MixedLayoutPreviewProps {
   isDarkTheme?: boolean
   columns: { [key: string]: Article[] }
   blockConfig: BlockConfig
+  clientGeneralSettingsData: ClientTheme
 }
 
 const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
@@ -23,8 +26,9 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
   isDarkTheme,
   columns,
   blockConfig,
+  clientGeneralSettingsData
 }) => {
-  const theme = blockConfig.styles.theme[isDarkTheme ? 'dark' : 'light']
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme })
 
   // Configurações globais de exibição
   const globalDisplayConfig = blockConfig.mediaConfig?.displayConfig || {
@@ -56,172 +60,71 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
   }
 
   const renderSidebarPreview = () => {
-    const mainArticle = columns['col-0']?.[0]
+    const mainArticles = columns['col-0'] || []
     const sidebarArticles = columns['col-1'] || []
 
-    // Configurações específicas para cada coluna
-    const mainDisplayConfig = getColumnDisplayConfig('col-0')
-    const sidebarDisplayConfig = getColumnDisplayConfig('col-1')
-
     return (
-      <div className="grid grid-cols-[2fr,1fr] gap-6">
+      <div className="grid grid-cols-3 gap-6">
         {/* Main Content */}
-        <div className="space-y-4">
-          {/* Featured Article */}
-          <article className="flex flex-col">
-            {mainDisplayConfig.showImage && (
-              <div
-                className={`
-                aspect-[16/9] rounded overflow-hidden
-              ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-            `}
-              >
-                {mainArticle?.content?.image?.desktop_image_path && (
-                  <div className="relative w-full h-full">
-                    <img
-                      src={mainArticle.content.image.desktop_image_path}
-                      alt={mainArticle.title}
-                      className={`w-full h-full object-${
-                        blockConfig.mediaConfig?.imageConfig?.fit || 'cover'
-                      } object-${
-                        blockConfig.mediaConfig?.imageConfig?.position ||
-                        'center'
-                      }`}
-                    />
-                    {blockConfig.mediaConfig?.imageConfig?.overlay?.enabled && (
-                      <div
-                        className="absolute inset-0"
-                        style={{
-                          backgroundColor:
-                            blockConfig.mediaConfig.imageConfig.overlay.color ||
-                            'rgba(0,0,0,0.5)',
-                          opacity:
-                            blockConfig.mediaConfig.imageConfig.overlay
-                              .opacity || 0.5,
-                        }}
-                      />
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-
-            <div className="p-4">
-              <div
-                className="text-xl font-semibold mb-2 line-clamp-2"
-                style={{
-                  fontSize: theme.headingProps.fontSize,
-                  fontWeight: theme.headingProps.fontWeight,
-                  color: theme.headingProps.color,
-                }}
-              >
-                {mainArticle?.title || 'Título do artigo principal'}
-              </div>
-
-              {mainDisplayConfig.showSubtitle &&
-                blockConfig.styles.showExcerpt && (
-                  <div
-                    className="line-clamp-2"
-                    style={{
-                      fontSize: theme.subtitleProps.fontSize,
-                      color: theme.subtitleProps.color,
-                    }}
-                  >
-                    {mainArticle?.subtitle ||
-                      'Descrição do artigo principal...'}
-                  </div>
-                )}
-
-              {mainDisplayConfig.showPublishDate && mainArticle?.created_at && (
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                  {new Date(mainArticle.created_at).toLocaleDateString('pt-BR')}
-                </div>
+        <div className="col-span-2">
+          {mainArticles.map((article, index) => (
+            <article key={index} className="mb-6">
+              {article.content?.image?.desktop_image_path && (
+                <img
+                  src={article.content.image.desktop_image_path}
+                  alt={article.title}
+                  className="w-full aspect-[16/9] object-cover rounded-lg mb-4"
+                />
               )}
-            </div>
-          </article>
+              <div>
+                <h3 className="text-xl font-semibold mb-2" style={{
+                  fontFamily: theme.title.fontFamily,
+                  color: theme.title.color,
+                }}>
+                  {article.title}
+                </h3>
+                {article.subtitle && (
+                  <p className="text-base" style={{
+                    fontFamily: theme.subtitle.fontFamily,
+                    color: theme.subtitle.color,
+                  }}>
+                    {article.subtitle}
+                  </p>
+                )}
+              </div>
+            </article>
+          ))}
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-4 border-l border-gray-200 dark:border-gray-700 pl-6">
-          {[...Array(4)].map((_, i) => {
-            const article = sidebarArticles[i]
-
-            return (
-              <article
-                key={i}
-                className={[
-                  'flex gap-4',
-                  i !== 3
-                    ? 'border-b border-gray-200 dark:border-gray-700 pb-4'
-                    : '',
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
-              >
-                {/* Thumbnail */}
-                {sidebarDisplayConfig.showImage && (
-                  <div className="w-24 aspect-[4/3] rounded overflow-hidden shrink-0">
-                    {article?.content?.image?.desktop_image_path ? (
-                      <div className="relative w-full h-full">
-                        <img
-                          src={article.content.image.desktop_image_path}
-                          alt={article.title}
-                          className={`w-full h-full object-${
-                            blockConfig.mediaConfig?.imageConfig?.fit || 'cover'
-                          } object-${
-                            blockConfig.mediaConfig?.imageConfig?.position ||
-                            'center'
-                          }`}
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        className={`w-full h-full ${
-                          isDarkTheme ? 'bg-gray-600' : 'bg-gray-300'
-                        }`}
-                      />
-                    )}
-                  </div>
+        <div className="col-span-1">
+          {sidebarArticles.map((article, index) => (
+            <article key={index} className="mb-4">
+              {article.content?.image?.desktop_image_path && (
+                <img
+                  src={article.content.image.desktop_image_path}
+                  alt={article.title}
+                  className="w-full aspect-[16/9] object-cover rounded-lg mb-2"
+                />
+              )}
+              <div>
+                <h4 className="text-base font-medium mb-1" style={{
+                  fontFamily: theme.title.fontFamily,
+                  color: theme.title.color,
+                }}>
+                  {article.title}
+                </h4>
+                {article.subtitle && (
+                  <p className="text-sm" style={{
+                    fontFamily: theme.subtitle.fontFamily,
+                    color: theme.subtitle.color,
+                  }}>
+                    {article.subtitle}
+                  </p>
                 )}
-
-                <div className="flex-1 min-w-0">
-                  <div
-                    className="text-sm font-medium line-clamp-2 mb-1"
-                    style={{
-                      fontSize: theme.headingProps.fontSize,
-                      fontWeight: theme.headingProps.fontWeight,
-                      color: theme.headingProps.color,
-                    }}
-                  >
-                    {article?.title || 'Título do artigo relacionado'}
-                  </div>
-
-                  {sidebarDisplayConfig.showSubtitle &&
-                    blockConfig.styles.showExcerpt &&
-                    article?.subtitle && (
-                      <div
-                        className="text-xs line-clamp-2"
-                        style={{
-                          fontSize: theme.subtitleProps.fontSize,
-                          color: theme.subtitleProps.color,
-                        }}
-                      >
-                        {article.subtitle}
-                      </div>
-                    )}
-
-                  {sidebarDisplayConfig.showPublishDate &&
-                    article?.created_at && (
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {new Date(article.created_at).toLocaleDateString(
-                          'pt-BR'
-                        )}
-                      </div>
-                    )}
-                </div>
-              </article>
-            )
-          })}
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     )
@@ -283,9 +186,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
               <div
                 className="text-2xl font-bold mb-2 line-clamp-2"
                 style={{
-                  fontSize: theme.headingProps.fontSize,
-                  fontWeight: theme.headingProps.fontWeight,
-                  color: theme.headingProps.color,
+                  fontFamily: theme.title.fontFamily,
+                  color: theme.title.color,
                 }}
               >
                 {mainArticle?.title || 'Título do artigo principal'}
@@ -296,8 +198,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                   <div
                     className="line-clamp-3"
                     style={{
-                      fontSize: theme.subtitleProps.fontSize,
-                      color: theme.subtitleProps.color,
+                      fontFamily: theme.subtitle.fontFamily,
+                      color: theme.subtitle.color,
                     }}
                   >
                     {mainArticle?.subtitle ||
@@ -351,9 +253,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                     <div
                       className="text-sm font-medium line-clamp-2 mb-1"
                       style={{
-                        fontSize: theme.headingProps.fontSize,
-                        fontWeight: theme.headingProps.fontWeight,
-                        color: theme.headingProps.color,
+                        fontFamily: theme.title.fontFamily,
+                        color: theme.title.color,
                       }}
                     >
                       {article?.title || 'Título do artigo'}
@@ -364,8 +265,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                         <div
                           className="text-xs line-clamp-2"
                           style={{
-                            fontSize: theme.subtitleProps.fontSize,
-                            color: theme.subtitleProps.color,
+                            fontFamily: theme.subtitle.fontFamily,
+                            color: theme.subtitle.color,
                           }}
                         >
                           {article?.subtitle || 'Descrição do artigo...'}
@@ -408,9 +309,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                   <div
                     className="text-sm font-medium line-clamp-2 mb-1"
                     style={{
-                      fontSize: theme.headingProps.fontSize,
-                      fontWeight: theme.headingProps.fontWeight,
-                      color: theme.headingProps.color,
+                      fontFamily: theme.title.fontFamily,
+                      color: theme.title.color,
                     }}
                   >
                     {article?.title || 'Título do artigo'}
@@ -421,19 +321,19 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                       <div
                         className="text-xs line-clamp-2"
                         style={{
-                          fontSize: theme.subtitleProps.fontSize,
-                          color: theme.subtitleProps.color,
+                          fontFamily: theme.subtitle.fontFamily,
+                          color: theme.subtitle.color,
                         }}
                       >
                         {article?.subtitle || 'Descrição do artigo...'}
                       </div>
                     )}
 
-                  {listDisplayConfig.showPublishDate && article?.created_at && (
-                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      {new Date(article.created_at).toLocaleDateString('pt-BR')}
-                    </div>
-                  )}
+                    {listDisplayConfig.showPublishDate && article?.created_at && (
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        {new Date(article.created_at).toLocaleDateString('pt-BR')}
+                      </div>
+                    )}
                 </article>
               )
             })}
@@ -449,257 +349,125 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
     const tertiaryArticles = columns['col-2'] || []
 
     return (
-      <div className="grid grid-cols-12 gap-6">
+      <div className="grid grid-cols-4 gap-6">
         {/* Main Articles */}
-        <div className="col-span-6">
-          {[...Array(2)].map((_, i) => {
-            const article = mainArticles[i]
+        <div className="col-span-4 grid grid-cols-2 gap-6">
+          {mainArticles.map((article, index) => (
+            <article key={index} className="relative">
+              {article.content?.image?.desktop_image_path && (
+                <img
+                  src={article.content.image.desktop_image_path}
+                  alt={article.title}
+                  className="w-full aspect-[16/9] object-cover rounded-lg mb-4"
+                />
+              )}
 
-            return (
-              <article
-                key={i}
-                className={['flex flex-col', i === 0 ? 'mb-6' : '']
-                  .filter(Boolean)
-                  .join(' ')}
-              >
-                {getColumnDisplayConfig('col-0').showImage &&
-                  article?.content?.image?.desktop_image_path && (
-                    <div
-                      className={`
-                    aspect-[16/9] rounded overflow-hidden mb-4
-                  ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-                `}
-                    >
-                      <div className="relative w-full h-full">
-                        <img
-                          src={article.content.image.desktop_image_path}
-                          alt={article.title}
-                          className={`w-full h-full object-${
-                            blockConfig.mediaConfig?.imageConfig?.fit || 'cover'
-                          } object-${
-                            blockConfig.mediaConfig?.imageConfig?.position ||
-                            'center'
-                          }`}
-                        />
-                        {blockConfig.mediaConfig?.imageConfig?.overlay
-                          ?.enabled && (
-                          <div
-                            className="absolute inset-0"
-                            style={{
-                              backgroundColor:
-                                blockConfig.mediaConfig.imageConfig.overlay
-                                  .color || 'rgba(0,0,0,0.5)',
-                              opacity:
-                                blockConfig.mediaConfig.imageConfig.overlay
-                                  .opacity || 0.5,
-                            }}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  )}
+              <div className="p-4">
+                <div
+                  className="text-xl font-semibold mb-2 line-clamp-2"
+                  style={{
+                    fontFamily: theme.title.fontFamily,
+                    color: theme.title.color,
+                  }}
+                >
+                  {article.title}
+                </div>
 
-                <div className="p-4">
+                {article.subtitle && (
                   <div
-                    className="text-xl font-semibold mb-2 line-clamp-2"
+                    className="line-clamp-3"
                     style={{
-                      fontSize: theme.headingProps.fontSize,
-                      fontWeight: theme.headingProps.fontWeight,
-                      color: theme.headingProps.color,
+                      fontFamily: theme.subtitle.fontFamily,
+                      color: theme.subtitle.color,
                     }}
                   >
-                    {article?.title || 'Título do artigo principal'}
+                    {article.subtitle}
                   </div>
-
-                  {getColumnDisplayConfig('col-0').showSubtitle &&
-                    blockConfig.styles.showExcerpt && (
-                      <div
-                        className="line-clamp-3"
-                        style={{
-                          fontSize: theme.subtitleProps.fontSize,
-                          color: theme.subtitleProps.color,
-                        }}
-                      >
-                        {article?.subtitle ||
-                          'Descrição do artigo principal...'}
-                      </div>
-                    )}
-
-                  {getColumnDisplayConfig('col-0').showPublishDate &&
-                    article?.created_at && (
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                        {new Date(article.created_at).toLocaleDateString(
-                          'pt-BR'
-                        )}
-                      </div>
-                    )}
-                </div>
-              </article>
-            )
-          })}
+                )}
+              </div>
+            </article>
+          ))}
         </div>
 
         {/* Secondary Articles */}
-        <div className="col-span-3 border-l border-gray-200 dark:border-gray-700 pl-6">
-          <div className="space-y-6">
-            {[...Array(4)].map((_, i) => {
-              const article = secondaryArticles[i]
+        <div className="col-span-2">
+          <div className="space-y-4">
+            {secondaryArticles.map((article, index) => (
+              <article key={index} className="flex gap-4">
+                {article.content?.image?.desktop_image_path && (
+                  <img
+                    src={article.content.image.desktop_image_path}
+                    alt={article.title}
+                    className="w-24 h-24 object-cover rounded-lg"
+                  />
+                )}
 
-              return (
-                <article
-                  key={i}
-                  className={[
-                    'flex flex-col',
-                    i !== 3
-                      ? 'border-b border-gray-200 dark:border-gray-700 pb-6'
-                      : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                >
-                  {getColumnDisplayConfig('col-1').showImage &&
-                    article?.content?.image?.desktop_image_path && (
-                      <div
-                        className={`
-                      aspect-[4/3] rounded overflow-hidden mb-4
-                      ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-                    `}
-                      >
-                        <div className="relative w-full h-full">
-                          <img
-                            src={article.content.image.desktop_image_path}
-                            alt={article.title}
-                            className={`w-full h-full object-${
-                              blockConfig.mediaConfig?.imageConfig?.fit ||
-                              'cover'
-                            } object-${
-                              blockConfig.mediaConfig?.imageConfig?.position ||
-                              'center'
-                            }`}
-                          />
-                        </div>
-                      </div>
-                    )}
+                <div className="flex-1">
+                  <div
+                    className="text-base font-medium line-clamp-2 mb-1"
+                    style={{
+                      fontFamily: theme.title.fontFamily,
+                      color: theme.title.color,
+                    }}
+                  >
+                    {article.title}
+                  </div>
 
-                  <div className="flex-1">
+                  {article.subtitle && (
                     <div
-                      className="text-base font-medium line-clamp-2 mb-1"
+                      className="text-sm line-clamp-2"
                       style={{
-                        fontSize: theme.headingProps.fontSize,
-                        fontWeight: theme.headingProps.fontWeight,
-                        color: theme.headingProps.color,
+                        fontFamily: theme.subtitle.fontFamily,
+                        color: theme.subtitle.color,
                       }}
                     >
-                      {article?.title || 'Título do artigo'}
+                      {article.subtitle}
                     </div>
-
-                    {getColumnDisplayConfig('col-1').showSubtitle &&
-                      blockConfig.styles.showExcerpt && (
-                        <div
-                          className="text-sm line-clamp-2"
-                          style={{
-                            fontSize: theme.subtitleProps.fontSize,
-                            color: theme.subtitleProps.color,
-                          }}
-                        >
-                          {article?.subtitle || 'Descrição do artigo...'}
-                        </div>
-                      )}
-
-                    {getColumnDisplayConfig('col-1').showPublishDate &&
-                      article?.created_at && (
-                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                          {new Date(article.created_at).toLocaleDateString(
-                            'pt-BR'
-                          )}
-                        </div>
-                      )}
-                  </div>
-                </article>
-              )
-            })}
+                  )}
+                </div>
+              </article>
+            ))}
           </div>
         </div>
 
         {/* Tertiary Articles */}
-        <div className="col-span-3 border-l border-gray-200 dark:border-gray-700 pl-6">
-          <div className="space-y-6">
-            {[...Array(4)].map((_, i) => {
-              const article = tertiaryArticles[i]
+        <div className="col-span-2 border-l border-gray-200 dark:border-gray-700 pl-6">
+          <div className="space-y-4">
+            {tertiaryArticles.map((article, index) => (
+              <article key={index} className="flex gap-4">
+                {article.content?.image?.desktop_image_path && (
+                  <img
+                    src={article.content.image.desktop_image_path}
+                    alt={article.title}
+                    className="w-24 h-24 object-cover rounded-lg"
+                  />
+                )}
 
-              return (
-                <article
-                  key={i}
-                  className={[
-                    'flex flex-col',
-                    i !== 3
-                      ? 'border-b border-gray-200 dark:border-gray-700 pb-6'
-                      : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                >
-                  {getColumnDisplayConfig('col-2').showImage &&
-                    article?.content?.image?.desktop_image_path && (
-                      <div
-                        className={`
-                      aspect-[4/3] rounded overflow-hidden mb-4
-                      ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-                    `}
-                      >
-                        <div className="relative w-full h-full">
-                          <img
-                            src={article.content.image.desktop_image_path}
-                            alt={article.title}
-                            className={`w-full h-full object-${
-                              blockConfig.mediaConfig?.imageConfig?.fit ||
-                              'cover'
-                            } object-${
-                              blockConfig.mediaConfig?.imageConfig?.position ||
-                              'center'
-                            }`}
-                          />
-                        </div>
-                      </div>
-                    )}
+                <div className="flex-1">
+                  <div
+                    className="text-base font-medium line-clamp-2 mb-1"
+                    style={{
+                      fontFamily: theme.title.fontFamily,
+                      color: theme.title.color,
+                    }}
+                  >
+                    {article.title}
+                  </div>
 
-                  <div className="flex-1">
+                  {article.subtitle && (
                     <div
-                      className="text-base font-medium line-clamp-2 mb-1"
+                      className="text-sm line-clamp-2"
                       style={{
-                        fontSize: theme.headingProps.fontSize,
-                        fontWeight: theme.headingProps.fontWeight,
-                        color: theme.headingProps.color,
+                        fontFamily: theme.subtitle.fontFamily,
+                        color: theme.subtitle.color,
                       }}
                     >
-                      {article?.title || 'Título do artigo'}
+                      {article.subtitle}
                     </div>
-
-                    {getColumnDisplayConfig('col-2').showSubtitle &&
-                      blockConfig.styles.showExcerpt && (
-                        <div
-                          className="text-sm line-clamp-2"
-                          style={{
-                            fontSize: theme.subtitleProps.fontSize,
-                            color: theme.subtitleProps.color,
-                          }}
-                        >
-                          {article?.subtitle || 'Descrição do artigo...'}
-                        </div>
-                      )}
-
-                    {getColumnDisplayConfig('col-2').showPublishDate &&
-                      article?.created_at && (
-                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                          {new Date(article.created_at).toLocaleDateString(
-                            'pt-BR'
-                          )}
-                        </div>
-                      )}
-                  </div>
-                </article>
-              )
-            })}
+                  )}
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </div>
@@ -744,9 +512,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
               <div
                 className="text-2xl font-bold mb-3"
                 style={{
-                  fontSize: theme.headingProps.fontSize,
-                  fontWeight: theme.headingProps.fontWeight,
-                  color: theme.headingProps.color,
+                  fontFamily: theme.title.fontFamily,
+                  color: theme.title.color,
                 }}
               >
                 {mainArticle?.title || 'Título do artigo principal'}
@@ -757,8 +524,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                   <div
                     className="text-lg line-clamp-3"
                     style={{
-                      fontSize: theme.subtitleProps.fontSize,
-                      color: theme.subtitleProps.color,
+                      fontFamily: theme.subtitle.fontFamily,
+                      color: theme.subtitle.color,
                     }}
                   >
                     {mainArticle?.subtitle ||
@@ -815,9 +582,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                     <div
                       className="text-xl font-semibold mb-2"
                       style={{
-                        fontSize: theme.headingProps.fontSize,
-                        fontWeight: theme.headingProps.fontWeight,
-                        color: theme.headingProps.color,
+                        fontFamily: theme.title.fontFamily,
+                        color: theme.title.color,
                       }}
                     >
                       {article?.title || 'Título do artigo secundário'}
@@ -828,8 +594,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                         <div
                           className="text-base line-clamp-2"
                           style={{
-                            fontSize: theme.subtitleProps.fontSize,
-                            color: theme.subtitleProps.color,
+                            fontFamily: theme.subtitle.fontFamily,
+                            color: theme.subtitle.color,
                           }}
                         >
                           {article?.subtitle ||
@@ -889,9 +655,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                     <div
                       className="text-xl font-semibold mb-2"
                       style={{
-                        fontSize: theme.headingProps.fontSize,
-                        fontWeight: theme.headingProps.fontWeight,
-                        color: theme.headingProps.color,
+                        fontFamily: theme.title.fontFamily,
+                        color: theme.title.color,
                       }}
                     >
                       {article?.title || 'Título do artigo terciário'}
@@ -902,8 +667,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                         <div
                           className="text-base line-clamp-2"
                           style={{
-                            fontSize: theme.subtitleProps.fontSize,
-                            color: theme.subtitleProps.color,
+                            fontFamily: theme.subtitle.fontFamily,
+                            color: theme.subtitle.color,
                           }}
                         >
                           {article?.subtitle ||
@@ -939,205 +704,123 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
     const tertiaryArticles = columns['col-2'] || []
 
     return (
-      <div className="grid grid-cols-12 gap-6">
-        {/* Main Video */}
-        <div className="col-span-6">
-          <article className="flex flex-col">
-            {getColumnDisplayConfig('col-0') && (
-              <div
-                className={`
-                aspect-[16/9] rounded overflow-hidden relative
-              ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-            `}
-              >
-                {mainArticle?.content?.image?.desktop_image_path && (
-                  <div className="relative w-full h-full">
-                    <img
-                      src={mainArticle.content.image.desktop_image_path}
-                      alt={mainArticle.title}
-                      className={`w-full h-full object-${
-                        blockConfig.mediaConfig?.imageConfig?.fit || 'cover'
-                      } object-${
-                        blockConfig.mediaConfig?.imageConfig?.position ||
-                        'center'
-                      }`}
-                    />
-                    <div className="absolute inset-0 bg-black/20" />
-                  </div>
-                )}
-
-                {/* Play Button */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div
-                    className={`
-                    w-16 h-16 rounded-full flex items-center justify-center
-                    ${isDarkTheme ? 'bg-white/20' : 'bg-black/20'}
-                    hover:scale-110 transition-transform duration-200
-                  `}
-                  >
-                    <div
-                      className={`
-                      w-0 h-0 border-t-[12px] border-t-transparent
-                      border-l-[20px] border-r-0
-                      border-b-[12px] border-b-transparent
-                      ${isDarkTheme ? 'border-l-white' : 'border-l-black'}
-                      ml-1
-                    `}
-                    />
-                  </div>
-                </div>
-              </div>
+      <div className="grid grid-cols-4 gap-6">
+        {/* Main Article */}
+        <div className="col-span-4">
+          <article className="relative">
+            {mainArticle?.content?.image?.desktop_image_path && (
+              <img
+                src={mainArticle.content.image.desktop_image_path}
+                alt={mainArticle.title}
+                className="w-full aspect-[21/9] object-cover rounded-lg mb-4"
+              />
             )}
 
             <div className="p-4">
               <div
-                className="text-xl font-semibold mb-2 line-clamp-2"
+                className="text-2xl font-bold mb-2"
                 style={{
-                  fontSize: theme.headingProps.fontSize,
-                  fontWeight: theme.headingProps.fontWeight,
-                  color: theme.headingProps.color,
+                  fontFamily: theme.title.fontFamily,
+                  color: theme.title.color,
                 }}
               >
-                {mainArticle?.title || 'Título do vídeo principal'}
+                {mainArticle?.title || <SwitchTitleSubtitleSkeleton variant="title" />}
               </div>
 
-              {getColumnDisplayConfig('col-0').showSubtitle &&
-                blockConfig.styles.showExcerpt && (
-                  <div
-                    className="line-clamp-2"
-                    style={{
-                      fontSize: theme.subtitleProps.fontSize,
-                      color: theme.subtitleProps.color,
-                    }}
-                  >
-                    {mainArticle?.subtitle || 'Descrição do vídeo principal...'}
-                  </div>
-                )}
-
-              {getColumnDisplayConfig('col-0').showPublishDate &&
-                mainArticle?.created_at && (
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                    {new Date(mainArticle.created_at).toLocaleDateString(
-                      'pt-BR'
-                    )}
-                  </div>
-                )}
+              {mainArticle?.subtitle && (
+                <div
+                  className="text-lg line-clamp-3"
+                  style={{
+                    fontFamily: theme.subtitle.fontFamily,
+                    color: theme.subtitle.color,
+                  }}
+                >
+                  {mainArticle.subtitle}
+                </div>
+              )}
             </div>
           </article>
         </div>
 
-        {/* Secondary Videos */}
-        <div className="col-span-3">
+        {/* Secondary Articles */}
+        <div className="col-span-2">
           <div className="grid grid-cols-1 gap-6">
-            {[...Array(2)].map((_, i) => {
-              const article = secondaryArticles[i]
+            {secondaryArticles.map((article, index) => (
+              <article key={index} className="flex flex-col">
+                {article.content?.image?.desktop_image_path && (
+                  <img
+                    src={article.content.image.desktop_image_path}
+                    alt={article.title}
+                    className="w-full aspect-[16/9] object-cover rounded-lg mb-2"
+                  />
+                )}
 
-              return (
-                <article key={i} className="flex flex-col">
-                  {getColumnDisplayConfig('col-1') && (
-                    <div
-                      className={`
-                      ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-                    `}
-                    >
-                    </div>
-                  )}
+                <div className="p-4">
+                  <div
+                    className="text-base font-medium line-clamp-2 mb-1"
+                    style={{
+                      fontFamily: theme.title.fontFamily,
+                      color: theme.title.color,
+                    }}
+                  >
+                    {article.title || <SwitchTitleSubtitleSkeleton variant="title" />}
+                  </div>
 
-                  <div className="p-4">
+                  {article.subtitle && (
                     <div
-                      className="text-base font-medium line-clamp-2 mb-1"
+                      className="text-sm line-clamp-2"
                       style={{
-                        fontSize: theme.headingProps.fontSize,
-                        fontWeight: theme.headingProps.fontWeight,
-                        color: theme.headingProps.color,
+                        fontFamily: theme.subtitle.fontFamily,
+                        color: theme.subtitle.color,
                       }}
                     >
-                      {article?.title || <SwitchTitleSubtitleSkeleton variant="title" />}
+                      {article.subtitle}
                     </div>
-
-                    {getColumnDisplayConfig('col-1').showSubtitle &&
-                      blockConfig.styles.showExcerpt && (
-                        <div
-                          className="text-sm line-clamp-2"
-                          style={{
-                            fontSize: theme.subtitleProps.fontSize,
-                            color: theme.subtitleProps.color,
-                          }}
-                        >
-                            {article?.subtitle ||
-                            <SwitchTitleSubtitleSkeleton variant="subtitle" />}
-                        </div>
-                      )}
-
-                    {getColumnDisplayConfig('col-1').showPublishDate &&
-                      article?.created_at && (
-                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                          {new Date(article.created_at).toLocaleDateString(
-                            'pt-BR'
-                          )}
-                        </div>
-                      )}
-                  </div>
-                </article>
-              )
-            })}
+                  )}
+                </div>
+              </article>
+            ))}
           </div>
         </div>
 
-        {/* Tertiary Videos */}
-        <div className="col-span-3">
+        {/* Tertiary Articles */}
+        <div className="col-span-2">
           <div className="grid grid-cols-1 gap-6">
-            {[...Array(2)].map((_, i) => {
-              const article = tertiaryArticles[i]
+            {tertiaryArticles.map((article, index) => (
+              <article key={index} className="flex flex-col">
+                {article.content?.image?.desktop_image_path && (
+                  <img
+                    src={article.content.image.desktop_image_path}
+                    alt={article.title}
+                    className="w-full aspect-[16/9] object-cover rounded-lg mb-2"
+                  />
+                )}
 
-              return (
-                <article key={i} className="flex flex-col">
-                  {getColumnDisplayConfig('col-2') && (
-                    <div
-                      className={`
-                      ${isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'}
-                    `}
-                    ></div>
-                  )}
+                <div className="p-4">
+                  <div
+                    className="text-base font-medium line-clamp-2 mb-1"
+                    style={{
+                      fontFamily: theme.title.fontFamily,
+                      color: theme.title.color,
+                    }}
+                  >
+                    {article.title || <SwitchTitleSubtitleSkeleton variant="title" />}
+                  </div>
 
-                  <div className="p-4">
+                  {article.subtitle && (
                     <div
-                      className="text-base font-medium line-clamp-2 mb-1"
+                      className="text-sm line-clamp-2"
                       style={{
-                        fontSize: theme.headingProps.fontSize,
-                        fontWeight: theme.headingProps.fontWeight,
-                        color: theme.headingProps.color,
+                        fontFamily: theme.subtitle.fontFamily,
+                        color: theme.subtitle.color,
                       }}
                     >
-                      {article?.title || <SwitchTitleSubtitleSkeleton variant="title" />}
+                      {article.subtitle}
                     </div>
-
-                    {getColumnDisplayConfig('col-2').showSubtitle &&
-                      blockConfig.styles.showExcerpt && (
-                        <div
-                          className="text-sm line-clamp-2"
-                          style={{
-                            fontSize: theme.subtitleProps.fontSize,
-                            color: theme.subtitleProps.color,
-                          }}
-                        >
-                          {article?.subtitle ||
-                            <SwitchTitleSubtitleSkeleton variant="subtitle" />}
-                        </div>
-                      )}
-
-                    {getColumnDisplayConfig('col-2').showPublishDate &&
-                      article?.created_at && (
-                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                          {new Date(article.created_at).toLocaleDateString(
-                            'pt-BR'
-                          )}
-                        </div>
-                      )}
-                  </div>
-                </article>
-              )
-            })}
+                  )}
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </div>

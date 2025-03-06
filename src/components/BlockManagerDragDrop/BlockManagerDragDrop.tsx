@@ -4,6 +4,7 @@ import type { BlockConfig } from './components/StyleConfigModal';
 import { GridVariantType, MixedVariantType, FeaturedVariantType, ListVariantType } from './types';
 import { PageResponse } from './interfaces/pages.types';
 import { Editorial } from './interfaces/editorial.types';
+import { ClientTheme } from './types';
 
 // Static imports
 import GridManager from './components/GridManager';
@@ -75,6 +76,7 @@ interface BlockManagerDragDropProps {
   onPageSelect?: (pageId: string) => void;
   onEditorialSelect?: (editorialId: string, subEditorialId?: string) => void;
   onPublishBlock?: () => void;
+  clientGeneralSettingsData: ClientTheme;
 }
 
 const BlockManagerDragDrop = React.memo(({
@@ -92,7 +94,8 @@ const BlockManagerDragDrop = React.memo(({
   isEditorialsLoading = false,
   onPageSelect,
   onEditorialSelect,
-  onPublishBlock
+  onPublishBlock,
+  clientGeneralSettingsData
 }: BlockManagerDragDropProps) => {
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [blockConfig, setBlockConfig] = useState<BlockConfig>(config || defaultBlockConfig);
@@ -171,6 +174,7 @@ const BlockManagerDragDrop = React.memo(({
           onPageSelect={onPageSelect}
           onEditorialSelect={onEditorialSelect}
           onPublishBlock={onPublishBlock}
+          clientGeneralSettingsData={clientGeneralSettingsData}
         />
       )}
 
@@ -191,6 +195,7 @@ const BlockManagerDragDrop = React.memo(({
           onPageSelect={onPageSelect}
           onEditorialSelect={onEditorialSelect}
           onPublishBlock={onPublishBlock}
+          clientGeneralSettingsData={clientGeneralSettingsData}
         />
       )}
 
