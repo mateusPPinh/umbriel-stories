@@ -4,6 +4,7 @@ import VideoGrid from '../blocks/MixedBlock/variants/VideoGrid';
 import { BlockVariant } from '../types';
 import { createArticles } from './mockData';
 import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
+import { mockClientTheme } from './mockClientTheme';
 
 export default {
   title: 'PageBlockV2/Mixed/VideoGrid',
@@ -17,7 +18,9 @@ export default {
   ],
 } as Meta;
 
-const Template: Story = (args) => <VideoGrid {...args} />;
+const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean }> = (args) => (
+  <VideoGrid {...args} clientGeneralSettingsData={mockClientTheme} />
+);
 
 // Mock articles for each column
 const videoArticles = {

@@ -1,8 +1,9 @@
 import React from 'react'
-import { BlockVariant, Article, GridStyles } from '../../../types'
+import { BlockVariant, Article, GridStyles, ClientTheme } from '../../../types'
+import { defaultClasses } from '../../../constants/defaultClasses'
 import { generateArticleUrl } from '../../../utils/generateArticleUrl'
 import Link from '../../../../Link'
-import { defaultClasses } from '../../../constants/defaultClasses'
+import { useClientTheme } from '../../../hooks/useClientTheme'
 
 interface BaseVariantProps {
   variant: BlockVariant & {
@@ -11,11 +12,17 @@ interface BaseVariantProps {
     }
   }
   isDarkTheme?: boolean
-  classes: any
-  
+  customStyles?: any
+  clientGeneralSettingsData: ClientTheme
 }
 
-const Masonry: React.FC<BaseVariantProps> = ({ variant, isDarkTheme }) => {
+const Masonry: React.FC<BaseVariantProps> = ({
+  variant,
+  isDarkTheme,
+  customStyles,
+  clientGeneralSettingsData
+}) => {
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme })
   const classes = defaultClasses.mixed.masonry || { container: '' }
   const { articles } = variant.config
   const items = Object.values(articles).flat()
@@ -59,12 +66,26 @@ const Masonry: React.FC<BaseVariantProps> = ({ variant, isDarkTheme }) => {
                   aria-label={article.title}
                   className="hover:underline transition-all duration-300"
                 >
-                  <h2 className={classes.heading || 'mb-3'}>{article.title}</h2>
+                  <h2 
+                    className={classes.heading || 'mb-3'}
+                    style={{
+                      fontFamily: theme.title.fontFamily,
+                      color: theme.title.color,
+                    }}
+                  >
+                    {article.title}
+                  </h2>
                 </Link>
-                {styles.showExcerpt ? (
-                  <p className={classes.subtitle || ''}>{article.subtitle}</p>
-                ) : (
-                  <p className={classes.subtitle || ''}>{article.subtitle}</p>
+                {styles.showExcerpt && article.subtitle && (
+                  <p 
+                    className={classes.subtitle || ''}
+                    style={{
+                      fontFamily: theme.subtitle.fontFamily,
+                      color: theme.subtitle.color,
+                    }}
+                  >
+                    {article.subtitle}
+                  </p>
                 )}
               </div>
             </article>

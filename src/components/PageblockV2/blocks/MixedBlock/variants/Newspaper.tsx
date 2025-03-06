@@ -1,8 +1,9 @@
 import React from 'react'
-import { BlockVariant, Article, GridStyles } from '../../../types'
+import { BlockVariant, Article, GridStyles, ClientTheme } from '../../../types'
+import { defaultClasses } from '../../../constants/defaultClasses'
 import { generateArticleUrl } from '../../../utils/generateArticleUrl'
 import Link from '../../../../Link'
-import { defaultClasses } from '../../../constants/defaultClasses'
+import { useClientTheme } from '../../../hooks/useClientTheme'
 
 interface BaseVariantProps {
   variant: BlockVariant & {
@@ -12,10 +13,16 @@ interface BaseVariantProps {
   }
   isDarkTheme?: boolean
   customStyles?: any
-  ;
+  clientGeneralSettingsData: ClientTheme
 }
 
-const Newspaper: React.FC<BaseVariantProps> = ({ variant, isDarkTheme }) => {
+const Newspaper: React.FC<BaseVariantProps> = ({
+  variant,
+  isDarkTheme,
+  customStyles,
+  clientGeneralSettingsData
+}) => {
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme })
   const classes = defaultClasses.mixed.newspaper || { container: '' }
   const { articles } = variant.config
   const styles = variant.config.styles || {}
@@ -25,19 +32,12 @@ const Newspaper: React.FC<BaseVariantProps> = ({ variant, isDarkTheme }) => {
 
   return (
     <div className={`${classes.container}`}>
-      <div
-        className={classes?.grid || 'grid grid-cols-1 lg:grid-cols-12 gap-6'}
-      >
+      <div className={classes?.grid || 'grid grid-cols-1 lg:grid-cols-12 gap-6'}>
         {/* Main Article */}
         {mainArticle && (
           <article className={classes?.mainArticle || 'lg:col-span-6'}>
             {mainArticle.content?.image?.desktop_image_path && (
-              <div
-                className={
-                  classes?.imageWrapper ||
-                  'relative w-full overflow-hidden mb-4'
-                }
-              >
+              <div className={classes?.imageWrapper || 'relative w-full overflow-hidden mb-4'}>
                 <img
                   src={mainArticle.content?.image?.desktop_image_path}
                   alt={mainArticle.title}
@@ -47,21 +47,26 @@ const Newspaper: React.FC<BaseVariantProps> = ({ variant, isDarkTheme }) => {
             )}
 
             <div className={classes?.content || 'p-4'}>
-              <Link
-                href={generateArticleUrl( mainArticle)}
-                className="hover:underline transition-all duration-300"
-              >
-                <h2 className={classes?.heading || 'mb-3'}>
+              <Link href={generateArticleUrl(mainArticle)} className="hover:underline transition-all duration-300">
+                <h2 
+                  className={classes?.heading || 'mb-3'}
+                  style={{
+                    fontFamily: theme.title.fontFamily,
+                    color: theme.title.color,
+                  }}
+                >
                   {mainArticle.title}
                 </h2>
               </Link>
 
-              {styles.showExcerpt ? (
-                <p className={classes?.subtitle || ''}>
-                  {mainArticle.subtitle}
-                </p>
-              ) : (
-                <p className={classes?.subtitle || ''}>
+              {styles.showExcerpt && mainArticle.subtitle && (
+                <p 
+                  className={classes?.subtitle || ''}
+                  style={{
+                    fontFamily: theme.subtitle.fontFamily,
+                    color: theme.subtitle.color,
+                  }}
+                >
                   {mainArticle.subtitle}
                 </p>
               )}
@@ -72,17 +77,9 @@ const Newspaper: React.FC<BaseVariantProps> = ({ variant, isDarkTheme }) => {
         {/* Secondary Articles */}
         <div className={classes?.secondaryArticles || 'lg:col-span-3'}>
           {secondaryArticles.map((article: Article) => (
-            <article
-              key={article.id}
-              className={classes?.secondaryArticle || 'mb-6 last:mb-0'}
-            >
+            <article key={article.id} className={classes?.secondaryArticle || 'mb-6 last:mb-0'}>
               {article.content?.image?.desktop_image_path && (
-                <div
-                  className={
-                    classes?.imageWrapper ||
-                    'relative w-full overflow-hidden mb-4'
-                  }
-                >
+                <div className={classes?.imageWrapper || 'relative w-full overflow-hidden mb-4'}>
                   <img
                     src={article.content.image.desktop_image_path}
                     alt={article.title}
@@ -92,19 +89,28 @@ const Newspaper: React.FC<BaseVariantProps> = ({ variant, isDarkTheme }) => {
               )}
 
               <div className={classes?.content || 'p-4'}>
-                <Link
-                  href={generateArticleUrl(article)}
-                  className="hover:underline transition-all duration-300"
-                >
-                  <h2 className={classes?.heading || 'mb-3'}>
+                <Link href={generateArticleUrl(article)} className="hover:underline transition-all duration-300">
+                  <h3 
+                    className={classes?.heading || 'mb-3'}
+                    style={{
+                      fontFamily: theme.title.fontFamily,
+                      color: theme.title.color,
+                    }}
+                  >
                     {article.title}
-                  </h2>
+                  </h3>
                 </Link>
 
-                {styles.showExcerpt ? (
-                  <p className={classes?.subtitle || ''}>{article.subtitle}</p>
-                ) : (
-                  <p className={classes?.subtitle || ''}>{article.subtitle}</p>
+                {styles.showExcerpt && article.subtitle && (
+                  <p 
+                    className={classes?.subtitle || ''}
+                    style={{
+                      fontFamily: theme.subtitle.fontFamily,
+                      color: theme.subtitle.color,
+                    }}
+                  >
+                    {article.subtitle}
+                  </p>
                 )}
               </div>
             </article>
@@ -114,19 +120,11 @@ const Newspaper: React.FC<BaseVariantProps> = ({ variant, isDarkTheme }) => {
         {/* Tertiary Articles */}
         <div className={classes?.tertiaryArticles || 'lg:col-span-3'}>
           {tertiaryArticles.map((article: Article) => (
-            <article
-              key={article.id}
-              className={classes?.tertiaryArticle || 'mb-6 last:mb-0'}
-            >
+            <article key={article.id} className={classes?.tertiaryArticle || 'mb-6 last:mb-0'}>
               {article.content?.image?.desktop_image_path && (
-                <div
-                  className={
-                    classes?.imageWrapper ||
-                    'relative w-full overflow-hidden mb-4'
-                  }
-                >
+                <div className={classes?.imageWrapper || 'relative w-full overflow-hidden mb-4'}>
                   <img
-                    src={article.content.image.desktop_image_path}
+                    src={article.content?.image?.desktop_image_path}
                     alt={article.title}
                     className={classes?.image || 'w-full h-full object-cover'}
                   />
@@ -134,19 +132,28 @@ const Newspaper: React.FC<BaseVariantProps> = ({ variant, isDarkTheme }) => {
               )}
 
               <div className={classes?.content || 'p-4'}>
-                <Link
-                  href={generateArticleUrl(article)}
-                  className="hover:underline transition-all duration-300"
-                >
-                  <h2 className={classes?.heading || 'mb-3'}>
+                <Link href={generateArticleUrl(article)} className="hover:underline transition-all duration-300">
+                  <h3 
+                    className={classes?.heading || 'mb-3'}
+                    style={{
+                      fontFamily: theme.title.fontFamily,
+                      color: theme.title.color,
+                    }}
+                  >
                     {article.title}
-                  </h2>
+                  </h3>
                 </Link>
 
-                {styles.showExcerpt ? (
-                  <p className={classes?.subtitle || ''}>{article.subtitle}</p>
-                ) : (
-                  <p className={classes?.subtitle || ''}>{article.subtitle}</p>
+                {styles.showExcerpt && article.subtitle && (
+                  <p 
+                    className={classes?.subtitle || ''}
+                    style={{
+                      fontFamily: theme.subtitle.fontFamily,
+                      color: theme.subtitle.color,
+                    }}
+                  >
+                    {article.subtitle}
+                  </p>
                 )}
               </div>
             </article>

@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { BlockVariant, Article, GridStyles } from '../../../types';
+import { BlockVariant, Article, GridStyles, ClientTheme } from '../../../types';
 import { generateArticleUrl } from '../../../utils/generateArticleUrl';
 import Link from '../../../../Link';
 import { defaultClasses } from '../../../constants/defaultClasses';
+import { useClientTheme } from '../../../hooks/useClientTheme';
 
 interface BaseVariantProps {
   variant: BlockVariant & {
@@ -21,6 +22,7 @@ interface BaseVariantProps {
   };
   isDarkTheme?: boolean;
   customStyles?: any;
+  clientGeneralSettingsData: ClientTheme;
 }
 
 const useFormatTime = (time: number) => {
@@ -32,8 +34,10 @@ const useFormatTime = (time: number) => {
 const VideoGrid: React.FC<BaseVariantProps> = ({ 
   variant, 
   isDarkTheme, 
-  customStyles
+  customStyles,
+  clientGeneralSettingsData
 }) => {
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme })
   const classes = defaultClasses.mixed.video || { container: '' };
   const { articles } = variant.config;
   const styles = variant.config.styles || {};
@@ -191,6 +195,11 @@ const VideoGrid: React.FC<BaseVariantProps> = ({
               <Link 
                 href={generateArticleUrl(article)}
                 className="hover:underline transition-all duration-300"
+                style={{
+                  color: theme.title.color,  
+                  fontFamily: theme.title.fontFamily,
+                  
+                }}
               >
                 <h2 className={`${customStyles?.heading || 'text-xl font-semibold mb-2'} text-white`}>
                   {article.title}
@@ -198,7 +207,10 @@ const VideoGrid: React.FC<BaseVariantProps> = ({
               </Link>
               
               {styles.showExcerpt && (
-                <p className={`${customStyles?.subtitle || 'text-base'} text-white/80`}>
+                <p className={`${customStyles?.subtitle || 'text-base'} text-white/80`} style={{
+                  color: theme.subtitle.color,
+                  fontFamily: theme.subtitle.fontFamily,
+                }}>
                   {article.subtitle}
                 </p>
               )}
@@ -297,13 +309,19 @@ const VideoGrid: React.FC<BaseVariantProps> = ({
           href={generateArticleUrl(article)}
           className="hover:underline transition-all duration-300"
         >
-          <h2 className={`${classes?.heading || 'text-xl font-semibold mb-2'} ${isDarkTheme ? 'text-white' : 'text-gray-900'}`}>
+          <h2 className={`${classes?.heading || 'text-xl font-semibold mb-2'} ${isDarkTheme ? 'text-white' : 'text-gray-900'}`} style={{
+            color: theme.title.color,
+            fontFamily: theme.title.fontFamily,
+          }}>
             {article.title}
           </h2>
         </Link>
         
         {styles.showExcerpt && (
-          <p className={`${classes?.subtitle || 'text-base'} ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'}`}>
+          <p className={`${classes?.subtitle || 'text-base'} ${isDarkTheme ? 'text-gray-300' : 'text-gray-600'}`} style={{
+            color: theme.subtitle.color,
+            fontFamily: theme.subtitle.fontFamily,
+          }}>
             {article.subtitle}
           </p>
         )}

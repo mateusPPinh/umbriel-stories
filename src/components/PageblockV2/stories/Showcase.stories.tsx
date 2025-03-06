@@ -2,7 +2,8 @@ import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import Showcase from '../blocks/MixedBlock/variants/Showcase';
 import { BlockVariant } from '../types';
-import { createArticles, baseVariantConfig } from './mockData';
+import { createArticles } from './mockData';
+import { mockClientTheme } from './mockClientTheme';
 import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
 
 export default {
@@ -17,30 +18,29 @@ export default {
   ],
 } as Meta;
 
-const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean }> = (args) => <Showcase {...args} />;
+const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean }> = (args) => (
+  <Showcase {...args} clientGeneralSettingsData={mockClientTheme} />
+);
 
-// Criar artigos mock
-const showcaseArticles = {
-  'col-0': createArticles(1),  // Featured article
-  'col-1': createArticles(4),  // Grid articles
-  'col-2': createArticles(5)   // List articles
-};
-
-// Mock base para Showcase variant
 const baseShowcaseVariant: BlockVariant = {
   variantType: 'showcase',
   variantPosition: 1,
   config: {
+    mediaConfig: {
+      type: 'image',
+      customUrl: '',
+      useArticleMedia: true
+    },
     layout: {
       columns: 12,
       gap: '24px',
       padding: '24px',
-      imageSize: '100%',
+      imageSize: 'medium',
       aspectRatio: '16/9',
       responsive: {
-        mobile: 12,
-        tablet: 12,
-        desktop: 12
+        mobile: 1,
+        tablet: 2,
+        desktop: 3
       },
       styles: {
         grid: {
@@ -52,7 +52,6 @@ const baseShowcaseVariant: BlockVariant = {
         columnStyles: {}
       }
     },
-    articles: showcaseArticles,
     styles: {
       theme: {
         light: {
@@ -84,73 +83,74 @@ const baseShowcaseVariant: BlockVariant = {
           }
         }
       },
+      showExcerpt: true,
+      showMetadata: false,
       titleSize: 'xl',
       columnStyle: {},
-      imageHeight: '300px',
-      showExcerpt: true,
-      showMetadata: false
+      imageHeight: '300px'
     },
-    mediaConfig: {
-      type: "image",
-      customUrl: "",
-      useArticleMedia: true
+    articles: {
+      'col-0': [createArticles(1)[0]].map(article => ({
+        ...article,
+        content: {
+          ...article.content,
+          image: {
+            desktop_image_path: article.content?.image?.desktop_image_path || undefined,
+            mobile_image_path: article.content?.image?.image_mobile_path || undefined
+          }
+        }
+      })),
+      'col-1': createArticles(3).map(article => ({
+        ...article,
+        content: {
+          ...article.content,
+          image: {
+            desktop_image_path: article.content?.image?.desktop_image_path || undefined,
+            mobile_image_path: article.content?.image?.image_mobile_path || undefined
+          }
+        }
+      })),
+      'col-2': createArticles(4).map(article => ({
+        ...article,
+        content: {
+          ...article.content,
+          image: {
+            desktop_image_path: article.content?.image?.desktop_image_path || undefined,
+            mobile_image_path: article.content?.image?.image_mobile_path || undefined
+          }
+        }
+      }))
     }
   }
 };
 
-// Default variant
 export const Default = Template.bind({});
 Default.args = {
   variant: baseShowcaseVariant,
   isDarkTheme: false
 };
 
-// Modern style
-export const ModernStyle = Template.bind({});
-ModernStyle.args = {
+export const DarkTheme = Template.bind({});
+DarkTheme.args = {
+  variant: baseShowcaseVariant,
+  isDarkTheme: true
+};
+
+export const WithoutExcerpt = Template.bind({});
+WithoutExcerpt.args = {
   variant: {
     ...baseShowcaseVariant,
     config: {
       ...baseShowcaseVariant.config,
       styles: {
         ...baseShowcaseVariant.config.styles,
-        theme: {
-          light: {
-            columnStyle: {
-              background: '#ffffff'
-            },
-            headingProps: {
-              fontSize: '2xl',
-              fontWeight: 700,
-              color: '#1a1a1a'
-            },
-            subtitleProps: {
-              fontSize: 'xl',
-              color: '#4a5568'
-            }
-          },
-          dark: {
-            columnStyle: {
-              background: '#1a1a1a'
-            },
-            headingProps: {
-              fontSize: '2xl',
-              fontWeight: 700,
-              color: '#ffffff'
-            },
-            subtitleProps: {
-              fontSize: 'xl',
-              color: '#a0aec0'
-            }
-          }
-        }
+        showExcerpt: false
       }
     }
   },
   isDarkTheme: false
 };
 
-// Minimal style
 export const MinimalStyle = Template.bind({});
 MinimalStyle.args = {
   variant: {
@@ -193,11 +193,4 @@ MinimalStyle.args = {
     }
   },
   isDarkTheme: false
-};
-
-// Dark theme
-export const DarkTheme = Template.bind({});
-DarkTheme.args = {
-  ...Default.args,
-  isDarkTheme: true
 }; 

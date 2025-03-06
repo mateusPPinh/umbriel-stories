@@ -1,8 +1,9 @@
 import React from 'react'
-import { BlockVariant, Article, GridStyles } from '../../../types'
+import { BlockVariant, Article, GridStyles, ClientTheme } from '../../../types'
 import { defaultClasses } from '../../../constants/defaultClasses'
 import { generateArticleUrl } from '../../../utils/generateArticleUrl'
 import Link from '../../../../Link'
+import { useClientTheme } from '../../../hooks/useClientTheme'
 
 interface BaseVariantProps {
   variant: BlockVariant & {
@@ -12,15 +13,16 @@ interface BaseVariantProps {
   }
   isDarkTheme?: boolean
   customStyles?: any
-  ;
+  clientGeneralSettingsData: ClientTheme
 }
 
 const Sidebar: React.FC<BaseVariantProps> = ({
   variant,
   isDarkTheme,
   customStyles,
-  
+  clientGeneralSettingsData
 }) => {
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme })
   const classes = defaultClasses.mixed.sidebar
   const { articles } = variant.config
   const items = Object.values(articles).flat()
@@ -57,20 +59,28 @@ const Sidebar: React.FC<BaseVariantProps> = ({
 
                   <div className={customStyles?.content || classes.content}>
                     <Link
-                      href={generateArticleUrl( mainArticle)}
+                      href={generateArticleUrl(mainArticle)}
                       className="hover:underline transition-all duration-300"
                     >
-                      <h2 className={classes.heading || customStyles?.heading}>
+                      <h2 
+                        className={classes.heading || customStyles?.heading}
+                        style={{
+                          fontFamily: theme.title.fontFamily,
+                          color: theme.title.color,
+                        }}
+                      >
                         {mainArticle.title}
                       </h2>
                     </Link>
 
-                    {styles.showExcerpt ? (
-                      <p className={customStyles?.subtitle || classes.subtitle}>
-                        {mainArticle.subtitle}
-                      </p>
-                    ) : (
-                      <p className={customStyles?.subtitle || classes.subtitle}>
+                    {styles.showExcerpt && (
+                      <p 
+                        className={customStyles?.subtitle || classes.subtitle}
+                        style={{
+                          fontFamily: theme.subtitle.fontFamily,
+                          color: theme.subtitle.color,
+                        }}
+                      >
                         {mainArticle.subtitle}
                       </p>
                     )}
@@ -116,17 +126,25 @@ const Sidebar: React.FC<BaseVariantProps> = ({
                       href={generateArticleUrl(article)}
                       className="hover:underline transition-all duration-300"
                     >
-                      <h2 className={customStyles?.heading || classes.heading}>
+                      <h2 
+                        className={customStyles?.heading || classes.heading}
+                        style={{
+                          fontFamily: theme.title.fontFamily,
+                          color: theme.title.color,
+                        }}
+                      >
                         {article.title}
                       </h2>
                     </Link>
 
-                    {styles.showExcerpt ? (
-                      <p className={customStyles?.subtitle || classes.subtitle}>
-                        {article.subtitle}
-                      </p>
-                    ) : (
-                      <p className={customStyles?.subtitle || classes.subtitle}>
+                    {styles.showExcerpt && (
+                      <p 
+                        className={customStyles?.subtitle || classes.subtitle}
+                        style={{
+                          fontFamily: theme.subtitle.fontFamily,
+                          color: theme.subtitle.color,
+                        }}
+                      >
                         {article.subtitle}
                       </p>
                     )}

@@ -1,8 +1,9 @@
 import React from 'react';
-import { BlockVariant, Article, GridStyles } from '../../../types';
+import { BlockVariant, Article, GridStyles, ClientTheme } from '../../../types';
 import { generateArticleUrl } from '../../../utils/generateArticleUrl';
 import Link from '../../../../Link';
 import { defaultClasses } from '../../../constants/defaultClasses';
+import { useClientTheme } from '../../../hooks/useClientTheme';
 
 
 
@@ -14,10 +15,13 @@ interface BaseVariantProps {
   };
   isDarkTheme?: boolean;
   customStyles?: any;
+  clientGeneralSettingsData: ClientTheme
 }
 
 
-const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles }) => {
+const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles, clientGeneralSettingsData }) => {
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme })
+
   const classes = defaultClasses.mixed.magazine || { container: '' };
   const { articles } = variant.config;
   const styles = variant.config.styles || {};
@@ -48,9 +52,16 @@ const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
               )}
               
               <div className={customStyles?.content || 'p-4'}>
-                <Link className="hover:underline transition-all duration-300" href={generateArticleUrl(mainArticle)}>
+                <Link style={{
+                      fontFamily: theme.title.fontFamily,
+                      color: theme.title.color,
+                    }} className="hover:underline transition-all duration-300" href={generateArticleUrl(mainArticle)}>
                   <h2 
                     className={customStyles?.heading || 'text-2xl font-bold mb-3'} 
+                    style={{
+                      fontFamily: theme.title.fontFamily,
+                      color: theme.title.color,
+                    }}
                   >
                     {mainArticle.title}
                   </h2>
@@ -59,12 +70,20 @@ const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
                 {styles.showExcerpt ? (
                   <p 
                     className={customStyles?.subtitle || 'text-lg'} 
+                    style={{
+                      fontFamily: theme.subtitle.fontFamily,
+                      color: theme.subtitle.color,
+                    }}
                   >
                     {mainArticle.subtitle}
                   </p>
                 ) : (
                   <p 
                     className={customStyles?.subtitle || 'text-lg'} 
+                    style={{
+                      fontFamily: theme.subtitle.fontFamily,
+                      color: theme.subtitle.color,
+                    }}
                   >
                     {mainArticle.subtitle}
                   </p>
@@ -93,9 +112,16 @@ const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
                 )}
                 
                 <div className={customStyles?.content || 'p-4'}>
-                  <Link className="hover:underline transition-all duration-300" href={generateArticleUrl(article)}>
+                    <Link style={{
+                      fontFamily: theme.title.fontFamily,
+                      color: theme.title.color,
+                    }} className="hover:underline transition-all duration-300" href={generateArticleUrl(article)}>
                     <h2 
                       className={customStyles?.heading || 'text-xl font-semibold mb-2'} 
+                      style={{
+                        fontFamily: theme.title.fontFamily,
+                        color: theme.title.color,
+                      }}
                     >
                       {article.title}
                     </h2>
@@ -104,12 +130,20 @@ const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
                   {styles.showExcerpt ? (
                     <p 
                       className={customStyles?.subtitle || 'text-base'} 
+                      style={{
+                        fontFamily: theme.subtitle.fontFamily,
+                        color: theme.subtitle.color,
+                      }}
                     >
                       {article.subtitle}
                     </p>
                     ) : (
                     <p 
                       className={customStyles?.subtitle || 'text-base'} 
+                      style={{
+                        fontFamily: theme.subtitle.fontFamily,
+                        color: theme.subtitle.color,
+                      }}
                     >
                       {article.subtitle}
                     </p>
@@ -139,9 +173,16 @@ const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
                 )}
                 
                 <div className={customStyles?.content || 'p-4'}>
-                  <Link className="hover:underline transition-all duration-300" href={generateArticleUrl(article)}>
+                  <Link style={{
+                      fontFamily: theme.title.fontFamily,
+                      color: theme.title.color,
+                    }} className="hover:underline transition-all duration-300" href={generateArticleUrl(article)}>
                     <h2 
                       className={customStyles?.heading || 'text-xl font-semibold mb-2'} 
+                      style={{
+                        fontFamily: theme.title.fontFamily,
+                        color: theme.title.color,
+                      }}
                     >
                       {article.title}
                     </h2>
@@ -150,12 +191,20 @@ const Magazine: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyl
                   {styles.showExcerpt ? (
                     <p 
                       className={customStyles?.subtitle || 'text-base'} 
+                      style={{
+                        fontFamily: theme.subtitle.fontFamily,
+                        color: theme.subtitle.color,
+                      }}
                     >
                       {article.subtitle}
                     </p>
                     ) : (
                     <p 
                       className={customStyles?.subtitle || 'text-base'} 
+                      style={{
+                        fontFamily: theme.subtitle.fontFamily,
+                        color: theme.subtitle.color,
+                      }}
                     >
                       {article.subtitle}
                     </p>

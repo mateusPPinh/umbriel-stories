@@ -1,5 +1,5 @@
 import React from 'react';
-import { PageBlock } from './types';
+import { PageBlock, ClientTheme } from './types';
 import GridBlock from './blocks/GridBlock';
 import FeaturedBlock from './blocks/FeaturedBlock';
 import ListBlock from './blocks/ListBlock';
@@ -8,9 +8,10 @@ import MixedBlock from './blocks/MixedBlock';
 interface PageBlockV2Props {
   blocksData: PageBlock[];
   isDarkTheme?: boolean;
+  clientGeneralSettingsData: ClientTheme;
 }
 
-const PageBlockV2 = ({ blocksData, isDarkTheme }: PageBlockV2Props) => {
+const PageBlockV2 = ({ blocksData, isDarkTheme, clientGeneralSettingsData }: PageBlockV2Props) => {
   if (!Array.isArray(blocksData)) {
     console.error('blocksData deve ser um array');
     return null;
@@ -34,7 +35,7 @@ const PageBlockV2 = ({ blocksData, isDarkTheme }: PageBlockV2Props) => {
           case 'list':
             return <ListBlock key={block.id} block={block} isDarkTheme={isDarkTheme} />;
           case 'mixed':
-            return <MixedBlock key={block.id} block={block} isDarkTheme={isDarkTheme} />;
+            return <MixedBlock key={block.id} block={block} isDarkTheme={isDarkTheme} clientGeneralSettingsData={clientGeneralSettingsData} />;
           default:
             console.warn(`Template não suportado: ${template}`);
             return null;

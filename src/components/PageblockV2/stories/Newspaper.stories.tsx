@@ -3,6 +3,7 @@ import { Story, Meta } from '@storybook/react';
 import Newspaper from '../blocks/MixedBlock/variants/Newspaper';
 import { BlockVariant } from '../types';
 import { createArticles } from './mockData';
+import { mockClientTheme } from './mockClientTheme';
 import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
 
 export default {
@@ -17,151 +18,139 @@ export default {
   ],
 } as Meta;
 
-const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean }> = (args) => <Newspaper {...args} />;
+const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean }> = (args) => (
+  <Newspaper {...args} clientGeneralSettingsData={mockClientTheme} />
+);
 
-// Criar artigos mock
-const newspaperArticles = {
-  'col-0': createArticles(1),  // Main article
-  'col-1': createArticles(3),  // Column articles
-  'col-2': createArticles(5)   // Secondary articles
-};
-
-// Mock base para Newspaper variant
 const baseNewspaperVariant: BlockVariant = {
   variantType: 'newspaper',
   variantPosition: 1,
   config: {
+    mediaConfig: {
+      type: 'image',
+      customUrl: '',
+      useArticleMedia: true
+    },
     layout: {
-      columns: 3,
-      gap: '0',
-      padding: '0',
+      columns: 12,
+      gap: '24px',
+      padding: '24px',
+      imageSize: 'medium',
+      aspectRatio: '16/9',
       responsive: {
         mobile: 1,
         tablet: 2,
         desktop: 3
+      },
+      styles: {
+        grid: {
+          autoRows: 'auto',
+          templateColumns: 'repeat(12, 1fr)'
+        },
+        width: '100%',
+        backgroundColor: 'transparent',
+        columnStyles: {}
       }
     },
-    articles: newspaperArticles,
     styles: {
       theme: {
         light: {
-          mainArticleStyle: {
-            background: "#ffffff",
-            padding: "32px",
-            borderRight: "1px solid #e2e8f0"
-          },
           columnStyle: {
-            background: "#ffffff",
-            padding: "24px",
-            borderRight: "1px solid #e2e8f0"
+            background: '#ffffff'
           },
           headingProps: {
-            fontSize: {
-              main: "4xl",
-              column: "xl",
-              secondary: "lg"
-            },
-            fontWeight: {
-              main: "bold",
-              column: "semibold",
-              secondary: "medium"
-            },
-            fontFamily: {
-              main: "serif",
-              column: "serif",
-              secondary: "sans"
-            },
-            color: "#1a1a1a"
+            fontSize: 'xl',
+            fontWeight: 700,
+            color: '#1a1a1a'
           },
           subtitleProps: {
-            fontSize: {
-              main: "xl",
-              column: "lg",
-              secondary: "base"
-            },
-            color: "#4a5568",
-            fontFamily: "serif"
+            fontSize: 'lg',
+            color: '#4a5568'
           }
         },
         dark: {
-          mainArticleStyle: {
-            background: "#1a1a1a",
-            padding: "32px",
-            borderRight: "1px solid #2d3748"
-          },
           columnStyle: {
-            background: "#1a1a1a",
-            padding: "24px",
-            borderRight: "1px solid #2d3748"
+            background: '#1a1a1a'
           },
           headingProps: {
-            fontSize: {
-              main: "4xl",
-              column: "xl",
-              secondary: "lg"
-            },
-            fontWeight: {
-              main: "bold",
-              column: "semibold",
-              secondary: "medium"
-            },
-            fontFamily: {
-              main: "serif",
-              column: "serif",
-              secondary: "sans"
-            },
-            color: "#ffffff"
+            fontSize: 'xl',
+            fontWeight: 700,
+            color: '#ffffff'
           },
           subtitleProps: {
-            fontSize: {
-              main: "xl",
-              column: "lg",
-              secondary: "base"
-            },
-            color: "#a0aec0",
-            fontFamily: "serif"
+            fontSize: 'lg',
+            color: '#a0aec0'
           }
         }
       },
-      showExcerpt: {
-        main: true,
-        column: true,
-        secondary: true
-      },
-      showImage: {
-        main: true,
-        column: true,
-        secondary: false
-      },
-      imageStyle: {
-        main: {
-          aspectRatio: '16/9',
-          borderRadius: '0'
-        },
-        column: {
-          aspectRatio: '4/3',
-          borderRadius: '0'
+      showExcerpt: true,
+      showMetadata: false,
+      titleSize: 'xl',
+      columnStyle: {},
+      imageHeight: '300px'
+    },
+    articles: {
+      'col-0': [createArticles(1)[0]].map(article => ({
+        ...article,
+        content: {
+          ...article.content,
+          image: {
+            desktop_image_path: article.content?.image?.desktop_image_path || undefined,
+            mobile_image_path: article.content?.image?.image_mobile_path || undefined
+          }
         }
-      },
-      showDate: true,
-      dateFormat: {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      }
+      })),
+      'col-1': createArticles(4).map(article => ({
+        ...article,
+        content: {
+          ...article.content,
+          image: {
+            desktop_image_path: article.content?.image?.desktop_image_path || undefined,
+            mobile_image_path: article.content?.image?.image_mobile_path || undefined
+          }
+        }
+      })),
+      'col-2': createArticles(4).map(article => ({
+        ...article,
+        content: {
+          ...article.content,
+          image: {
+            desktop_image_path: article.content?.image?.desktop_image_path || undefined,
+            mobile_image_path: article.content?.image?.image_mobile_path || undefined
+          }
+        }
+      }))
     }
   }
 };
 
-// Default variant
 export const Default = Template.bind({});
 Default.args = {
   variant: baseNewspaperVariant,
   isDarkTheme: false
 };
 
-// Classic style
+export const DarkTheme = Template.bind({});
+DarkTheme.args = {
+  variant: baseNewspaperVariant,
+  isDarkTheme: true
+};
+
+export const WithoutExcerpt = Template.bind({});
+WithoutExcerpt.args = {
+  variant: {
+    ...baseNewspaperVariant,
+    config: {
+      ...baseNewspaperVariant.config,
+      styles: {
+        ...baseNewspaperVariant.config.styles,
+        showExcerpt: false
+      }
+    }
+  },
+  isDarkTheme: false
+};
+
 export const ClassicStyle = Template.bind({});
 ClassicStyle.args = {
   variant: {
@@ -172,63 +161,31 @@ ClassicStyle.args = {
         ...baseNewspaperVariant.config.styles,
         theme: {
           light: {
-            mainArticleStyle: {
-              background: "#f8fafc",
-              padding: "40px",
-              borderRight: "2px solid #cbd5e0"
-            },
             columnStyle: {
-              background: "#f8fafc",
-              padding: "32px",
-              borderRight: "2px solid #cbd5e0"
+              background: '#f8fafc'
             },
             headingProps: {
-              fontSize: {
-                main: "5xl",
-                column: "2xl",
-                secondary: "xl"
-              },
-              fontWeight: {
-                main: "black",
-                column: "bold",
-                secondary: "semibold"
-              },
-              fontFamily: {
-                main: "serif",
-                column: "serif",
-                secondary: "serif"
-              },
-              color: "#000000"
+              fontSize: '2xl',
+              fontWeight: 700,
+              color: '#1a1a1a'
+            },
+            subtitleProps: {
+              fontSize: 'lg',
+              color: '#4a5568'
             }
           },
           dark: {
-            mainArticleStyle: {
-              background: "#1a1a1a",
-              padding: "40px",
-              borderRight: "2px solid #4a5568"
-            },
             columnStyle: {
-              background: "#1a1a1a",
-              padding: "32px",
-              borderRight: "2px solid #4a5568"
+              background: '#1a1a1a'
             },
             headingProps: {
-              fontSize: {
-                main: "5xl",
-                column: "2xl",
-                secondary: "xl"
-              },
-              fontWeight: {
-                main: "black",
-                column: "bold",
-                secondary: "semibold"
-              },
-              fontFamily: {
-                main: "serif",
-                column: "serif",
-                secondary: "serif"
-              },
-              color: "#ffffff"
+              fontSize: '2xl',
+              fontWeight: 700,
+              color: '#ffffff'
+            },
+            subtitleProps: {
+              fontSize: 'lg',
+              color: '#a0aec0'
             }
           }
         }
@@ -325,11 +282,4 @@ ModernStyle.args = {
     }
   },
   isDarkTheme: false
-};
-
-// Dark theme
-export const DarkTheme = Template.bind({});
-DarkTheme.args = {
-  ...Default.args,
-  isDarkTheme: true
 }; 

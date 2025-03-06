@@ -1,8 +1,9 @@
 import React from 'react'
-import { BlockVariant, Article, GridStyles } from '../../../types'
+import { BlockVariant, Article, GridStyles, ClientTheme } from '../../../types'
 import { defaultClasses } from '../../../constants/defaultClasses'
 import { generateArticleUrl } from '../../../utils/generateArticleUrl'
 import Link from '../../../../Link'
+import { useClientTheme } from '../../../hooks/useClientTheme'
 
 interface BaseVariantProps {
   variant: BlockVariant & {
@@ -12,15 +13,16 @@ interface BaseVariantProps {
   }
   isDarkTheme?: boolean
   customStyles?: any
-  ;
+  clientGeneralSettingsData: ClientTheme
 }
 
 const Showcase: React.FC<BaseVariantProps> = ({
   variant,
   isDarkTheme,
   customStyles,
-  
+  clientGeneralSettingsData
 }) => {
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme })
   const classes = defaultClasses.mixed.showcase
   const { articles } = variant.config
   const styles = variant.config.styles || {}
@@ -31,54 +33,41 @@ const Showcase: React.FC<BaseVariantProps> = ({
 
   return (
     <div className={`${classes.container} ${customStyles?.container || ''}`}>
-      <div className={customStyles?.grid || classes.grid}>
+      <div className={customStyles?.grid || 'grid grid-cols-1 lg:grid-cols-12 gap-6'}>
         {/* Featured Article */}
-        <div className={customStyles?.featuredColumn || classes.featuredColumn}>
+        <div className={customStyles?.featuredColumn || 'lg:col-span-6'}>
           {featuredArticle && (
-            <article
-              className={customStyles?.article || classes.article.featured}
-            >
+            <article className={customStyles?.article || 'flex flex-col'}>
               {featuredArticle.content?.image?.desktop_image_path && (
-                <div
-                  className={customStyles?.imageWrapper || classes.imageWrapper}
-                >
+                <div className={customStyles?.imageWrapper || 'relative w-full aspect-[16/9] overflow-hidden mb-4'}>
                   <img
                     src={featuredArticle.content.image.desktop_image_path}
                     alt={featuredArticle.title}
-                    className={customStyles?.image || classes.image}
+                    className={customStyles?.image || 'w-full h-full object-cover'}
                   />
                 </div>
               )}
 
-              <div
-                className={customStyles?.content || classes.content.featured}
-              >
-                <Link
-                  href={generateArticleUrl( featuredArticle)}
-                  className="hover:underline transition-all duration-300"
-                >
-                  <h1
-                    className={
-                      customStyles?.heading || classes.heading.featured
-                    }
+              <div className={customStyles?.content || 'p-4'}>
+                <Link href={generateArticleUrl(featuredArticle)} className="hover:underline transition-all duration-300">
+                  <h2 
+                    className={customStyles?.heading || 'text-2xl font-bold mb-3'}
+                    style={{
+                      fontFamily: theme.title.fontFamily,
+                      color: theme.title.color,
+                    }}
                   >
                     {featuredArticle.title}
-                  </h1>
+                  </h2>
                 </Link>
 
-                {styles.showExcerpt ? (
-                  <p
-                    className={
-                      customStyles?.subtitle || classes.subtitle.featured
-                    }
-                  >
-                    {featuredArticle.subtitle}
-                  </p>
-                ) : (
-                  <p
-                    className={
-                      customStyles?.subtitle || classes.subtitle.featured
-                    }
+                {styles.showExcerpt && featuredArticle.subtitle && (
+                  <p 
+                    className={customStyles?.subtitle || 'text-lg'}
+                    style={{
+                      fontFamily: theme.subtitle.fontFamily,
+                      color: theme.subtitle.color,
+                    }}
                   >
                     {featuredArticle.subtitle}
                   </p>
@@ -89,52 +78,40 @@ const Showcase: React.FC<BaseVariantProps> = ({
         </div>
 
         {/* Grid Articles */}
-        <div className={customStyles?.gridColumn || classes.gridColumn}>
-          <div className={customStyles?.gridLayout || 'grid grid-cols-1 gap-6'}>
+        <div className={customStyles?.gridColumn || 'lg:col-span-3'}>
+          <div className={customStyles?.gridLayout || 'space-y-6'}>
             {gridArticles.map((article: Article) => (
-              <article
-                key={article.id}
-                className={customStyles?.gridArticle || classes.article.grid}
-              >
+              <article key={article.id} className={customStyles?.gridArticle || 'flex flex-col'}>
                 {article.content?.image?.desktop_image_path && (
-                  <div
-                    className={
-                      customStyles?.imageWrapper || classes.imageWrapper
-                    }
-                  >
+                  <div className={customStyles?.imageWrapper || 'relative w-full aspect-[4/3] overflow-hidden mb-4'}>
                     <img
                       src={article.content.image.desktop_image_path}
                       alt={article.title}
-                      className={customStyles?.image || classes.image}
+                      className={customStyles?.image || 'w-full h-full object-cover'}
                     />
                   </div>
                 )}
 
-                <div className={customStyles?.content || classes.content.grid}>
-                  <Link
-                    href={generateArticleUrl(article)}
-                    className="hover:underline transition-all duration-300"
-                  >
-                    <h2
-                      className={customStyles?.heading || classes.heading.grid}
+                <div className={customStyles?.content || 'p-4'}>
+                  <Link href={generateArticleUrl(article)} className="hover:underline transition-all duration-300">
+                    <h3 
+                      className={customStyles?.heading || 'text-xl font-semibold mb-2'}
+                      style={{
+                        fontFamily: theme.title.fontFamily,
+                        color: theme.title.color,
+                      }}
                     >
                       {article.title}
-                    </h2>
+                    </h3>
                   </Link>
 
-                  {styles.showExcerpt ? (
-                    <p
-                      className={
-                        customStyles?.subtitle || classes.subtitle.grid
-                      }
-                    >
-                      {article.subtitle}
-                    </p>
-                  ) : (
-                    <p
-                      className={
-                        customStyles?.subtitle || classes.subtitle.grid
-                      }
+                  {styles.showExcerpt && article.subtitle && (
+                    <p 
+                      className={customStyles?.subtitle || 'text-base'}
+                      style={{
+                        fontFamily: theme.subtitle.fontFamily,
+                        color: theme.subtitle.color,
+                      }}
                     >
                       {article.subtitle}
                     </p>
@@ -146,31 +123,29 @@ const Showcase: React.FC<BaseVariantProps> = ({
         </div>
 
         {/* List Articles */}
-        <div className={customStyles?.listColumn || classes.listColumn}>
+        <div className={customStyles?.listColumn || 'lg:col-span-3'}>
           <div className={customStyles?.listLayout || 'space-y-6'}>
             {listArticles.map((article: Article) => (
-              <article
-                key={article.id}
-                className={customStyles?.listArticle || classes.article.list}
-              >
-                <Link
-                  href={generateArticleUrl(article)}
-                  className="hover:underline transition-all duration-300"
-                >
-                  <h3 className={customStyles?.heading || classes.heading.list}>
+              <article key={article.id} className={customStyles?.listArticle || 'flex flex-col'}>
+                <Link href={generateArticleUrl(article)} className="hover:underline transition-all duration-300">
+                  <h3 
+                    className={customStyles?.heading || 'text-xl font-semibold mb-2'}
+                    style={{
+                      fontFamily: theme.title.fontFamily,
+                      color: theme.title.color,
+                    }}
+                  >
                     {article.title}
                   </h3>
                 </Link>
 
-                {styles.showExcerpt ? (
-                  <p
-                    className={customStyles?.subtitle || classes.subtitle.list}
-                  >
-                    {article.subtitle}
-                  </p>
-                ) : (
-                  <p
-                    className={customStyles?.subtitle || classes.subtitle.list}
+                {styles.showExcerpt && article.subtitle && (
+                  <p 
+                    className={customStyles?.subtitle || 'text-base'}
+                    style={{
+                      fontFamily: theme.subtitle.fontFamily,
+                      color: theme.subtitle.color,
+                    }}
                   >
                     {article.subtitle}
                   </p>
