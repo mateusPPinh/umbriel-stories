@@ -6,7 +6,7 @@ import MixedLayoutPreview from './MixedLayoutPreview';
 import ArticlesPool from './ArticlesPool';
 import { BlockConfig } from './StyleConfigModal';
 import { useBlockState } from '../hooks/useBlockState';
-import { VariantType, ArticleFilters } from '../types';
+import { VariantType, ArticleFilters, ClientTheme } from '../types';
 import Button from '../../../components/Button';
 import Sidebar from './Sidebar';
 import { PageResponse } from '../interfaces/pages.types';
@@ -32,6 +32,7 @@ interface MixedManagerProps {
   onPageSelect?: (pageId: string) => void;
   onEditorialSelect?: (editorialId: string, subEditorialId?: string) => void;
   onPublishBlock?: () => void;
+  clientGeneralSettingsData: ClientTheme;
 }
 
 // Ajuste na tipagem das colunas
@@ -141,6 +142,7 @@ interface MixedLayoutPreviewProps {
   columns: Record<string, Article[]>;
   isDarkTheme?: boolean;
   blockConfig: BlockConfig;
+  clientGeneralSettingsData: ClientTheme;
 }
 
 const MixedManager: React.FC<MixedManagerProps> = ({ 
@@ -160,7 +162,8 @@ const MixedManager: React.FC<MixedManagerProps> = ({
   isEditorialsLoading = false,
   onPageSelect,
   onEditorialSelect,
-  onPublishBlock
+  onPublishBlock,
+  clientGeneralSettingsData
 }) => {
   // Garantir que sempre temos uma variante válida
   const safeVariant = useMemo(() => {
@@ -496,6 +499,7 @@ const MixedManager: React.FC<MixedManagerProps> = ({
               columns={blockState.articles}
               isDarkTheme={isDarkTheme}
               blockConfig={adaptBlockConfig(externalBlockConfig) as any}
+              clientGeneralSettingsData={clientGeneralSettingsData}
             />
           </div>
         ) : (
@@ -560,6 +564,7 @@ const MixedManager: React.FC<MixedManagerProps> = ({
                   columns={blockState.articles}
                   isDarkTheme={isDarkTheme}
                   blockConfig={adaptBlockConfig(externalBlockConfig) as any}
+                  clientGeneralSettingsData={clientGeneralSettingsData}
                 />
               </div>
             </div>
