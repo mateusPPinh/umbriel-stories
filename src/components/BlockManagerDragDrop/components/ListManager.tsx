@@ -32,6 +32,9 @@ const LAYOUT_VARIANTS = {
 
 type LayoutVariant = keyof typeof LAYOUT_VARIANTS;
 
+// Add at the top with other type definitions
+type VariantType = 'chronological' | 'compact' | 'thumbnail' | 'card';
+
 interface ListBlockConfig {
   articles: Record<string, Article[]>;
   variant?: 'chronological' | 'compact' | 'card';
@@ -130,6 +133,7 @@ interface ListManagerProps {
   onEditorialSelect?: (editorialId: string, subEditorialId?: string) => void;
   onPublishBlock?: () => void;
   clientGeneralSettingsData: ClientTheme;
+  initialLayout?: 'single' | 'grid';
 }
 
 const ListManager = ({ 
@@ -148,7 +152,8 @@ const ListManager = ({
   onPageSelect,
   onEditorialSelect,
   onPublishBlock,
-  clientGeneralSettingsData
+  clientGeneralSettingsData,
+  initialLayout = 'single'
 }: ListManagerProps) => {
   const {
     blockState,
@@ -179,6 +184,7 @@ const ListManager = ({
     subEditorial: '',
     isMultiSelectEnabled: false
   });
+  const [currentLayout, setCurrentLayout] = useState<'single' | 'grid'>(initialLayout);
 
   const handleFiltersChange = useCallback((newFilters: Partial<ArticleFilters>) => {
     setFilters((prev: ArticleFilters) => ({ ...prev, ...newFilters }));
@@ -478,6 +484,23 @@ const ListManager = ({
     }));
   }, [pageId, updateBlockIdentifiers]);
 
+  // Function to adapt the block config including layout
+  const getConfigWithLayout = useCallback(() => {
+    const config = adaptBlockConfig(externalBlockConfig);
+    return {
+      ...config,
+      styles: {
+        ...config.styles,
+        layout: currentLayout
+      }
+    };
+  }, [externalBlockConfig, currentLayout]);
+
+  // Function to toggle the layout
+  const toggleLayout = useCallback(() => {
+    setCurrentLayout(prev => prev === 'single' ? 'grid' : 'single');
+  }, []);
+
   return (
     <div className="relative">
       <DragDropTips 
@@ -532,7 +555,46 @@ const ListManager = ({
                   />
                 </svg>
               </button>
-              <Button variant="primary" onClick={() => onSave(getApiFormat())}>
+              <Button 
+                variant="primary" 
+                onClick={() => {
+                  // Create clean article data without pool
+                  const cleanArticles: Record<string, (string | number)[]> = {};
+                  
+                  // Only include non-pool columns
+                  Object.entries(blockState.articles).forEach(([colKey, articles]) => {
+                    if (colKey !== 'pool') {
+                      cleanArticles[colKey] = articles.map(article => article.id);
+                    }
+                  });
+                  
+                  // Create a clean payload
+                  const payload = {
+                    blockType: 'articles',
+                    blockPosition: blockState.blockPosition || 1,
+                    template: blockState.template,
+                    variants: [
+                      {
+                        variantType: blockState.currentVariant.variantType,
+                        variantPosition: blockState.currentVariant.variantPosition || 1,
+                        config: {
+                          articles: cleanArticles,
+                          styles: {
+                            ...(blockState.currentVariant.config?.styles || {}),
+                            layout: currentLayout,
+                            gridGap: '24px'
+                          }
+                        }
+                      }
+                    ],
+                    pageId: pageId
+                  };
+                  
+                  // Save the clean payload
+                  console.log('Clean payload:', payload);
+                  onSave(payload);
+                }}
+              >
                 Salvar
               </Button>
               <Button variant="info" onClick={onConfigClick}>
@@ -548,7 +610,7 @@ const ListManager = ({
               variant={validVariantType}
               articles={blockState.articles['col-0'] || []}
               isDarkTheme={isDarkTheme}
-              blockConfig={adaptBlockConfig(externalBlockConfig) as any}
+              blockConfig={getConfigWithLayout() as any}
               clientGeneralSettingsData={clientGeneralSettingsData}
             />
           </div>
@@ -561,7 +623,7 @@ const ListManager = ({
                 editorialsData={editorialsData}
                 isPagesLoading={isPagesLoading}
                 isEditorialsLoading={isEditorialsLoading}
-                blockConfig={adaptBlockConfig(externalBlockConfig) as any}
+                blockConfig={getConfigWithLayout() as any}
                 filters={filters}
                 onFiltersChange={handleFiltersChange}
                 onPageSelect={handlePageSelect}
@@ -576,7 +638,7 @@ const ListManager = ({
                   <ArticlesPool
                     articles={filteredArticles}
                     isDarkTheme={isDarkTheme}
-                    blockConfig={adaptBlockConfig(externalBlockConfig) as any}
+                    blockConfig={getConfigWithLayout() as any}
                     usedArticleIds={getUsedArticleIds()}
                     isCompact={true}
                     isMultiSelectEnabled={true}
@@ -594,7 +656,7 @@ const ListManager = ({
                     isDarkTheme={isDarkTheme}
                     label="Artigos da Lista"
                     maxItems={LAYOUT_VARIANTS[validVariantType].maxItems}
-                    blockConfig={adaptBlockConfig(externalBlockConfig) as any}
+                    blockConfig={getConfigWithLayout() as any}
                     handleRemoveArticle={handleRemoveArticle}
                     handleRemoveArticles={handleRemoveArticles}
                     variant={validVariantType}
@@ -608,13 +670,30 @@ const ListManager = ({
                     variant={validVariantType}
                     articles={blockState.articles['col-0'] || []}
                     isDarkTheme={isDarkTheme}
-                    blockConfig={adaptBlockConfig(externalBlockConfig) as any}
+                    blockConfig={getConfigWithLayout() as any}
                     clientGeneralSettingsData={clientGeneralSettingsData}
                   />
                 </div>
               </div>
             </div>
           </DragDropContext>
+        )}
+
+        {blockState.currentVariant.variantType === 'card' && !isPreviewOnly && (
+          <div className="flex items-center gap-2 mt-4">
+            <label htmlFor="layout-select" className="text-sm text-gray-600 dark:text-gray-400">
+              Layout:
+            </label>
+            <select
+              id="layout-select"
+              value={currentLayout}
+              onChange={(e) => setCurrentLayout(e.target.value as 'single' | 'grid')}
+              className="text-sm rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="single">Single Column</option>
+              <option value="grid">Grid Layout</option>
+            </select>
+          </div>
         )}
       </div>
     </div>

@@ -33,7 +33,7 @@ export default [
       commonjs(),
       typescript({
         tsconfig: './tsconfig.json',
-        exclude: ['**/*.stories.tsx', '**/mocks/*.mock.*', '**/mocks/**/*.ts', '**/mock.d.ts']
+        exclude: ['**/*.stories.tsx', '**/mocks/*.mock.*', '**/mocks/**/*.ts', '**/mock.d.ts', '**/example/**']
       }),
       postcss({
         extensions: ['.css'],

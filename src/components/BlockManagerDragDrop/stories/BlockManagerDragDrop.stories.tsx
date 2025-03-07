@@ -8,45 +8,7 @@ import { Editorial } from '../interfaces/editorial.types';
 import { PageResponse } from '../interfaces/pages.types';
 import { pageMock } from './page.mock';
 import { ClientTheme } from '../types';
-
-// Mock do clientGeneralSettingsData
-const mockClientTheme: ClientTheme = {
-  fontMapping: {
-    articleTitle: "Inter Variable, sans-serif",
-    articleSubtitle: "Inter Variable, sans-serif",
-    articleBody: "Inter Variable, sans-serif",
-    headerTitle: "Inter Variable, sans-serif",
-    headerText: "Inter Variable, sans-serif",
-  },
-  colorMapping: {
-    light: {
-      articleBackground: '#FFFFFF',
-      articleTitle: '#1A1A1A',
-      articleSubtitle: '#4A5568',
-      articleText: '#2D3748',
-      headerBackground: '#FFFFFF',
-      headerText: '#1A1A1A',
-      primaryButton: '#3182CE',
-      secondaryButton: '#718096',
-      accent: '#3182CE',
-      sidebarBackground: '#F7FAFC',
-      sidebarText: '#2D3748',
-    },
-    dark: {
-      articleBackground: '#1A1A1A',
-      articleTitle: '#FFFFFF',
-      articleSubtitle: '#A0AEC0',
-      articleText: '#E2E8F0',
-      headerBackground: '#1A1A1A',
-      headerText: '#FFFFFF',
-      primaryButton: '#4299E1',
-      secondaryButton: '#A0AEC0',
-      accent: '#4299E1',
-      sidebarBackground: '#2D3748',
-      sidebarText: '#E2E8F0',
-    },
-  },
-};
+import { mockClientTheme } from '../../PageblockV2/stories/mockClientTheme';  
 
 interface BlockManagerDragDropProps {
   articles: any[];
@@ -64,6 +26,7 @@ interface BlockManagerDragDropProps {
   onPublishBlock?: () => void;
   showSidebar?: boolean;
   clientGeneralSettingsData: ClientTheme;
+  initialLayout?: 'single' | 'grid';
 }
 
 export default {
@@ -79,6 +42,17 @@ export default {
       ]
     }
   },
+  argTypes: {
+    initialLayout: {
+      control: { type: 'radio' },
+      options: ['single', 'grid'],
+      defaultValue: 'single',
+      description: 'Layout type for list cards'
+    },
+    isDarkTheme: {
+      control: 'boolean'
+    }
+  },
   decorators: [
     (Story) => (
       <div className="h-screen p-4 w-full">
@@ -91,7 +65,7 @@ export default {
 const mockArticles = createArticles(30);
 
 const Template: Story<BlockManagerDragDropProps> = (args) => (
-  <div className="w-full mx-auto"><BlockManagerDragDrop {...args} /></div>
+  <div className="w-full mx-auto"><BlockManagerDragDrop {...args} clientGeneralSettingsData={mockClientTheme} /></div>
 );
 
 // Common props for all stories
@@ -109,6 +83,7 @@ const commonProps = {
   onPublishBlock: () => console.log('Publishing block'),
   showSidebar: true,
   clientGeneralSettingsData: mockClientTheme,
+  initialLayout: 'single'
 };
 
 // Grid Variants
@@ -165,6 +140,7 @@ export const List_Chronological = Template.bind({});
 List_Chronological.args = {
   ...commonProps,
   blockType: 'list',
+  variant: 'chronological'
 };
 List_Chronological.storyName = 'List/Chronological';
 
@@ -172,15 +148,27 @@ export const List_Compact = Template.bind({});
 List_Compact.args = {
   ...commonProps,
   blockType: 'list',
+  variant: 'compact'
 };
 List_Compact.storyName = 'List/Compact';
 
-export const List_Card = Template.bind({});
-List_Card.args = {
+export const List_Card_Single = Template.bind({});
+List_Card_Single.args = {
   ...commonProps,
   blockType: 'list',
+  variant: 'card',
+  initialLayout: 'single'
 };
-List_Card.storyName = 'List/Card';
+List_Card_Single.storyName = 'List/Card/Single';
+
+export const List_Card_Grid = Template.bind({});
+List_Card_Grid.args = {
+  ...commonProps,
+  blockType: 'list',
+  variant: 'card',
+  initialLayout: 'grid'
+};
+List_Card_Grid.storyName = 'List/Card/Grid';
 
 // Mixed Variants
 export const Mixed_Sidebar = Template.bind({});

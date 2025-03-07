@@ -5,6 +5,8 @@ import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { generateArticleUrl } from '../../../utils/generateArticleUrl';
 import { useClientTheme } from '../../../hooks/useClientTheme';
+import Link from '../../../../Link'
+
 interface BaseVariantProps {
   variant: BlockVariant & {
     config: {
@@ -79,9 +81,8 @@ const Chronological: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custo
                   </div>
                 ) : null}
 
-                <a 
-                  href={articleUrl}
-                  className="block group"
+                <Link 
+                  className="hover:underline transition-all duration-300" href={articleUrl}
                 >
                   <h3 className={`
                     ${classes.content.title}
@@ -151,7 +152,7 @@ const Chronological: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custo
                       </p>
                     ) : null}
                   </div>
-                </a>
+                </Link>
               </div>
             );
           })

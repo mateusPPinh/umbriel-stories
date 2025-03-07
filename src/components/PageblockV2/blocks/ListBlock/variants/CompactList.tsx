@@ -3,6 +3,9 @@ import { useBlockStyles } from '../../../hooks/useBlockStyles';
 import { BlockVariant, Article, ClientTheme } from '../../../types';
 import { defaultClasses } from '../../../constants/defaultClasses';
 import { useClientTheme } from '../../../hooks/useClientTheme';
+import { generateArticleUrl } from '../../../utils/generateArticleUrl';
+import Link from '../../../../Link'
+
 interface BaseVariantProps {
   variant: BlockVariant;
   isDarkTheme?: boolean;
@@ -132,53 +135,58 @@ const CompactList: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
   return (
     <div className={`${classes.container} ${customStyles?.container || ''}`} style={containerStyle}>
       <div className={`${classes.list} ${customStyles?.list || ''}`}>
-        {Object.entries(articles).map(([colKey, colArticles]) => (
-          colArticles.map((article: Article) => (
-            <div 
-              key={article.id}
-              className={`
-                transition-all duration-200
-                ${getHoverEffectClass()}
-                ${getDividerStyle()}
-                last:border-b-0
-              `}
-              style={columnStyle(colKey)}
-            >
-              <div className="flex flex-col">
-                <h3 className="mb-1" style={{
-                  color: theme.title.color,
-                  fontFamily: theme.title.fontFamily,
-                }}>
-                    {article.title}
-                </h3>
-                {mergedStyles.showExcerpt ? (
-                  <p style={{
-                    color: theme.subtitle.color,
-                    fontFamily: theme.subtitle.fontFamily,
+        {Object.entries(articles).map(([colKey, colArticles]) =>  {
+          const articleUrl = generateArticleUrl(colArticles[0]);
+          return (
+            colArticles.map((article: Article) => (
+              <div 
+                key={article.id}
+                className={`
+                  transition-all duration-200
+                  ${getHoverEffectClass()}
+                  ${getDividerStyle()}
+                  last:border-b-0
+                `}
+                style={columnStyle(colKey)}
+              >
+                <div className="flex flex-col">
+                 <Link className="hover:underline transition-all duration-300" href={articleUrl}>
+                 <h3 className="mb-1" style={{
+                    color: theme.title.color,
+                    fontFamily: theme.title.fontFamily,
                   }}>
-                    {article.subtitle}
-                  </p>
-                ) : (
-                  <p style={{
-                    color: theme.subtitle.color,
-                    fontFamily: theme.subtitle.fontFamily,
-                  }}>
-                    {article.subtitle}
-                  </p>
-                )}
-                {mergedStyles.showMetadata ? (
-                  <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                    {/* Add metadata rendering here */}
-                  </div>
-                ) : (
-                  <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                    {/* Add metadata rendering here */}
-                  </div>
-                )}
+                      {article.title}
+                  </h3>
+                 </Link>
+                  {mergedStyles.showExcerpt ? (
+                    <p style={{
+                      color: theme.subtitle.color,
+                      fontFamily: theme.subtitle.fontFamily,
+                    }}>
+                      {article.subtitle}
+                    </p>
+                  ) : (
+                    <p style={{
+                      color: theme.subtitle.color,
+                      fontFamily: theme.subtitle.fontFamily,
+                    }}>
+                      {article.subtitle}
+                    </p>
+                  )}
+                  {mergedStyles.showMetadata ? (
+                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                      {/* Add metadata rendering here */}
+                    </div>
+                  ) : (
+                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                      {/* Add metadata rendering here */}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))
-        ))}
+            ))
+          )
+        })}
       </div>
     </div>
   );

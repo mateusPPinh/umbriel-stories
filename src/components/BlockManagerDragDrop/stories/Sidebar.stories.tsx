@@ -1,8 +1,8 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
-import { Sidebar } from '../index';
 import { createArticles } from '../../PageblockV2/stories/mockData';
 import { DragDropContext } from '@hello-pangea/dnd';
+import Sidebar from '../components/Sidebar';
 
 interface SidebarProps {
   articles?: any[];

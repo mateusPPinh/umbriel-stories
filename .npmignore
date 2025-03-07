@@ -8,3 +8,6 @@ src/stories/
 **/mocks/*.mock.*
 **/mocks/**/*.ts
 **/mock.d.ts
+**/example/
+**/src/App.tsx
+**/src/example/PageblockV2.tsx

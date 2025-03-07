@@ -1,7 +1,7 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import NewsFeedGrid from '../blocks/GridBlock/variants/NewsFeedGrid';
-import { BlockVariant, ClientTheme } from '../types';
+import { BlockVariant } from '../types';
 import { createArticles } from './mockData';
 import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
 import { mockClientTheme } from './mockClientTheme';
@@ -18,7 +18,7 @@ export default {
   ],
 } as Meta;
 
-const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean; clientGeneralSettingsData: ClientTheme }> = (args) => <NewsFeedGrid {...args} clientGeneralSettingsData={mockClientTheme} />;
+const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean; clientGeneralSettingsData }> = (args) => <NewsFeedGrid {...args} clientGeneralSettingsData={mockClientTheme} />;
 
 // Criar artigos mock para grid
 const gridArticles = {

@@ -56,18 +56,18 @@ const Hero: React.FC<BaseVariantProps> = ({
                     className="!hover:underline transition-all duration-300"
                   >
                     <h2 className={classes.heading} style={{
-                      color: theme.title.color,
+                      color: '#ffffff',
                       fontFamily: theme.title.fontFamily,
                     }}>{article.title}</h2>
                   </Link>
                   {styles.showExcerpt ? (
                     <p className={classes.subtitle} style={{
-                      color: theme.subtitle.color,
+                      color: '#ffffff',
                       fontFamily: theme.subtitle.fontFamily,
                     }}>{article.subtitle}</p>
                   ) : (
                     <p className={classes.subtitle} style={{
-                      color: theme.subtitle.color,
+                      color: '#ffffff',
                       fontFamily: theme.subtitle.fontFamily,
                     }}>{article.subtitle}</p>
                   )}

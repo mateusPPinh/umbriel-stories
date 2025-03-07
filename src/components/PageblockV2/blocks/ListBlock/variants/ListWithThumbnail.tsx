@@ -3,12 +3,17 @@ import { useBlockStyles } from '../../../hooks/useBlockStyles';
 import { BlockVariant, Article, ClientTheme } from '../../../types';
 import { defaultClasses } from '../../../constants/defaultClasses';
 import { useClientTheme } from '../../../hooks/useClientTheme';
+import { generateArticleUrl } from '../../../utils/generateArticleUrl';
+import Link from '../../../../Link'
+
+
 
 interface BaseVariantProps {
   variant: BlockVariant;
   isDarkTheme?: boolean;
   customStyles?: any;
   clientGeneralSettingsData: ClientTheme;
+  layout?: 'single' | 'grid';
 }
 
 // Helper function to merge styles
@@ -42,8 +47,17 @@ const mergeStyles = (defaultStyles: any, customStyles: any) => {
   };
 };
 
-const ListWithThumbnail: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles, clientGeneralSettingsData }) => {
-  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme })
+const ListWithThumbnail: React.FC<BaseVariantProps> = ({ 
+  variant, 
+  isDarkTheme, 
+  customStyles, 
+  clientGeneralSettingsData, 
+  // The layout prop can come from two places: 
+  // 1. Directly passed as a prop (for client-side control)
+  // 2. From the variant's config.styles (when loaded from API)
+  layout: explicitLayout
+}) => {
+  const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme });
   const classes = defaultClasses.list.thumbnail;
   const { articles } = variant.config;
 
@@ -87,15 +101,39 @@ const ListWithThumbnail: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, c
       width: '120px',
       height: '120px'
     },
-    thumbnailShape: 'square', // 'square' | 'rounded' | 'circle'
+    thumbnailShape: 'square',
     showExcerpt: true,
     showMetadata: true,
-    hoverEffect: 'scale', // 'scale' | 'glow' | 'none'
-    imagePosition: 'left' // 'left' | 'right'
+    hoverEffect: 'scale',
+    imagePosition: 'left',
+    layout: 'single',
+    gridGap: '24px'
   };
 
+  // Determine the actual layout to use
+  // Priority: 1. Explicit layout prop, 2. Style config, 3. Default
+  // This ensures both client-side control and API payload control work
+  const layoutFromConfig = (variant.config.styles as any)?.layout;
+  const actualLayout = explicitLayout || layoutFromConfig || 'single';
+  
+  // Get grid gap from config or use default
+  const gridGap = (variant.config.styles as any)?.gridGap || '24px';
+
+  // Apply the layout-specific thumbnail size
+  const thumbnailSize = actualLayout === 'grid' 
+    ? { width: '180px', height: '120px' }
+    : { width: '120px', height: '120px' };
+
   // Merge default styles with variant styles
-  const mergedStyles = mergeStyles(defaultStyles, variant.config.styles);
+  const mergedStyles = mergeStyles(
+    { 
+      ...defaultStyles,
+      thumbnailSize,
+      layout: actualLayout,
+      gridGap
+    },
+    variant.config.styles
+  );
   
   // Use merged styles in useBlockStyles
   const { containerStyle, columnStyle, headingStyle, subtitleStyle } = useBlockStyles({
@@ -130,17 +168,36 @@ const ListWithThumbnail: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, c
     }
   };
 
+  // Log for debugging
+  console.log('ListWithThumbnail rendering with layout:', actualLayout, 'from sources:', {
+    explicitLayout,
+    layoutFromConfig,
+    mergedStyles
+  });
+
   return (
     <div className={`${classes.container} ${customStyles?.container || ''}`} style={containerStyle}>
-      <div className={`${classes.list} space-y-4 ${customStyles?.list || ''}`}>
-        {Object.entries(articles).map(([colKey, colArticles]) => (
-          colArticles.map((article: Article) => (
+      <div 
+        className={`
+          ${classes.list} 
+          ${actualLayout === 'grid' ? 'grid grid-cols-2 gap-6' : 'space-y-4'} 
+          ${customStyles?.list || ''}
+        `}
+        style={{
+          gap: actualLayout === 'grid' ? gridGap : undefined
+        }}
+      >
+        {Object.entries(articles).map(([colKey, colArticles]) => {
+          const articleUrl = generateArticleUrl(colArticles[0]);
+          return (
+             colArticles.map((article: Article) => (
             <div 
               key={article.id}
               className={`
                 flex ${mergedStyles.imagePosition === 'right' ? 'flex-row-reverse' : 'flex-row'}
                 gap-6 items-start
                 ${getHoverEffectClass()}
+                ${actualLayout === 'grid' ? 'h-full' : ''}
               `}
               style={columnStyle(colKey)}
             >
@@ -148,8 +205,8 @@ const ListWithThumbnail: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, c
                 <div 
                   className="flex-shrink-0"
                   style={{
-                    width: mergedStyles.thumbnailSize.width,
-                    height: mergedStyles.thumbnailSize.height
+                    width: actualLayout === 'grid' ? '180px' : mergedStyles.thumbnailSize.width,
+                    height: actualLayout === 'grid' ? '120px' : mergedStyles.thumbnailSize.height
                   }}
                 >
                   <div className={`relative w-full h-full overflow-hidden ${getThumbnailShapeClass()}`}>
@@ -163,40 +220,32 @@ const ListWithThumbnail: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, c
               )}
               
               <div className="flex-grow">
-                <h3 className="mb-2" style={{
+                <Link href={articleUrl}>
+                <h3 className={`mb-2 ${actualLayout === 'grid' ? 'text-lg font-semibold' : ''}`} style={{
                   color: theme.title.color,
                   fontFamily: theme.title.fontFamily,
                 }}>
                   {article.title}
                 </h3>
+                </Link>
                 {mergedStyles.showExcerpt ? (
-                  <p className="mb-2" style={{
+                  <p className={`mb-2 ${actualLayout === 'grid' ? 'line-clamp-3' : 'line-clamp-2'}`} style={{
                     color: theme.subtitle.color,
                     fontFamily: theme.subtitle.fontFamily,
                   }}>
                     {article.subtitle}
                   </p>
-                ) : (
-                  <p className="mb-2" style={{
-                    color: theme.subtitle.color,
-                    fontFamily: theme.subtitle.fontFamily,
-                  }}>
-                    {article.subtitle}
-                  </p>
-                )}
+                ) : null}
                 {mergedStyles.showMetadata ? (
                   <div className="text-sm text-gray-500 dark:text-gray-400">
                     {/* Add metadata rendering here */}
                   </div>
-                ) : (
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {/* Add metadata rendering here */}
-                  </div>
-                )}
+                ) : null}
               </div>
             </div>
           ))
-        ))}
+          )
+        })}
       </div>
     </div>
   );

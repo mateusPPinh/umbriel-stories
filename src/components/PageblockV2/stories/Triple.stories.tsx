@@ -1,9 +1,10 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import Triple from '../blocks/FeaturedBlock/variants/Triple';
-import { BlockVariant } from '../types';
+import { BlockVariant, ClientTheme } from '../types';
 import { mockBlocks, createArticles, baseBlockConfig, baseVariantConfig } from './mockData';
 import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
+import { mockClientTheme } from './mockClientTheme';
 
 export default {
   title: 'PageBlockV2/Featured/Triple',
@@ -17,7 +18,7 @@ export default {
   ],
 } as Meta;
 
-const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean }> = (args) => <Triple {...args} />;
+const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean; clientGeneralSettingsData: ClientTheme }> = (args) => <Triple {...args} clientGeneralSettingsData={mockClientTheme} />;
 
 // Criar artigos mock para 3 colunas
 const tripleArticles = {

@@ -1,9 +1,10 @@
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
 import Split from '../blocks/FeaturedBlock/variants/Split';
-import { BlockVariant } from '../types';
+import { BlockVariant, ClientTheme } from '../types';
 import { createArticles } from './mockData';
 import { ResponsiveDeviceProvider } from '../contexts/ResponsiveDeviceContext';
+import { mockClientTheme } from './mockClientTheme';
 
 export default {
   title: 'PageBlockV2/Featured/Split',
@@ -17,7 +18,7 @@ export default {
   ],
 } as Meta;
 
-const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean }> = (args) => <Split {...args} />;
+const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean; clientGeneralSettingsData: ClientTheme }> = (args) => <Split {...args} clientGeneralSettingsData={mockClientTheme} />;
 
 // Criar artigos mock para Split
 const splitArticles = {

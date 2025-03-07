@@ -16,16 +16,46 @@ export default {
       </ResponsiveDeviceProvider>
     ),
   ],
+  parameters: {
+    controls: {
+      expanded: true
+    }
+  },
+  argTypes: {
+    layout: {
+      control: { type: 'radio' },
+      options: ['single', 'grid'],
+      defaultValue: 'single',
+      description: 'Layout type for the list'
+    },
+    isDarkTheme: {
+      control: 'boolean'
+    }
+  }
 } as Meta;
 
-const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean; clientGeneralSettingsData: ClientTheme }> = (args) => <ListWithThumbnail {...args} clientGeneralSettingsData={mockClientTheme} />;
-
-// Criar artigos mock para lista
-const listArticles = {
-  'col-0': createArticles(4)
+// Componente wrapper para garantir que a prop layout seja passada corretamente
+const TemplateWithControls: Story<{ 
+  variant: BlockVariant; 
+  isDarkTheme?: boolean; 
+  clientGeneralSettingsData: ClientTheme;
+  layout: 'single' | 'grid';
+}> = (args) => {
+  console.log('Storybook rendering with layout:', args.layout);
+  return (
+    <div className="p-4 bg-gray-100 dark:bg-gray-900 rounded-lg">
+      <h2 className="mb-4 text-lg font-semibold">Layout: {args.layout}</h2>
+      <ListWithThumbnail {...args} clientGeneralSettingsData={mockClientTheme} />
+    </div>
+  );
 };
 
-// Mock base para ListWithThumbnail variant
+// Create mock articles for the list - increased for better grid visualization
+const listArticles = {
+  'col-0': createArticles(6)
+};
+
+// Base thumbnail variant mock
 const baseThumbnailVariant: BlockVariant = {
   variantType: 'thumbnail',
   variantPosition: 1,
@@ -89,16 +119,25 @@ const baseThumbnailVariant: BlockVariant = {
   }
 };
 
-// Default variant
-export const Default = Template.bind({});
-Default.args = {
+// Single Column Layout (Default)
+export const SingleColumn = TemplateWithControls.bind({});
+SingleColumn.args = {
   variant: baseThumbnailVariant,
-  isDarkTheme: false
+  isDarkTheme: false,
+  layout: 'single'
 };
 
-// Rounded thumbnails with right position
-export const RoundedRight = Template.bind({});
-RoundedRight.args = {
+// Grid Layout
+export const GridLayout = TemplateWithControls.bind({});
+GridLayout.args = {
+  variant: baseThumbnailVariant,
+  isDarkTheme: false,
+  layout: 'grid'
+};
+
+// Rounded thumbnails with right position (Grid)
+export const RoundedRightGrid = TemplateWithControls.bind({});
+RoundedRightGrid.args = {
   variant: {
     ...baseThumbnailVariant,
     config: {
@@ -108,8 +147,8 @@ RoundedRight.args = {
         thumbnailShape: 'rounded',
         imagePosition: 'right',
         thumbnailSize: {
-          width: '150px',
-          height: '150px'
+          width: '180px',
+          height: '120px'
         },
         theme: {
           light: {
@@ -150,33 +189,14 @@ RoundedRight.args = {
       }
     }
   },
-  isDarkTheme: false
+  isDarkTheme: false,
+  layout: 'grid'
 };
 
-// Circular thumbnails with glow effect
-export const CircularGlow = Template.bind({});
-CircularGlow.args = {
-  variant: {
-    ...baseThumbnailVariant,
-    config: {
-      ...baseThumbnailVariant.config,
-      styles: {
-        ...baseThumbnailVariant.config.styles,
-        thumbnailShape: 'circle',
-        hoverEffect: 'glow',
-        thumbnailSize: {
-          width: '100px',
-          height: '100px'
-        }
-      }
-    }
-  },
-  isDarkTheme: false
-};
-
-// Dark theme
-export const DarkTheme = Template.bind({});
-DarkTheme.args = {
-  ...RoundedRight.args,
-  isDarkTheme: true
+// Dark theme with grid
+export const DarkThemeGrid = TemplateWithControls.bind({});
+DarkThemeGrid.args = {
+  ...RoundedRightGrid.args,
+  isDarkTheme: true,
+  layout: 'grid'
 }; 

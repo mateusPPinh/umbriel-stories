@@ -63,12 +63,12 @@ export const defaultClasses = {
       image: {
         wrapper: 'relative aspect-[16/10] overflow-hidden',
         img: 'w-full h-full object-cover',
-        overlay: 'absolute inset-0 bg-gradient-to-b from-transparent to-black/80'
+        overlay: 'absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/75',
       },
       content: {
-        wrapper: 'absolute bottom-0 left-0 right-0 p-6',
-        title: 'text-[1.5rem] sm:text-[1rem] font-bold text-white mb-2 dark:text-white',
-        subtitle: 'text-[1rem] sm:text-[0.8rem] text-white/80 dark:text-white/80'
+        wrapper: 'absolute bottom-0 left-0 right-0 p-6 z-10',
+        title: 'text-[2.5rem] sm:text-[1rem] mb-2 !text-white',
+        subtitle: 'text-[1rem] sm:text-[0.8rem] !text-white'
       }
     },
     sidebar: {
@@ -241,10 +241,10 @@ export const defaultClasses = {
       content: 'p-2',
       heading: [
         'mb-0',
-        'text-[1.5rem] text-white font-bold sm:text-[1rem] dark:text-white',
+        'md:text-[2rem] sm:text-[1rem]',
       ].join(' '),
       subtitle: [
-        'text-lg text-white/80 dark:text-white/80',
+        'md:text-[1.5rem] sm:text-[1rem]',
       ].join(' ')
     },
     split: {
@@ -261,10 +261,10 @@ export const defaultClasses = {
       content: 'p-2',
       heading: [
         'mb-0',
-        'text-[1.5rem] text-gray-900 font-bold sm:text-[1rem] dark:text-white',
+        'text-[1.5rem] sm:text-[1rem]',
       ].join(' '),
       subtitle: [
-        'text-lg text-gray-600 dark:text-gray-300',
+        'text-lg',
       ].join(' ')
     },
     triple: {
@@ -281,16 +281,16 @@ export const defaultClasses = {
       content: 'p-2',
       heading: [
         'mb-0',
-        'text-[1.5rem] text-gray-900 font-bold sm:text-[1rem] dark:text-white',
+        'text-[1.5rem] sm:text-[1rem]',
       ].join(' '),
       subtitle: [
-        'text-lg text-gray-600 dark:text-gray-300',
+        'text-lg',
       ].join(' ')
     }
   },
   list: {
     chronological: {
-      container: 'relative w-full max-w-3xl mx-auto',
+      container: 'relative w-full',
       list: 'relative space-y-6',
       timeline: 'absolute left-4 top-0 bottom-0 w-px bg-gray-300 dark:bg-gray-700',
       item: 'flex flex-col gap-2 pl-8 relative',
@@ -323,7 +323,7 @@ export const defaultClasses = {
       }
     },
     compact: {
-      container: 'relative w-full max-w-3xl mx-auto',
+      container: 'relative w-full',
       list: 'space-y-2',
       variants: {
         hover: {
@@ -341,7 +341,7 @@ export const defaultClasses = {
       }
     },
     thumbnail: {
-      container: 'relative w-full max-w-3xl mx-auto',
+      container: 'relative w-full',
       list: 'space-y-4',
       variants: {
         hover: {

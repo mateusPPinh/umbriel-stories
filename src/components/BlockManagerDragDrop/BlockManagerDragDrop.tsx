@@ -77,6 +77,7 @@ interface BlockManagerDragDropProps {
   onEditorialSelect?: (editorialId: string, subEditorialId?: string) => void;
   onPublishBlock?: () => void;
   clientGeneralSettingsData: ClientTheme;
+  initialLayout?: 'single' | 'grid';
 }
 
 const BlockManagerDragDrop = React.memo(({
@@ -95,7 +96,8 @@ const BlockManagerDragDrop = React.memo(({
   onPageSelect,
   onEditorialSelect,
   onPublishBlock,
-  clientGeneralSettingsData
+  clientGeneralSettingsData,
+  initialLayout = 'single'
 }: BlockManagerDragDropProps) => {
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
   const [blockConfig, setBlockConfig] = useState<BlockConfig>(config || defaultBlockConfig);
@@ -196,6 +198,7 @@ const BlockManagerDragDrop = React.memo(({
           onEditorialSelect={onEditorialSelect}
           onPublishBlock={onPublishBlock}
           clientGeneralSettingsData={clientGeneralSettingsData}
+          initialLayout={initialLayout}
         />
       )}
 

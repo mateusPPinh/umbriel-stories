@@ -4,14 +4,22 @@ import GridBlock from './blocks/GridBlock';
 import FeaturedBlock from './blocks/FeaturedBlock';
 import ListBlock from './blocks/ListBlock';
 import MixedBlock from './blocks/MixedBlock';
+import { withLayoutControl } from './hoc/withLayoutControl';
 
 interface PageBlockV2Props {
   blocksData: PageBlock[];
   isDarkTheme?: boolean;
   clientGeneralSettingsData: ClientTheme;
+  listLayout?: 'single' | 'grid';
 }
 
-const PageBlockV2 = ({ blocksData, isDarkTheme, clientGeneralSettingsData }: PageBlockV2Props) => {
+// Aplicar o HOC aos componentes de bloco
+const EnhancedListBlock = withLayoutControl(ListBlock);
+const EnhancedFeaturedBlock = withLayoutControl(FeaturedBlock);
+const EnhancedGridBlock = withLayoutControl(GridBlock);
+const EnhancedMixedBlock = withLayoutControl(MixedBlock);
+
+const PageBlockV2 = ({ blocksData, isDarkTheme, clientGeneralSettingsData, listLayout = 'single' }: PageBlockV2Props) => {
   if (!Array.isArray(blocksData)) {
     console.error('blocksData deve ser um array');
     return null;
@@ -26,16 +34,23 @@ const PageBlockV2 = ({ blocksData, isDarkTheme, clientGeneralSettingsData }: Pag
         }
 
         const { template } = block;
+        const commonProps = {
+          key: block.id,
+          block,
+          isDarkTheme,
+          clientGeneralSettingsData,
+          layout: listLayout
+        };
 
         switch (template) {
           case 'grid':
-            return <GridBlock key={block.id} block={block} isDarkTheme={isDarkTheme} clientGeneralSettingsData={clientGeneralSettingsData} />;
+            return <EnhancedGridBlock {...commonProps} />;
           case 'featured':
-            return <FeaturedBlock key={block.id} block={block} isDarkTheme={isDarkTheme} clientGeneralSettingsData={clientGeneralSettingsData} />;
+            return <EnhancedFeaturedBlock {...commonProps} />;
           case 'list':
-            return <ListBlock key={block.id} block={block} isDarkTheme={isDarkTheme} clientGeneralSettingsData={clientGeneralSettingsData} />;
+            return <EnhancedListBlock {...commonProps} />;
           case 'mixed':
-            return <MixedBlock key={block.id} block={block} isDarkTheme={isDarkTheme} clientGeneralSettingsData={clientGeneralSettingsData} />;
+            return <EnhancedMixedBlock {...commonProps} />;
           default:
             console.warn(`Template não suportado: ${template}`);
             return null;
