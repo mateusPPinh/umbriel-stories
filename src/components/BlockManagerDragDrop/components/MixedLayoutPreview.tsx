@@ -116,6 +116,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                 style={{
                   fontFamily: theme.title.fontFamily,
                   color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
                 }}
               >
                 {mainArticle?.title || 'Título do artigo principal'}
@@ -128,6 +129,7 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                     style={{
                       fontFamily: theme.subtitle.fontFamily,
                       color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
                     }}
                   >
                     {mainArticle?.subtitle ||
@@ -193,6 +195,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                     style={{
                       fontFamily: theme.title.fontFamily,
                       color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                     }}
                   >
                     {article?.title || 'Título do artigo relacionado'}
@@ -206,6 +210,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                         style={{
                           fontFamily: theme.subtitle.fontFamily,
                           color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                         }}
                       >
                         {article.subtitle}
@@ -287,6 +293,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                 style={{
                   fontFamily: theme.title.fontFamily,
                   color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                 }}
               >
                 {mainArticle?.title || 'Título do artigo principal'}
@@ -299,6 +307,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                     style={{
                       fontFamily: theme.subtitle.fontFamily,
                       color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                     }}
                   >
                     {mainArticle?.subtitle ||
@@ -354,6 +364,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                       style={{
                         fontFamily: theme.title.fontFamily,
                         color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                       }}
                     >
                       {article?.title || 'Título do artigo'}
@@ -366,6 +378,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                           style={{
                             fontFamily: theme.subtitle.fontFamily,
                             color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                           }}
                         >
                           {article?.subtitle || 'Descrição do artigo...'}
@@ -410,6 +424,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                     style={{
                       fontFamily: theme.title.fontFamily,
                       color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                     }}
                   >
                     {article?.title || 'Título do artigo'}
@@ -422,6 +438,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                         style={{
                           fontFamily: theme.subtitle.fontFamily,
                           color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                         }}
                       >
                         {article?.subtitle || 'Descrição do artigo...'}
@@ -504,6 +522,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                     style={{
                       fontFamily: theme.title.fontFamily,
                       color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                     }}
                   >
                     {article?.title || 'Título do artigo principal'}
@@ -516,6 +536,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                         style={{
                           fontFamily: theme.subtitle.fontFamily,
                           color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                         }}
                       >
                         {article?.subtitle ||
@@ -585,6 +607,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                       style={{
                         fontFamily: theme.title.fontFamily,
                         color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                       }}
                     >
                       {article?.title || 'Título do artigo'}
@@ -597,6 +621,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                           style={{
                             fontFamily: theme.subtitle.fontFamily,
                             color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                           }}
                         >
                           {article?.subtitle || 'Descrição do artigo...'}
@@ -666,6 +692,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                       style={{
                         fontFamily: theme.title.fontFamily,
                         color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                       }}
                     >
                       {article?.title || 'Título do artigo'}
@@ -678,6 +706,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                           style={{
                             fontFamily: theme.subtitle.fontFamily,
                             color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                           }}
                         >
                           {article?.subtitle || 'Descrição do artigo...'}
@@ -742,6 +772,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                 style={{
                   fontFamily: theme.title.fontFamily,
                   color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                 }}
               >
                 {mainArticle?.title || 'Título do artigo principal'}
@@ -754,6 +786,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                     style={{
                       fontFamily: theme.subtitle.fontFamily,
                       color: theme.subtitle.color,
+  fontSize: theme?.fontSize?.pageblockSubtitle,
+
                     }}
                   >
                     {mainArticle?.subtitle ||
@@ -812,6 +846,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                       style={{
                         fontFamily: theme.title.fontFamily,
                         color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                       }}
                     >
                       {article?.title || 'Título do artigo secundário'}
@@ -824,6 +860,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                           style={{
                             fontFamily: theme.subtitle.fontFamily,
                             color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                           }}
                         >
                           {article?.subtitle ||
@@ -885,6 +923,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                       style={{
                         fontFamily: theme.title.fontFamily,
                         color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                       }}
                     >
                       {article?.title || 'Título do artigo terciário'}
@@ -897,6 +937,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                           style={{
                             fontFamily: theme.subtitle.fontFamily,
                             color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                           }}
                         >
                           {article?.subtitle ||
@@ -988,6 +1030,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                 style={{
                   fontFamily: theme.title.fontFamily,
                   color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                 }}
               >
                 {mainArticle?.title || 'Título do vídeo principal'}
@@ -1000,6 +1044,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                     style={{
                       fontFamily: theme.subtitle.fontFamily,
                       color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                     }}
                   >
                     {mainArticle?.subtitle || 'Descrição do vídeo principal...'}
@@ -1041,6 +1087,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                       style={{
                         fontFamily: theme.title.fontFamily,
                         color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                       }}
                     >
                       {article?.title || <SwitchTitleSubtitleSkeleton variant="title" />}
@@ -1053,6 +1101,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                           style={{
                             fontFamily: theme.subtitle.fontFamily,
                             color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                           }}
                         >
                             {article?.subtitle ||
@@ -1097,6 +1147,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                       style={{
                         fontFamily: theme.title.fontFamily,
                         color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                       }}
                     >
                       {article?.title || <SwitchTitleSubtitleSkeleton variant="title" />}
@@ -1109,6 +1161,8 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
                           style={{
                             fontFamily: theme.subtitle.fontFamily,
                             color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                           }}
                         >
                           {article?.subtitle ||

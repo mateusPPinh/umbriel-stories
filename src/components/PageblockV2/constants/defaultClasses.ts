@@ -23,8 +23,8 @@ export const defaultClasses = {
       },
       content: {
         wrapper: 'p-4',
-        title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white mb-2',
-        subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300'
+        title: ' font-semibold mb-2 text-gray-900 dark:text-white mb-2',
+        subtitle: ' text-gray-700 dark:text-gray-300'
       }
     },
     masonry: {
@@ -44,8 +44,8 @@ export const defaultClasses = {
         img: 'w-full h-full object-cover'
       },
       content: {
-        title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white',
-        subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300',
+        title: ' font-semibold mb-2 text-gray-900 dark:text-white',
+        subtitle: ' text-gray-700 dark:text-gray-300',
         wrapper: 'p-4 bg-white dark:bg-gray-800 rounded-lg',
       },
     },
@@ -68,7 +68,7 @@ export const defaultClasses = {
       content: {
         wrapper: 'absolute bottom-0 left-0 right-0 p-6 z-10',
         title: 'text-[2.5rem] sm:text-[1rem] mb-2 !text-white',
-        subtitle: 'text-[1rem] sm:text-[0.8rem] !text-white'
+        subtitle: ' !text-white'
       }
     },
     sidebar: {
@@ -108,12 +108,12 @@ export const defaultClasses = {
       },
       content: {
         main: {
-          title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white mb-2',
-          subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300'
+          title: ' font-semibold mb-2 text-gray-900 dark:text-white mb-2',
+          subtitle: ' text-gray-700 dark:text-gray-300'
         },
         sidebar: {
-          title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white mb-1',
-          subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300'
+          title: ' font-semibold mb-2 text-gray-900 dark:text-white mb-1',
+          subtitle: ' text-gray-700 dark:text-gray-300'
         }
       }
     },
@@ -153,12 +153,12 @@ export const defaultClasses = {
       },
       content: {
         main: {
-          title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white mb-2',
-          subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300'
+          title: ' font-semibold mb-2 text-gray-900 dark:text-white mb-2',
+          subtitle: ' text-gray-700 dark:text-gray-300'
         },
         sidebar: {
-          title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white mb-1',
-          subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300'
+          title: ' font-semibold mb-2 text-gray-900 dark:text-white mb-1',
+          subtitle: ' text-gray-700 dark:text-gray-300'
         }
       }
     },
@@ -184,8 +184,8 @@ export const defaultClasses = {
       },
       content: {
         wrapper: 'p-4',
-        title: 'text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white mb-2',
-        subtitle: 'text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300'
+        title: ' font-semibold mb-2 text-gray-900 dark:text-white mb-2',
+        subtitle: ' text-gray-700 dark:text-gray-300'
       }
     },
     newsgrid: {
@@ -216,12 +216,12 @@ export const defaultClasses = {
       imageWrapper: 'relative aspect-[16/10] overflow-hidden mb-3',
       image: 'w-full h-full object-cover',
       mainTitle: [
-        'text-[1rem] sm:text-[0.8rem] font-normal',
+        ' font-normal',
         'text-gray-900 dark:text-white',
         'leading-tight'
       ].join(' '),
       secondaryTitle: [
-        'text-[1rem] sm:text-[0.8rem] font-medium',
+        ' font-medium',
         'text-gray-800 dark:text-gray-200',
         'leading-snug'
       ].join(' ')
@@ -244,7 +244,7 @@ export const defaultClasses = {
         'md:text-[2rem] sm:text-[1rem]',
       ].join(' '),
       subtitle: [
-        'md:text-[1.5rem] sm:text-[1rem]',
+        'md:',
       ].join(' ')
     },
     split: {
@@ -261,7 +261,7 @@ export const defaultClasses = {
       content: 'p-2',
       heading: [
         'mb-0',
-        'text-[1.5rem] sm:text-[1rem]',
+        '',
       ].join(' '),
       subtitle: [
         'text-lg',
@@ -281,7 +281,7 @@ export const defaultClasses = {
       content: 'p-2',
       heading: [
         'mb-0',
-        'text-[1.5rem] sm:text-[1rem]',
+        '',
       ].join(' '),
       subtitle: [
         'text-lg',
@@ -451,20 +451,20 @@ export const defaultClasses = {
         ].join(' '),
         grid: [
           'mb-2 line-clamp-2',
-          'text-[1.5rem] sm:text-[1rem] font-bold',
+          ' font-bold',
           'text-gray-900',
           'dark:text-white'
         ].join(' '),
         list: [
           'mb-2 line-clamp-2',
-          'text-[1.5rem] sm:text-[1rem] font-bold',
+          ' font-bold',
           'text-gray-900',
           'dark:text-white'
         ].join(' ')
       },
       subtitle: {
         featured: [
-          'text-[1.5rem] sm:text-[1rem] mb-4',
+          ' mb-4',
           'text-gray-600',
           'dark:text-gray-400'
         ].join(' '),
@@ -560,8 +560,8 @@ export const defaultClasses = {
       imageWrapper: "relative w-full overflow-hidden mb-4",
       image: "w-full h-full object-cover",
       content: "p-4",
-      heading: "text-[1.5rem] sm:text-[1rem] font-semibold mb-2 text-gray-900 dark:text-white",
-      subtitle: "text-[1rem] sm:text-[0.8rem] text-gray-700 dark:text-gray-300",
+      heading: " font-semibold mb-2 text-gray-900 dark:text-white",
+      subtitle: " text-gray-700 dark:text-gray-300",
       customVideoHeight: "h-[300px] sm:h-[200px] md:h-[300px] lg:h-auto"
     }
   },
@@ -650,12 +650,12 @@ export const defaultClasses = {
     imageWrapper: "relative aspect-[16/10] overflow-hidden mb-3",
     image: "w-full h-full object-cover",
     mainTitle: [
-      "text-[1rem] sm:text-[0.8rem] font-normal",
+      " font-normal",
       "text-gray-900 dark:text-white",
       "leading-tight",
     ].join(" "),
     secondaryTitle: [
-      "text-[1rem] sm:text-[0.8rem] font-medium",
+      " font-medium",
       "text-gray-800 dark:text-gray-200",
       "leading-snug",
     ].join(" "),

@@ -27,6 +27,7 @@ export interface ThemeProps {
   fontSize: string;
   fontWeight?: string;
   color: string;
+  fontFamily: string;
 }
 
 export interface ThemeConfig {
@@ -140,38 +141,50 @@ export interface ArticleFilters {
 
 export interface ClientTheme {
   fontMapping: {
-    articleTitle: string;
-    articleSubtitle: string;
-    articleBody: string;
-    headerTitle: string;
-    headerText: string;
+    pageblockTitle: string;
+    pageblockSubtitle: string;
+    pageblockText: string;
   };
   colorMapping: {
     light: {
-      articleBackground: string;
-      articleTitle: string;
-      articleSubtitle: string;
-      articleText: string;
-      headerBackground: string;
-      headerText: string;
-      primaryButton: string;
-      secondaryButton: string;
-      accent: string;
-      sidebarBackground: string;
-      sidebarText: string;
+      pageblockTitle: string;
+      pageblockSubtitle: string;
+      pageblockText: string;
     };
     dark: {
-      articleBackground: string;
-      articleTitle: string;
-      articleSubtitle: string;
-      articleText: string;
-      headerBackground: string;
-      headerText: string;
-      primaryButton: string;
-      secondaryButton: string;
-      accent: string;
-      sidebarBackground: string;
-      sidebarText: string;
+      pageblockTitle: string;
+      pageblockSubtitle: string;
+      pageblockText: string;
     };
   };
+  fontSize?: {
+    pageblockTitle: string;
+    pageblockSubtitle: string;
+    pageblockText: string;
+  };
 }
+
+export interface ClientThemeV2 {
+  fontMapping: {
+    pageblockTitle: string;
+    pageblockSubtitle: string;
+    pageblockText: string;
+  };
+  colorMapping: {
+    light: {
+      pageblockTitle: string;
+      pageblockSubtitle: string;
+      pageblockText: string;
+    };
+    dark: {
+      pageblockTitle: string;
+      pageblockSubtitle: string;
+      pageblockText: string;
+    };
+  };
+  fontSizeBySession: {
+    pageblockTitle: string;
+    pageblockSubtitle: string;
+    pageblockText: string;
+  };
+}   

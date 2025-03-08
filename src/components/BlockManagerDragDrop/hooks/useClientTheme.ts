@@ -15,61 +15,58 @@ interface ThemeStyles {
     fontFamily: string;
     color: string;
   };
+  fontSize: {
+    pageblockTitle: string;
+    pageblockSubtitle: string;
+    pageblockText: string;
+  };
 }
 
 const defaultTheme: ClientTheme = {
   fontMapping: {
-    articleTitle: "'Noto Sans Variable', sans-serif",
-    articleSubtitle: "'Noto Sans Variable', sans-serif",
-    articleBody: "'Noto Sans Variable', sans-serif",
-    headerTitle: "'Noto Sans Variable', sans-serif",
-    headerText: "'Noto Sans Variable', sans-serif",
+    pageblockTitle: "'Noto Sans Variable', sans-serif",
+    pageblockSubtitle: "'Noto Sans Variable', sans-serif",
+    pageblockText: "'Noto Sans Variable', sans-serif",
   },
   colorMapping: {
     light: {
-      articleBackground: '#FFFFFF',
-      articleTitle: '#1A1A1A',
-      articleSubtitle: '#4A5568',
-      articleText: '#2D3748',
-      headerBackground: '#FFFFFF',
-      headerText: '#1A1A1A',
-      primaryButton: '#3182CE',
-      secondaryButton: '#718096',
-      accent: '#3182CE',
-      sidebarBackground: '#F7FAFC',
-      sidebarText: '#2D3748',
+      pageblockTitle: '#1A1A1A',
+      pageblockSubtitle: '#4A5568',
+      pageblockText: '#4A5568',
     },
     dark: {
-      articleBackground: '#1A1A1A',
-      articleTitle: '#FFFFFF',
-      articleSubtitle: '#A0AEC0',
-      articleText: '#E2E8F0',
-      headerBackground: '#1A1A1A',
-      headerText: '#FFFFFF',
-      primaryButton: '#4299E1',
-      secondaryButton: '#A0AEC0',
-      accent: '#4299E1',
-      sidebarBackground: '#2D3748',
-      sidebarText: '#E2E8F0',
+      pageblockTitle: '#FFFFFF',
+      pageblockSubtitle: '#E2E8F0',
+      pageblockText: '#A0AEC0',
     },
+  },
+  fontSize: {
+    pageblockTitle: '1rem',
+    pageblockSubtitle: '0.80rem',
+    pageblockText: '1rem',
   },
 };
 
-export function useClientTheme({ clientGeneralSettingsData, isDarkTheme }: UseClientThemeProps): ThemeStyles {
+export function useClientTheme({ clientGeneralSettingsData, isDarkTheme = false }: UseClientThemeProps): ThemeStyles {
+  // @ts-ignore
   return useMemo(() => {
-    const theme = clientGeneralSettingsData || defaultTheme;
-    const { fontMapping, colorMapping } = theme;
-    const colors = isDarkTheme ? colorMapping.dark : colorMapping.light;
+    const theme = isDarkTheme ? 'dark' : 'light';
+    const settings = clientGeneralSettingsData || defaultTheme;
 
     return {
       title: {
-        fontFamily: fontMapping.articleTitle,
-        color: colors.articleTitle,
+        fontFamily: settings?.fontMapping?.pageblockTitle ?? defaultTheme.fontMapping.pageblockTitle,
+        color: settings?.colorMapping?.[theme]?.pageblockTitle ?? defaultTheme.colorMapping[theme].pageblockTitle,
       },
       subtitle: {
-        fontFamily: fontMapping.articleSubtitle,
-        color: colors.articleSubtitle,
+        fontFamily: settings?.fontMapping?.pageblockSubtitle ?? defaultTheme.fontMapping.pageblockSubtitle,
+        color: settings?.colorMapping?.[theme]?.pageblockSubtitle ?? defaultTheme.colorMapping[theme].pageblockSubtitle,
       },
+      fontSize: {
+        pageblockTitle: settings?.fontSize?.pageblockTitle ?? defaultTheme.fontSize?.pageblockTitle,
+        pageblockSubtitle: settings?.fontSize?.pageblockSubtitle ?? defaultTheme.fontSize?.pageblockSubtitle,
+        pageblockText: settings?.fontSize?.pageblockText ?? defaultTheme.fontSize?.pageblockText,
+      }
     };
   }, [clientGeneralSettingsData, isDarkTheme]);
 } 

@@ -53,6 +53,8 @@ const Newspaper: React.FC<BaseVariantProps> = ({
                   style={{
                     fontFamily: theme.title.fontFamily,
                     color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                   }}
                 >
                   {mainArticle.title}
@@ -65,6 +67,8 @@ const Newspaper: React.FC<BaseVariantProps> = ({
                   style={{
                     fontFamily: theme.subtitle.fontFamily,
                     color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                   }}
                 >
                   {mainArticle.subtitle}
@@ -95,6 +99,8 @@ const Newspaper: React.FC<BaseVariantProps> = ({
                     style={{
                       fontFamily: theme.title.fontFamily,
                       color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                     }}
                   >
                     {article.title}
@@ -107,6 +113,8 @@ const Newspaper: React.FC<BaseVariantProps> = ({
                     style={{
                       fontFamily: theme.subtitle.fontFamily,
                       color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                     }}
                   >
                     {article.subtitle}
@@ -138,6 +146,8 @@ const Newspaper: React.FC<BaseVariantProps> = ({
                     style={{
                       fontFamily: theme.title.fontFamily,
                       color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                     }}
                   >
                     {article.title}
@@ -150,6 +160,8 @@ const Newspaper: React.FC<BaseVariantProps> = ({
                     style={{
                       fontFamily: theme.subtitle.fontFamily,
                       color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                     }}
                   >
                     {article.subtitle}

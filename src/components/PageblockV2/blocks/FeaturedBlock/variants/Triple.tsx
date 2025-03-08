@@ -45,6 +45,8 @@ const Triple: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles
                 <Link href={articleUrl} aria-label={article.title} className="hover:underline transition-all duration-300">
                   <h3 className={classes.heading} style={{
                     color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                     fontFamily: theme.title.fontFamily,
                   }}>
                     {article.title}
@@ -53,6 +55,8 @@ const Triple: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles
                 {styles.showExcerpt ? (
                   <p className={classes.subtitle} style={{
                     color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                     fontFamily: theme.subtitle.fontFamily,
                   }}>
                     {article.subtitle}
@@ -60,6 +64,8 @@ const Triple: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customStyles
                 ) : (
                   <p className={classes.subtitle} style={{
                     color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                     fontFamily: theme.subtitle.fontFamily,
                   }}>
                     {article.subtitle}

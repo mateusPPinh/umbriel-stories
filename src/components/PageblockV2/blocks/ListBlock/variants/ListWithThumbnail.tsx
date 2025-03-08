@@ -259,6 +259,8 @@ const ListWithThumbnail: React.FC<BaseVariantProps> = ({
                 <Link href={articleUrl}>
                 <h3 className={`mb-2 ${actualLayout === 'grid' ? 'text-lg font-semibold' : ''}`} style={{
                   color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                   fontFamily: theme.title.fontFamily,
                 }}>
                   {article.title}
@@ -267,6 +269,8 @@ const ListWithThumbnail: React.FC<BaseVariantProps> = ({
                 {mergedStyles.showExcerpt ? (
                   <p className={`mb-2 ${actualLayout === 'grid' ? 'line-clamp-3' : 'line-clamp-2'}`} style={{
                     color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                     fontFamily: theme.subtitle.fontFamily,
                   }}>
                     {article.subtitle}

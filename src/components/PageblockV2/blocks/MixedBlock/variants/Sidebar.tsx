@@ -1,5 +1,5 @@
 import React from 'react'
-import { BlockVariant, Article, GridStyles, ClientTheme } from '../../../types'
+import { BlockVariant, Article, GridStyles, ClientTheme,  } from '../../../types'
 import { defaultClasses } from '../../../constants/defaultClasses'
 import { generateArticleUrl } from '../../../utils/generateArticleUrl'
 import Link from '../../../../Link'
@@ -67,6 +67,8 @@ const Sidebar: React.FC<BaseVariantProps> = ({
                         style={{
                           fontFamily: theme.title.fontFamily,
                           color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                         }}
                       >
                         {mainArticle.title}
@@ -79,6 +81,8 @@ const Sidebar: React.FC<BaseVariantProps> = ({
                         style={{
                           fontFamily: theme.subtitle.fontFamily,
                           color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                         }}
                       >
                         {mainArticle.subtitle}
@@ -131,6 +135,8 @@ const Sidebar: React.FC<BaseVariantProps> = ({
                         style={{
                           fontFamily: theme.title.fontFamily,
                           color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                         }}
                       >
                         {article.title}
@@ -143,6 +149,8 @@ const Sidebar: React.FC<BaseVariantProps> = ({
                         style={{
                           fontFamily: theme.subtitle.fontFamily,
                           color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                         }}
                       >
                         {article.subtitle}

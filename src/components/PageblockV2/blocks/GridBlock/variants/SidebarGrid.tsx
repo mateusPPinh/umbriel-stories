@@ -52,6 +52,8 @@ const SidebarGrid: React.FC<BaseVariantProps> = ({
                   >
                     <h3 className={classes.content.main.title} style={{
                       color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                       fontFamily: theme.title.fontFamily,
                     }}>
                       {article.title}
@@ -60,6 +62,8 @@ const SidebarGrid: React.FC<BaseVariantProps> = ({
                   {styles.showExcerpt ? (
                     <p className={classes.content.main.subtitle} style={{
                       color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                       fontFamily: theme.subtitle.fontFamily,
                     }}>
                       {article.subtitle}
@@ -67,6 +71,8 @@ const SidebarGrid: React.FC<BaseVariantProps> = ({
                   ) : (
                     <p className={classes.content.main.subtitle} style={{
                       color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                       fontFamily: theme.subtitle.fontFamily,
                     }}>
                       {article.subtitle}
@@ -109,6 +115,8 @@ const SidebarGrid: React.FC<BaseVariantProps> = ({
                   >
                     <h3 className={classes.content.sidebar.title} style={{
                       color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                       fontFamily: theme.title.fontFamily,
                     }}>
                       {article.title}
@@ -117,6 +125,8 @@ const SidebarGrid: React.FC<BaseVariantProps> = ({
                   {styles.showExcerpt ? (
                     <p className={classes.content.sidebar.subtitle} style={{
                       color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                       fontFamily: theme.subtitle.fontFamily,
                     }}>
                       {article.subtitle}
@@ -124,6 +134,8 @@ const SidebarGrid: React.FC<BaseVariantProps> = ({
                   ) : (
                     <p className={classes.content.sidebar.subtitle} style={{
                       color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                       fontFamily: theme.subtitle.fontFamily,
                     }}>
                       {article.subtitle}

@@ -294,6 +294,7 @@ const ListLayoutPreview = ({
                 style={{
                   fontFamily: theme.title.fontFamily,
                   color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle
                 }}
               >
                 {article.title}
@@ -309,6 +310,9 @@ const ListLayoutPreview = ({
                   style={{
                     fontFamily: theme.subtitle.fontFamily,
                     color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
+                    
                   }}
                 >
                   {article.subtitle}
@@ -352,6 +356,8 @@ const ListLayoutPreview = ({
               style={{
                 fontFamily: theme.title.fontFamily,
                 color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
               }}
             >
               {article.title}
@@ -367,6 +373,9 @@ const ListLayoutPreview = ({
                 style={{
                   fontFamily: theme.subtitle.fontFamily,
                   color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
+                  
                 }}
               >
                 {article.subtitle}
@@ -439,6 +448,7 @@ const ListLayoutPreview = ({
                 style={{
                   fontFamily: theme.title.fontFamily,
                   color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle
                 }}
               >
                 {article.title}
@@ -454,6 +464,9 @@ const ListLayoutPreview = ({
                   style={{
                     fontFamily: theme.subtitle.fontFamily,
                     color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
+                    
                   }}
                 >
                   {article.subtitle}

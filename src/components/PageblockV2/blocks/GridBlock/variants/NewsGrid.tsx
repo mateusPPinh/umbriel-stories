@@ -59,6 +59,8 @@ const NewsGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, clientGene
                       <Link href={articleUrl}>
                         <h3 className={classes.mainTitle} style={{
                           color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                           fontFamily: theme.title.fontFamily,
                         }}>
                           {article.title}
@@ -68,6 +70,8 @@ const NewsGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, clientGene
                       <Link href={articleUrl}>
                         <h3 className={classes.secondaryTitle} style={{
                           color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                           fontFamily: theme.title.fontFamily,
                         }}>
                           {article.title}

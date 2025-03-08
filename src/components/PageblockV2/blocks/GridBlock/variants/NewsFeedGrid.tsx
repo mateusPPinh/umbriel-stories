@@ -53,6 +53,8 @@ const NewsFeedGrid: React.FC<BaseVariantProps> = ({
                   >
                       <h3 className={classes.title} style={{
                       color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                       fontFamily: theme.title.fontFamily,
                     }}>
                       {article.title}
@@ -61,6 +63,8 @@ const NewsFeedGrid: React.FC<BaseVariantProps> = ({
                   {article.subtitle && (
                     <p className={classes.subtitle} style={{
                       color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                       fontFamily: theme.subtitle.fontFamily,
                     }}>{article.subtitle}</p>
                   )}
@@ -96,6 +100,8 @@ const NewsFeedGrid: React.FC<BaseVariantProps> = ({
                   <Link href={articleUrl} aria-label={article.title} className="hover:underline transition-all duration-300">
                     <h3 className={classes.title} style={{
                       color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                       fontFamily: theme.title.fontFamily,
                     }}>{article.title}</h3>
                   </Link>

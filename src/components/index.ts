@@ -38,3 +38,7 @@ export type { BlockConfig } from './BlockManagerDragDrop/components/StyleConfigM
 /**
  * Exportar tipagens, exemplos
  */
+
+export type { ClientTheme } from './PageblockV2/types'
+export type { Theme as PageblockTheme } from './PageblockV2/types'
+

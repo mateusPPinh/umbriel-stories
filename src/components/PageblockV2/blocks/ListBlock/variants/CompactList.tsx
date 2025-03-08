@@ -277,6 +277,8 @@ const CompactList: React.FC<BaseVariantProps> = ({
                         className={`mb-1 ${actualLayout === 'grid' ? 'text-lg' : ''}`}
                         style={{
                           color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                           fontFamily: theme.title.fontFamily,
                         }}
                       >
@@ -288,6 +290,8 @@ const CompactList: React.FC<BaseVariantProps> = ({
                         className={`${actualLayout === 'grid' ? 'line-clamp-3' : 'line-clamp-2'} mt-1`}
                         style={{
                           color: theme.subtitle.color,
+  fontSize: theme?.fontSize?.pageblockSubtitle,
+
                           fontFamily: theme.subtitle.fontFamily,
                         }}
                       >

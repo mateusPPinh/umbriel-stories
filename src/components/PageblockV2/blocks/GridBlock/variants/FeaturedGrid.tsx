@@ -66,6 +66,8 @@ const FeaturedGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
                         group-hover:text-blue-400
                       `} style={{
                         color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                         fontFamily: theme.title.fontFamily,
                       }}>
                         {article.title}
@@ -73,6 +75,8 @@ const FeaturedGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
                       {article.subtitle && (
                         <p className={classes.content.subtitle} style={{
                           color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                           fontFamily: theme.subtitle.fontFamily,
                         }}>
                           {article.subtitle}
@@ -91,6 +95,8 @@ const FeaturedGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
                       group-hover:text-blue-600 dark:group-hover:text-blue-400
                     `} style={{
                       color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                       fontFamily: theme.title.fontFamily,
                     }}>
                       {article.title}
@@ -98,6 +104,8 @@ const FeaturedGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
                     {article.subtitle && (
                       <p className={classes.content.subtitle} style={{
                         color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                         fontFamily: theme.subtitle.fontFamily,
                       }}>
                         {article.subtitle}

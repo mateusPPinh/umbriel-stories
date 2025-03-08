@@ -72,6 +72,8 @@ const MasonryGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
                <Link href={articleUrl} aria-label={article.title} className="hover:underline transition-all duration-300">
                <h3 className={classes.content.title} style={{
                 color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                 fontFamily: theme.title.fontFamily,
                }}>
                   {article.title}
@@ -80,6 +82,8 @@ const MasonryGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
                 {styles.showExcerpt ? (
                   <p className={classes.content.subtitle} style={{
                     color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                     fontFamily: theme.subtitle.fontFamily,
                   }}>
                     {article.subtitle}
@@ -87,6 +91,8 @@ const MasonryGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, customS
                 ) : (
                   <p className={classes.content.subtitle} style={{
                     color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                     fontFamily: theme.subtitle.fontFamily,
                   }}>
                     {article.subtitle}

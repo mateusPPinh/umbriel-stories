@@ -64,17 +64,23 @@ const Split: React.FC<BaseVariantProps> = ({
                   >
                     <h3 className={classes.heading} style={{
                       color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                       fontFamily: theme.title.fontFamily,
                     }}>{article.title}</h3>
                   </Link>
                   {styles.showExcerpt ? (
                     <p className={classes.subtitle} style={{
                       color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                       fontFamily: theme.subtitle.fontFamily,
                     }}>{article.subtitle}</p>
                   ) : (
                     <p className={classes.subtitle} style={{
                       color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                       fontFamily: theme.subtitle.fontFamily,
                     }}>{article.subtitle}</p>
                   )}

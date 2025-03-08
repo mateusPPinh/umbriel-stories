@@ -50,6 +50,7 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
                 <h2 className="text-2xl font-bold mb-2" style={{
                   fontFamily: theme.title.fontFamily,
                   color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle
                 }}>
                   {article.title}
                 </h2>
@@ -57,6 +58,9 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
                   <p className="text-base" style={{
                     fontFamily: theme.subtitle.fontFamily,
                     color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
+                    
                   }}>
                     {article.subtitle}
                   </p>
@@ -107,6 +111,9 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
                     style={{
                       fontFamily: theme.title.fontFamily,
                       color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
+                      
                     }}
                   >
                     {article.title}
@@ -117,6 +124,9 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
                       style={{
                         fontFamily: theme.subtitle.fontFamily,
                         color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
+                        
                       }}
                     >
                       {article.subtitle}
@@ -164,6 +174,9 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
                     style={{
                       fontFamily: theme.title.fontFamily,
                       color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
+                      
                     }}
                   >
                     {article.title}
@@ -174,6 +187,9 @@ const FeaturedLayoutPreview: React.FC<FeaturedLayoutPreviewProps> = ({ variantTy
                       style={{
                         fontFamily: theme.subtitle.fontFamily,
                         color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
+                        
                       }}
                     >
                       {article.subtitle}

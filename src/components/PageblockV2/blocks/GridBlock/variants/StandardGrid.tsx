@@ -48,6 +48,8 @@ const StandardGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
               <Link href={articleUrl} className="hover:underline transition-all duration-300">
               <h2 className={classes.content.title} style={{
                 color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                 fontFamily: theme.title.fontFamily,
               }}>
                 {article.title}
@@ -57,6 +59,8 @@ const StandardGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
               {styles.showExcerpt ? (
                 <p className={classes.content.subtitle} style={{
                   color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                   fontFamily: theme.subtitle.fontFamily,
                 }}>
                   {article.subtitle}
@@ -64,6 +68,8 @@ const StandardGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
               ) : (
                 <p className={classes.content.subtitle} style={{
                   color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                   fontFamily: theme.subtitle.fontFamily,
                 }}>
                   {article.subtitle}

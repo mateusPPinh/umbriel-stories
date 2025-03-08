@@ -78,11 +78,13 @@ export const useBlockState = ({
             headingProps: {
               fontSize: 'lg',
               fontWeight: 'medium',
-              color: '#1a1a1a'
+              color: '#1a1a1a',
+              fontFamily: "'Noto Sans Variable', sans-serif"
             },
             subtitleProps: {
               fontSize: 'sm',
-              color: '#4a5568'
+              color: '#4a5568',
+              fontFamily: "'Noto Sans Variable', sans-serif"
             },
             timelineProps: {
               color: '#3182ce',
@@ -99,11 +101,13 @@ export const useBlockState = ({
             headingProps: {
               fontSize: 'lg',
               fontWeight: 'medium',
-              color: '#ffffff'
+              color: '#ffffff',
+              fontFamily: "'Noto Sans Variable', sans-serif"
             },
             subtitleProps: {
               fontSize: 'sm',
-              color: '#a0aec0'
+              color: '#a0aec0',
+              fontFamily: "'Noto Sans Variable', sans-serif"
             },
             timelineProps: {
               color: '#63b3ed',

@@ -215,6 +215,8 @@ const mergeStyles = (defaultStyles: any, customStyles: any) => {
                     transition-colors duration-200
                   `} style={{
                     color: theme.title.color,
+fontSize: theme?.fontSize?.pageblockTitle,
+
                     fontFamily: theme.title.fontFamily,
                   }}>
                     {actualLayout === 'grid' ? truncateTitle(article.title) : article.title}
@@ -226,6 +228,8 @@ const mergeStyles = (defaultStyles: any, customStyles: any) => {
                       ${actualLayout === 'grid' ? 'line-clamp-3' : ''}
                     `} style={{
                       color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                       fontFamily: theme.subtitle.fontFamily,
                     }}>
                       {article.subtitle}
@@ -275,6 +279,8 @@ const mergeStyles = (defaultStyles: any, customStyles: any) => {
                       ) : article?.articleBody ? (
                         <p className="text-sm text-gray-600 dark:text-gray-400 mt-2" style={{
                           color: theme.subtitle.color,
+fontSize: theme?.fontSize?.pageblockSubtitle,
+
                           fontFamily: theme.subtitle.fontFamily,
                         }}>
                           {truncateText(article.articleBody, 150)}

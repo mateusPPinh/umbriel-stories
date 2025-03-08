@@ -335,38 +335,25 @@ export interface GridStyles {
 
 export interface ClientTheme {
   fontMapping: {
-    articleTitle: string;
-    articleSubtitle: string;
-    articleBody: string;
-    headerTitle: string;
-    headerText: string;
+    pageblockTitle: string;
+    pageblockSubtitle: string;
+    pageblockText: string;
   };
   colorMapping: {
     light: {
-      articleBackground: string;
-      articleTitle: string;
-      articleSubtitle: string;
-      articleText: string;
-      headerBackground: string;
-      headerText: string;
-      primaryButton: string;
-      secondaryButton: string;
-      accent: string;
-      sidebarBackground: string;
-      sidebarText: string;
+      pageblockTitle: string;
+      pageblockSubtitle: string;
+      pageblockText: string;
     };
     dark: {
-      articleBackground: string;
-      articleTitle: string;
-      articleSubtitle: string;
-      articleText: string;
-      headerBackground: string;
-      headerText: string;
-      primaryButton: string;
-      secondaryButton: string;
-      accent: string;
-      sidebarBackground: string;
-      sidebarText: string;
+      pageblockTitle: string;
+      pageblockSubtitle: string;
+      pageblockText: string;
     };
+  };
+  fontSize?: {
+    pageblockTitle: string;
+    pageblockSubtitle: string;
+    pageblockText: string;
   };
 }
