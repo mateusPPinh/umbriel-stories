@@ -17,9 +17,30 @@ export default {
       </ResponsiveDeviceProvider>
     ),
   ],
+  parameters: {
+    controls: {
+      expanded: true
+    }
+  },
+  argTypes: {
+    layout: {
+      control: { type: 'radio' },
+      options: ['single', 'grid'],
+      defaultValue: 'single',
+      description: 'Layout type for the list'
+    },
+    isDarkTheme: {
+      control: 'boolean'
+    }
+  }
 } as Meta;
 
-const Template: Story<{ variant: BlockVariant; isDarkTheme?: boolean; clientGeneralSettingsData: ClientTheme }> = (args) => <Chronological {...args} clientGeneralSettingsData={mockClientTheme} />;
+const Template: Story<{
+  variant: BlockVariant;
+  isDarkTheme?: boolean;
+  clientGeneralSettingsData: ClientTheme;
+  layout: 'single' | 'grid';
+}> = (args) => <Chronological {...args as any} clientGeneralSettingsData={mockClientTheme} />;
 
 // Criar artigos mock para lista
 const listArticles = {
@@ -104,6 +125,41 @@ const baseChronologicalVariant = {
 export const Default = Template.bind({});
 Default.args = {
   variant: baseChronologicalVariant,
+  isDarkTheme: false
+};
+
+// Single Column Layout (Default)
+export const SingleColumn = Template.bind({});
+SingleColumn.args = {
+  variant: {
+    ...baseChronologicalVariant,
+    config: {
+      ...baseChronologicalVariant.config,
+      styles: {
+        ...baseChronologicalVariant.config.styles,
+        layout: 'single'
+      }
+    }
+  },
+  layout: 'single',
+  isDarkTheme: false
+};
+
+// Grid Layout
+export const GridLayout = Template.bind({});
+GridLayout.args = {
+  variant: {
+    ...baseChronologicalVariant,
+    config: {
+      ...baseChronologicalVariant.config,
+      styles: {
+        ...baseChronologicalVariant.config.styles,
+        layout: 'grid',
+        gridGap: '24px'
+      }
+    }
+  },
+  layout: 'grid',
   isDarkTheme: false
 };
 

@@ -115,48 +115,61 @@ const ListLayoutPreview = ({
   console.log('ListLayoutPreview:', { variant, itemsLength: articlesData[0]?.length, articlesData });
 
   // Move renderSkeleton inside the component
-  const renderSkeleton = (type: 'timeline' | 'compact' | 'card') => {
-    const isGridLayout = type === 'card' && blockConfig.styles.layout === 'grid';
+  const renderSkeleton = () => {
+    const variantType = variant;
+    const isGridLayout = blockConfig.styles.layout === 'grid';
     
-    if (type === 'timeline') {
-      return Array(5).fill(0).map((_, index) => (
-        <div key={index} className="flex items-start gap-4 py-4">
-          <div className="w-3 h-3 rounded-full bg-gray-700/50 dark:bg-gray-200/50 mt-2" />
-          <div className="flex-1">
-            <div className="flex gap-2 mb-2">
-              <div className="w-24 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
-              <div className="w-16 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
-            </div>
-            <div className="w-3/4 h-6 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
-            <div className="w-1/2 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse mt-2" />
-          </div>
-        </div>
-      ));
-    } else if (type === 'compact') {
-      return Array(5).fill(0).map((_, index) => (
-        <div key={index} className="py-3 border-b border-gray-700/50 dark:border-gray-200/50">
-          <div className="w-3/4 h-5 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse" />
-          <div className="w-1/2 h-4 bg-gray-700/50 dark:bg-gray-200/50 rounded animate-pulse mt-2" />
-        </div>
-      ));
-    } else {
-      // Card skeleton - update for grid support
+    if (variantType === 'chronological') {
+      // Timeline skeleton
       return (
-        <div className={`${isGridLayout ? 'grid grid-cols-2 gap-4' : 'space-y-4'}`}>
-          {Array.from({ length: 4 }).map((_, i) => (
+        <div className={`${isGridLayout ? 'grid grid-cols-2 gap-6' : 'flex flex-col space-y-6'}`}>
+          {Array.from({ length: isGridLayout ? 4 : 3 }).map((_, index) => (
+            <div key={index} className="animate-pulse flex flex-col">
+              <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/3 mb-4"></div>
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-2"></div>
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+            </div>
+          ))}
+        </div>
+      );
+    } else if (variantType === 'compact') {
+      // Compact skeleton
+      return (
+        <div className={`w-full ${isGridLayout ? 'grid grid-cols-2 gap-6' : 'flex flex-col'}`}>
+          {Array.from({ length: isGridLayout ? 6 : 5 }).map((_, index) => (
             <div 
-              key={i}
+              key={index} 
               className={`
-                flex gap-4 p-4 animate-pulse
-                ${!isGridLayout && i !== 3 ? 'border-b border-gray-200 dark:border-gray-700 pb-4' : ''}
-                ${isGridLayout ? 'h-full' : ''}
+                animate-pulse py-4
+                ${!isGridLayout && index < 4 ? 'border-b border-gray-200 dark:border-gray-700' : ''}
+                ${isGridLayout ? 'p-4 rounded-lg' : ''}
               `}
             >
-              <div className="w-24 h-24 bg-gray-200 dark:bg-gray-700 rounded flex-shrink-0"></div>
-              <div className="flex-1 space-y-2">
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
+              {/* Title */}
+              <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-3"></div>
+              
+              {/* Excerpt */}
+              <div className="space-y-2 mt-2">
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+              </div>
+              
+              {/* Date */}
+              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mt-3"></div>
+            </div>
+          ))}
+        </div>
+      );
+    } else {
+      // Card skeleton
+      return (
+        <div className={`${isGridLayout ? 'grid grid-cols-2 gap-6' : 'flex flex-col space-y-6'}`}>
+          {Array.from({ length: isGridLayout ? 4 : 3 }).map((_, index) => (
+            <div key={index} className="animate-pulse">
+              <div className="bg-gray-200 dark:bg-gray-700 h-48 rounded-t"></div>
+              <div className="p-4 border border-t-0 border-gray-200 dark:border-gray-700 rounded-b">
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
               </div>
             </div>
           ))}
@@ -238,15 +251,22 @@ const ListLayoutPreview = ({
   const renderChronologicalList = () => {
     const articles = articlesData[0] || [];
     const displayConfig = getColumnDisplayConfig('col-0');
+    const isGridLayout = blockConfig.styles.layout === 'grid';
     
     if (articles.length === 0) {
-      return renderSkeleton('timeline');
+      return renderSkeleton();
     }
 
     return (
-      <div className="space-y-2">
+      <div className={isGridLayout ? 'grid grid-cols-2 gap-4' : 'space-y-2'}>
         {articles.map((article, index) => (
-          <div key={index} className="flex items-start gap-4 py-4">
+          <div 
+            key={index} 
+            className={`
+              flex items-start gap-4 py-4
+              ${isGridLayout ? 'h-full' : ''}
+            `}
+          >
             {/* Timeline marker */}
             <div 
               className={`
@@ -266,7 +286,11 @@ const ListLayoutPreview = ({
               
               {/* Title */}
               <h3 
-                className={`font-semibold mb-1 ${getTitleSizeClass(blockConfig.styles.titleSize)}`}
+                className={`
+                  font-semibold mb-1 
+                  ${getTitleSizeClass(blockConfig.styles.titleSize)}
+                  ${isGridLayout ? 'text-lg' : ''}
+                `}
                 style={{
                   fontFamily: theme.title.fontFamily,
                   color: theme.title.color,
@@ -278,7 +302,10 @@ const ListLayoutPreview = ({
               {/* Excerpt */}
               {displayConfig.showSubtitle && blockConfig.styles.showExcerpt && article.subtitle && (
                 <p 
-                  className="text-sm line-clamp-2"
+                  className={`
+                    text-sm 
+                    ${isGridLayout ? 'line-clamp-3' : 'line-clamp-2'}
+                  `}
                   style={{
                     fontFamily: theme.subtitle.fontFamily,
                     color: theme.subtitle.color,
@@ -297,25 +324,31 @@ const ListLayoutPreview = ({
   const renderCompactList = () => {
     const articles = articlesData[0] || [];
     const displayConfig = getColumnDisplayConfig('col-0');
+    const isGridLayout = blockConfig.styles.layout === 'grid';
     
     if (articles.length === 0) {
-      return renderSkeleton('compact');
+      return renderSkeleton();
     }
 
     return (
-      <div className="space-y-0">
+      <div className={isGridLayout ? 'grid grid-cols-2 gap-4' : 'space-y-0'}>
         {articles.map((article, index) => (
           <div 
             key={index}
             className={`
               py-3 
-              ${index !== articles.length - 1 ? getBorderStyle(blockConfig.styles.dividerStyle) : ''}
+              ${!isGridLayout && index !== articles.length - 1 ? getBorderStyle(blockConfig.styles.dividerStyle) : ''}
               ${getHoverEffectClass(blockConfig.styles.hoverEffect)}
+              ${isGridLayout ? 'h-full' : ''}
             `}
           >
             {/* Title */}
             <h3 
-              className={`font-semibold mb-1 ${getTitleSizeClass(blockConfig.styles.titleSize)}`}
+              className={`
+                font-semibold mb-1 
+                ${getTitleSizeClass(blockConfig.styles.titleSize)}
+                ${isGridLayout ? 'text-lg' : ''}
+              `}
               style={{
                 fontFamily: theme.title.fontFamily,
                 color: theme.title.color,
@@ -327,7 +360,10 @@ const ListLayoutPreview = ({
             {/* Excerpt */}
             {displayConfig.showSubtitle && blockConfig.styles.showExcerpt && article.subtitle && (
               <p 
-                className="text-sm line-clamp-2"
+                className={`
+                  text-sm 
+                  ${isGridLayout ? 'line-clamp-3' : 'line-clamp-2'}
+                `}
                 style={{
                   fontFamily: theme.subtitle.fontFamily,
                   color: theme.subtitle.color,
@@ -354,7 +390,7 @@ const ListLayoutPreview = ({
     const displayConfig = getColumnDisplayConfig('col-0');
     
     if (articles.length === 0) {
-      return renderSkeleton('card');
+      return renderSkeleton();
     }
 
     const isGridLayout = blockConfig.styles.layout === 'grid';

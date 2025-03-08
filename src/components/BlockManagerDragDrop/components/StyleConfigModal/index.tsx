@@ -4,7 +4,7 @@ import LayoutConfig from './LayoutConfig';
 import ThemeConfig from './ThemeConfig';
 import MediaConfig, { VideoConfig, ImageConfig, DisplayConfig } from './MediaConfig';
 import VariantConfig from './VariantConfig';
-
+import Button from '../../../Button';
 // Lazy load the config components
 import LayoutConfigLazy from './LayoutConfig';
 import ThemeConfigLazy from './ThemeConfig';
@@ -256,18 +256,19 @@ const StyleConfigModal: React.FC<StyleConfigModalProps> = ({
 
           {/* Footer */}
           <div className="flex justify-end gap-3 p-4 border-t border-gray-200 dark:border-gray-700">
-            <button
+            <Button
+              variant="warning"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white"
+              
             >
               Cancelar
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="primary"
               onClick={() => onSave(config)}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Salvar
-            </button>
+            </Button>
           </div>
         </div>
       </div>

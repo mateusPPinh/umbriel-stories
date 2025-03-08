@@ -679,7 +679,10 @@ const ListManager = ({
           </DragDropContext>
         )}
 
-        {blockState.currentVariant.variantType === 'card' && !isPreviewOnly && (
+        {(blockState.currentVariant.variantType === 'card' || 
+          blockState.currentVariant.variantType === 'chronological' || 
+          blockState.currentVariant.variantType === 'compact') && 
+          !isPreviewOnly && (
           <div className="flex items-center gap-2 mt-4">
             <label htmlFor="layout-select" className="text-sm text-gray-600 dark:text-gray-400">
               Layout:

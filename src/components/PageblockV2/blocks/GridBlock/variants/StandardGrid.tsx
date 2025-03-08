@@ -3,12 +3,11 @@ import {
   BlockVariant, 
   Article, 
 } from '../../../types';
-import { defaultClasses } from '../../../constants/defaultClasses';
 import { generateArticleUrl } from '../../../utils/generateArticleUrl';
 import Link from '../../../../Link';
 import { useClientTheme } from '../../../hooks/useClientTheme';
 import { ClientTheme } from '../../../types';
-
+import {defaultClasses} from '../../../constants/defaultClasses';
 interface BaseVariantProps {
   variant: BlockVariant;
   isDarkTheme?: boolean;
