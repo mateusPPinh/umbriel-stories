@@ -111,13 +111,21 @@ const ListWithThumbnail: React.FC<BaseVariantProps> = ({
   };
 
   // Get the actual layout to use, prioritizing:
-  // 1. Explicit layout prop
-  // 2. Layout from variant's config
+  // 1. Layout from variant's config
+  // 2. Explicit layout prop
   // 3. Default to 'single'
   const layoutFromConfig = (variant.config.styles as any)?.layout;
-  const actualLayout = explicitLayout || layoutFromConfig || 'single';
+  const actualLayout = layoutFromConfig || explicitLayout || 'single';
   
-  // Merge styles with grid-specific styles
+  // Get grid gap from config or use default
+  const gridGap = (variant.config.styles as any)?.gridGap || '24px';
+
+  // Apply the layout-specific thumbnail size
+  const thumbnailSize = actualLayout === 'grid' 
+    ? { width: '180px', height: '120px' }
+    : { width: '120px', height: '120px' };
+
+  // Ensure grid styles are merged correctly with priority
   const defaultGridStyles = {
     gridGap: '24px',
     columns: 2,
@@ -126,34 +134,42 @@ const ListWithThumbnail: React.FC<BaseVariantProps> = ({
   
   const gridStyles = (variant.config.styles as any)?.gridStyles || {};
 
-  // Apply the layout-specific thumbnail size
-  const thumbnailSize = actualLayout === 'grid' 
-    ? { width: '180px', height: '120px' }
-    : { width: '120px', height: '120px' };
-  
-  // Merge default styles with variant styles
+  // Create base styles with layout priority
+  const baseStyles = {
+    ...defaultStyles,
+    thumbnailSize,
+    layout: actualLayout, // Ensure layout is at the base level
+    gridGap,
+    gridStyles: {
+      ...defaultGridStyles,
+      ...gridStyles
+    }
+  };
+
+  // Merge styles ensuring layout is preserved
   const mergedStyles = mergeStyles(
-    { 
-      ...defaultStyles,
-      thumbnailSize,
-      layout: actualLayout,
-      gridGap: defaultGridStyles.gridGap,
-      gridStyles: {
-        ...defaultGridStyles,
-        ...gridStyles
-      }
-    },
-    variant.config.styles
+    baseStyles,
+    {
+      ...variant.config.styles,
+      layout: actualLayout // Ensure layout is preserved in the merge
+    }
   );
   
-  // Override styles.layout in variant config to ensure it's used by the component
-  // This is critical for the layout to persist in the Next.js frontend
-  (variant.config.styles as any) = {
-    ...(variant.config.styles as any),
-    layout: actualLayout
-  };
-  
-  const gridGap = defaultGridStyles.gridGap;
+  // Override the variant config to ensure layout persists
+  variant.config = {
+    ...variant.config,
+    styles: {
+      ...variant.config.styles,
+      layout: actualLayout // Ensure layout is in the final config
+    }
+  } as any;
+
+  console.log('ListWithThumbnail Layout Debug:', {
+    explicitLayout,
+    layoutFromConfig,
+    actualLayout,
+    mergedStylesLayout: mergedStyles.layout
+  });
 
   // Use merged styles in useBlockStyles
   const { containerStyle, columnStyle, headingStyle, subtitleStyle } = useBlockStyles({

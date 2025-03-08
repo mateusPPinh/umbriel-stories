@@ -6,6 +6,10 @@ module.exports = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+    './src/components/PageblockV2/**/*.{ts,tsx}',
+    './src/components/BlockManagerDragDrop/**/*.{ts,tsx}',
+    './node_modules/@umbriel/components/dist/cjs/components/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@umbriel/components/dist/esm/components/**/*.{js,ts,jsx,tsx}',
   ],
   prefix: "",
   theme: {

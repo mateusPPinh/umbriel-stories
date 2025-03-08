@@ -11,6 +11,9 @@ export { default as Link } from './Link'
 export { default as LazyImage } from './LazyImage'
 export { default as PageBlockV2 } from './PageblockV2'
 
+//barrel 
+export * from './PageblockV2/barrel'
+
 // theme
 export * from '../styles/deliveryThemeFunc'
 // types

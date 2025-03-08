@@ -71,8 +71,14 @@ const mergeStyles = (defaultStyles: any, customStyles: any) => {
     return text.slice(0, maxLength) + '...';
   };
 
+  const truncateTitle = (title: string, maxLength: number = 58) => {
+    if (!title) return '';
+    if (title.length <= maxLength) return title;
+    return title.slice(0, maxLength) + '...';
+  };
+
   const layoutFromConfig = (variant.config.styles as any)?.layout;
-  const actualLayout = explicitLayout || layoutFromConfig || 'single';
+  const actualLayout = layoutFromConfig || explicitLayout || 'single';
   
   // Get grid gap from config or use default
   const gridGap = (variant.config.styles as any)?.gridGap || '24px';
@@ -82,7 +88,7 @@ const mergeStyles = (defaultStyles: any, customStyles: any) => {
     ? { width: '180px', height: '120px' }
     : { width: '120px', height: '120px' };
 
-  // Ensure grid styles are merged correctly
+  // Ensure grid styles are merged correctly with priority
   const defaultGridStyles = {
     gridGap: '24px',
     columns: 2,
@@ -91,27 +97,41 @@ const mergeStyles = (defaultStyles: any, customStyles: any) => {
   
   const gridStyles = (variant.config.styles as any)?.gridStyles || {};
 
-  // Merge default styles with variant styles
+  // Create base styles with layout priority
+  const baseStyles = {
+    ...styles,
+    layout: actualLayout, // Ensure layout is at the base level
+    gridGap,
+    gridStyles: {
+      ...defaultGridStyles,
+      ...gridStyles
+    }
+  };
+
+  // Merge styles ensuring layout is preserved
   const mergedStyles = mergeStyles(
-    { 
-      ...styles,
-      thumbnailSize,
-      layout: actualLayout, // Important: preserve layout in mergedStyles
-      gridGap,
-      gridStyles: {
-        ...defaultGridStyles,
-        ...gridStyles
-      }
-    },
-    variant.config.styles
+    baseStyles,
+    {
+      ...variant.config.styles,
+      layout: actualLayout // Ensure layout is preserved in the merge
+    }
   );
   
-  // Override styles.layout in variant config to ensure it's used by the component
-  // This is critical for the layout to persist in the Next.js frontend
-  (variant.config.styles as any) = {
-    ...(variant.config.styles as any),
-    layout: actualLayout
-  };
+  // Override the variant config to ensure layout persists
+  variant.config = {
+    ...variant.config,
+    styles: {
+      ...variant.config.styles,
+      layout: actualLayout // Ensure layout is in the final config
+    }
+  } as any;
+
+  console.log('Chronological Layout Debug:', {
+    explicitLayout,
+    layoutFromConfig,
+    actualLayout,
+    mergedStylesLayout: mergedStyles.layout
+  });
   
   // Use merged styles in useBlockStyles
   const { containerStyle, columnStyle, headingStyle, subtitleStyle } = useBlockStyles({
@@ -147,8 +167,8 @@ const mergeStyles = (defaultStyles: any, customStyles: any) => {
                 key={article.id}
                 className={`
                   ${classes.item}
-                  ${actualLayout === 'grid' ? 'p-4 rounded-lg border border-gray-200 dark:border-gray-700' : ''}
-                  ${classes.variants.hover[styles.hoverEffect || 'highlight']}
+                  ${actualLayout === 'grid' ? 'p-4 bg-white dark:bg-gray-800 rounded-lg' : ''}
+                  ${actualLayout !== 'grid' ? classes.variants.hover[styles.hoverEffect || 'highlight'] : ''}
                   group
                 `}
                 style={{
@@ -181,17 +201,23 @@ const mergeStyles = (defaultStyles: any, customStyles: any) => {
                 ) : null}
 
                 <Link 
-                  className="hover:underline transition-all duration-300" href={articleUrl}
+                  className={`
+                    block
+                    ${actualLayout === 'grid' ? 'hover:no-underline' : 'hover:underline'} 
+                    transition-all duration-300
+                  `} 
+                  href={articleUrl}
                 >
                   <h3 className={`
                     ${classes.content.title}
-                    group-hover:text-blue-600 dark:group-hover:text-blue-400
+                    ${actualLayout === 'grid' ? 'text-lg font-semibold line-clamp-2 min-h-[2.5rem] hover:underline' : ''}
+                    ${actualLayout !== 'grid' ? 'group-hover:text-blue-600 dark:group-hover:text-blue-400' : ''}
                     transition-colors duration-200
                   `} style={{
                     color: theme.title.color,
                     fontFamily: theme.title.fontFamily,
                   }}>
-                    {article.title}
+                    {actualLayout === 'grid' ? truncateTitle(article.title) : article.title}
                   </h3>
                   
                   {article.subtitle ? (

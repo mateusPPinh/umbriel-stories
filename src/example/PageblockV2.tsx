@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import PageBlockV2 from '../components/PageblockV2/index';
+import PageBlockV2 from '../components/PageblockV2';
 import { blocks } from '../blocos.mock';
 
 const App = (): ReactElement => {

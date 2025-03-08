@@ -10,9 +10,8 @@ export const withLayoutControl = <P extends WithLayoutControlProps>(
   WrappedComponent: React.ComponentType<P>
 ) => {
   return function WithLayoutControl(props: P) {
-    // Se o bloco for do tipo list e a variante for thumbnail, permitimos o controle de layout
-    const shouldControlLayout = props.block.template === 'list' && 
-      props.block.variants?.[0]?.variantType === 'thumbnail';
+    // Permitir controle de layout para todos os blocos do tipo list
+    const shouldControlLayout = props.block.template === 'list';
 
     // Se não devemos controlar o layout, passa as props originais
     if (!shouldControlLayout) {

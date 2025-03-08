@@ -34,7 +34,7 @@ const PageBlockV2 = ({ blocksData, isDarkTheme, clientGeneralSettingsData, listL
         }
 
         const { template } = block;
-        const commonProps = {
+        const { key, ...restProps } = {
           key: block.id,
           block,
           isDarkTheme,
@@ -44,13 +44,13 @@ const PageBlockV2 = ({ blocksData, isDarkTheme, clientGeneralSettingsData, listL
 
         switch (template) {
           case 'grid':
-            return <EnhancedGridBlock {...commonProps} />;
+            return <EnhancedGridBlock key={key} {...restProps} />;
           case 'featured':
-            return <EnhancedFeaturedBlock {...commonProps} />;
+            return <EnhancedFeaturedBlock key={key} {...restProps} />;
           case 'list':
-            return <EnhancedListBlock {...commonProps} />;
+            return <EnhancedListBlock key={key} {...restProps} />;
           case 'mixed':
-            return <EnhancedMixedBlock {...commonProps} />;
+            return <EnhancedMixedBlock key={key} {...restProps} />;
           default:
             console.warn(`Template não suportado: ${template}`);
             return null;

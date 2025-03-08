@@ -1,12 +1,5 @@
-import { ReactElement } from "react";
-
-
-const App = (): ReactElement => {
-   return (
-      <div>
-         <h1>Hello World</h1>
-      </div>
-   )
-}
+const App = () => {
+  return<h1>Hello World</h1>;
+};
 
 export default App;
