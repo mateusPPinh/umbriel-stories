@@ -27,6 +27,7 @@ interface BlockManagerDragDropProps {
   showSidebar?: boolean;
   clientGeneralSettingsData: ClientTheme;
   initialLayout?: 'single' | 'grid';
+  children?: React.ReactNode; 
 }
 
 export default {
@@ -83,7 +84,8 @@ const commonProps = {
   onPublishBlock: () => console.log('Publishing block'),
   showSidebar: true,
   clientGeneralSettingsData: mockClientTheme,
-  initialLayout: 'single'
+  initialLayout: 'single',
+  children: <div>teste</div>
 };
 
 // Grid Variants
@@ -267,3 +269,10 @@ Without_Sidebar.args = {
   showSidebar: false
 };
 Without_Sidebar.storyName = 'Without Sidebar'; 
+
+export const children = Template.bind({});
+children.args = {
+  ...commonProps,
+  children: <div>teste</div>
+};
+children.storyName = 'Children';
