@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo, useEffect, ReactElement } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Article } from '../../PageblockV2/types';
 import { useBlockState } from '../hooks/useBlockState';
@@ -118,6 +118,7 @@ interface GridManagerProps {
   onEditorialSelect?: (editorialId: string, subEditorialId?: string) => void;
   onPublishBlock?: () => void;
   clientGeneralSettingsData: ClientTheme;
+  initialSelectedArticles?: Record<string, any[]>;
 }
 
 interface HeadingProps {
@@ -138,18 +139,24 @@ const GridManager: React.FC<GridManagerProps> = ({
   isDarkTheme = false, 
   onSave, 
   variant = 'standard',
-  blockConfig,
+  blockConfig: externalBlockConfig,
   onConfigClick,
   isPreviewOnly = false,
-  pageData,
+  pageData = [],
   editorialsData,
   isPagesLoading = false,
   isEditorialsLoading = false,
   onPageSelect,
   onEditorialSelect,
   onPublishBlock,
-  clientGeneralSettingsData
-}): JSX.Element => {
+  clientGeneralSettingsData,
+  initialSelectedArticles
+}): ReactElement => {
+  // Log para debug
+  console.log('===== RENDERIZANDO GRIDMANAGER =====');
+  console.log('Prop variant recebida:', variant);
+  console.log('Artigos pré-selecionados:', initialSelectedArticles);
+  
   const {
     blockState,
     updateArticlePositions,
@@ -159,12 +166,13 @@ const GridManager: React.FC<GridManagerProps> = ({
     updateBlockConfig,
     updateBlockIdentifiers,
     getApiFormat,
+    setDragging,
     handleRemoveArticle,
   } = useBlockState({
     pageId,
     template: 'grid',
     initialArticles: articles,
-    initialVariant: variant,
+    initialVariant: variant as GridVariantType,
     blockPosition: 1,
     pageData: pageData,
     editorialsData: editorialsData
@@ -179,6 +187,16 @@ const GridManager: React.FC<GridManagerProps> = ({
   });
   const [selectedArticleIds, setSelectedArticleIds] = useState<(string | number)[]>([]);
   const [showTips, setShowTips] = useState(false);
+
+  // Garantir que sempre temos uma variante válida
+  const safeVariant = useMemo(() => {
+    const validVariant = variant && GRID_VARIANTS[variant] ? variant : 'standard';
+    if (validVariant !== variant) {
+      console.warn(`Variante "${variant}" não encontrada, usando "standard" como fallback`);
+    }
+    console.log('safeVariant calculada:', validVariant);
+    return validVariant;
+  }, [variant]) as GridVariantType;
 
   // Add safety check for currentVariant
   const currentVariantType = blockState.currentVariant?.variantType as GridVariantType;
@@ -203,6 +221,11 @@ const GridManager: React.FC<GridManagerProps> = ({
 
   // Filter articles based on current filters
   const filteredArticles = useMemo(() => {
+    // Verificar se blockState.articles.pool existe
+    if (!blockState.articles.pool) {
+      return [];
+    }
+    
     let filtered = blockState.articles.pool;
 
     // Filter by image
@@ -211,7 +234,6 @@ const GridManager: React.FC<GridManagerProps> = ({
         const desktopImage = article.content?.image?.desktop_image_path;
         const mobileImage = article.content?.image?.mobile_image_path;
         
-        // Verifica se pelo menos uma das imagens existe e tem conteúdo válido
         const hasValidDesktopImage = desktopImage && typeof desktopImage === 'string' && desktopImage.trim().length > 0;
         const hasValidMobileImage = mobileImage && typeof mobileImage === 'string' && mobileImage.trim().length > 0;
         
@@ -391,13 +413,13 @@ const GridManager: React.FC<GridManagerProps> = ({
         maxItems={currentVariant?.maxItems}
         isDarkTheme={isDarkTheme}
         label={currentVariant?.columns[0]?.title}
-        blockConfig={blockConfig}
+        blockConfig={externalBlockConfig}
         handleRemoveArticle={handleRemoveArticle}
         variant="masonry"
         useCompactView={true}
       />
     </div>
-  ), [blockState.articles, currentVariant, isDarkTheme, blockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
+  ), [blockState.articles, currentVariant, isDarkTheme, externalBlockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
 
   const renderFeaturedLayout = useMemo(() => (
     <div className={currentVariant?.layout?.container} style={dragStyles.draggingContainer}>
@@ -415,7 +437,7 @@ const GridManager: React.FC<GridManagerProps> = ({
             maxItems={currentVariant?.maxItems}
             isDarkTheme={isDarkTheme}
             label={currentVariant?.columns[0]?.title}
-            blockConfig={blockConfig}
+            blockConfig={externalBlockConfig}
             handleRemoveArticle={handleRemoveArticle}
             variant="featured-main"
             useCompactView={true}
@@ -434,7 +456,7 @@ const GridManager: React.FC<GridManagerProps> = ({
             maxItems={currentVariant?.maxItems}
             isDarkTheme={isDarkTheme}
             label={currentVariant?.columns[1]?.title}
-            blockConfig={blockConfig}
+            blockConfig={externalBlockConfig}
             handleRemoveArticle={handleRemoveArticle}
             variant="featured-secondary"
             useCompactView={true}
@@ -442,7 +464,7 @@ const GridManager: React.FC<GridManagerProps> = ({
         </div>
       </div>
     </div>
-  ), [blockState.articles, currentVariant, isDarkTheme, blockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
+  ), [blockState.articles, currentVariant, isDarkTheme, externalBlockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
 
   const renderSidebarLayout = useMemo(() => (
     <div className={currentVariant.layout.container} style={dragStyles.draggingContainer}>
@@ -460,7 +482,7 @@ const GridManager: React.FC<GridManagerProps> = ({
             maxItems={currentVariant.maxItems}
             isDarkTheme={isDarkTheme}
             label={currentVariant.columns[0].title}
-            blockConfig={blockConfig}
+            blockConfig={externalBlockConfig}
             handleRemoveArticle={handleRemoveArticle}
             variant="sidebar-main"
             useCompactView={true}
@@ -479,7 +501,7 @@ const GridManager: React.FC<GridManagerProps> = ({
             maxItems={getMaxSidebarItems(currentVariant.columns[0].id)}
             isDarkTheme={isDarkTheme}
             label={currentVariant.columns[1].title}
-            blockConfig={blockConfig}
+            blockConfig={externalBlockConfig}
             handleRemoveArticle={handleRemoveArticle}
             variant="sidebar-side"
             useCompactView={true}
@@ -487,7 +509,7 @@ const GridManager: React.FC<GridManagerProps> = ({
         </div>
       </div>
     </div>
-  ), [blockState.articles, currentVariant, isDarkTheme, blockConfig, handleRemoveArticle, dragStyles.draggingContainer, getMaxSidebarItems]);
+  ), [blockState.articles, currentVariant, isDarkTheme, externalBlockConfig, handleRemoveArticle, dragStyles.draggingContainer, getMaxSidebarItems]);
 
   const renderNewsFeedLayout = useMemo(() => (
     <div className={currentVariant.layout.container} style={dragStyles.draggingContainer}>
@@ -505,7 +527,7 @@ const GridManager: React.FC<GridManagerProps> = ({
             maxItems={currentVariant.maxItems}
             isDarkTheme={isDarkTheme}
             label={currentVariant.columns[0].title}
-            blockConfig={blockConfig}
+            blockConfig={externalBlockConfig}
             handleRemoveArticle={handleRemoveArticle}
             variant="newsfeed-main"
             useCompactView={true}
@@ -524,7 +546,7 @@ const GridManager: React.FC<GridManagerProps> = ({
             maxItems={currentVariant.maxItems}
             isDarkTheme={isDarkTheme}
             label={currentVariant.columns[1].title}
-            blockConfig={blockConfig}
+            blockConfig={externalBlockConfig}
             handleRemoveArticle={handleRemoveArticle}
             variant="newsfeed-side"
             useCompactView={true}
@@ -532,7 +554,7 @@ const GridManager: React.FC<GridManagerProps> = ({
         </div>
       </div>
     </div>
-  ), [blockState.articles, currentVariant, isDarkTheme, blockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
+  ), [blockState.articles, currentVariant, isDarkTheme, externalBlockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
 
   const renderStandardLayout = useMemo(() => (
     <div className={currentVariant.layout.container} style={dragStyles.draggingContainer}>
@@ -559,7 +581,7 @@ const GridManager: React.FC<GridManagerProps> = ({
               maxItems={currentVariant.maxItems}
               isDarkTheme={isDarkTheme}
               label={column.title}
-              blockConfig={blockConfig}
+              blockConfig={externalBlockConfig}
               handleRemoveArticle={handleRemoveArticle}
               variant="standard"
               useCompactView={true}
@@ -569,7 +591,7 @@ const GridManager: React.FC<GridManagerProps> = ({
         ))}
       </div>
     </div>
-  ), [blockState.articles, currentVariant, isDarkTheme, blockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
+  ), [blockState.articles, currentVariant, isDarkTheme, externalBlockConfig, handleRemoveArticle, dragStyles.draggingContainer]);
 
   const renderColumns = useCallback(() => {
     switch (currentVariantType) {
@@ -602,6 +624,23 @@ const GridManager: React.FC<GridManagerProps> = ({
     // Apenas limpa as seleções de editorias
     updateBlockIdentifiers(pageId, undefined, undefined);
   }, [pageId, updateBlockIdentifiers]);
+
+  // Efeito para inicializar os artigos pré-selecionados
+  useEffect(() => {
+    if (initialSelectedArticles && Object.keys(initialSelectedArticles).length > 0) {
+      console.log('Inicializando artigos pré-selecionados no GridManager:', initialSelectedArticles);
+      
+      // Atualizar as posições dos artigos com os artigos pré-selecionados
+      updateArticlePositions(initialSelectedArticles);
+    }
+  }, [initialSelectedArticles, updateArticlePositions]);
+
+  // Atualizar a configuração do bloco após a inicialização
+  useEffect(() => {
+    if (externalBlockConfig) {
+      updateBlockConfig(externalBlockConfig as any);
+    }
+  }, [externalBlockConfig, updateBlockConfig]);
 
   useEffect(() => {
     console.log("GridManager: Dados formatados:", {
@@ -680,7 +719,7 @@ const GridManager: React.FC<GridManagerProps> = ({
               variantType={currentVariantType}
               columns={blockState.articles}
               isDarkTheme={isDarkTheme}
-              blockConfig={blockConfig}
+              blockConfig={externalBlockConfig}
               clientGeneralSettingsData={clientGeneralSettingsData}
             />
           </div>
@@ -693,7 +732,7 @@ const GridManager: React.FC<GridManagerProps> = ({
                 editorialsData={editorialsData}
                 isPagesLoading={isPagesLoading}
                 isEditorialsLoading={isEditorialsLoading}
-                blockConfig={blockConfig}
+                blockConfig={externalBlockConfig}
                 filters={filters}
                 onFiltersChange={setFilters}
                 onPageSelect={handlePageSelect}
@@ -708,7 +747,7 @@ const GridManager: React.FC<GridManagerProps> = ({
                   <ArticlesPool
                     articles={filteredArticles}
                     isDarkTheme={isDarkTheme}
-                    blockConfig={blockConfig}
+                    blockConfig={externalBlockConfig}
                     usedArticleIds={getUsedArticleIds()}
                     isCompact={true}
                     isMultiSelectEnabled={isMultiSelectEnabled}
@@ -730,7 +769,7 @@ const GridManager: React.FC<GridManagerProps> = ({
                   variantType={currentVariantType}
                   columns={blockState.articles}
                   isDarkTheme={isDarkTheme}
-                  blockConfig={blockConfig}
+                  blockConfig={externalBlockConfig}
                   clientGeneralSettingsData={clientGeneralSettingsData}
                 />
               </div>

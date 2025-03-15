@@ -134,6 +134,7 @@ interface ListManagerProps {
   onPublishBlock?: () => void;
   clientGeneralSettingsData: ClientTheme;
   initialLayout?: 'single' | 'grid';
+  initialSelectedArticles?: Record<string, any[]>;
 }
 
 const ListManager = ({ 
@@ -153,20 +154,25 @@ const ListManager = ({
   onEditorialSelect,
   onPublishBlock,
   clientGeneralSettingsData,
-  initialLayout = 'single'
+  initialLayout = 'single',
+  initialSelectedArticles
 }: ListManagerProps) => {
   const {
     blockState,
     updateArticlePositions,
     updateVariant,
+    updateVariantPosition,
+    updateBlockPosition,
     updateBlockConfig,
     updateBlockIdentifiers,
-    getApiFormat
+    getApiFormat,
+    setDragging
   } = useBlockState({
     pageId,
     template: 'list',
-    initialVariant: variant as ListVariantType,
     initialArticles: articles,
+    initialVariant: variant as ListVariantType,
+    blockPosition: 1,
     pageData: pageData,
     editorialsData: editorialsData
   });
@@ -296,6 +302,11 @@ const ListManager = ({
 
   // Filter articles based on current filters
   const filteredArticles = useMemo(() => {
+    // Verificar se blockState.articles.pool existe
+    if (!blockState.articles.pool) {
+      return [];
+    }
+    
     let filtered = blockState.articles.pool;
 
     // Filter by image
@@ -304,7 +315,6 @@ const ListManager = ({
         const desktopImage = article.content?.image?.desktop_image_path;
         const mobileImage = article.content?.image?.mobile_image_path;
         
-        // Verifica se pelo menos uma das imagens existe e tem conteúdo válido
         const hasValidDesktopImage = desktopImage && typeof desktopImage === 'string' && desktopImage.trim().length > 0;
         const hasValidMobileImage = mobileImage && typeof mobileImage === 'string' && mobileImage.trim().length > 0;
         
@@ -403,34 +413,20 @@ const ListManager = ({
     }
   }, [blockState.articles, selectedPoolArticleIds, validVariantType, LAYOUT_VARIANTS, updateArticlePositions]);
 
-  // Função para remover múltiplos artigos de uma coluna e devolvê-los para a pool
+  // Função para remover artigos de uma coluna
   const handleRemoveArticles = (columnId: string, articleIds: (string | number)[]) => {
-    // Encontra os artigos na coluna - garantindo que estamos usando as referências originais
-    const articlesToRemove = blockState.articles[columnId]?.filter(article => 
-      articleIds.some(id => String(id) === String(article.id))
-    );
+    const newColumns = { ...blockState.articles };
     
-    if (!articlesToRemove?.length) return;
-    
-    // Remove os artigos da coluna
-    const updatedColumn = blockState.articles[columnId]?.filter(article => 
-      !articleIds.some(id => String(id) === String(article.id))
-    ) || [];
-    
-    // Adiciona os artigos de volta à pool - usando as referências originais
-    const updatedPool = [...(blockState.articles.pool || []), ...articlesToRemove];
-    
-    // Atualiza o estado
-    const newColumns = {
-      ...blockState.articles,
-      [columnId]: updatedColumn,
-      pool: updatedPool
-    };
+    if (newColumns[columnId]) {
+      newColumns[columnId] = newColumns[columnId].filter(
+        article => !articleIds.includes(article.id)
+      );
+    }
     
     updateArticlePositions(newColumns);
   };
-
-  // Função para remover um único artigo (mantida para compatibilidade)
+  
+  // Função para remover um único artigo
   const handleRemoveArticle = (columnId: string, articleId: string | number) => {
     handleRemoveArticles(columnId, [articleId]);
   };
@@ -500,6 +496,23 @@ const ListManager = ({
   const toggleLayout = useCallback(() => {
     setCurrentLayout(prev => prev === 'single' ? 'grid' : 'single');
   }, []);
+
+  // Efeito para inicializar os artigos pré-selecionados
+  useEffect(() => {
+    if (initialSelectedArticles && Object.keys(initialSelectedArticles).length > 0) {
+      console.log('Inicializando artigos pré-selecionados no ListManager:', initialSelectedArticles);
+      
+      // Atualizar as posições dos artigos com os artigos pré-selecionados
+      updateArticlePositions(initialSelectedArticles);
+    }
+  }, [initialSelectedArticles, updateArticlePositions]);
+
+  // Atualizar a configuração do bloco após a inicialização
+  useEffect(() => {
+    if (externalBlockConfig) {
+      updateBlockConfig(externalBlockConfig as any);
+    }
+  }, [externalBlockConfig, updateBlockConfig]);
 
   return (
     <div className="relative">
@@ -658,7 +671,6 @@ const ListManager = ({
                     maxItems={LAYOUT_VARIANTS[validVariantType].maxItems}
                     blockConfig={getConfigWithLayout() as any}
                     handleRemoveArticle={handleRemoveArticle}
-                    handleRemoveArticles={handleRemoveArticles}
                     variant={validVariantType}
                     useCompactView={true}
                   />

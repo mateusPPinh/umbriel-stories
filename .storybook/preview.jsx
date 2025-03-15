@@ -1,5 +1,6 @@
 import '../src/index.css'
 import Theme from '../src/styles/index'
+import '../src/i18n/config'
 import '@fontsource/roboto'
 import { INITIAL_VIEWPORTS, MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
 

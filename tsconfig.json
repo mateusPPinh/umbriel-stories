@@ -24,7 +24,7 @@
     },
     "typeRoots": ["node_modules/@types", "src/components/index.d.ts"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "frontend-code-forTest.tsx"],
   "exclude": ["**/*.stories.tsx", "**/mocks/*.mock.*", "**/mocks/**/*.ts", "**/mock.d.ts", "**/example/**"],
   "references": [{ "path": "./tsconfig.node.json" }],
 }

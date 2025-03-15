@@ -1,0 +1,139 @@
+{
+  "calendar": {
+    "weekday": {
+      "sunday": "Sun",
+      "monday": "Mon",
+      "tuesday": "Tue",
+      "wednesday": "Wed",
+      "thursday": "Thu",
+      "friday": "Fri",
+      "saturday": "Sat"
+    },
+    "month": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "today": "Today"
+  },
+  "blocksList": {
+    "title": "Available Blocks",
+    "empty": "No blocks found",
+    "close": "Close",
+    "edit": "Edit",
+    "schedule": "Schedule",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "position": "Position",
+    "unknownDate": "Unknown date",
+    "invalidDate": "Invalid date",
+    "templateTypes": {
+      "grid": "Grid",
+      "list": "List",
+      "mixed": "Mixed",
+      "featured": "Featured",
+      "unknown": "Unknown"
+    }
+  },
+  "scheduleStatus": {
+    "actions": {
+      "publish": "Publication",
+      "update": "Update",
+      "delete": "Deletion",
+      "create": "Creation",
+      "default": "Action"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "completed": "Completed",
+      "failed": "Failed",
+      "canceled": "Canceled"
+    }
+  },
+  "scheduleModal": {
+    "title": "Schedule {{action}}",
+    "action": "Action",
+    "update": "Update",
+    "publish": "Publish",
+    "delete": "Delete",
+    "create": "Create",
+    "date": "Date",
+    "time": "Time",
+    "summary": "Summary",
+    "summaryText": "{{action}} scheduled for {{datetime}}",
+    "noDateSelected": "no date selected",
+    "metadata": {
+      "title": "Title",
+      "description": "Description"
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "schedule": "Schedule"
+    },
+    "timePicker": {
+      "hours": "Hours",
+      "minutes": "Minutes"
+    }
+  },
+  "scheduleList": {
+    "title": "Scheduled Items",
+    "empty": "No scheduled items found",
+    "loading": "Loading scheduled items...",
+    "refresh": "Refresh",
+    "filter": "Filter",
+    "search": "Search scheduled items...",
+    "filters": {
+      "allActions": "All actions",
+      "allStatuses": "All statuses"
+    },
+    "untitled": "Untitled",
+    "scheduledFor": "Scheduled for",
+    "createdAt": "Created at",
+    "cancel": "Cancel"
+  },
+  "blockTargetSelector": {
+    "title": "Select Target",
+    "search": "Search pages or sections...",
+    "tabs": {
+      "sections": "Sections",
+      "pages": "Pages"
+    },
+    "select": "Select",
+    "loading": "Loading...",
+    "noSections": "No sections found",
+    "noSectionsFound": "No sections found for this search",
+    "noPages": "No pages found",
+    "noPagesFound": "No pages found for this search"
+  },
+  "scheduleManager": {
+    "title": "Schedule Manager",
+    "description": "View and manage all scheduled publications, updates, and deletions of blocks.",
+    "errors": {
+      "loadingTargets": "Error loading sections and pages",
+      "loadingSchedules": "Error loading scheduled items",
+      "cancelingSchedule": "Error canceling scheduled item"
+    }
+  },
+  "app": {
+    "title": "Block Builder",
+    "backToList": "Back to Block List",
+    "showList": "Show Block List",
+    "hideList": "Hide Block List",
+    "schedulePublication": "Schedule Publication",
+    "viewSchedules": "View Schedules",
+    "switchToEnglish": "English",
+    "switchToPortuguese": "Português",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode",
+    "languageChanged": "Language changed to {{language}}"
+  }
+} 

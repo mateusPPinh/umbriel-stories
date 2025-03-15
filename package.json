@@ -14,7 +14,8 @@
     "prepack": "cp package.json package.backup.json && json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\"",
     "postpack": "mv package.backup.json package.json",
     "format": "prettier --write .",
-    "test": "jest"
+    "test": "jest",
+    "pack-for-test": "pnpm run build && pnpm pack"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0",

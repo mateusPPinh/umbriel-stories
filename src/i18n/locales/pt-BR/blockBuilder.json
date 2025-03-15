@@ -1,0 +1,139 @@
+{
+  "calendar": {
+    "weekday": {
+      "sunday": "Dom",
+      "monday": "Seg",
+      "tuesday": "Ter",
+      "wednesday": "Qua",
+      "thursday": "Qui",
+      "friday": "Sex",
+      "saturday": "Sáb"
+    },
+    "month": {
+      "january": "Janeiro",
+      "february": "Fevereiro",
+      "march": "Março",
+      "april": "Abril",
+      "may": "Maio",
+      "june": "Junho",
+      "july": "Julho",
+      "august": "Agosto",
+      "september": "Setembro",
+      "october": "Outubro",
+      "november": "Novembro",
+      "december": "Dezembro"
+    },
+    "today": "Hoje"
+  },
+  "blocksList": {
+    "title": "Blocos Disponíveis",
+    "empty": "Nenhum bloco encontrado",
+    "close": "Fechar",
+    "edit": "Editar",
+    "schedule": "Agendar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "position": "Posição",
+    "unknownDate": "Data desconhecida",
+    "invalidDate": "Data inválida",
+    "templateTypes": {
+      "grid": "Grid",
+      "list": "Lista",
+      "mixed": "Misto",
+      "featured": "Destaque",
+      "unknown": "Desconhecido"
+    }
+  },
+  "scheduleStatus": {
+    "actions": {
+      "publish": "Publicação",
+      "update": "Atualização",
+      "delete": "Exclusão",
+      "create": "Criação",
+      "default": "Ação"
+    },
+    "statuses": {
+      "pending": "Pendente",
+      "completed": "Concluído",
+      "failed": "Falhou",
+      "canceled": "Cancelado"
+    }
+  },
+  "scheduleModal": {
+    "title": "Agendar {{action}}",
+    "action": "Ação",
+    "update": "Atualizar",
+    "publish": "Publicar",
+    "delete": "Excluir",
+    "create": "Criar",
+    "date": "Data",
+    "time": "Hora",
+    "summary": "Resumo",
+    "summaryText": "{{action}} agendada para {{datetime}}",
+    "noDateSelected": "data não selecionada",
+    "metadata": {
+      "title": "Título",
+      "description": "Descrição"
+    },
+    "buttons": {
+      "cancel": "Cancelar",
+      "schedule": "Agendar"
+    },
+    "timePicker": {
+      "hours": "Horas",
+      "minutes": "Minutos"
+    }
+  },
+  "scheduleList": {
+    "title": "Agendamentos",
+    "empty": "Nenhum agendamento encontrado",
+    "loading": "Carregando agendamentos...",
+    "refresh": "Atualizar",
+    "filter": "Filtrar",
+    "search": "Buscar agendamentos...",
+    "filters": {
+      "allActions": "Todas as ações",
+      "allStatuses": "Todos os status"
+    },
+    "untitled": "Sem título",
+    "scheduledFor": "Agendado para",
+    "createdAt": "Criado em",
+    "cancel": "Cancelar"
+  },
+  "blockTargetSelector": {
+    "title": "Selecionar Alvo",
+    "search": "Buscar páginas ou editorias...",
+    "tabs": {
+      "sections": "Editorias",
+      "pages": "Páginas"
+    },
+    "select": "Selecionar",
+    "loading": "Carregando...",
+    "noSections": "Nenhuma editoria encontrada",
+    "noSectionsFound": "Nenhuma editoria encontrada para esta busca",
+    "noPages": "Nenhuma página encontrada",
+    "noPagesFound": "Nenhuma página encontrada para esta busca"
+  },
+  "scheduleManager": {
+    "title": "Gerenciador de Agendamentos",
+    "description": "Visualize e gerencie todos os agendamentos de publicação, atualização e exclusão de blocos.",
+    "errors": {
+      "loadingTargets": "Erro ao carregar editorias e páginas",
+      "loadingSchedules": "Erro ao carregar agendamentos",
+      "cancelingSchedule": "Erro ao cancelar agendamento"
+    }
+  },
+  "app": {
+    "title": "Construtor de Blocos",
+    "backToList": "Voltar para Lista de Blocos",
+    "showList": "Mostrar Lista de Blocos",
+    "hideList": "Esconder Lista de Blocos",
+    "schedulePublication": "Agendar Publicação",
+    "viewSchedules": "Ver Agendamentos",
+    "switchToEnglish": "English",
+    "switchToPortuguese": "Português",
+    "lightMode": "Modo Claro",
+    "darkMode": "Modo Escuro",
+    "languageChanged": "Idioma alterado para {{language}}"
+  }
+} 

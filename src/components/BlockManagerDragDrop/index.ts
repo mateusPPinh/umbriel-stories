@@ -1,6 +1,7 @@
 // Exportando o componente principal
-import BlockManagerDragDrop from './BlockManagerDragDrop';
+import BlockManagerDragDrop, { BlockManagerDragDropRef } from './BlockManagerDragDrop';
 export default BlockManagerDragDrop;
+export type { BlockManagerDragDropRef };
 
 // Exportando componentes
 export { default as GridManager } from './components/GridManager';

@@ -33,7 +33,15 @@ export default [
       commonjs(),
       typescript({
         tsconfig: './tsconfig.json',
-        exclude: ['**/*.stories.tsx', '**/mocks/*.mock.*', '**/mocks/**/*.ts', '**/mock.d.ts', '**/example/**']
+        exclude: [
+          '**/*.stories.tsx', 
+          '**/mocks/*.mock.*', 
+          '**/mocks/**/*.ts', 
+          '**/mock.d.ts', 
+          '**/example/**',
+          '**/src/App.tsx',
+          '**/frontend-code-forTest.tsx'
+        ]
       }),
       postcss({
         extensions: ['.css'],
@@ -69,7 +77,13 @@ export default [
     input: 'src/components/index.ts',
     output: [{ file: 'dist/index.d.ts', format: 'es' }],
     plugins: [dts({
-      exclude: ['**/*.stories.tsx', '**/mocks/*.mock.*', '**/mocks/**/*.ts']
+      exclude: [
+        '**/*.stories.tsx', 
+        '**/mocks/*.mock.*', 
+        '**/mocks/**/*.ts',
+        '**/src/App.tsx',
+        '**/frontend-code-forTest.tsx'
+      ]
     })],
     external: [/\.css$/]
   }

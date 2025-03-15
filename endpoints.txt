@@ -1,0 +1,54 @@
+Obter blocos pelo id da pagina:
+
+curl --request GET \
+  --url 'https://erikatomato.local.api.umbrielcms.com.br:3001/private/page-blocks/v2/page/a8980b89-db72-4fcf-9388-21db124a75a0?limit=1' \
+  --header 'auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiVEVOQU5UX0FETUlOIiwiaWF0IjoxNzQxNDc2MDI0LCJleHAiOjE3NDE1NjI0MjQsInN1YiI6ImIyYzJiZmVkLWFhMmEtNDBkNi05NWUzLTgzNzYwMjJkYjQ1YyJ9.3GfMR-BVSKBdk9NmZFrYgy-059jLFkkdrrZ9S0VgtsE' \
+  --header 'tenant-id: b2c2bfed-aa2a-40d6-95e3-8376022db45c'
+
+
+Obter blocos pelo id do bloco:
+
+curl --request GET \
+  --url 'https://erikatomato.local.api.umbrielcms.com.br:3001/private/page-blocks/v2/9a8f73ed-1de3-4119-8aea-f05740748316?limit=1' \
+  --header 'auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiVEVOQU5UX0FETUlOIiwiaWF0IjoxNzQxNDc2MDI0LCJleHAiOjE3NDE1NjI0MjQsInN1YiI6ImIyYzJiZmVkLWFhMmEtNDBkNi05NWUzLTgzNzYwMjJkYjQ1YyJ9.3GfMR-BVSKBdk9NmZFrYgy-059jLFkkdrrZ9S0VgtsE' \
+  --header 'tenant-id: b2c2bfed-aa2a-40d6-95e3-8376022db45c'
+
+  Agendar atualização de um bloco:
+  curl --request POST \
+  --url 'https://erikatomato.local.api.umbrielcms.com.br:3001/private/page-blocks/v2/9a8f73ed-1de3-4119-8aea-f05740748316/schedule/blocks?id=9a8f73ed-1de3-4119-8aea-f05740748316' \
+  --header 'Content-Type: application/json' \
+  --header 'auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiVEVOQU5UX0FETUlOIiwiaWF0IjoxNzQxNDc2MDI0LCJleHAiOjE3NDE1NjI0MjQsInN1YiI6ImIyYzJiZmVkLWFhMmEtNDBkNi05NWUzLTgzNzYwMjJkYjQ1YyJ9.3GfMR-BVSKBdk9NmZFrYgy-059jLFkkdrrZ9S0VgtsE' \
+  --header 'x-tenant-id:  b2c2bfed-aa2a-40d6-95e3-8376022db45c' \
+  --data '{
+  "scheduledAt": "2025-03-09T18:58:16Z",
+  "scheduledAction": "update",
+  "scheduledData": {
+    "metadata": {
+      "title": "Teste 8",
+      "description": "Teste 8"
+    }
+  }
+}'
+
+
+Listar agendamentos:
+curl --request GET \
+  --url https://erikatomato.local.api.umbrielcms.com.br:3001/private/page-blocks/v2/schedules/all \
+  --header 'auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiVEVOQU5UX0FETUlOIiwiaWF0IjoxNzQxNDc2MDI0LCJleHAiOjE3NDE1NjI0MjQsInN1YiI6ImIyYzJiZmVkLWFhMmEtNDBkNi05NWUzLTgzNzYwMjJkYjQ1YyJ9.3GfMR-BVSKBdk9NmZFrYgy-059jLFkkdrrZ9S0VgtsE' \
+  --header 'x-tenant-id: b2c2bfed-aa2a-40d6-95e3-8376022db45c'
+
+  Cancelar agendamento:
+
+  curl --request DELETE \
+  --url https://erikatomato.local.api.umbrielcms.com.br:3001/private/page-blocks/v2/schedule \
+  --header 'auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiVEVOQU5UX0FETUlOIiwiaWF0IjoxNzQxNDc2MDI0LCJleHAiOjE3NDE1NjI0MjQsInN1YiI6ImIyYzJiZmVkLWFhMmEtNDBkNi05NWUzLTgzNzYwMjJkYjQ1YyJ9.3GfMR-BVSKBdk9NmZFrYgy-059jLFkkdrrZ9S0VgtsE' \
+  --header 'tenant-id: b2c2bfed-aa2a-40d6-95e3-8376022db45c'
+
+
+
+  Processar agendamentos:
+
+curl --request POST \
+  --url https://erikatomato.local.api.umbrielcms.com.br:3001/private/page-blocks/v2/schedules/process \
+  --header 'auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiVEVOQU5UX0FETUlOIiwiaWF0IjoxNzQxNDc2MDI0LCJleHAiOjE3NDE1NjI0MjQsInN1YiI6ImIyYzJiZmVkLWFhMmEtNDBkNi05NWUzLTgzNzYwMjJkYjQ1YyJ9.3GfMR-BVSKBdk9NmZFrYgy-059jLFkkdrrZ9S0VgtsE' \
+  --header 'x-tenant-id: b2c2bfed-aa2a-40d6-95e3-8376022db45c'

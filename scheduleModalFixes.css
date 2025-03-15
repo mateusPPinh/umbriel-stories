@@ -1,0 +1,235 @@
+/* Estilos para corrigir problemas de layout no modal de agendamento */
+
+/* Garantir que o modal tenha um z-index alto para ficar acima de outros elementos */
+.ReactModal__Overlay {
+  z-index: 9999 !important;
+}
+
+/* Corrigir sobreposição de textos */
+.ReactModal__Content {
+  overflow: auto !important;
+  max-height: 90vh !important;
+}
+
+/* Classes adicionadas pelo hook useScheduleModalFix */
+.schedule-modal-content-fixed {
+  padding: 1.5rem !important;
+  background: #fff !important;
+  color: #000 !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.schedule-modal-overlay-fixed {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.schedule-modal-label {
+  display: block !important;
+  margin-bottom: 0.5rem !important;
+  font-weight: 500 !important;
+  color: inherit !important;
+}
+
+.schedule-modal-input {
+  width: 100% !important;
+  padding: 0.5rem !important;
+  border-radius: 0.25rem !important;
+  border: 1px solid #d1d5db !important;
+  background-color: #fff !important;
+  color: #000 !important;
+}
+
+.schedule-modal-cancel-button {
+  background-color: #f3f4f6 !important;
+  color: #1f2937 !important;
+  border: 1px solid #d1d5db !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.25rem !important;
+  font-weight: 500 !important;
+  margin-right: 0.5rem !important;
+}
+
+.schedule-modal-schedule-button {
+  background-color: #3b82f6 !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.25rem !important;
+  font-weight: 500 !important;
+}
+
+/* Estilos para o calendário */
+.react-calendar {
+  width: 100% !important;
+  max-width: 100% !important;
+  background: var(--background) !important;
+  color: var(--foreground) !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid var(--border) !important;
+}
+
+/* Estilos para os dias do calendário */
+.react-calendar__tile {
+  padding: 0.75rem !important;
+  border-radius: 0.25rem !important;
+}
+
+/* Estilos para o dia selecionado */
+.react-calendar__tile--active {
+  background: var(--primary) !important;
+  color: white !important;
+}
+
+/* Estilos para o seletor de tempo */
+.time-picker {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 1rem !important;
+}
+
+/* Estilos para os botões do modal */
+.schedule-modal-buttons {
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 0.5rem !important;
+  margin-top: 1rem !important;
+}
+
+/* Estilos para o resumo do agendamento */
+.schedule-modal-summary {
+  padding: 1rem !important;
+  background: var(--accent-background) !important;
+  border-radius: 0.5rem !important;
+  margin: 1rem 0 !important;
+}
+
+/* Estilos para os botões de ação */
+.schedule-modal-action-buttons {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
+  gap: 0.5rem !important;
+  margin-bottom: 1rem !important;
+}
+
+/* Corrigir espaçamento entre seções */
+.schedule-modal-section {
+  margin-bottom: 1.5rem !important;
+}
+
+/* Garantir que os textos não fiquem sobrepostos */
+.schedule-modal-title {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 1rem !important;
+  line-height: 1.5 !important;
+}
+
+/* Corrigir problemas com o seletor de data/hora */
+.react-calendar,
+.time-picker-container {
+  margin-bottom: 1rem !important;
+}
+
+/* Garantir que o modal seja responsivo */
+@media (max-width: 640px) {
+  .ReactModal__Content {
+    width: 90vw !important;
+    max-width: 90vw !important;
+  }
+  
+  .schedule-modal-action-buttons {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Corrigir problemas específicos com as traduções */
+[data-i18n-key] {
+  visibility: visible !important;
+  display: inline-block !important;
+}
+
+/* Garantir que os botões de ação tenham o texto visível */
+.schedule-modal-action-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.25rem !important;
+  font-weight: 500 !important;
+}
+
+/* Corrigir problemas com o tema escuro */
+.dark .ReactModal__Content,
+.dark .schedule-modal-content-fixed {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+}
+
+.dark .schedule-modal-input {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+  border-color: #4b5563 !important;
+}
+
+.dark .schedule-modal-summary {
+  background-color: #374151 !important;
+}
+
+.dark .schedule-modal-cancel-button {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+  border-color: #4b5563 !important;
+}
+
+.dark .schedule-modal-schedule-button {
+  background-color: #3b82f6 !important;
+  color: #f9fafb !important;
+}
+
+/* Corrigir problemas com o calendário no tema escuro */
+.dark .react-calendar {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+  border-color: #4b5563 !important;
+}
+
+.dark .react-calendar__tile {
+  color: #f9fafb !important;
+}
+
+.dark .react-calendar__tile--active {
+  background-color: #3b82f6 !important;
+  color: white !important;
+}
+
+/* Garantir que o modal seja exibido corretamente */
+.ReactModal__Overlay {
+  opacity: 1 !important;
+  transition: opacity 200ms ease-in-out !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.ReactModal__Content {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  margin: 0 auto !important;
+  border: none !important;
+  background: #fff !important;
+  overflow: auto !important;
+  border-radius: 0.5rem !important;
+  outline: none !important;
+  padding: 1.5rem !important;
+  max-width: 550px !important;
+  width: 100% !important;
+} 

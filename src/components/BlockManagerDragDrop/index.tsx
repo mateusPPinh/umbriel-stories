@@ -5,6 +5,7 @@ import { GridVariantType, MixedVariantType, FeaturedVariantType, ListVariantType
 import { PageResponse } from './interfaces/pages.types';
 import { Editorial } from './interfaces/editorial.types';
 import { ClientTheme } from './types';
+import { ScheduleRequest } from './interfaces/schedule.types';
 
 // Static imports
 import GridManager from './components/GridManager';
@@ -77,6 +78,24 @@ interface BlockManagerDragDropProps {
   showSidebar?: boolean;
   clientGeneralSettingsData: ClientTheme;
   children?: React.ReactNode;
+  config?: BlockConfig;
+  initialSelectedArticles?: Record<string, any[]>;
+  initialLayout?: 'single' | 'grid';
+  showBlockTypeSelector?: boolean;
+  onBlockTypeChange?: (blockType: 'grid' | 'list' | 'mixed' | 'featured') => void;
+  blockId?: string;
+  isEditMode?: boolean;
+  scheduleInfo?: {
+    scheduledAt: string | null;
+    scheduledAction: string | null;
+    scheduleStatus: string | null;
+    scheduledData: any | null;
+  };
+  onSchedule?: (blockId: string, scheduleData: ScheduleRequest) => void;
+  onCancelSchedule?: (blockId: string) => void;
+  onLoadBlocksByPageId?: (pageId: string) => Promise<any>;
+  onLoadBlockById?: (blockId: string) => Promise<any>;
+  isBlocksLoading?: boolean;
 }
 
 const BlockManagerDragDrop = React.memo(({
@@ -94,10 +113,23 @@ const BlockManagerDragDrop = React.memo(({
   onEditorialSelect,
   onPublishBlock,
   clientGeneralSettingsData,
-  children
+  children,
+  config,
+  initialSelectedArticles,
+  initialLayout,
+  showBlockTypeSelector,
+  onBlockTypeChange,
+  blockId,
+  isEditMode,
+  scheduleInfo,
+  onSchedule,
+  onCancelSchedule,
+  onLoadBlocksByPageId,
+  onLoadBlockById,
+  isBlocksLoading = false
 }: BlockManagerDragDropProps) => {
   const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
-  const [blockConfig, setBlockConfig] = useState<BlockConfig>(defaultBlockConfig);
+  const [blockConfig, setBlockConfig] = useState<BlockConfig>(config || defaultBlockConfig);
   const [currentVariant, setCurrentVariant] = useState<string>(variant || 'standard');
   const [isPreviewOnly, setIsPreviewOnly] = useState(false);
 

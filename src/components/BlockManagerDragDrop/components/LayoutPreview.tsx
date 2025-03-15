@@ -723,7 +723,7 @@ const LayoutPreview: React.FC<LayoutPreviewProps> = ({
                           group-hover:scale-105
                         `}
                         />
-                        {blockConfig.styles.featuredImageOverlay && (
+                        {blockConfig.styles?.featuredImageOverlay && (
                           <div
                             className={`
                           ${classes.image.overlay}

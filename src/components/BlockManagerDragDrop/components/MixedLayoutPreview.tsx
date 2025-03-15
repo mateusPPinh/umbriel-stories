@@ -31,12 +31,13 @@ const MixedLayoutPreview: React.FC<MixedLayoutPreviewProps> = ({
   const theme = useClientTheme({ clientGeneralSettingsData, isDarkTheme })
 
   // Configurações globais de exibição
-  const globalDisplayConfig = blockConfig.mediaConfig?.displayConfig || {
-    showImage: true,
-    showSubtitle: true,
-    showPublishDate: true,
-    showAuthor: false,
-    showCategory: false,
+  const globalDisplayConfig: DisplayConfig = {
+    showImage: blockConfig.mediaConfig?.displayConfig?.showImage ?? true,
+    showSubtitle: blockConfig.mediaConfig?.displayConfig?.showSubtitle ?? true,
+    showPublishDate: blockConfig.mediaConfig?.displayConfig?.showPublishDate ?? true,
+    showAuthor: blockConfig.mediaConfig?.displayConfig?.showAuthor ?? false,
+    showCategory: blockConfig.mediaConfig?.displayConfig?.showCategory ?? false,
+    columnConfig: blockConfig.mediaConfig?.displayConfig?.columnConfig
   }
 
   // Função para obter configurações específicas de uma coluna

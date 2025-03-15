@@ -79,6 +79,11 @@ export interface ExtendedBlockConfig {
  * necessário para o componente ListLayoutPreview
  */
 export const adaptBlockConfig = (config: BlockConfig): ExtendedBlockConfig => {
+  // Definir valores padrão para propriedades que podem ser undefined
+  const defaultTitleSize = 'text-lg';
+  const defaultShowExcerpt = false;
+  const defaultShowMetadata = true;
+  
   return {
     layout: config.layout,
     styles: {
@@ -114,18 +119,22 @@ export const adaptBlockConfig = (config: BlockConfig): ExtendedBlockConfig => {
           }
         }
       },
-      showExcerpt: config.styles.showExcerpt,
-      showMetadata: config.styles.showMetadata || true,
-      titleSize: config.styles.titleSize || 'text-lg',
+      // Usar valores padrão para propriedades opcionais
+      showExcerpt: config.styles.showExcerpt ?? defaultShowExcerpt,
+      showMetadata: config.styles.showMetadata ?? defaultShowMetadata,
+      titleSize: defaultTitleSize, // Usar valor padrão já que a propriedade não existe no tipo BlockConfig
       columnStyle: {},
       imageHeight: 'h-48',
-      timelineStyle: config.styles.timelineStyle,
-      markerStyle: config.styles.markerStyle as MarkerStyle,
-      hoverEffect: config.styles.hoverEffect as HoverEffect,
-      dividerStyle: config.styles.dividerStyle as DividerStyle,
-      thumbnailShape: config.styles.thumbnailShape as ThumbnailShape
+      // Usar type assertions para propriedades que podem ter tipos incompatíveis
+      timelineStyle: (config.styles.timelineStyle as 'solid' | 'dashed' | 'dotted' | undefined),
+      markerStyle: (config.styles.markerStyle as MarkerStyle | undefined),
+      hoverEffect: (config.styles.hoverEffect as HoverEffect | undefined),
+      // Estas propriedades não existem no tipo BlockConfig, então usamos undefined
+      dividerStyle: undefined,
+      thumbnailShape: undefined
     },
-    variant: config.variant as 'chronological' | 'compact' | 'card',
-    mediaConfig: config.mediaConfig
+    // Estas propriedades não existem no tipo BlockConfig, então usamos undefined
+    variant: undefined,
+    mediaConfig: undefined
   };
 }; 

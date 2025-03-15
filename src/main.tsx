@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+// Import i18n configuration before App
+import './i18n/config'
 import App from './App'
 import './index.css'
 import Theme from './styles/index'

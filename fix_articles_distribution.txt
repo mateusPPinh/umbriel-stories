@@ -1,0 +1,3 @@
+// Usar a estrutura de colunas e estilos do blockData atual, que foi atualizado pelo BlockManagerDragDrop
+// Isso garante que estamos usando a estrutura correta para cada variante
+let articlesStructure: Record<string, any[]> = {};

@@ -58,7 +58,7 @@ const VideoGrid: React.FC<BaseVariantProps> = ({
     className?: string;
   }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const previewTimeoutRef = useRef<NodeJS.Timeout>();
+    const previewTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [isHovered, setIsHovered] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);

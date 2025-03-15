@@ -3,6 +3,7 @@ import '../src/index.css'
 import Theme from '../src/styles/index'
 import '@fontsource/roboto'
 import { INITIAL_VIEWPORTS, MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
+import '../src/i18n/config';
 
 export const decorators = [
   (Story) => {

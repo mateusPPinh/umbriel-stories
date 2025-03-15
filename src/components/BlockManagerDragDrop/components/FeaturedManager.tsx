@@ -30,6 +30,7 @@ interface FeaturedManagerProps {
   onEditorialSelect?: (editorialId: string, subEditorialId?: string) => void;
   onPublishBlock?: () => void;
   clientGeneralSettingsData: ClientTheme;
+  initialSelectedArticles?: Record<string, any[]>;
 }
 
 const FeaturedManager: React.FC<FeaturedManagerProps> = ({ 
@@ -48,20 +49,25 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
   onPageSelect,
   onEditorialSelect,
   onPublishBlock,
-  clientGeneralSettingsData
+  clientGeneralSettingsData,
+  initialSelectedArticles
 }) => {
   const {
     blockState,
     updateArticlePositions,
     updateVariant,
+    updateVariantPosition,
+    updateBlockPosition,
     updateBlockConfig,
     updateBlockIdentifiers,
-    getApiFormat
+    getApiFormat,
+    setDragging
   } = useBlockState({
     pageId,
     template: 'featured',
-    initialVariant: variant,
     initialArticles: articles,
+    initialVariant: variant as FeaturedVariantType,
+    blockPosition: 1,
     pageData: pageData,
     editorialsData: editorialsData
   });
@@ -79,6 +85,23 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
     subEditorial: '',
     isMultiSelectEnabled: false
   });
+
+  // Efeito para inicializar os artigos pré-selecionados
+  useEffect(() => {
+    if (initialSelectedArticles && Object.keys(initialSelectedArticles).length > 0) {
+      console.log('Inicializando artigos pré-selecionados no FeaturedManager:', initialSelectedArticles);
+      
+      // Atualizar as posições dos artigos com os artigos pré-selecionados
+      updateArticlePositions(initialSelectedArticles);
+    }
+  }, [initialSelectedArticles, updateArticlePositions]);
+
+  // Atualizar a configuração do bloco após a inicialização
+  useEffect(() => {
+    if (externalBlockConfig) {
+      updateBlockConfig(externalBlockConfig as any);
+    }
+  }, [externalBlockConfig, updateBlockConfig]);
 
   const handleFiltersChange = useCallback((newFilters: Partial<ArticleFilters>) => {
     setFilters((prev: ArticleFilters) => ({ ...prev, ...newFilters }));
@@ -237,8 +260,14 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
 
   // Filter articles based on current filters
   const filteredArticles = useMemo(() => {
+    // Verificar se blockState.articles.pool existe
+    if (!blockState.articles.pool) {
+      return [];
+    }
+    
     let filtered = blockState.articles.pool;
 
+    // Filter by image
     if (filters.hasImage) {
       filtered = filtered.filter(article => {
         const desktopImage = article.content?.image?.desktop_image_path;
@@ -251,6 +280,7 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
       });
     }
 
+    // Filter by text (title and subtitle)
     if (filters.searchTerm) {
       const searchLower = filters.searchTerm.toLowerCase();
       filtered = filtered.filter(article => 
@@ -259,6 +289,7 @@ const FeaturedManager: React.FC<FeaturedManagerProps> = ({
       );
     }
 
+    // Apply limit
     return filtered.slice(0, filters.limit);
   }, [blockState.articles.pool, filters]);
 

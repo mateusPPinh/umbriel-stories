@@ -33,6 +33,7 @@ interface MixedManagerProps {
   onEditorialSelect?: (editorialId: string, subEditorialId?: string) => void;
   onPublishBlock?: () => void;
   clientGeneralSettingsData: ClientTheme;
+  initialSelectedArticles?: Record<string, any[]>;
 }
 
 // Ajuste na tipagem das colunas
@@ -163,14 +164,21 @@ const MixedManager: React.FC<MixedManagerProps> = ({
   onPageSelect,
   onEditorialSelect,
   onPublishBlock,
-  clientGeneralSettingsData
+  clientGeneralSettingsData,
+  initialSelectedArticles
 }) => {
+  // Log para debug
+  console.log('===== RENDERIZANDO MIXEDMANAGER =====');
+  console.log('Prop variant recebida:', variant);
+  console.log('Artigos pré-selecionados:', initialSelectedArticles);
+  
   // Garantir que sempre temos uma variante válida
   const safeVariant = useMemo(() => {
     const validVariant = variant && LAYOUT_VARIANTS[variant] ? variant : 'sidebar';
     if (validVariant !== variant) {
       console.warn(`Variante "${variant}" não encontrada, usando "sidebar" como fallback`);
     }
+    console.log('safeVariant calculada:', validVariant);
     return validVariant;
   }, [variant]) as LayoutVariant;
 
@@ -208,6 +216,23 @@ const MixedManager: React.FC<MixedManagerProps> = ({
     editorialsData: editorialsData
   });
 
+  // Atualizar a configuração do bloco após a inicialização
+  useEffect(() => {
+    if (externalBlockConfig) {
+      updateBlockConfig(externalBlockConfig as any);
+    }
+  }, [externalBlockConfig, updateBlockConfig]);
+
+  // Efeito para inicializar os artigos pré-selecionados
+  useEffect(() => {
+    if (initialSelectedArticles && Object.keys(initialSelectedArticles).length > 0) {
+      console.log('Inicializando artigos pré-selecionados no MixedManager:', initialSelectedArticles);
+      
+      // Atualizar as posições dos artigos com os artigos pré-selecionados
+      updateArticlePositions(initialSelectedArticles);
+    }
+  }, [initialSelectedArticles, updateArticlePositions]);
+
   const handleFiltersChange = useCallback((newFilters: Partial<ArticleFilters>) => {
     setFilters((prev: ArticleFilters) => ({ ...prev, ...newFilters }));
   }, []);
@@ -218,6 +243,11 @@ const MixedManager: React.FC<MixedManagerProps> = ({
 
   // Filter articles based on current filters
   const filteredArticles = useMemo(() => {
+    // Verificar se blockState.articles.pool existe
+    if (!blockState.articles.pool) {
+      return [];
+    }
+    
     let filtered = blockState.articles.pool;
 
     // Filter by image

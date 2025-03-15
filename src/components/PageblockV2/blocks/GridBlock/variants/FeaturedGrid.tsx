@@ -52,7 +52,7 @@ const FeaturedGrid: React.FC<BaseVariantProps> = ({ variant, isDarkTheme, custom
                         group-hover:scale-105
                       `}
                     />
-                    {styles.featuredImageOverlay && (
+                    {styles?.featuredImageOverlay && (
                       <div className={`
                         ${classes.image.overlay}
                         transition-opacity duration-300

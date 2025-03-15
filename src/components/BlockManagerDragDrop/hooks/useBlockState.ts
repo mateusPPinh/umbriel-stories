@@ -431,7 +431,7 @@ export const useBlockState = ({
       currentVariant: {
         variantType: initialVariant,
         variantPosition: 1,
-        config: variantStates[initialVariant].config
+        config: variantStates[initialVariant]?.config || defaultConfig
       },
       articles: {
         'pool': initialArticles,
@@ -498,8 +498,31 @@ export const useBlockState = ({
     setBlockState(prev => {
       // Verificar se a variante existe
       if (!prev.variantStates[newVariantType]) {
-        console.error(`Variante "${newVariantType}" não encontrada em variantStates`);
-        return prev;
+        console.error(`Variante "${newVariantType}" não encontrada em variantStates. Usando variante padrão.`);
+        // Encontrar uma variante padrão com base no template
+        let defaultVariant: VariantType;
+        switch (prev.template) {
+          case 'grid':
+            defaultVariant = 'standard';
+            break;
+          case 'list':
+            defaultVariant = 'chronological';
+            break;
+          case 'mixed':
+            defaultVariant = 'sidebar';
+            break;
+          case 'featured':
+            defaultVariant = 'hero';
+            break;
+          default:
+            defaultVariant = 'standard';
+        }
+        // Se a variante padrão também não existir, retornar estado atual
+        if (!prev.variantStates[defaultVariant]) {
+          console.error('Variante padrão também não encontrada. Mantendo estado atual.');
+          return prev;
+        }
+        newVariantType = defaultVariant;
       }
       
       // Obter o estado da variante

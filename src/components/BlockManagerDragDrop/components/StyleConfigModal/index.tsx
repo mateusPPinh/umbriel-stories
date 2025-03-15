@@ -60,6 +60,11 @@ export interface BlockConfig {
   articles?: any[];
   // Optional variant property
   variant?: string;
+  // Optional metadata property
+  metadata?: {
+    title?: string;
+    description?: string;
+  };
 }
 
 interface ThemeConfigProps {
