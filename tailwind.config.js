@@ -1,11 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ["class"],
+  darkMode: "selector",
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+    './src/components/PageblockV2/**/*.{ts,tsx}',
+    './src/components/BlockManagerDragDrop/**/*.{ts,tsx}',
+    './node_modules/@umbriel/components/dist/cjs/components/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@umbriel/components/dist/esm/components/**/*.{js,ts,jsx,tsx}',
   ],
   prefix: "",
   theme: {
@@ -89,5 +93,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require('tailwind-scrollbar')],
 }

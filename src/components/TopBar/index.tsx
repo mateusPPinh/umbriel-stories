@@ -1,8 +1,8 @@
 import { type ReactElement } from 'react'
 import { type TopbarProps } from './types'
 import { Container } from './styles'
-import ArrowLeft from '../../../public/icons/ArrowLeft'
-import ArrowRight from '../../../public/icons/ArrowRight'
+import ArrowLeft from './assets/ArrowLeftIcon'
+import ArrowRight from './assets/ArrowRightIcon'
 
 export default function Topbar({
   topbarDescriptionChild,

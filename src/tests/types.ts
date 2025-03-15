@@ -1,0 +1,1 @@
+export type { TabPagesProps, VariantSelectorProps, BlockTypeSelectorProps } from './interfaces';

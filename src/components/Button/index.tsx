@@ -1,13 +1,13 @@
 import { type ReactElement } from 'react'
 import { Container } from './styles'
-import plusIcon from '../../../public/plus-icon.svg'
+import PlusIcon from './assets/plus-icon.svg'
 import { type ButtonProps } from './types'
 import ClipLoader from 'react-spinners/ClipLoader'
 
 export default function Button({
   children,
   variant,
-  className,
+  className='font-heading',
   isFullWidth,
   disabled,
   isLoading,
@@ -39,11 +39,11 @@ export default function Button({
         />
       ) : variant === 'rounded' ? (
         <>
-          <img src={plusIcon} alt="plus icon" />
+          <PlusIcon />
           <span>{children}</span>
         </>
       ) : (
-        children
+        <>{children}</>
       )}
     </Container>
   )

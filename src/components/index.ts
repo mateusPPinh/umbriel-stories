@@ -5,31 +5,55 @@ export { default as SideMenu } from './SideMenu'
 export { default as Modal } from './Modal'
 export { default as ArticleLayoutCards } from './BlockItemCards'
 export { default as Button } from './Button'
-export { default as PageBlock } from './NewPageBlock'
 export { default as BlurredImagem } from './ImageBlur'
-export { default as T3070Variation } from './NewPageBlock/templates/variations/3070'
 export { default as TopBar } from './TopBar'
 export { default as Link } from './Link'
-// export { default as TemplateSeventyThirtyWithCarousel } from './NewPageBlock/templates/TemplateSeventyThirtyWithCarousel'
 export { default as LazyImage } from './LazyImage'
-// export { default as T7030WithinNewsletter } from './NewPageBlock/templates/variations/T7030WithinNewsletter'
-export { default as Article } from './Article'
-export { default as Author } from './Article/Author'
-export { default as Body } from './Article/Body'
-export { default as Share } from './Article/Share'
-export { default as Subtitle } from './Article/Subtitle'
-export { default as Title } from './Article/Title'
-export { default as Slot100FeaturedRelated } from './NewPageBlock/templates/TemplateSlot100-FeaturedRelated'
-export { default as Template5050Grid } from './NewPageBlock/templates/Template5050Grid'
+export { default as PageBlockV2 } from './PageblockV2'
+
+//barrel 
+export * from './PageblockV2/barrel'
 
 // theme
 export * from '../styles/deliveryThemeFunc'
 // types
-export * from './Article/types'
 
-// icons and types
-export * from '../../public/icons/types'
-export { default as WhatsappIcon } from '../../public/icons/Whats'
-export { default as XIcon } from '../../public/icons/x'
-export { default as LinkedinIcon } from '../../public/icons/Linkedin'
-export { default as CopyIcon } from '../../public/icons/Copy'
+// Block Manager Drag Drop
+export { default as BlockManagerDragDrop } from './BlockManagerDragDrop'
+export type { BlockManagerDragDropRef } from './BlockManagerDragDrop'
+
+// Exportando componentes individuais do BlockManagerDragDrop
+export { default as ListManager } from './BlockManagerDragDrop/components/ListManager'
+export { default as ListLayoutPreview } from './BlockManagerDragDrop/components/ListLayoutPreview'
+export { default as DroppableColumn } from './BlockManagerDragDrop/components/DroppableColumn'
+export { default as ArticlesPool } from './BlockManagerDragDrop/components/ArticlesPool'
+export { default as SchedulePublishModal } from './BlockManagerDragDrop/components/SchedulePublishModal'
+export { default as ScheduleStatusBadge } from './BlockManagerDragDrop/components/ScheduleStatusBadge'
+export { default as BlocksList } from './BlockManagerDragDrop/components/BlocksList'
+
+// Novos componentes de agendamento
+export { default as ScheduleList } from './BlockManagerDragDrop/components/ScheduleList'
+export { default as BlockTargetSelector } from './BlockManagerDragDrop/components/BlockTargetSelector'
+export { default as ScheduleManager } from './BlockManagerDragDrop/components/ScheduleManager'
+
+// Exportando hooks
+export { useBlockState } from './BlockManagerDragDrop/hooks/useBlockState'
+
+// Exportando tipos
+export type { ListVariantType } from './BlockManagerDragDrop/types'
+export type { BlockConfig } from './BlockManagerDragDrop/components/StyleConfigModal'
+export type { 
+  ScheduleAction, 
+  ScheduleStatus, 
+  ScheduleData, 
+  ScheduleRequest, 
+  ScheduleResponse 
+} from './BlockManagerDragDrop/interfaces/schedule.types'
+
+/**
+ * Exportar tipagens, exemplos
+ */
+
+export type { ClientTheme } from './PageblockV2/types'
+export type { Theme as PageblockTheme } from './PageblockV2/types'
+

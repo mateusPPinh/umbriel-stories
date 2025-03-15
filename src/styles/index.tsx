@@ -90,7 +90,7 @@ export const theme = {
 
 export default function CustomStyles({
   children,
-}: PropsWithChildren): JSX.Element {
+}: PropsWithChildren) {
   return (
     <StyleSheetManager
       enableVendorPrefixes

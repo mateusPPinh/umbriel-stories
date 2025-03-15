@@ -1,7 +1,7 @@
-import { type DialogProps } from '@radix-ui/react-dialog'
+import { type Props as ReactModalProps } from 'react-modal'
 import { type ReactNode } from 'react'
 
-export interface ModalProps extends DialogProps {
+export interface ModalProps extends Omit<ReactModalProps, 'isOpen' | 'onRequestClose'> {
   modalTitle: string
   modalSubtitle?: string
   modalContent: ReactNode
